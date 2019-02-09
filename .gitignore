@@ -32,5 +32,5 @@
 *.app
 
 # Doxygen output
-/Doc/html/
-/Doc/latex/
+html/
+latex/
