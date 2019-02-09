@@ -42,6 +42,42 @@ murasaki::debugger->Printf("Hello, World!");
 murasaki::debugger->Printf("Coounter value is : %d\n", counter);
 ```
 
+```C++
+uint8_t data[5] = { 1, 2, 3, 4, 5 };
+murasaki::UartStatus stat;
+
+stat = murasaki::platform.uart->Transmit(
+                                         data,
+                                         5);
+
+```
+
+```C++
+uint8_t data[5] = { 1, 2, 3, 4, 5 };
+murasaki::I2cStatus stat;
+
+stat = murasaki::platform.i2cMaster->Transmit(
+                                              127,
+                                              data,
+                                              5);
+```
+
+
+```C++
+ // For demonstration of FreeRTOS task.
+ murasaki::platform.task1 = new murasaki::Task(
+                                               "Master",
+                                               256,
+                                               (( configMAX_PRIORITIES > 1) ? 1 : 0),
+                                               nullptr,
+                                               &TaskBodyFunction
+                                               );
+```
+```
+    murasaki::platform.task1->Start();
+
+```
+
 
 
 ## VS. 
