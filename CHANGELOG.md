@@ -14,4 +14,5 @@
 ### Fixed
 ### Security
 
-[Unreleased]: https://github.com/suikan4github/murasaki/compare/master...develop
+[Unreleased]: https://github.com/suikan4github/murasaki/compare/v0.1.0...develop
+[0.1.0]: https://github.com/suikan4github/murasaki/compare/v0.0.0...v0.1.0
