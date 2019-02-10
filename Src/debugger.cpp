@@ -120,16 +120,19 @@ void Debugger::AutoRePrint()
     // protecting from double task creation
     if (auto_reprint_enable_)
         return;
-    auto_reprint_task = new murasaki::DebuggerAutoRePrintTask("DebugTask",                              // name of task
-                                                              PLATFORM_CONFIG_DEBUG_TASK_STACK_SIZE,      // stack depth
-                                                              PLATFORM_CONFIG_DEBUG_TASK_PRIORITY,  // execusion priority of task
-                                                              &helpers_                             // parameter to task
-                                                              );
-    MURASAKI_ASSERT(auto_reprint_task != nullptr);
+    else
+    {
+        auto_reprint_task = new murasaki::DebuggerAutoRePrintTask("DebugTask",                              // name of task
+                PLATFORM_CONFIG_DEBUG_TASK_STACK_SIZE,      // stack depth
+                PLATFORM_CONFIG_DEBUG_TASK_PRIORITY,  // execusion priority of task
+                &helpers_                             // parameter to task
+                );
+        MURASAKI_ASSERT(auto_reprint_task != nullptr);
 
-    auto_reprint_task->Start();
+        auto_reprint_task->Start();
 
-    auto_reprint_enable_ = true;
+        auto_reprint_enable_ = true;
+    }
 }
 
 void Debugger::DoPostMortem() {
