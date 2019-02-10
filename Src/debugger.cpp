@@ -203,7 +203,5 @@ static void TxTaskBody(const void* ptr)
             helpers->logger->putMessage(reinterpret_cast<char *>(block), copy_size);
     }
 
-    // This code is not reachable. But to be sure delete statement is added.
-    delete[] block;
 
 }
