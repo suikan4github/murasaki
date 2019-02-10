@@ -2,7 +2,7 @@
 Record of the modification in project development.
 
 ## [Unreleased]
-No issues.
+- [Issue 3 : Porting guide must follow the new directory.](https://github.com/suikan4github/murasaki/issues/3)
 ## [0.1.0] - 2019-02-10
 
 ### Added
