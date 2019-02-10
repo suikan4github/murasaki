@@ -19,7 +19,7 @@
 #include "murasaki_config.hpp"
 #include "debuggerfifo.hpp"
 #include "debuggertxtask.hpp"
-#include "debuggerautoreprinttask.hpp"
+#include "task.hpp"
 
 
 
@@ -130,7 +130,7 @@ class Debugger
     /**
      * @brief Handle to the auto reprint task.
      */
-    murasaki::DebuggerAutoRePrintTask * auto_reprint_task;
+    murasaki::Task * auto_reprint_task;
 
     /**
      * @brief For protecting from double enabled.

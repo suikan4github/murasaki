@@ -15,7 +15,12 @@
 
 #include "murasaki_assert.hpp"
 
+// Watch the logger and trigger the rewind.
+static void AutoRePrintTaskBody(const void* ptr);
+
+
 namespace murasaki {
+
 
 Debugger::Debugger(LoggerStrategy * logger):
 		helpers_{
@@ -122,10 +127,11 @@ void Debugger::AutoRePrint()
         return;
     else
     {
-        auto_reprint_task = new murasaki::DebuggerAutoRePrintTask("DebugTask",                              // name of task
-                PLATFORM_CONFIG_DEBUG_TASK_STACK_SIZE,      // stack depth
-                PLATFORM_CONFIG_DEBUG_TASK_PRIORITY,  // execusion priority of task
-                &helpers_                             // parameter to task
+        auto_reprint_task = new murasaki::Task("DebugTask",  // name of task
+                PLATFORM_CONFIG_DEBUG_TASK_STACK_SIZE,       // stack depth
+                PLATFORM_CONFIG_DEBUG_TASK_PRIORITY,         // execusion priority of task
+                &helpers_,                                   // parameter to task
+                &AutoRePrintTaskBody
                 );
         MURASAKI_ASSERT(auto_reprint_task != nullptr);
 
@@ -143,3 +149,25 @@ void Debugger::DoPostMortem() {
 
 } /* namespace platform */
 
+
+/**
+ * Keep watching the input from the loggin device. If some input comes, call the RwWind()
+ * member function to flash out the message FIFO.
+ */
+static void AutoRePrintTaskBody(const void* ptr)
+                                {
+    MURASAKI_ASSERT(ptr != nullptr);
+
+    // ptr is regarded as pointer to the LoggingHelpers
+    // This struct contains the logger and fifo.
+    const murasaki::LoggingHelpers * const helpers = static_cast<const murasaki::LoggingHelpers * const >(ptr);
+
+    while (true) {
+        // Any character?
+        helpers->logger->getCharacter();
+
+        // Then rewind.
+        helpers->fifo->ReWind();
+    }
+
+}
