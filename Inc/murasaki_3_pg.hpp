@@ -27,6 +27,7 @@
  * \li \subpage murasaki_pg_platform_varialbe
  * \li \subpage murasaki_pg_interrupt
  * \li \subpage murasaki_pg_error
+ * \li \subpage murasaki_pg_summary
  *
  * There are some other manuals of murasaki class library :
  *
@@ -39,82 +40,84 @@
 
 /**
  * \page murasaki_pg_directory Directory Structure
- * \brief Murasaki has two main directory and several user modifiable files.
+ * \brief Murasaki has four main directory and several user-modifiable files.
  * \details
  *
- * This page describes these directories and files. These file can be copied from the sample program.
+ * This page describes these directories and files.
  *
- * In the following descriptions, "/" means project root directory.
- *
- * \section sec_ds_1 /murasaki directory
- * Almost files of the murasaki source code are stored in this directory. Basically,
+ * \section sec_ds_1 Src directory
+ * Almost files of the Murasaki source code are stored in this directory. Basically,
  * there is no need to edit the files inside this directory, except the development of
- * murasaki itself.
+ * Murasaki itself. The project setting must
+ * refer this directory as the source directory.
  *
- * Because this directory contains both source files and include files, the project setting must
- * refere this directory as source directory and include directory.
+ * \section sec_ds_1_2 Inc directory
+ * This directory contains the include files, the project setting must
+ * refer this directory as an include directory.
  *
- * \section sec_ds_1_5 /murasaki_tp directory
+ * \section sec_ds_1_5 Src-tp and Inc-tp directory
  * The class collection of the third party peripherals. The "third party" means, the
  * outside of the microprocessor.
  *
- * Because this directory contains both source files and include files, the project setting must
- * refere this directory as source directory and include directory.
+ * Currently these directories are not utilized.
  *
  * \section sec_ds_2 murasaki.hpp
- * The \ref murasaki.hpp include files usually the only one to include from the application program.
- * By including this file, application can refer all the definition of the murasaki
+ * Usually, the \ref murasaki.hpp include file is the only one to include from an application program.
+ * By including this file, an application can refer all the definition of the Murasaki
  *
- * This file is stored in the /murasaki directory.
+ * This file is stored in the Inc directory.
  *
- * \section sec_ds_3 platform_config.hpp
- * The \ref platform_config.hpp file is collection of the build configuration.
- * By defining macro, programmer can change the behavior of the murasaki.
+ * \section sec_ds_3 template directory
+ * \subsection sec_ds_3_1 platform_config.hpp
+ * The \ref platform_config.hpp file is a collection of the build configuration.
+ * By defining a macro, a programmer can change the behavior of the Murasaki.
  *
  * There are mainly two types of the configuration in this file.
  *
- * One type of the configuration is to override the \ref murasaki_config.hpp file.
- * The all contents of the murasaki_config.hpp are macros.
- * These macros are defined to control  the murasaki, for example:
+ * One type of configuration is to override the \ref murasaki_config.hpp file.
+ * All contents of the murasaki_config.hpp are macros.
+ * These macros are defined to control  the Murasaki, for example:
  * the task priority, the task stack size or the timeout period,
  * described in the \ref MURASAKI_DEFINITION_GROUP.
  *
- * The other configuration type is the assertion inside murasaki.
+ * The other configuration type is the assertion inside Murasaki.
  * See \ref MURASAKI_CONFIG_NODEBUG for details.
  *
- * The platform_config.hpp is better to be stored in the /Inc directory of the application.
+ * The platform_config.hpp is better to be copied in the /Inc directory of the application.
  *
- * \section sec_ds_4 platform_defs.hpp
+ * \subsection sec_ds_3_2 platform_defs.hpp
  * As same as \ref platform_config.hpp, the \ref platform_defs.hpp is not the core part
- * of the murasaki class library.
- * This include file has definition of the \ref murasaki::platform
- * which provides "nice looking" aggregation of the class objects.
+ * of the Murasaki class library.
+ * This include file has a definition of the \ref murasaki::platform
+ * which provide "nice looking" aggregation of the class objects.
  *
  * The application programmer can define the \ref murasaki::Platform type freely.
- * There is no limitation or requirement what you put into, unless compiler reports an error message.
+ * There is no limitation or requirement what you put into unless compiler reports an error message.
  *
- * In other hand, programmer may found that adding the peripheral based class variables and
- * middle ware based class variables into the murasaki::Platform type is reasonable.
+ * On the other hand, a programmer may find that adding the peripheral-based class variables and
+ * middleware based class variables into the murasaki::Platform type is reasonable.
  * Actually, the independent devices ( ie:I2C connected LCD controller ) may be
- * better to be a member variables of the mruasaki::Platform type.
+ * better to be a member variable of the mruasaki::Platform type.
  *
- * The platform_defs.hpp is better to be stored in the /Inc directory of the application.
+ * The platform_defs.hpp is better to be copied in the /Inc directory of the application.
  *
  * See \ref MURASAKI_PLATFORM_GROUP as usage sample.
  *
- * @section sec_ds_5 murasaki_platform.cpp
+ * @subsection sec_ds_3_3 murasaki_platform.hpp
+ * A header file of the @ref murasaki_platform.cpp. This file is better to be copied in the
+ * /Inc directory of the application.
+ *
+ * @subsection sec_ds_3_4 murasaki_platform.cpp
  * The murasaki_platform.cpp is the interface between the application and the HAL/RTOS.
  * This file has variables / functions which user needs to program at porting time.
  * @li @ref murasaki::platform variable
  * @li @ref murasaki::debugger variable
- * @li \ref InitPlatform() to initialize the platfrom variable
+ * @li \ref InitPlatform() to initialize the platform variable
  * \li \ref ExecPlatform() to execute the platform algorithm
  * \li \link murasaki_pg_interrupt Interrupt routing functions \endlink
  * \li \link murasaki_pg_error HAL assertion function and Custome default exception handler \endlink
  *
- * @section sec_ds_6 murasaki_platform.hpp
- * A header file of the @ref murasaki_platform.cpp
- *
+ * The murasaki_platform.cpp is better to be copied in the /Src directory of the application.
  */
 
 /**
@@ -151,17 +154,17 @@
  * To avoid the heap allocation problem, it is better to have more than 8kB FreeRTOS heap.
  * The FreeRTOS heap size can be changed by CubeMX :
  * @code
- * Tab => Configuration => FreeRTOS => Config Parameters Tab => TOTAL_HEAP_SIZE
+ * Tab => Pinout & Configuration => Middleware => FreeRTOS => Config Parameters Tab => TOTAL_HEAP_SIZE
  * @endcode
  *
- * In the other hand, the system heap size can be smaller like 128 Byte because we don't use it..
+ * On the other hand, the system heap size can be smaller like 128 Byte because we don't use it..
  *
  * Note that to know the minimum requirement of the system heap size, you must investigate how much allocations are done before entering FreeRTOS.
  * Because murasaki application doesn't use any system heap, only very small management memory should be required in system heap.
  *
  * The system Heap size can be set by following place.
  * @code
- * Menu Bar => Project => Settings => Project
+ * Tab => Project Manager => Code Generator => Linker Settings
  * @endcode
  *
  * \section sec_cm_2 Stack Size
@@ -178,7 +181,7 @@
  * To make them always possible, it is better to set the interrupt stack size bigger than 256 Bytes.
  * The interrupt stack size can be changed by CubeMX :
  * @code
- * Menu Bar => Project => Settings => Project
+ * Tab => Project Manager => Code Generator => Linker Settings
  * @endcode
  * \section sec_cm_3 Task stack size of the default task
  * The daault task has very small stack ( 128 Bytes )
@@ -188,7 +191,8 @@
  *
  * It can be changed by CubeMX:
  * @code
- * Tab => Configuration => FreeRTOS => Tasks and Queues
+ * Tab => Pinout & Configuration => Middleware => FreeRTOS => Config Parameters Tab => MINIMAL_STACK_SIZE
+ *
  * @endcode
  */
 
@@ -199,14 +203,14 @@
  *
  * These parameters control mainly the task size and task priority.
  *
- * One of the special configuration is \ref MURASAKI_CONFIG_NODEBUG macro.
- * This macro controls whether assertion inside murasaki source code works or ignored.
+ * One of the special configurations is \ref MURASAKI_CONFIG_NODEBUG macro.
+ * This macro controls whether assertion inside Murasaki source code works or ignored.
  *
- * To customize the configuration, define the configuration macro with desired value in the
+ * To customize the configuration, define the configuration macro with the desired value in the
  *  platform_config.hpp file.
- * This definition will override the murasaki default configuration.
+ * This definition will override the Murasaki default configuration.
  *
- * For the detail of the each macros, see \ref MURASAKI_DEFINITION_GROUP.
+ * For the detail of each macro, see \ref MURASAKI_DEFINITION_GROUP.
  */
 
 /**
@@ -214,39 +218,39 @@
  * @brief The FreeRTOS task priority is allowed from 1 to configMAX_PRIORITIES.
  * @details
  *
- * Where configMAX_PRIORITIES is porting dependent. Tha task with priority == configMAX_PRIORITIES will run with
+ * Where configMAX_PRIORITIES is porting dependent. The task with priority == configMAX_PRIORITIES will run with
  * the highest priority among all tasks.
  *
- * At initial state, the murasaki has two hidden tasks inside.
+ * At the initial state, the Murasaki has two hidden tasks inside.
  * Both are running for the murasaki::Debugger class, and both task's priority are defined as @ref PLATFORM_CONFIG_DEBUG_TASK_PRIORITY.
  * By default, the value of PLATFORM_CONFIG_DEBUG_TASK_PRIORITY is configMAX_PRIORITIES - 1.
- * That mean, debug tasks priority is very high.
+ * That means, debug tasks priority is very high.
  *
  * The debug tasks should have priority as high as possible.
- * Otherwise, other task may block the debugging message.
+ * Otherwise, another task may block the debugging message.
  *
  * Unlike the task priority, the interrupt priority is easy.
  * Usually, it is not so sensitive because the ISR is very short in the good designed RTOS application design.
- * In this case, all ISR can be same priority.
+ * In this case, all ISR can be a same priority.
  *
  * In the bad designed RTOS application, there are very few things we can do.
  */
 
 /**
  * \page murasaki_pg_heap Heap memory consideration
- * \brief In murasaki, there is a re-definition of @ref operator new and @ref operator delete inside \ref allocators.cpp.
+ * \brief In Murasaki, there is a re-definition of @ref operator new and @ref operator delete inside \ref allocators.cpp.
  * @details
  * This re-definition let the pvPortMalloc() allocate
  * a fragment of memory for the @ref operator new.
  *
  * This changes converges all allocation to the FreeRTOS's heap.
  * There is some merit of the convergence:
- * @li The FreeRTOS heap is thread safe while the system heap in SW4STM32 is not thread safe
- * @li The FreeRTOS heap is checking the heap size limitation and return error, while the system heap in SW4STM32 behavior is not clear.
+ * @li The FreeRTOS heap is thread safe while the system heap in SW4STM32 is not thread-safe
+ * @li The FreeRTOS heap is checking the heap size limitation and return an error, while the system heap behavior in SW4STM32  is not clear.
  * @li The heap size calculation is easier if we integrate the memory allocation activity into one heap.
  *
- * In the other hand, FreeRTOS heap is not be able to allocate/deallocate in the
- * ISR context. And it is impossible to use the FreeRTOS healp before staring up the FreeRTOS. Then,
+ * On the other hand, FreeRTOS heap is not able to allocate/deallocate in the
+ * ISR context. And it is impossible to use the FreeRTOS heap before starting up the FreeRTOS. Then,
  * we have to follow the rules here :
  * @li C++ new / delete operators have to be called after FreeRTOS started.
  * @li C++ new / delete operators have to be called in the task context.
@@ -262,7 +266,7 @@
  *
  * First of all, the porting programmer has to make the peripheral handles as visible from the murasaki_platform.cpp.
  *
- * For example, CubeMx generate the huar2 for Nucleo L152RE for the serial communication over the ST-LINK USB connection.
+ * For example, CubeMx generate the huart2 for Nucleo L152RE for the serial communication over the ST-LINK USB connection.
  * huart2 is defined in main.c as like below:
  * @code
  * UART_HandleTypeDef huart2;
@@ -287,15 +291,15 @@
  *     // UART is used for logging port.
  *     // At least one logger is needed to run the debugger class.
  *     murasaki::platform.logger = new murasaki::UartLogger(murasaki::platform.uart_console);
+ *     // Setting the debugger
+ *     murasaki::debugger = new murasaki::Debugger(murasaki::platform.logger);
+ *     // Set the debugger as AutoRePrint mode, for the easy operation.
+ *     murasaki::debugger->AutoRePrint();  // type any key to show history.
  *
  *     // For demonstration, one GPIO LED port is reserved.
  *     // The port and pin names are fined by CubeMX.
  *     murasaki::platform.led = new murasaki::BitOut(LD2_GPIO_Port, LD2_Pin);
  *
- *     // Setting the debugger
- *     murasaki::debugger = new murasaki::Debugger(murasaki::platform.logger);
- *     // Set the debugger as AutoRePrint mode, for the easy operation.
- *     murasaki::debugger->AutoRePrint();  // type any key to show history.
  *
  * }
  * @endcode
@@ -308,10 +312,7 @@
  * This member variable is an essential stub for the murasaki::debugger.
  * In this example, we assign the UART2 port as interface for the debugging output.
  *
- * At the last step of the peripheral initialization, we create the led member variable
- * as a general purpose output port.
- *
- * After initializing the platform peripherals, we initialize the murasaki::debugger.
+ * After the logger becomes ready, we initialize the murasaki::debugger.
  * As we already discussed, this debugger receives a logger object as a parameter.
  * The debugger output all messages through this logger.
  *
@@ -323,6 +324,9 @@
  * This "auto re-print by any key" is convenient in the small system.
  * But for the large system which has its own command line shell, this input-interruption is harmful.
  * For such the system, programmer want to call murasaki::Debugger::RePrint() member function, by certain customer command.
+ *
+ * Once the debugger is ready to use, we create the led member variable
+ * as a general purpose output port of the application .
  *
  * The ExecPlatform() function implements the actual algorithm of application.
  * In the example below, the application is blinking a LED and printing a messages on the console output.
@@ -347,6 +351,26 @@
  *         // wait for a while
  *         murasaki::Sleep(static_cast<murasaki::WaitMilliSeconds>(500));
  *     }
+ * }
+ * @endcode
+ *
+ * Finally, above two functions have to be called from StartDefaultTask of the main.c.
+ * Also, main.c must include the murasaki_platform.hpp to read the prototype of these functions.
+ *
+ * Following is the sample of the StartDefaultTask(). The actual code have a comment to work
+ * together the code generator of the CubeMX. But this sample remove them because of the
+ * documenattion tool ( doxygen ) limitation.
+ * @code
+ * void StartDefaultTask(void const * argument)
+ * {
+ *
+ *   InitPlatform();
+ *   ExecPlatform();
+ *
+ *   for(;;)
+ *   {
+ *     osDelay(1);
+ *   }
  * }
  * @endcode
  */
@@ -387,6 +411,8 @@
  * \li void HAL_SPI_ErrorCallback(SPI_HandleTypeDef * hspi);
  * \li void HAL_I2C_MasterTxCpltCallback(I2C_HandleTypeDef * hi2c);
  * \li void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef * hi2c);
+ * \li void HAL_I2C_SlaveTxCpltCallback(I2C_HandleTypeDef * hi2c);
+ * \li void HAL_I2C_SlaveRxCpltCallback(I2C_HandleTypeDef * hi2c);
  * \li void HAL_I2C_ErrorCallback(I2C_HandleTypeDef * hi2c);
  * \li void HAL_GPIO_EXTI_Callback(uint16_t GPIO_P);
  *
@@ -451,8 +477,21 @@
  *   b  Infinite_Loop
  *   .size  Default_Handler, .-Default_Handler
  * @endcode
+ *
  */
 
+/**
+ * \page murasaki_pg_summary Summary of the porting
+ * Following is the porting steps :
+ * @li Adjust heap size and stack size as described in the @ref murasaki_pg_cubemx
+ * @li Generate an application skeleton from CubeMX.
+ * @li Checkout Murasaki repository into your project.
+ * @li Copy the template files as described in the @ref murasaki_pg_directory .
+ * @li Configure Muraaski as described in the @ref murasaki_pg_configuration and the @ref murasaki_pg_task_priority_and_stack
+ * @li Call InitPlatform() and ExecPlatform() as described @ref murasaki_pg_platform_varialbe.
+ * @li Route the interrupts as described @ref murasaki_pg_interrupt.
+ * @li Route the error handling as described @ref murasaki_pg_error
+ */
 
 
 #endif /* MURASAKI_3_PG_HPP_ */
