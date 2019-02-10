@@ -2,7 +2,6 @@
 Record of the modification in project development.
 
 ## [Unreleased]
- - [Refactoring of the Debugger::AutoRePrint](https://github.com/suikan4github/murasaki/issues/2)
  - [Convert debug tasks from derived class to the simple task.](https://github.com/suikan4github/murasaki/issues/1)
 
 ## [0.1.0] - 2019-02-10
@@ -12,6 +11,9 @@ Record of the modification in project development.
  - THis CHANGELOG.md file
 
 ### Changed
+- [Refactoring of the Debugger::AutoRePrint](https://github.com/suikan4github/murasaki/issues/2)
+
+
 ### Deprecated
 ### Removed
 ### Fixed
