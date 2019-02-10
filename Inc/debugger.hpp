@@ -125,7 +125,7 @@ class Debugger
     /**
      * \brief Handle to the transmission control task.
      */
-    murasaki::DebuggerTxTask * const tx_task_;
+    murasaki::Task * const tx_task_;
 
     /**
      * @brief Handle to the auto reprint task.

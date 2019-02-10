@@ -18,6 +18,9 @@
 // Watch the logger and trigger the rewind.
 static void AutoRePrintTaskBody(const void* ptr);
 
+// Copy data from FIFO to Logger.
+static void TxTaskBody(const void* ptr);
+
 
 namespace murasaki {
 
@@ -27,10 +30,12 @@ Debugger::Debugger(LoggerStrategy * logger):
 			new murasaki::DebuggerFifo(PLATFORM_CONFIG_DEBUG_BUFFER_SIZE),
 			logger
 		},
-	    tx_task_( new murasaki::DebuggerTxTask("DebugTask",                              // name of task
-	                                            PLATFORM_CONFIG_DEBUG_TASK_STACK_SIZE,                        // stack depth
-	                                            PLATFORM_CONFIG_DEBUG_TASK_PRIORITY,           // execusion priority of task
-	                                            &helpers_                              // parameter to task
+          tx_task_(
+                   new murasaki::Task("DebugTask",                   // name of task
+                           PLATFORM_CONFIG_DEBUG_TASK_STACK_SIZE,    // stack depth
+                           PLATFORM_CONFIG_DEBUG_TASK_PRIORITY,      // execusion priority of task
+                           &helpers_,                                // parameter to task
+                           &TxTaskBody                               // Task body
 	                                            ))
 
 {
@@ -150,7 +155,7 @@ void Debugger::DoPostMortem() {
 } /* namespace platform */
 
 
-/**
+/*
  * Keep watching the input from the loggin device. If some input comes, call the RwWind()
  * member function to flash out the message FIFO.
  */
@@ -169,5 +174,36 @@ static void AutoRePrintTaskBody(const void* ptr)
         // Then rewind.
         helpers->fifo->ReWind();
     }
+
+}
+
+/*
+ * Keep cpoying from TX buffer to TX peripheral.
+ */
+
+static void TxTaskBody(const void* ptr)
+                       {
+    MURASAKI_ASSERT(ptr != nullptr);
+
+    // ptr is regarded as pointer to the LoggingHelpers
+    // This struct contains the logger and fifo.
+    const murasaki::LoggingHelpers * const helpers = static_cast<const murasaki::LoggingHelpers * const >(ptr);
+
+    // allocate a copy buffer.
+    const int block_size = 100;
+    uint8_t block[block_size];
+
+
+    while (true) {
+        // Copy data from FIFO
+        unsigned int copy_size = helpers->fifo->Get(block, block_size);
+
+        // Then, put it to logger, if data exsit.
+        if (copy_size != 0)
+            helpers->logger->putMessage(reinterpret_cast<char *>(block), copy_size);
+    }
+
+    // This code is not reachable. But to be sure delete statement is added.
+    delete[] block;
 
 }
