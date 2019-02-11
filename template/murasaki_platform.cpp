@@ -36,11 +36,14 @@ murasaki::Debugger * murasaki::debugger;
  *
  * The declaration here is user project dependent.
  */
+// Following block is just sample.
+#if 0
 extern I2C_HandleTypeDef hi2c1;
 extern I2C_HandleTypeDef hi2c2;
 extern SPI_HandleTypeDef hspi1;
 extern SPI_HandleTypeDef hspi4;
 extern UART_HandleTypeDef huart2;
+#endif
 extern UART_HandleTypeDef huart3;
 
 /* -------------------- PLATFORM ALGORITHM ------------------------- */
@@ -66,6 +69,17 @@ void InitPlatform()
     // The port and pin names are fined by CubeMX.
     murasaki::platform.led = new murasaki::BitOut(LD2_GPIO_Port, LD2_Pin);
 
+    // For demonstration of FreeRTOS task.
+    murasaki::platform.task1 = new murasaki::Task(
+                                                  "Master",
+                                                  256,
+                                                  1,
+                                                  nullptr,
+                                                  &TaskBodyFunction
+                                                  );
+
+    // Following block is just for sample.
+#if 0
     // For demonstration of the serial communication.
     murasaki::platform.uart = new murasaki::Uart(&huart2);
     // For demonstration of master and slave I2C
@@ -74,15 +88,7 @@ void InitPlatform()
     // For demonstration of master and slave SPI
     murasaki::platform.spiMaster = new murasaki::SpiMaster(&hspi1);
     murasaki::platform.spiSlave = new murasaki::SpiSlave(&hspi4);
-
-    // For demonstration of FreeRTOS task.
-    murasaki::platform.task1 = new murasaki::Task(
-                                                  "Master",
-                                                  256,
-                                                  (( configMAX_PRIORITIES > 1) ? 1 : 0),
-                                                  nullptr,
-                                                  &TaskBodyFunction
-                                                  );
+#endif
 
 }
 
@@ -91,6 +97,8 @@ void ExecPlatform()
     // counter for the demonstration.
     static int count = 0;
 
+    // Following blocks are sample.
+#if 0
     {
         uint8_t data[5] = { 1, 2, 3, 4, 5 };
         murasaki::UartStatus stat;
@@ -152,14 +160,12 @@ void ExecPlatform()
                                                                rx_data,
                                                                5);
     }
-
+#endif
     murasaki::platform.task1->Start();
 
 
     // Loop forever
     while (true) {
-        // Toggle LED.
-        murasaki::platform.led->Toggle();
 
         // print a message with counter value to the console.
         murasaki::debugger->Printf("Hello %d \n\r", count);
@@ -266,10 +272,12 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart) {
  * murasaki::Spi::TransmitAndReceiveCompleteCallback () function.
  */
 void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi) {
-    /* Uncomment following line and edit to fit the target platform.
+    // Poll all SPI TX RX related interrupt receivers.
+    // If hit, return. If not hit,check next.
+#if 0
      if ( murasaki::platform.spi1->TransmitAndReceiveCompleteCallback(hspi) )
      return;
-     */
+#endif
 }
 
 /**
@@ -288,10 +296,12 @@ void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi) {
  * murasaki::Uart::HandleError() function.
  */
 void HAL_SPI_ErrorCallback(SPI_HandleTypeDef * hspi) {
-    /* Uncomment following line and edit to fit the target platform.
+    // Poll all SPI error interrupt related interrupt receivers.
+    // If hit, return. If not hit,check next.
+#if 0
      if ( murasaki::platform.spi1->HandleError(hspi) )
      return;
-     */
+#endif
 }
 
 #endif
@@ -320,9 +330,10 @@ void HAL_I2C_MasterTxCpltCallback(I2C_HandleTypeDef * hi2c)
 {
     // Poll all I2C master tx related interrupt receivers.
     // If hit, return. If not hit,check next.
+#if 0
 //    if (murasaki::platform.i2c_master->TransmitCompleteCallback(hi2c))
 //        return;
-
+#endif
 }
 
 /**
@@ -342,9 +353,10 @@ void HAL_I2C_MasterTxCpltCallback(I2C_HandleTypeDef * hi2c)
 void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef * hi2c) {
     // Poll all I2C master rx related interrupt receivers.
     // If hit, return. If not hit,check next.
-//    if (murasaki::platform.i2c_master->ReceiveCompleteCallback(hi2c))
-//        return;
-
+#if 0
+    if (murasaki::platform.i2c_master->ReceiveCompleteCallback(hi2c))
+    return;
+#endif
 }
 /**
  * @brief Essential to sync up with I2C.
@@ -365,9 +377,10 @@ void HAL_I2C_SlaveTxCpltCallback(I2C_HandleTypeDef * hi2c)
 {
     // Poll all I2C master tx related interrupt receivers.
     // If hit, return. If not hit,check next.
-//    if (murasaki::platform.i2c_slave->TransmitCompleteCallback(hi2c))
-//        return;
-
+#if 0
+    if (murasaki::platform.i2c_slave->TransmitCompleteCallback(hi2c))
+    return;
+#endif
 }
 
 /**
@@ -387,9 +400,10 @@ void HAL_I2C_SlaveTxCpltCallback(I2C_HandleTypeDef * hi2c)
 void HAL_I2C_SlaveRxCpltCallback(I2C_HandleTypeDef * hi2c) {
     // Poll all I2C master rx related interrupt receivers.
     // If hit, return. If not hit,check next.
-//    if (murasaki::platform.i2c_slave->ReceiveCompleteCallback(hi2c))
-//        return;
-
+#if 0
+    if (murasaki::platform.i2c_slave->ReceiveCompleteCallback(hi2c))
+    return;
+#endif
 }
 
 /**
@@ -410,9 +424,10 @@ void HAL_I2C_SlaveRxCpltCallback(I2C_HandleTypeDef * hi2c) {
 void HAL_I2C_ErrorCallback(I2C_HandleTypeDef * hi2c) {
     // Poll all I2C master error related interrupt receivers.
     // If hit, return. If not hit,check next.
-//    if (murasaki::platform.i2c_master->HandleError(hi2c))
-//        return;
-
+#if 0
+    if (murasaki::platform.i2c_master->HandleError(hi2c))
+    return;
+#endif
 }
 
 #endif
