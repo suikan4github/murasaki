@@ -15,7 +15,7 @@
  * \details
  *
  * In this guide, user will study the library porting to the STM32 microcomputer
- * system working with STM32 HAL.
+ * system working with STM32Cube HAL.
  *
  * Followings are the contents of this porting guide :
  *

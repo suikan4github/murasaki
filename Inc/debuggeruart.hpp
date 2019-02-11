@@ -72,7 +72,7 @@ class DebuggerUart : public UartStrategy
      * \brief Constructor
      * \param uart Pointer to a UART control struct. This device have to be configured to use DMA and interrupt for both Tx and Rx.
      * \details
-     * Store the given uart pointer into the internal variable. This pointer is passed to the STM32 HAL UART functions when needed.
+     * Store the given uart pointer into the internal variable. This pointer is passed to the STM32Cube HAL UART functions when needed.
      *
      */
     DebuggerUart(UART_HandleTypeDef * uart);

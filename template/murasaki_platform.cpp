@@ -187,7 +187,7 @@ void ExecPlatform()
  * @details
  * This is called from inside of HAL when an UART transmission done interrupt is accepted.
  *
- * STM32 HAL has same name function internally.
+ * STM32Cube HAL has same name function internally.
  * That function is invoked whenever an relevant interrupt happens.
  * In the other hand, that function is declared as weak bound.
  * As a result, this function overrides the default TX interrupt call back.
@@ -211,7 +211,7 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef * huart)
  * @details
  * This is called from inside of HAL when an UART receive done interrupt is accepted.
  *
- * STM32 HAL has same name function internally.
+ * STM32Cube HAL has same name function internally.
  * That function is invoked whenever an relevant interrupt happens.
  * In the other hand, that function is declared as weak bound.
  * As a result, this function overrides the default RX interrupt call back.
@@ -235,7 +235,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart)
  * @details
  * This is called from inside of HAL when an UART error interrupt is accepted.
  *
- * STM32 HAL has same name function internally.
+ * STM32Cube HAL has same name function internally.
  * That function is invoked whenever an relevant interrupt happens.
  * In the other hand, that function is declared as weak bound.
  * As a result, this function overrides the default error interrupt call back.
@@ -263,7 +263,7 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart) {
  * @details
  * This is called from inside of HAL when an SPI transfer done interrupt is accepted.
  *
- * STM32 HAL has same name function internally.
+ * STM32Cube HAL has same name function internally.
  * That function is invoked whenever an relevant interrupt happens.
  * In the other hand, that function is declared as weak bound.
  * As a result, this function overrides the default TX/RX interrupt call back.
@@ -287,7 +287,7 @@ void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi) {
  * @details
  * This is called from inside of HAL when an SPI error interrupt is accepted.
  *
- * STM32 HAL has same name function internally.
+ * STM32Cube HAL has same name function internally.
  * That function is invoked whenever an relevant interrupt happens.
  * In the other hand, that function is declared as weak bound.
  * As a result, this function overrides the default error interrupt call back.
@@ -318,7 +318,7 @@ void HAL_SPI_ErrorCallback(SPI_HandleTypeDef * hspi) {
  * @details
  * This is called from inside of HAL when an I2C transmission done interrupt is accepted.
  *
- * STM32 HAL has same name function internally.
+ * STM32Cube HAL has same name function internally.
  * That function is invoked whenever an relevant interrupt happens.
  * In the other hand, that function is declared as weak bound.
  * As a result, this function overrides the default TX interrupt call back.
@@ -342,7 +342,7 @@ void HAL_I2C_MasterTxCpltCallback(I2C_HandleTypeDef * hi2c)
  * @details
  * This is called from inside of HAL when an I2C receive done interrupt is accepted.
  *
- * STM32 HAL has same name function internally.
+ * STM32Cube HAL has same name function internally.
  * That function is invoked whenever an relevant interrupt happens.
  * In the other hand, that function is declared as weak bound.
  * As a result, this function overrides the default RX interrupt call back.
@@ -365,7 +365,7 @@ void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef * hi2c) {
  * @details
  * This is called from inside of HAL when an I2C transmission done interrupt is accepted.
  *
- * STM32 HAL has same name function internally.
+ * STM32Cube HAL has same name function internally.
  * That function is invoked whenever an relevant interrupt happens.
  * In the other hand, that function is declared as weak bound.
  * As a result, this function overrides the default TX interrupt call back.
@@ -389,7 +389,7 @@ void HAL_I2C_SlaveTxCpltCallback(I2C_HandleTypeDef * hi2c)
  * @details
  * This is called from inside of HAL when an I2C receive done interrupt is accepted.
  *
- * STM32 HAL has same name function internally.
+ * STM32Cube HAL has same name function internally.
  * That function is invoked whenever an relevant interrupt happens.
  * In the other hand, that function is declared as weak bound.
  * As a result, this function overrides the default RX interrupt call back.
@@ -413,7 +413,7 @@ void HAL_I2C_SlaveRxCpltCallback(I2C_HandleTypeDef * hi2c) {
  * @details
  * This is called from inside of HAL when an I2C error interrupt is accepted.
  *
- * STM32 HAL has same name function internally.
+ * STM32Cube HAL has same name function internally.
  * That function is invoked whenever an relevant interrupt happens.
  * In the other hand, that function is declared as weak bound.
  * As a result, this function overrides the default error interrupt call back.
@@ -443,7 +443,7 @@ void HAL_I2C_ErrorCallback(I2C_HandleTypeDef * hi2c) {
  * @details
  * This is called from inside of HAL when an EXTI is accepted.
  *
- * STM32 HAL has same name function internally.
+ * STM32Cube HAL has same name function internally.
  * That function is invoked whenever an relevant interrupt happens.
  * In the other hand, that function is declared as weak bound.
  * As a result, this function overrides the default error interrupt call back.

@@ -20,7 +20,7 @@
 namespace murasaki {
 /**
  * \ingroup MURASAKI_GROUP
- * @brief Thread safe, blocking IO. Encapsulating I2C slave. Based on STM32 HAL driver and FreeRTOS
+ * @brief Thread safe, blocking IO. Encapsulating I2C slave. Based on STM32Cube HAL driver and FreeRTOS
  * \details
  * The I2cSlave class is the wrapper of the I2C controller. To use the I2cSlave class,
  * make an instance with I2C_HandleTypeDef * type pointer. For example, to create

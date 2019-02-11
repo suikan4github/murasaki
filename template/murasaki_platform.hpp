@@ -58,7 +58,7 @@ void ExecPlatform();
  * @param file Name of the source file where assertion happen
  * @param line Number of the line where assertion happen
  * @details
- * This routine provides a custom hook for the assertion inside STM32 HAL.
+ * This routine provides a custom hook for the assertion inside STM32Cube HAL.
  * All assertion raised in HAL will be redirected here.
  *
  * @code

@@ -61,7 +61,7 @@
  * This assertion do nothing if programmer defines \ref MURASAKI_CONFIG_NODEBUG macro as true.
  * This macro is defined in the file \ref platform_config.hpp.
  *
- * For example, following code is typical usage of this macro. ERROR maccro is copied from STM32 HAL source code.
+ * For example, following code is typical usage of this macro. ERROR maccro is copied from STM32Cube HAL source code.
  * @code
  * bool Uart::HandleError(void* const ptr)
  * {

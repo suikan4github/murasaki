@@ -20,7 +20,7 @@ namespace murasaki {
 
 /**
  * \ingroup MURASAKI_GROUP
- * \brief Concrete implementation of UART controller. Based on the STM32 HAL DMA Transfer.
+ * \brief Concrete implementation of UART controller. Based on the STM32Cube HAL DMA Transfer.
  * \details
  *
  * The Uart class is the wrapper of the UART controller. To use the Uart class,
@@ -72,7 +72,7 @@ class Uart : public UartStrategy
      * \brief Constructor
      * \param uart Pointer to a UART control struct. This device have to be configured to use DMA and interrupt for both Tx and Rx.
      * \details
-     * Store the given uart pointer into the internal variable. This pointer is passed to the STM32 HAL UART functions when needed.
+     * Store the given uart pointer into the internal variable. This pointer is passed to the STM32Cube HAL UART functions when needed.
      *
      */
     Uart(UART_HandleTypeDef * uart);

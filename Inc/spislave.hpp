@@ -18,7 +18,7 @@
 
 namespace murasaki {
 /**
- * @brief Thread safe, blocking IO. Encapsulating SPI slave. Based on STM32 HAL driver and FreeRTOS
+ * @brief Thread safe, blocking IO. Encapsulating SPI slave. Based on STM32Cube HAL driver and FreeRTOS
  * \details
  * The SpiSlave class is the wrapper of the SPI controller. To use the SpiSlave class,
  * make an instance with SPI_HandleTypeDef * type pointer. For example, to create

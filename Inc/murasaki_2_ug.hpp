@@ -106,7 +106,7 @@
  * These features helps programmer to display message in the real-time, multi-task application.
  *
  * In addition to this simple debugging variable, a programmer can use assert_failure() function of the STM32 HA.
- * The STM32 HAL has assert_failure() to check the parameter on the fly.
+ * The STM32Cube HAL has assert_failure() to check the parameter on the fly.
  * By default, this function is disabled.
  * To use this function, programmer have to make it enable, and add function to receive the
  * debug information.
