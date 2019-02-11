@@ -2,6 +2,7 @@
 Record of the modification in project development.
 
 ## [Unreleased]
+- [Issue 4 : Extern declaration is too much](https://github.com/suikan4github/murasaki/issues/4)
 ## [0.1.0] - 2019-02-11
 
 ### Added
