@@ -2,7 +2,6 @@
 Record of the modification in project development.
 
 ## [Unreleased]
-- [Issue 4 : Extern declaration is too much](https://github.com/suikan4github/murasaki/issues/4)
 ## [0.1.0] - 2019-02-11
 
 ### Added
@@ -13,6 +12,7 @@ Record of the modification in project development.
 - [Issue 1 : Convert debug tasks from derived class to the simple task.](https://github.com/suikan4github/murasaki/issues/1)
 - [Issue 2 : Refactoring of the Debugger::AutoRePrint](https://github.com/suikan4github/murasaki/issues/2)
 - [Issue 3 : Porting guide must follow the new directory.](https://github.com/suikan4github/murasaki/issues/3)
+- [Issue 4 : Extern declaration is too much](https://github.com/suikan4github/murasaki/issues/4)
 
 ### Deprecated
 ### Removed
