@@ -2,6 +2,7 @@
 Record of the modification in project development.
 
 ## [Unreleased]
+- [Issue 7 : README.md doesn't have link to the "where to get" at ToC](https://github.com/suikan4github/murasaki/issues/7)
 ## [0.1.0] - 2019-02-11
 
 ### Added
