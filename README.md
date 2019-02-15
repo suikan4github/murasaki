@@ -5,6 +5,7 @@ Easy to use [STM32Cube HAL](https://www.st.com/content/st_com/en/products/embedd
  * [Description](#description)
  * [VS. Naked STM32Cube HAL](#vs-naked-stm32-hal)
  * [Requirement](#requirement)
+ * [Where to get Murasaki](#where-to-get)
  * [Install](#install)
  * [License](#license)
  * [Author](#author)
@@ -120,7 +121,7 @@ This limited use case makes function set smaller. And allows class library encap
 asynchronous HAL APIs to utilize the CPU with the interrupt / DMA transfers. Then, Murasaki's function is easier to use compared to the naked HAL.
 
 ### Strongly controlled namespace
-The STM32Cube HAL is designed to not only C++ but also C compiler. So, all functions are in the global namespace, and constants are macro. 
+The STM32Cube HAL is designed to not only C++ but also C compiler. So, all functions are in the global namespace, and constants are macro.
 This too flat namespace prevent the IDE's completion helps programmer. In addition to this, the wrong macro values are easily passed to the wrong parameters.
 
 Murasaki's design encapsulates the function to the dedicate class. This puts the function into the narrow namespace.
