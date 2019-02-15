@@ -44,6 +44,8 @@ In addition to the above peripheral, a set of classes serve the following functi
  * Critical Section
  * Message output
 
+You can find a set of sample in the [murasaki_samples](https://github.com/suikan4github/murasaki_samples) project.
+
 ## Sample
 With the Murasaki library, the STM32Cube HAL IO becomes easy to write.
 
