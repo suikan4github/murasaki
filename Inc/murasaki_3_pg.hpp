@@ -120,17 +120,25 @@
  * The murasaki_platform.cpp is better to be copied in the /Src directory of the application.
  */
 
+
+
 /**
  * \page murasaki_pg_cubemx CubeMX setting
  * \brief There is several required CubeMX setting.
  * \details
  *
- * \li Heap Size
- * \li Stack Size
- * \li Task stack size of the default task
+ * \li @subpage sec_cm_1
+ * \li @subpage sec_cm_2
+ * \li @subpage sec_cm_3
+ * \li @subpage sec_cm_4
+ * \li @subpage sec_cm_5
+ * \li @subpage sec_cm_6
+ * \li @subpage sec_cm_7
+ * \li @subpage sec_cm_8
  *
- * \section sec_cm_1 Heap Size
- * Heap is very important in the application with murasaki.
+ *
+ * @page sec_cm_1 Heap Size
+ * @brief Heap is very important in the application with murasaki.
  *
  * First, class instances are created inside heap region by new operator often.
  * And second, murasaki::Debugger allocates a huge size of FIFO buffer.
@@ -167,8 +175,9 @@
  * Tab => Project Manager => Code Generator => Linker Settings
  * @endcode
  *
- * \section sec_cm_2 Stack Size
- * In this section, the stack means the interrupt stack.
+ *
+ * \page sec_cm_2 Stack Size
+ * @brief In this section, the stack means the interrupt stack.
  *
  * The interrupt stack is used only when the interrupt is accepted. Then, it is basically small.
  *
@@ -183,8 +192,10 @@
  * @code
  * Tab => Project Manager => Code Generator => Linker Settings
  * @endcode
- * \section sec_cm_3 Task stack size of the default task
- * The daault task has very small stack ( 128 Bytes )
+ *
+ *
+ * @page sec_cm_3 Task stack size of the default task
+ * @brief The dealt task has very small stack ( 128 Bytes )
  *
  * This is not enough to use murasaki and its debugger output functionality.
  * It should be increased at smallest 256 Bytes.
@@ -194,6 +205,40 @@
  * Tab => Pinout & Configuration => Middleware => FreeRTOS => Config Parameters Tab => MINIMAL_STACK_SIZE
  *
  * @endcode
+ *
+ *
+ * @page sec_cm_4 UART peripheral
+ * @brief UART/USART peripheral have to be configured as Asynchronous mode.
+ *
+ * The DMA have to be enabled for both TX and RX. Both DMA must be normal mode.
+ *
+ * All i3 of the NVIC interrupt have to be enabled.
+ *
+ * @page sec_cm_5 SPI Master peripheral
+ * @brief SPI Master peripheral have to be configured as Full-Duplex Master mode.  The NSS must be disabled.
+ *
+ * The DMA have to be enabled for both TX and RX. Both DMA must be normal mode.
+ *
+ * All 3 of the NVIC interrupt have to be enabled.
+ *
+ * @page sec_cm_6 SPI Slave peripheral
+ * @brief SPI Slave peripheral have to be configured as Full-Duplex Slave mode.  The NSS must be input signal.
+ *
+ * The DMA have to be enabled for both TX and RX. Both DMA must be normal mode.
+ *
+ * All 3 of the NVIC interrupt have to be enabled.
+ *
+ * @page sec_cm_7 I2C peripheral
+ * @brief I2C have to be configured as "I2" mode.
+ *
+ * The NVIC interrupt have to be enabled.
+ *
+ * To configure as I2C device, the primary slave address have to be configured.
+ *
+ * @page sec_cm_8 EXTI
+ * @brief The corresponding interrupt have to be enabled by NVIC.
+ *
+ *
  */
 
 /**
