@@ -439,7 +439,7 @@ void HAL_I2C_ErrorCallback(I2C_HandleTypeDef * hi2c) {
 /**
  * @brief Optional interrupt handling of EXTI
  * @ingroup MURASAKI_PLATFORM_GROUP
- * @param GPIO_P Pin number from 0 to 31
+ * @param GPIO_Pin Pin number from 0 to 31
  * @details
  * This is called from inside of HAL when an EXTI is accepted.
  *
@@ -451,14 +451,22 @@ void HAL_I2C_ErrorCallback(I2C_HandleTypeDef * hi2c) {
  * The GPIO_P is the number of Pin. If programmmer set the pin name by CubeMX as FOO, the
  * macro to identify that EXTI is FOO_PIN
  */
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_P)
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-  /*
-   if ( FOO_PIN == GPIO_PIN )
-   {
-   // do something
-   }
-   */
+#if 0
+    // Sample of the EXTI call back.
+    // USER_Btn is a standard name of the user push button switch of the Nucleo F722.
+    // This switch can be configured as EXTI interrupt srouce.
+    // In this sample, releasing the waiting task if interrupt comes.
+
+    // Check whether appropriate interrupt or not
+    if ( USER_Btn_Pin == GPIO_Pin) {
+        // Check whether sync object is ready or not.
+        if (murasaki::platform.sync_with_button != nullptr)
+        // release the waiting task
+            murasaki::platform.sync_with_button->Release();
+    }
+#endif
 }
 
 /* ------------------ ASSERTION AND ERROR -------------------------- */
