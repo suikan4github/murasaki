@@ -462,6 +462,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
     // Check whether appropriate interrupt or not
     if ( USER_Btn_Pin == GPIO_Pin) {
         // Check whether sync object is ready or not.
+        // This check is essential from the interrupt before the platform variable is ready
         if (murasaki::platform.sync_with_button != nullptr)
         // release the waiting task
             murasaki::platform.sync_with_button->Release();
