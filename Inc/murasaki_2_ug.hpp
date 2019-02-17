@@ -273,7 +273,7 @@
 
 /**
  * @page ug_sect_5_3 SPI Master
- * @brief murasaki::SpiMaster is the SPI master class of Murasaki.
+ * @brief @ref murasaki::SpiMaster is the SPI master class of Murasaki.
  *
  * This class is more complicated than other peripherals, because of flexibility.
  * The SPI master controller must adapt to the several variation of the SPI communication.
@@ -312,7 +312,7 @@
 
 /**
  * @page ug_sect_5_4 SPI Slave
- * @brief murasaki::SpiSlave class provides the SPI slave functionality.
+ * @brief @ref murasaki::SpiSlave class provides the SPI slave functionality.
  *
  * This class encapsulate the SPI slave function.
  * @code
@@ -329,7 +329,7 @@
 
 /**
  * @page ug_sect_5_5 GPIO
- * @brief murasaki::BitOut and murasaki::BitIn provides the GPIO functionality
+ * @brief @ref murasaki::BitOut and murasaki::BitIn provides the GPIO functionality
 
  * Following is the example of the murasaki::BitOut class.
  * @code
