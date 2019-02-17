@@ -3,6 +3,7 @@ Record of the modification in project development.
 
 ## [Unreleased]
 - [Issue 5 : HAL_GPIO_EXTI_Callback() needs to avoid the null pointer access](https://github.com/suikan4github/murasaki/issues/5)
+- [Issue 6 : Add CubeMX configuration note to the porting guide.](https://github.com/suikan4github/murasaki/issues/6)
 - [Issue 7 : README.md doesn't have link to the "where to get" at ToC](https://github.com/suikan4github/murasaki/issues/7)
 - [Issue 8 : ADD link to murasaki_samples to README.md](https://github.com/suikan4github/murasaki/issues/8)
 
