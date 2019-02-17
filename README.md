@@ -3,7 +3,7 @@ Easy to use [STM32Cube HAL](https://www.st.com/content/st_com/en/products/embedd
 
 ## Talbe of Contents
  * [Description](#description)
- * [VS. Naked STM32Cube HAL](#vs-naked-stm32-hal)
+ * [VS. Naked STM32Cube HAL](#vs-naked-stm32cube-hal)
  * [Requirement](#requirement)
  * [Where to get Murasaki](#where-to-get-murasaki)
  * [Install](#install)
