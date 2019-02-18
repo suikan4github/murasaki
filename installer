@@ -1,0 +1,43 @@
+#!/bin/bash
+
+cp template/*.hpp ./Inc
+cp template/*.cpp ./Src
+
+# Modify the Src/main.c like following
+# 1. Insert include file.
+#    Find the line which has "USER CODE BEGIN Includes", and then
+#    add the following line after that one.
+#    #include "murasaki_platform.hpp"
+# 2. Insert the platform code.
+#    Find the line which has "USER CODE BEGIN 5" and then,
+#    add the following lines after that one.
+#    InitPlatform();
+#    ExecPlatform();
+# 3. Find the line which has "USER CODE END 6" and then,
+#    add the following line before that one.
+#    CustomAssertFailed(file, line);
+#
+cat  ../Src/main.c  | awk -f <(cat - <<- 'EDO'
+  /USER CODE END 6/{print "    CustomAssertFailed(file, line);"}
+  {print $0}
+  /USER CODE BEGIN Includes/{print "#include \"murasaki_platform.hpp\""}
+  /USER CODE BEGIN 5/{print "  InitPlatform();"; print "  ExecPlatform();"}
+EDO
+) > foo.txt
+mv foo.txt ../Src/main.c
+
+# Modify the startup/startup_stm32*.s like following.
+# Find the line which has "Deafult_Handler:" and then,
+# Substitute that line with following lines :
+#   .global CustomDefaultHandler
+#   Default_Handler:
+#   bl CustomDefaultHandler
+#
+
+cat `ls ../startup/startup_stm32*.s` | awk -f <(cat - <<- 'EDO'
+  /Default_Handler\:/{print "    .global CustomDefaultHandler"}
+  {print $0}
+  /Default_Handler\:/{print "  bl CustomDefaultHandler"}
+EDO
+) > foo.txt
+mv foo.txt `ls ../startup/startup_stm32*.s`
