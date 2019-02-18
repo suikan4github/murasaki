@@ -6,6 +6,7 @@ Record of the modification in project development.
 - [Issue 6 : Add CubeMX configuration note to the porting guide.](https://github.com/suikan4github/murasaki/issues/6)
 - [Issue 7 : README.md doesn't have link to the "where to get" at ToC](https://github.com/suikan4github/murasaki/issues/7)
 - [Issue 8 : ADD link to murasaki_samples to README.md](https://github.com/suikan4github/murasaki/issues/8)
+- [Issue 10 : Write an install script](https://github.com/suikan4github/murasaki/issues/10)
 
 ## [0.1.0] - 2019-02-11
 
