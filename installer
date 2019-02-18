@@ -1,7 +1,7 @@
 #!/bin/bash
 
-cp template/*.hpp ./Inc
-cp template/*.cpp ./Src
+cp template/*.hpp ../Inc
+cp template/*.cpp ../Src
 
 # Modify the Src/main.c like following
 # 1. Insert include file.
