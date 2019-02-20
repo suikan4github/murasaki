@@ -19,6 +19,7 @@
  * @li Ubuntu 16.04 LTS
  * @li Nucleo F722ZE
  *
+ * Followings are the contents of this chapter.
  *
  * @li @subpage spg_1
  * @li @subpage spg_2
@@ -43,29 +44,29 @@
  * To use the Debugger class, we have to configure the UART port correctly.
  *
  * To configure the UART, select the UART3 peripheral inside the Connectivity category of the
- * Pinout & Configuration tab( Fig. 1).  The default tab is the Parameter and Setting tab. In this tab, we will configure the
+ * Pinout & Configuration tab.  The default tab is the Parameter and Setting tab. In this tab, we will configure the
  * Basic Parameters like Baud rate, word length, etc...
  *
- * @image html "Screenshot from 2019-02-18 08-42-34.png" "Fig. 1 CubeMX UART panel"
- * @image latex "Screenshot from 2019-02-18 08-42-34.png" "Fig. 1 CubeMX UART panel"
+ * @image html "Screenshot from 2019-02-18 08-42-34.png" "CubeMX UART panel"
+ * @image latex "Screenshot from 2019-02-18 08-42-34.png" "CubeMX UART panel"
  *
  * And then, we configure the DMA. The murasaki::Uart class uses the DMA transfer for both
  * TX and RX. To enable DMA, click the DMA Settings tab and add DMAs. The default state of the
- * DMA configuration after clicking Add button is undetermined. Then, select the TX and RX DMA channel(Fig. 2).
+ * DMA configuration after clicking Add button is undetermined. Then, select the TX and RX DMA channel.
  *
- * @image html "Screenshot from 2019-02-18 08-43-41.png" "Fig. 2 UART DMA Settings tab"
- * @image latex "Screenshot from 2019-02-18 08-43-41.png" "Fig. 2 UART DMA Settings tab"
+ * @image html "Screenshot from 2019-02-18 08-43-41.png" "UART DMA Settings tab"
+ * @image latex "Screenshot from 2019-02-18 08-43-41.png" "UART DMA Settings tab"
  *
  * Finally, we configure the interrupt by NVIC Settings tab. Check all checkboxes.
  *
- * @image html "Screenshot from 2019-02-18 08-44-04.png" "Fig. 3 UART NVIC Settings tab"
- * @image latex "Screenshot from 2019-02-18 08-44-04.png" "Fig. 3 UART NIC Settings tab"
+ * @image html "Screenshot from 2019-02-18 08-44-04.png" "UART NVIC Settings tab"
+ * @image latex "Screenshot from 2019-02-18 08-44-04.png" "UART NIC Settings tab"
  *
  * By the way, we don't use the USB OTG of the Nucleo F722ZE in this demo. So let's disable it.
  * This is optional. There is no side effect to enable USB except memory usage.
  *
- * @image html "Screenshot from 2019-02-18 08-55-25.png" "Fig. 4 USB_OTG_FS Mode and Configuration"
- * @image latex "Screenshot from 2019-02-18 08-55-25.png" "Fig. 4 USB_OTG_FS Mode and Configuration"
+ * @image html "Screenshot from 2019-02-18 08-55-25.png" "USB_OTG_FS Mode and Configuration"
+ * @image latex "Screenshot from 2019-02-18 08-55-25.png" "USB_OTG_FS Mode and Configuration"
  */
 
 /**
@@ -77,8 +78,8 @@
  *
  * Select CORETEX_M7 tab of the System Core category. Then, enable these items.
  *
- * @image html "Screenshot from 2019-02-18 08-47-58.png" "Fig. 5 CORTEX_M7 Mode and Configuration"
- * @image latex "Screenshot from 2019-02-18 08-47-58.png" "Fig. 5 CORTEX_M7 Mode and Configuration"
+ * @image html "Screenshot from 2019-02-18 08-47-58.png" "CORTEX_M7 Mode and Configuration"
+ * @image latex "Screenshot from 2019-02-18 08-47-58.png" "CORTEX_M7 Mode and Configuration"
  *
  * Nucleo F722ZE board uses PC13 pin as user button (Bule button on the board). In this demo
  * we will use this button as an interrupt source. Then, we have to configure this PC13 pin as
@@ -86,20 +87,20 @@
  *
  * Select GPIO in the System Core category and set the PC13 GPIO mode to External Interrupt.
  *
- * @image html "Screenshot from 2019-02-18 08-46-54.png" "Fig. 6 GPIO Mode and Configuration"
- * @image latex "Screenshot from 2019-02-18 08-46-54.png" "Fig. 6 GPIO Mode and Configuration"
+ * @image html "Screenshot from 2019-02-18 08-46-54.png" "GPIO Mode and Configuration"
+ * @image latex "Screenshot from 2019-02-18 08-46-54.png" "GPIO Mode and Configuration"
  *
  * Select NVIC tab to enable the EXTI line input.
  *
- * @image html "Screenshot from 2019-02-18 08-47-07.png" "Fig. 7 GPIO NVIC(EXTI)"
- * @image latex "Screenshot from 2019-02-18 08-47-07.png" "Fig. 7 GPIO NVIC(EXTI)"
+ * @image html "Screenshot from 2019-02-18 08-47-07.png" "GPIO NVIC(EXTI)"
+ * @image latex "Screenshot from 2019-02-18 08-47-07.png" "GPIO NVIC(EXTI)"
  *
  * Then set the Timebase source. This is timer selection for the system tick.
  * FreeRTOS recommend using the GP timer as system tick source. So, the select
- * one of the unused timer. In the Fig.8, we chose TIM14.
+ * one of the unused timer. In the figure below we are choosing TIM14.
  *
- * @image html "Screenshot from 2019-02-18 08-48-58.png" "Fig. 8 Sys Mode and Configuration"
- * @image latex "Screenshot from 2019-02-18 08-48-58.png" "Fig. 8 Sys Mode and Configuration"
+ * @image html "Screenshot from 2019-02-18 08-48-58.png" "Sys Mode and Configuration"
+ * @image latex "Screenshot from 2019-02-18 08-48-58.png" "Sys Mode and Configuration"
  */
 
 /**
@@ -114,16 +115,16 @@
  * first task created by CubeMX. See the @ref sec_cm_3 for detail.
  * The default value is 128 Byte. It should be at least 256 Byte.
  *
- * @image html "Screenshot from 2019-02-18 08-49-55.png" "Fig. 9 FREERTOS Mode and Configuration: MINIMAL_STACK_SIZE"
- * @image latex "Screenshot from 2019-02-18 08-49-55.png" "Fig. 9 FREERTOS Mode and Configuration: MINIMAL_STACK_SIZE"
+ * @image html "Screenshot from 2019-02-18 08-49-55.png" "FREERTOS Mode and Configuration: MINIMAL_STACK_SIZE"
+ * @image latex "Screenshot from 2019-02-18 08-49-55.png" "FREERTOS Mode and Configuration: MINIMAL_STACK_SIZE"
  *
  * Another important parameter is TOTAL_HEAP_SIZE. This is the size of the heap
  * under the FreeRTOS management. See the @ref sec_cm_1 for detail.
  *
  * 16kB is a little bit smaller. 32kB and greater is preferable.
  *
- * @image html "Screenshot from 2019-02-18 08-50-35.png" "Fig. 10 FREERTOS Mode and Configuration: TOTAL_HEAP_SIZE"
- * @image latex "Screenshot from 2019-02-18 08-50-35.png" "Fig. 10 FREERTOS Mode and Configuration: TOTAL_HEAP_SIZE"
+ * @image html "Screenshot from 2019-02-18 08-50-35.png" "FREERTOS Mode and Configuration: TOTAL_HEAP_SIZE"
+ * @image latex "Screenshot from 2019-02-18 08-50-35.png" "FREERTOS Mode and Configuration: TOTAL_HEAP_SIZE"
  *
  *
  *
@@ -137,16 +138,16 @@
  * is 25MHz. So, we have to fix this bug by hand.
  *
  * Select the Clock Configuration tab. The HSE input frequency is at the left end of the
- * clock chain (Fig 11). Change this frequency from 25 to 8.
+ * clock chain . Change this frequency from 25 to 8.
  *
  * Once you change, CubeMX adjusts the entire clock but that is still not enough.
  * CPU clock (HCLK) is too low. Then, we should modify by hand again.
  *
- * The HCLK is located at the right end of the Fig. 11.  Change it to 216 MHz which is the
+ * The HCLK is located at the right end of the figure below.  Change it to 216 MHz which is the
  * Maximum operation frequency.
  *
- * @image html "Screenshot from 2019-02-18 08-52-28.png" "Fig. 11 Clock Configuration"
- * @image latex "Screenshot from 2019-02-18 08-52-28.png" "Fig. 11 Clock Configuration"
+ * @image html "Screenshot from 2019-02-18 08-52-28.png" "Clock Configuration"
+ * @image latex "Screenshot from 2019-02-18 08-52-28.png" "Clock Configuration"
  */
 
 
@@ -160,7 +161,7 @@
  * to start the following procedure, we must create a workspace of the SW4STM32
  * and keep it open by SW4STM32 during the following configuration.
  *
- * At first, select the  Project Manager tab (Fig. 12).
+ * At first, select the  Project Manager tab.
  *
  * Because Murasaki Class library target is the SW4STM32, we must set the tool chaine to
  * SW4STM32. And then, brouse the SW4STM32 workspace which is open by SW4STM32.
@@ -168,34 +169,34 @@
  * @li murasaki_demo as project name.
  * @li workspace_murasaki_sample as workspace directory name.
  *
- * @image html "Screenshot from 2019-02-18 08-57-07.png" "Fig. 12 Project Manager"
- * @image latex "Screenshot from 2019-02-18 08-57-07.png" "Fig. 12 Project Manager"
+ * @image html "Screenshot from 2019-02-18 08-57-07.png" "Project Manager"
+ * @image latex "Screenshot from 2019-02-18 08-57-07.png" "Project Manager"
  *
  * Now, we are ready to generate the code. Click the "GENERATE CODE" button near the
  * right upper corner.
  *
- * Onece code negenration is finished, CubeMX shows the Code Generation dialog(Fig 13).
+ * Onece code negenration is finished, CubeMX shows the Code Generation dialog.
  * Click "Open Project".
  *
- * @image html "Screenshot from 2019-02-18 08-58-05.png" "Fig. 13 Code Generation"
- * @image latex "Screenshot from 2019-02-18 08-58-05.png" "Fig. 13 Code Generation"
+ * @image html "Screenshot from 2019-02-18 08-58-05.png" "Code Generation"
+ * @image latex "Screenshot from 2019-02-18 08-58-05.png" "Code Generation"
  *
  * Then, CubeMX let the SW4STM32 import the generated project into the workspace
  * (This is tricky part. Generating the code into workspace is not enough. We have
  * to import that project to the workspace. "Open Project" button let the SW4STM32
  * import it).
  *
- * SW4STM32 import the project and show a dialog ( Fig 14 ).
+ * SW4STM32 import the project and show a dialog.
  *
- * @image html "Screenshot from 2019-02-18 08-58-57.png" "Fig. 14 Successfully imported"
- * @image latex "Screenshot from 2019-02-18 08-58-57.png" "Fig. 14 Successfully imported"
+ * @image html "Screenshot from 2019-02-18 08-58-57.png" "Successfully imported"
+ * @image latex "Screenshot from 2019-02-18 08-58-57.png" "Successfully imported"
  *
  * Now, the project is ready to build. But to go to next step, we must convert the
  * Project to the C++ project. The generated code is C project. But we use the
  * class library inside application. Thus, this conversion is essential.
  *
- * @image html "Screenshot from 2019-02-18 09-01-35.png" "Fig. 15 Convert to C++ Project"
- * @image latex "Screenshot from 2019-02-18 09-01-35.png" "Fig. 15 Convert to C++ Project"
+ * @image html "Screenshot from 2019-02-18 09-01-35.png" "Convert to C++ Project"
+ * @image latex "Screenshot from 2019-02-18 09-01-35.png" "Convert to C++ Project"
  *
  *
  *
@@ -230,17 +231,17 @@
  *
  * Now, we are at the final stage. Open the project property, expand the C/C++ General, choose the
  * Paths and Symbols, select the include tab, and click the GNU C++. This is the include path
- * lists. Click Add button and type "murasaki/Inc". Then check the Add to all configurations ( Fig. 16 )..
+ * lists. Click Add button and type "murasaki/Inc". Then check the Add to all configurations..
  *
  * Click ok if the directory is correctly typed.
  *
- * @image html "Screenshot from 2019-02-20 18-20-48.png" "Fig. 16 Add Murasaki include path"
- * @image latex "Screenshot from 2019-02-20 18-20-48.png" "Fig. 16 Add Murasaki include path"
+ * @image html "Screenshot from 2019-02-20 18-20-48.png" "Add Murasaki include path"
+ * @image latex "Screenshot from 2019-02-20 18-20-48.png" "Add Murasaki include path"
  *
- * Next, click the Source Location tab, and add "murasaki/Src" (Fig. 17).
+ * Next, click the Source Location tab, and add "murasaki/Src" .
  *
- * @image html "Screenshot from 2019-02-18 09-12-04.png" "Fig. 17 Add Murasaki source path"
- * @image latex "Screenshot from 2019-02-18 09-12-04.png" "Fig. 17 Add Murasaki source path"
+ * @image html "Screenshot from 2019-02-18 09-12-04.png" "Add Murasaki source path"
+ * @image latex "Screenshot from 2019-02-18 09-12-04.png" "Add Murasaki source path"
  *
  */
 
