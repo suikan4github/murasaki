@@ -119,7 +119,9 @@
  * #define USE_FULL_ASSERT    1
  * \endcode
  *
- * And then, you should modify assert_failure() in main.c, to call output function.
+ * And then, you should modify assert_failure() in main.c, to call output function
+ * (Note, this modification is altered by install script. See @ref spg_6 of the @ref spg.
+ * Still USE_FULL_ASSERT macro is responsibility of the porting programmer ).
  *
  * \code
  * void assert_failed(uint8_t* file, uint32_t line)
@@ -128,7 +130,7 @@
  * }
  * \endcode
  *
- * Finally, you must define the output function.
+ * This hook calls CustomAssertFailed() function.
  *
  * \code
  * // Hook for the assert_failure() in main.c
@@ -168,6 +170,26 @@
  * If you want to have your own console program through the debug port input,
  * do not you the auto history. Alternatively, you can send the previously transmitted message again,
  * by calling murasaki::Debugger::PrintHistory() explicitly.
+ *
+ * Murasaki also have post-mortem debugging feature which helps to analyze severe error.
+ * Murasaki adds a hook into the Default_Handler of the startup_stm32****.s file.
+ *
+ * @code
+ *     .section  .text.Default_Handler,"ax",%progbits
+ *     .global CustomDefaultHandler
+ * Default_Handler:
+ *   bl CustomDefaultHandler
+ * Infinite_Loop:
+ *   b  Infinite_Loop
+ * @endcode
+ *
+ * The inserted bl instruction supersedes the infinite loop at spurious interrupt handler.
+ * Alternatively, CustomDefaultHandler() is called. The CustomDefaultHandler() stops entire
+ * Debugger process, and get into the polling mode serial operation with auto history.
+ *
+ * That mean, once spurious interrupt happen, you can read the messages in the debug
+ * message FIFO by pressing any key. This feature helps to analyze the assertion message
+ * just before the trouble.
  *
  */
 
