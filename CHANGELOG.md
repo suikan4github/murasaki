@@ -7,15 +7,15 @@ Record of the modification in project development.
 - [Issue 6 : Add CubeMX configuration note to the porting guide.](https://github.com/suikan4github/murasaki/issues/6)
 - [Issue 10 : Write an install script](https://github.com/suikan4github/murasaki/issues/10)
 - [Issue 12 : Step-By-Step porting sample](https://github.com/suikan4github/murasaki/issues/12)
-
+- [Issue 14 : Add post mortem debugging description](https://github.com/suikan4github/murasaki/issues/13)
 ### Changed
-- [Issue 5 : HAL_GPIO_EXTI_Callback() needs to avoid the null pointer access](https://github.com/suikan4github/murasaki/issues/5)
-- [Issue 7 : README.md doesn't have link to the "where to get" at ToC](https://github.com/suikan4github/murasaki/issues/7)
 - [Issue 8 : ADD link to murasaki_samples to README.md](https://github.com/suikan4github/murasaki/issues/8)
-- [Issue 11 : Link to refman.pdf in README.md is wrong](https://github.com/suikan4github/murasaki/issues/11)
 ### Deprecated
 ### Removed
 ### Fixed
+- [Issue 5 : HAL_GPIO_EXTI_Callback() needs to avoid the null pointer access](https://github.com/suikan4github/murasaki/issues/5)
+- [Issue 11 : Link to refman.pdf in README.md is wrong](https://github.com/suikan4github/murasaki/issues/11)
+- [Issue 7 : README.md doesn't have link to the "where to get" at ToC](https://github.com/suikan4github/murasaki/issues/7)
 ### Security
 
 ## [0.1.0] - 2019-02-11
