@@ -375,6 +375,8 @@
  * @li @subpage ug_sect_6_1
  * @li @subpage ug_sect_6_2
  * @li @subpage ug_sect_6_3
+ * @li @subpage ug_sect_6_4
+ * @li @subpage ug_sect_6_5
  */
 
 /**
@@ -514,14 +516,57 @@
 
 /**
  * @page ug_sect_6_2 HAL Assertion flow
- * @brief @ref murasaki::BitOut and murasaki::BitIn provides the GPIO functionality
+ * @brief HAL Assertion is a STM32Cube HAL's programming help mechanism.
+ *
+ * @code
+ * void assert_failed(uint8_t *file, uint32_t line)
+ * {
+ *   // USER CODE BEGIN 6
+ *     CustomAssertFailed(file, line);
+ *   // USER CODE END 6
+ * }
+ * @endcode
+ *
+ * @code
+ * void CustomAssertFailed(uint8_t* file, uint32_t line) {
+ *     murasaki::debugger->Printf(
+ *                              "Wrong parameters value: file %s on line %d\r\n",
+ *                              file,
+ *                              line);
+ * }
+ * @endcode
  */
 
 /**
- * @page ug_sect_6_3 Sprious Interrupt flow
- * @brief @ref murasaki::BitOut and murasaki::BitIn provides the GPIO functionality
+ * @page ug_sect_6_3 Spurious Interrupt flow
+ * @brief Murasaki provides a mechanism to catch a spurious interrupt.
+ *
+ * @code
+ *     .section  .text.Default_Handler,"ax",%progbits
+ *     .global CustomDefaultHandler
+ * Default_Handler:
+ *   bl CustomDefaultHandler
+ * Infinite_Loop:
+ *   b  Infinite_Loop
+ * @endcode
+ *
+ * @code
+ * void CustomDefaultHandler() {
+ *     // Call debugger's post mortem processing. Never return again.
+ *     murasaki::debugger->DoPostMortem();
+ * }
+ * @endcode
  */
 
+/**
+ * @page ug_sect_6_4 General Interrupt flow
+ * @brief Murasaki provides a mechanism to catch a spurious interrupt.
+ */
+
+/**
+ * @page ug_sect_6_5 EXTI flow
+ * @brief Murasaki provides a mechanism to catch a spurious interrupt.
+ */
 
 
 #endif /* MURASAKI_2_UG_HPP_ */
