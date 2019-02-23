@@ -217,7 +217,7 @@
  *
  * @code
  * cd workspace_murasaki_sample/murasaki_demo
- * git clone git@github.com:suikan4github/murasaki.git
+ * git clone https://github.com/suikan4github/murasaki.git
  * cd murasaki
  * ./install
  * @endcode
