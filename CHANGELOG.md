@@ -20,8 +20,8 @@ Record of the modification in project development.
 ### Removed
 ### Fixed
 - [Issue 5 : HAL_GPIO_EXTI_Callback() needs to avoid the null pointer access](https://github.com/suikan4github/murasaki/issues/5)
-- [Issue 11 : Link to refman.pdf in README.md is wrong](https://github.com/suikan4github/murasaki/issues/11)
 - [Issue 7 : README.md doesn't have link to the "where to get" at ToC](https://github.com/suikan4github/murasaki/issues/7)
+- [Issue 11 : Link to refman.pdf in README.md is wrong](https://github.com/suikan4github/murasaki/issues/11)
 - [Issue 15 : Write a Program flow walk through](https://github.com/suikan4github/murasaki/issues/15)
 
 ### Security
