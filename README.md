@@ -30,10 +30,12 @@ the program may be broken.
 To prevent this problem, Murasaki guards the important portion of the control program by a critical section.
 Thus, the programmer doesn't need to care the exclusive access to the peripheral.
 
+The Murasaki peripheral classes uses DMA/Interrupt transfer.
 The interrupt/DMA access is also important to utilize the CPU under an RTOS environment.
-STM32Cube HAL provides a polling version of API. These API has a waiting loop inside.
-As a result, such the API will occupy the CPU while it waits for an event.
-The interrupt/DMA based peripheral access utilize the CPU with high efficiency under the RTOS environment.
+While STM32Cube HAL provides a polling version of API, these API has a waiting loop inside.
+As a result, such the polling API will occupy the CPU while it waits for an event.
+The interrupt/DMA based peripheral access doesn't have such the waitingloop, thus RTOS
+can utilize CPU for other tasks, while peripheral doens't need CPU's help.
 
 The blocking IO guarantees the end of a communication when the program returns from one IO function.
 Then, once returned from the function, for example, received data is ready to use in an RX buffer.

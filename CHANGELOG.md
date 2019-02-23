@@ -20,7 +20,8 @@ Record of the modification in project development.
 - [Issue 7 : README.md doesn't have link to the "where to get" at ToC](https://github.com/suikan4github/murasaki/issues/7)
 - [Issue 15 : Write a Program flow walk through](https://github.com/suikan4github/murasaki/issues/15)
 ### Security
-
+### Known Issue
+- The SPI slave transfer is not tested. 
 ## [0.1.0] - 2019-02-11
 
 ### Added
