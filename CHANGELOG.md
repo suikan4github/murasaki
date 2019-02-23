@@ -10,6 +10,7 @@ Record of the modification in project development.
 - [Issue 13 : Add post mortem debugging description](https://github.com/suikan4github/murasaki/issues/13)
 ### Changed
 - [Issue 8 : ADD link to murasaki_samples to README.md](https://github.com/suikan4github/murasaki/issues/8)
+- [Issue 16 : Substitute \n\r by \n ](https://github.com/suikan4github/murasaki/issues/16)
 ### Deprecated
 ### Removed
 ### Fixed
