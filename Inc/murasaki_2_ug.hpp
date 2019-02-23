@@ -40,20 +40,20 @@
  * As usual, let's start from "hello, world".
  *
  * \code
- * murasaki::debugger->Printf("Hello, world!\n\r");
+ * murasaki::debugger->Printf("Hello, world!\n");
  * \endcode
  *
  * In Murasaki manner, the Printf() is not a global function. This is a method of murasaki::Debugger class.
  * The murasaki::debugger variable is a one of two Murasaki's golobal variable. And it provide an easy
  * to use message output.
  *
- * The end-of-line charater is depend on the terminal. In the above sample, the terminator is \n\r.
+ * The end-of-line charater is depend on the terminal. In the above sample, the terminator is \n.
  * This is for the linux based kermit. Other terminal system may need other end-of-line character.
  *
  * Because the Printf() works as like standard printf(), you can also use the format string.
  *
  * \code
- * murasaki::debugger->Printf("count is %d\n\r", count);
+ * murasaki::debugger->Printf("count is %d\n", count);
  * \endcode
  *
  * The Printf() is designed as debugger message output for an embeded realtime system.
@@ -137,7 +137,7 @@
  * // Hook for the assert_failure() in main.c
  * void CustomAssertFailed(uint8_t* file, uint32_t line)
  * {
- *     murasaki::debugger->Printf("Wrong parameters value: file %s on line %d\r\n", file, line);
+ *     murasaki::debugger->Printf("Wrong parameters value: file %s on line %d\n", file, line);
  * }
  *
  * \endcode
@@ -497,7 +497,7 @@
 
 
  *     // print a message with counter value to the console.
- *     murasaki::debugger->Printf("Push user button to display the I2C slave device \n\r");
+ *     murasaki::debugger->Printf("Push user button to display the I2C slave device \n");
 
 
  *     // Loop forever
@@ -544,7 +544,7 @@
  * @code
  * void CustomAssertFailed(uint8_t* file, uint32_t line) {
  *     murasaki::debugger->Printf(
- *                              "Wrong parameters value: file %s on line %d\r\n",
+ *                              "Wrong parameters value: file %s on line %d\n",
  *                              file,
  *                              line);
  * }

@@ -103,7 +103,7 @@ bool AllowedSyslogOut(murasaki::SyslogFacility facility,
     {\
         murasaki::debugger->Printf("%s, %s: %s, line %4d, %s(): ", #FACILITY, #SEVERITY, __MURASAKI__FILE__, __LINE__, __func__);\
         murasaki::debugger->Printf( FORMAT __VA_ARGS__ );\
-        murasaki::debugger->Printf("\r\n");\
+        murasaki::debugger->Printf("\n");\
     }
 #endif
 

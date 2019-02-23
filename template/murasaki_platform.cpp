@@ -168,7 +168,7 @@ void ExecPlatform()
     while (true) {
 
         // print a message with counter value to the console.
-        murasaki::debugger->Printf("Hello %d \n\r", count);
+        murasaki::debugger->Printf("Hello %d \n", count);
 
         // update the counter value.
         count++;
@@ -474,7 +474,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 
 void CustomAssertFailed(uint8_t* file, uint32_t line)
                         {
-    murasaki::debugger->Printf("Wrong parameters value: file %s on line %d\r\n",
+    murasaki::debugger->Printf("Wrong parameters value: file %s on line %d\n",
                                file, line);
 }
 

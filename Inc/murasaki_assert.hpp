@@ -14,8 +14,8 @@
 #include "murasaki_defs.hpp"
 #include <string.h>
 
-#define MURASAKI_ASSERT_MSG "!! Assertion failure in function %s(), at line %d of file %s !!\n\r"
-#define MURASAKI_ERROR_MSG  "Error in function %s(), at line %d of file %s : %s \n\r"
+#define MURASAKI_ASSERT_MSG "!! Assertion failure in function %s(), at line %d of file %s !!\n"
+#define MURASAKI_ERROR_MSG  "Error in function %s(), at line %d of file %s : %s \n"
 
 // Remove directory path from __FILE__
 #ifndef __MURASAKI__FILE__
@@ -43,9 +43,9 @@
 #define MURASAKI_ASSERT( COND )\
     if ( ! (COND) )\
     {\
-        murasaki::debugger->Printf("--------------------\n\r");\
+        murasaki::debugger->Printf("--------------------\n");\
         murasaki::debugger->Printf(MURASAKI_ASSERT_MSG,  __func__, __LINE__,__MURASAKI__FILE__ );\
-        murasaki::debugger->Printf("Fail expression : %s\r\n", #COND);\
+        murasaki::debugger->Printf("Fail expression : %s\n", #COND);\
         if ( murasaki::IsTaskContext() )\
             vTaskSuspend(nullptr);\
     }

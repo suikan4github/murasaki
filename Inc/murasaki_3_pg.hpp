@@ -388,7 +388,7 @@
  *         murasaki::platform.led->Toggle();
  *
  *         // print a message with counter value to the console.
- *         murasaki::debugger->Printf("Hello %d \n\r", count);
+ *         murasaki::debugger->Printf("Hello %d \n", count);
  *
  *         // update the counter value.
  *         count++;
