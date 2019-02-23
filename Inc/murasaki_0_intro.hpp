@@ -13,7 +13,8 @@
  * \page murasaki_ug_preface Preface
  * \brief Murasaki, is a class library on the STM32Cube HAL and FreeRTOS.
  * \details
- * By using Murasaki, you can program STM32 series quickly and easily.
+ * By using Murasaki, you can program STM32 series quickly and easily. You can obtain the
+ * source code of the Murasaki Library from the <a href="https://github.com/suikan4github/murasaki">GitHub repository</a>.
  *
  * Murasaki has following design philosophies:
  *
