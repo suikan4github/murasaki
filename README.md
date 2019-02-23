@@ -150,9 +150,13 @@ The tested target is following :
 Pins, clocks, peripherals, and FreeRTOS have to be configured by CubeMX.
 
 The required memory resoucese for the Nucleo F722 demo application (2 tasks, 1 LED,
-  1 UART , 1 I2C and 1 EXTI)
- * .text(Flash) : 48kB
- * .bss (RAM) : 16kB
+  1 UART , 1 I2C and 1 EXTI) is following:
+
+|Section|Memory|Size|
+|-------|:----:|---:|
+|.text|Flash|48kB|
+|.data & .bss|RAM|16kB|
+
 
 ## Where to get Murasaki
 The Murasaki library can be obtained from [Github project page](https://github.com/suikan4github/murasaki/)
