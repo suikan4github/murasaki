@@ -635,7 +635,7 @@
  * While other peripheral raises interrupt after the peripheral instance are created,
  * EXTI peripheral may raise the interrupt before the platform peripherals are ready.
  *
- * Then, EXTI call back has gnuard to avoid the null pointer access.
+ * Then, EXTI call back has guard to avoid the null pointer access.
  *
  * @code
  * void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
