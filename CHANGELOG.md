@@ -11,6 +11,7 @@ Record of the modification in project development.
 ### Changed
 - [Issue 8 : ADD link to murasaki_samples to README.md](https://github.com/suikan4github/murasaki/issues/8)
 - [Issue 16 : Substitute \n\r by \n ](https://github.com/suikan4github/murasaki/issues/16)
+- [Issue 17 : README.md refinement for DMA Interrupt and required memory](https://github.com/suikan4github/murasaki/issues/17)
 ### Deprecated
 ### Removed
 ### Fixed
