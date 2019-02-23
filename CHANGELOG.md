@@ -3,7 +3,20 @@ Record of the modification in project development.
 
 ## [Unreleased]
 
+
+### Added
+### Changed
+### Deprecated
+### Removed
+### Fixed
+- [Issue 19 ; Clone method is wrong](https://github.com/suikan4github/murasaki/issues/19)
+
+### Security
+### Known Issue
+- The SPI slave transfer is not tested.
+
 ## [0.2.0] - 2019-02-23
+
 
 ### Added
 - [Issue 6 : Add CubeMX configuration note to the porting guide.](https://github.com/suikan4github/murasaki/issues/6)
