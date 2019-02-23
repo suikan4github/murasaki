@@ -448,8 +448,8 @@ void HAL_I2C_ErrorCallback(I2C_HandleTypeDef * hi2c) {
  * In the other hand, that function is declared as weak bound.
  * As a result, this function overrides the default error interrupt call back.
  *
- * The GPIO_P is the number of Pin. If programmmer set the pin name by CubeMX as FOO, the
- * macro to identify that EXTI is FOO_PIN
+ * The GPIO_Pin is the number of Pin. For example, if a programmer set the pin name by CubeMX as FOO, the
+ * macro to identify that EXTI is FOO_Pin
  */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {

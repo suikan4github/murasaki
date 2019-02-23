@@ -93,18 +93,18 @@
 
 /**
  * \page ug_sec_3 Debugging with Murasaki.
- * \brief As we saw, Murasaki has simple messaging output for realtime debug.
+ * \brief As we saw, Murasaki has a simple messaging output for real-time debugging.
  *
  * This feature is
- * typically used as UART serial output, but configurable by programmer.
+ * typically used as UART serial output, but configurable by the programmer.
  *
  * The murasaki::debugger is the useful variable to output the debugging message.
  * murasaki::debugger->prrntf() has several good feature.
  * \li Versatile printf() style format string.
  * \li Can call from both task and interrupt context
- * \li Non blocking
+ * \li Non-blocking
  *
- * These features helps programmer to display message in the real-time, multi-task application.
+ * These features help the programmer to display the message in the real-time, multi-task application.
  *
  * In addition to this simple debugging variable, a programmer can use assert_failure() function of the STM32 HA.
  * The STM32Cube HAL has assert_failure() to check the parameter on the fly.
@@ -121,8 +121,8 @@
  * \endcode
  *
  * And then, you should modify assert_failure() in main.c, to call output function
- * (Note, this modification is altered by install script. See @ref spg_6 of the @ref spg.
- * Still USE_FULL_ASSERT macro is responsibility of the porting programmer ).
+ * (Note, this modification is altered by the install script. See @ref spg_6 of the @ref spg.
+ * Still USE_FULL_ASSERT macro is a responsibility of the porting programmer ).
  *
  * \code
  * void assert_failed(uint8_t* file, uint32_t line)
@@ -144,17 +144,17 @@
  * Once above programming is done, you can watch the integrity of the HAL parameter by
  * reading the console output.
  *
- * Above debugging mechanism redirects all HAL assertion , Murasaki assertion and
+ * Above debugging mechanism redirects all HAL assertion, Murasaki assertion and
  * application debug message to the specified logging port.
  * That logging port is able to customize.
  * In the case of the User's Guide, logging is done through the UART port.
  *
- * Time by time, you may not wnat to connect serial terminal to the board, unless you have problem.
- * That means, when you find problem and connect your serial terminal, the assertion
+ * Time by time, you may not want to connect a serial terminal to the board unless you have a problem.
+ * That means when you find a problem and connect your serial terminal, the assertion
  * message is already transmitted ( and lost ).
  *
  * Murasaki can save this problem.
- * By adding following code after creating murasaki::Debugger instance, you can use history functionality.
+ * By adding the following code after creating murasaki::Debugger instance, you can use history functionality.
  *
  * @code
  *     murasaki::debugger->AutoHistory();
@@ -164,7 +164,7 @@
  * This task watch the input from the logging port.
  * Again, in this User's guide it is UART.
  * Once any character is received from the logging port ( terminal ),
- * previously transmitted message are sent again.
+ * previously transmitted message is sent again.
  * So you can read the last tens of messages.
  *
  * The auto history is handy, but it blocks all input from the terminal.
@@ -450,16 +450,16 @@
  *                                                  &TaskBodyFunction
  *                                                  );
 
- *    // Following block is just for sample.
+ *    // the Following block is just for sample.
 
  * }
  * @endcode
  *
  * In this sample, the first half of the InitPlatform() is building a murasaki::debugger
- * variable. Because this variable is utilized for the debug of the entire application,
+ * variable. Because this variable is utilized for the debugging of the entire application,
  * there is a value to make it at first.
  *
- * Probably the most critical statement in this part is creation of the DebuggerUart class object.
+ * Probably the most critical statement in this part is the creation of the DebuggerUart class object.
  *
  * @code
  *    murasaki::platform.uart_console = new murasaki::DebuggerUart(&huart3);
@@ -471,18 +471,18 @@
  * we are making debugging console through the USB-serial line of the Nucleo F722ZE board.
  *
  * Because the huart3 is generated into the main.c directory, we have to declare this
- * variable as external variable. You can find the declaration around the top of the
+ * variable as an external variable. You can find the declaration around the top of the
  * Src/murasaki_platform.cpp.
  *
  * @code
  * extern UART_HandleTypeDef huart3;
  * @endcode
  *
- * Note that the UART port number is vary among the different Nucleo board. So, the
- * porting programmer have responsibility to refer the right UART.
+ * Note that the UART port number varies among the different Nucleo board. So, the
+ * porting programmer have a responsibility to refer the right UART.
  *
  * The second half of the InitPlatform() is the creation part of the other peripheral
- * object. This part is fully depend on the application. Programmer can define any
+ * object. This part fully depends on the application. A programmer can define any
  * object, by modifying the murasaki::Platform struct in the Inc/platform_defs.hpp.
  *
  * The second function called from the @ref StartDefaultTask() is the @ref ExecPlatform().
@@ -518,6 +518,14 @@
  * @page ug_sect_6_2 HAL Assertion flow
  * @brief HAL Assertion is a STM32Cube HAL's programming help mechanism.
  *
+ * STM32Cube HAL provies a run-time parameter check. This parameter check is
+ * enabled by un-comment the USE_FULL_ASSERT macro inside stm32xxxx_hal_conf.h file.
+ * See "Run-time checking" of the HAL manual for detail.
+ *
+ * Assertion is defined in Src/main.c. As assert_failed() function. This function
+ * is empty at first. The murasaki install script fills by CustomerAssertFailed() calling
+ * statement.
+ *
  * @code
  * void assert_failed(uint8_t *file, uint32_t line)
  * {
@@ -526,6 +534,12 @@
  *   // USER CODE END 6
  * }
  * @endcode
+ *
+ * If a HAL API received wrong parameter, the assert_failed() function is
+ * called with its filename and line number. Then. assert_failed() call CustomAssertFailed()
+ * function in the @ref Src/murasaki_platform.cpp file.
+ *
+ * The CustomAssertFailed() print the filename and line number with message.
  *
  * @code
  * void CustomAssertFailed(uint8_t* file, uint32_t line) {
@@ -541,6 +555,11 @@
  * @page ug_sect_6_3 Spurious Interrupt flow
  * @brief Murasaki provides a mechanism to catch a spurious interrupt.
  *
+ * Default_handler is the entry point of the spurious interrupt handler.
+ * This is defined in  startup/startup_stm32******.s.
+ *
+ * The install script modify this handler to call the pref CustomDefaultHanlder()
+ * in the @ref Src/murasaki_platform.cpp.
  * @code
  *     .section  .text.Default_Handler,"ax",%progbits
  *     .global CustomDefaultHandler
@@ -549,6 +568,12 @@
  * Infinite_Loop:
  *   b  Infinite_Loop
  * @endcode
+ *
+ * CustomDefaultHandler() put the debugger to the post mortem state which
+ * can work without the debug helper tasks. This function keep watching UART and
+ * if any input is found, it flushes the entire data of debug FIFO.
+ *
+ * Thus, programmer can see the last messages before triggering spurious interrupt.
  *
  * @code
  * void CustomDefaultHandler() {
@@ -560,12 +585,71 @@
 
 /**
  * @page ug_sect_6_4 General Interrupt flow
- * @brief Murasaki provides a mechanism to catch a spurious interrupt.
+ * @brief As described in the HAL manual, STM32Cube HAL handles all peripheral related interrupt
+ * , and then, call corresponding callback function.
+ *
+ * @details
+ * These call backs are optional from the view point of the peripheral hardware, but
+ * essential hook to sync with software.
+ *
+ * Murasaki is using these callback to notify the end of processing, to the peripheral class objects.
+ * For example, following is the sample of callback.
+ *
+ * @code
+ * void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart)
+ * {
+ *     // Poll all uart rx related interrupt receivers.
+ *     // If hit, return. If not hit,check next.
+ *     if (murasaki::platform.uart_console->ReceiveCompleteCallback(huart))
+ *         return;
+
+ * }
+ * @endcode
+ *
+ * This callback is called from HAL, after the end of peripheral interrupt processing.
+ * And calling the ReceiveCompleteCallback() of the UART object in the platform. Note
+ * that Murasaki object returns true, if the callback member function parameter matches
+ * with its own hardware handle. Then, the function can return if the return value
+ * is true.
+ *
+ * Note that forwarding this call back to all the relevant peripheral is a
+ * Responsibility of the porting programmer. To forward the callback to the multiple objects,
+ * you can call like this.
+ *
+ * @code
+ *     if (murasaki::platform.uart_console->ReceiveCompleteCallback(huart))
+ *         return;
+ *     if (murasaki::platform.uart_1->ReceiveCompleteCallback(huart))
+ *         return;
+ *     if (murasaki::platform.uart_2->ReceiveCompleteCallback(huart))
+ *         return;
+ * @endcode
+ *
  */
 
 /**
  * @page ug_sect_6_5 EXTI flow
- * @brief Murasaki provides a mechanism to catch a spurious interrupt.
+ * @brief EXTI flow is very similar to the @ref ug_sect_6_4 except its timing.
+ *
+ * @details
+ * While other peripheral raises interrupt after the peripheral instance are created,
+ * EXTI peripheral may raise the interrupt before the platform peripherals are ready.
+ *
+ * Then, EXTI call back has gnuard to avoid the null pointer access.
+ *
+ * @code
+ * void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+ * {
+
+ *     if ( USER_Btn_Pin == GPIO_Pin) {
+ *         // release the waiting task
+ *         if (murasaki::platform.sync_with_button != nullptr)
+ *             murasaki::platform.sync_with_button->Release();
+ *     }
+
+ * }
+ * @endcode
+ *
  */
 
 
