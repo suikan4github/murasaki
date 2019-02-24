@@ -134,4 +134,4 @@
 
 
 
-#endif /* MURASAKI_0_UG_HPP_ */
+#endif /* MURASAKI_0_INTRO_HPP_ */
