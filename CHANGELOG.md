@@ -3,6 +3,7 @@ Record of the modification in project development.
 
 ## [Unreleased]
 
+## [0.2.1] - 2019-02-24
 
 ### Added
 ### Changed
@@ -16,7 +17,6 @@ Record of the modification in project development.
 - The SPI slave transfer is not tested.
 
 ## [0.2.0] - 2019-02-23
-
 
 ### Added
 - [Issue 6 : Add CubeMX configuration note to the porting guide.](https://github.com/suikan4github/murasaki/issues/6)
@@ -58,6 +58,7 @@ Record of the modification in project development.
 ### Fixed
 ### Security
 
-[Unreleased]: https://github.com/suikan4github/murasaki/compare/v0.2.0...develop
+[Unreleased]: https://github.com/suikan4github/murasaki/compare/v0.2.1...develop
+[0.2.1]: https://github.com/suikan4github/murasaki/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/suikan4github/murasaki/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/suikan4github/murasaki/compare/v0.0.0...v0.1.0
