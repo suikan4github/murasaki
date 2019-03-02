@@ -2,7 +2,7 @@
  * CriticalSection.cpp
  *
  *  Created on: 2018/01/27
- *      Author: takemasa
+ *      Author: Seiichi "Suikan" Horie
  */
 
 #include "criticalsection.hpp"

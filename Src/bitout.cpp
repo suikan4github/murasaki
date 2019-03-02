@@ -2,7 +2,7 @@
  * bitout.cpp
  *
  *  Created on: 2018/05/07
- *      Author: takemasa
+ *      Author: Seiichi "Suikan" Horie
  */
 
 #include <bitout.hpp>

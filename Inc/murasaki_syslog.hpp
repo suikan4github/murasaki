@@ -2,7 +2,7 @@
  * @file murasaki_syslog.hpp
  * @brief Syslog definition
  * @date  2018/09/01
- * @author takemasa
+ * @author Seiichi "Suikan" Horie
  */
 
 #ifndef MURASAKI_SYSLOG_HPP_

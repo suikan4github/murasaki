@@ -2,7 +2,7 @@
  * i2cslave.cpp
  *
  *  Created on: 2018/10/07
- *      Author: takemasa
+ *      Author: Seiichi "Suikan" Horie
  */
 
 #include <i2cslave.hpp>

@@ -2,7 +2,7 @@
  * \file murasaki.hpp
  *
  * \date 2018/01/21
- * \author takemasa
+ * \author Seiichi "Suikan" Horie
  * \brief Application include file for Murasaki class library.
  * \details
  * Application can include only this file. Other essential header files are automatically

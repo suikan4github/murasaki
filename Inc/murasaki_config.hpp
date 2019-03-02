@@ -2,7 +2,7 @@
  * \file murasaki_config.hpp
  *
  * \date 2018/01/03
- * \author takemasa
+ * \author Seiichi "Suikan" Horie
  * \brief Configuration file for platform.
  * \details To override the configuration, define the same name macro inside
  * application_config.hpp

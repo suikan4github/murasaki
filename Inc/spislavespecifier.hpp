@@ -2,7 +2,7 @@
  * @file spislavespecifier.hpp
  *
  * @date 2018/02/17
- * @author takemasa
+ * @author Seiichi "Suikan" Horie
  * @brief STM32 SPI slave speifire
  */
 

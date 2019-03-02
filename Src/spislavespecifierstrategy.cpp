@@ -2,7 +2,7 @@
  * abstractspimasterdecorator.cpp
  *
  *  Created on: 2018/02/11
- *      Author: takemasa
+ *      Author: Seiichi "Suikan" Horie
  */
 
 #include <spislavespecifierstrategy.hpp>

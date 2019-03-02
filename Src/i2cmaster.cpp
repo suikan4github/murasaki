@@ -2,7 +2,7 @@
  * i2cmaster.cpp
  *
  *  Created on: 2018/02/12
- *      Author: takemasa
+ *      Author: Seiichi "Suikan" Horie
  */
 
 #include <i2cmaster.hpp>

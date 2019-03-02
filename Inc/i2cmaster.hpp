@@ -2,7 +2,7 @@
  * @file i2cmaster.hpp
  *
  * @date 2018/02/12
- * @author: takemasa
+ * @author: Seiichi "Suikan" Horie
  * @brief I2C master. Thread safe, blocking IO
  */
 

@@ -2,7 +2,7 @@
  * @file i2cslave.hpp
  *
  * @date 2018/10/07
- * @author takemasa
+ * @author Seiichi "Suikan" Horie
  * @brief I2C slave. Thread safe, blocking IO
  *
  */

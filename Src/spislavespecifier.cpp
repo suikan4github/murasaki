@@ -2,7 +2,7 @@
  * spislavespecifier.cpp
  *
  *  Created on: 2018/02/17
- *      Author: takemasa
+ *      Author: Seiichi "Suikan" Horie
  */
 
 #include <spislavespecifier.hpp>

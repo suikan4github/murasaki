@@ -2,7 +2,7 @@
  * @file murasaki_platform.cpp
  *
  * @date 2018/05/20
- * @author takemasa
+ * @author Seiichi "Suikan" Horie
  * @brief A glue file between the user application and HAL/RTOS.
  */
 

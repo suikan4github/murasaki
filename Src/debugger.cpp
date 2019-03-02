@@ -2,7 +2,7 @@
  * debug.cpp
  *
  *  Created on: 2018/01/03
- *      Author: takemasa
+ *      Author: Seiichi "Suikan" Horie
  */
 
 #include <debugger.hpp>

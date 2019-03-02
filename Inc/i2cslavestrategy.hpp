@@ -2,7 +2,7 @@
  * @file i2cslavestrategy.hpp
  *
  * @date 2018/10/07
- * @author takemasa
+ * @author Seiichi "Suikan" Horie
  *  \brief Root class definition of the I2C Slave.
  */
 

@@ -2,7 +2,7 @@
  * \file platform_defs.hpp
  *
  * \date 2018/01/16
- * \author takemasa
+ * \author Seiichi "Suikan" Horie
  * \brief Murasaki platform customize file.
  * \details
  * This file contains user defined struct murasaki::Platform.

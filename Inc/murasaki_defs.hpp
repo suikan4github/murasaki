@@ -2,7 +2,7 @@
  * \file murasaki_defs.hpp
  *
  * \date 2017/11/05
- * \author takemasa
+ * \author Seiichi "Suikan" Horie
  * \brief common definition of the platfrom.
  */
 

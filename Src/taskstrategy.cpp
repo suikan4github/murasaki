@@ -2,7 +2,7 @@
  * abstracttask.cpp
  *
  *  Created on: 2018/02/20
- *      Author: takemasa
+ *      Author: Seiichi "Suikan" Horie
  */
 
 #include <taskstrategy.hpp>

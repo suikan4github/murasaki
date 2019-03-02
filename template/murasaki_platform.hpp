@@ -2,7 +2,7 @@
  * @file murasaki_platform.hpp
  *
  * @date 2017/11/12
- * @author takemasa
+ * @author Seiichi "Suikan" Horie
  * @brief An interface for the applicaiton from murasaki library to main.c
  * @details
  * The resources below are impremented in the murasaki_platform.cpp and serve as glue to the main.c.

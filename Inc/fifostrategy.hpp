@@ -2,7 +2,7 @@
  * @file fifostrategy.hpp
  *
  * @date 2018/02/26
- * @author takemasa
+ * @author Seiichi "Suikan" Horie
  * @brief Abstract class of FIFO
  */
 

@@ -2,7 +2,7 @@
  * murasaki_syslog.cpp
  *
  *  Created on: 2018/09/02
- *      Author: takemasa
+ *      Author: Seiichi "Suikan" Horie
  */
 
 #include "murasaki_syslog.hpp"

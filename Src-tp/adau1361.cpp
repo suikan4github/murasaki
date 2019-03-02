@@ -2,7 +2,7 @@
  * adau1361.cpp
  *
  *  Created on: 2018/05/11
- *      Author: takemasa
+ *      Author: Seiichi "Suikan" Horie
  */
 
 #include "adau1361.hpp"

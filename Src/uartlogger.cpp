@@ -2,7 +2,7 @@
  * uartlogger.cpp
  *
  *  Created on: 2018/01/20
- *      Author: takemasa
+ *      Author: Seiichi "Suikan" Horie
  */
 
 #include "uartlogger.hpp"

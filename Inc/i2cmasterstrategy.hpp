@@ -2,7 +2,7 @@
  * \file i2cmasterstrategy.hpp
  *
  *  \date  2018/02/11
- *  \author: takemasa
+ *  \author: Seiichi "Suikan" Horie
  *  \brief Root class definition of the I2C Master.
  */
 

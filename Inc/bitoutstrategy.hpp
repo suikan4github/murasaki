@@ -2,7 +2,7 @@
  * @file bitoutstrategy.hpp
  *
  * @date 2018/05/07
- * @author takemasa
+ * @author Seiichi "Suikan" Horie
  * @brief Abstract class of GPIO bit out
  */
 

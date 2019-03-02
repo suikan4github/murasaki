@@ -2,7 +2,7 @@
  * \file synchronizer.hpp
  *
  * \date 2018/01/26
- * \author takemasa
+ * \author Seiichi "Suikan" Horie
  * \brief Synchronization between a Task and interrupt.
  */
 

@@ -2,7 +2,7 @@
  * @file murasaki_3_pg.hpp
  *
  * @date May 25, 2018
- * @author takemasa
+ * @author Seiichi "Suikan" Horie
  * @brief Porting Guide
  */
 

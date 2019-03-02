@@ -2,7 +2,7 @@
  * @file spislavespecifierstrategy.hpp
  *
  * @date 2018/02/11
- * @author: takemasa
+ * @author: Seiichi "Suikan" Horie
  * @brief Abstract class of SPI slave specification.
  */
 

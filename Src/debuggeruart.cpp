@@ -2,7 +2,7 @@
  * debuggerart.cpp
  *
  *  Created on: 2018/09/23
- *      Author: takemasa
+ *      Author: Seiichi "Suikan" Horie
  */
 
 #include "debuggeruart.hpp"

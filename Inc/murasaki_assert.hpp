@@ -2,7 +2,7 @@
  * \file murasaki_assert.hpp
  *
  * \date 2018/01/31
- * \author takemasa
+ * \author Seiichi "Suikan" Horie
  * \brief Assertion definition
  */
 

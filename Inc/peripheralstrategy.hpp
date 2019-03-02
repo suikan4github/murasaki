@@ -2,7 +2,7 @@
  * @file peripheralstrategy.hpp
  *
  * @date 2018/04/26
- * @author: takemasa
+ * @author: Seiichi "Suikan" Horie
  * @brief Mother of All peripheral
  */
 

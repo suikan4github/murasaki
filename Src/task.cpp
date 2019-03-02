@@ -2,7 +2,7 @@
  * task.cpp
  *
  *  Created on: 2019/02/03
- *      Author: takemasa
+ *      Author: Seiichi "Suikan" Horie
  */
 
 #include <task.hpp>

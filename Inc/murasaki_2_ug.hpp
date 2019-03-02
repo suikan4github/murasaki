@@ -2,7 +2,7 @@
  * \file murasaki_2_ug.hpp
  *
  * \date 2018/02/01
- * \author takemasa
+ * \author Seiichi "Suikan" Horie
  * \brief Doxygen document file. No need to include.
  */
 

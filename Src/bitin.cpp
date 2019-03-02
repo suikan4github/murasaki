@@ -2,7 +2,7 @@
  * bitin.cpp
  *
  *  Created on: 2018/05/07
- *      Author: takemasa
+ *      Author: Seiichi "Suikan" Horie
  */
 
 #include <bitin.hpp>
