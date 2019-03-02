@@ -9,7 +9,7 @@ Record of the modification in project development.
 ### Removed
 ### Fixed
 - [Pull Request 21 : Typo](https://github.com/suikan4github/murasaki/pull/21). Thanks osaboh.
-
+^ [Issue 25 : "Takemasa" is wrong signature](https://github.com/suikan4github/murasaki/issues/25)
 ### Security
 ### Known Issue
 - The SPI slave transfer is not tested.
