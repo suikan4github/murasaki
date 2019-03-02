@@ -3,6 +3,17 @@ Record of the modification in project development.
 
 ## [Unreleased]
 
+### Added
+### Changed
+### Deprecated
+### Removed
+### Fixed
+- [Pull Request 21 : Typo](https://github.com/suikan4github/murasaki/pull/21). Thanks osaboh.
+
+### Security
+### Known Issue
+- The SPI slave transfer is not tested.
+
 ## [0.2.1] - 2019-02-24
 
 ### Added
