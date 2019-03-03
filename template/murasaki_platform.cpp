@@ -476,6 +476,8 @@ void CustomAssertFailed(uint8_t* file, uint32_t line)
                         {
     murasaki::debugger->Printf("Wrong parameters value: file %s on line %d\n",
                                file, line);
+    // To stop the execusion, raise assert.
+    MURASAKI_ASSERT(false);
 }
 
 void CustomDefaultHandler() {

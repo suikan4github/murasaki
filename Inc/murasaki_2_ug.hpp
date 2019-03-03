@@ -375,6 +375,7 @@
  * @li @subpage ug_sect_6_1
  * @li @subpage ug_sect_6_2
  * @li @subpage ug_sect_6_3
+ * @li @subpage ug_sect_6_31
  * @li @subpage ug_sect_6_4
  * @li @subpage ug_sect_6_5
  */
@@ -579,6 +580,25 @@
  * void CustomDefaultHandler() {
  *     // Call debugger's post mortem processing. Never return again.
  *     murasaki::debugger->DoPostMortem();
+ * }
+ * @endcode
+ */
+
+/**
+ * @page ug_sect_6_31 Assertion flow
+ * @brief The assertion flow is similar to the Spurious Interrupt flow.
+ *
+ * Once assertion is raised, assertion macro raised Hard Fault execption.
+ * The Hard Fault exception handler in the  Src/st32****_it.c calles
+ * CustomDefaultHandler.
+ *
+ * @code
+ * void HardFault_Handler(void)
+ * {
+ *   CustomDefaultHandler();
+ *   while (1)
+ *   {
+ *   }
  * }
  * @endcode
  */
