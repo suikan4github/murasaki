@@ -41,3 +41,22 @@ cat `ls ../startup/startup_stm32*.s` | awk -f <(cat - <<- 'EDO'
 EDO
 ) > foo.txt
 mv foo.txt `ls ../startup/startup_stm32*.s`
+
+
+
+# Modify the Src/stm32*_it.c like following.
+# 1. Insert include file.
+#    Find the line which has "USER CODE BEGIN Includes", and then
+#    add the following line after that one.
+#    #include "murasaki_platform.hpp"
+# 2. Insert the HardFault code
+#    Find the line which has "USER CODE BEGIN HardFault_IRQn 0" and then,
+#    add the following lines after that one.
+#    CustomDefaultHandler();
+cat `ls ../Src/stm32*_it.c` | awk -f <(cat - <<- 'EDO'
+  {print $0}
+  /USER CODE BEGIN Includes/{print "#include \"murasaki_platform.hpp\""}
+  /USER CODE BEGIN HardFault_IRQn 0/{print "CustomDefaultHandler();"}
+EDO
+) > foo.txt
+mv foo.txt `ls Src/stm32*_it.c`
