@@ -32,7 +32,7 @@
 #include "debuggeruart.hpp"
 #include "spimaster.hpp"
 #include "spislave.hpp"
-#include "spislavespecifier.hpp"
+#include "spislaveadapter.hpp"
 #include "i2cmaster.hpp"
 #include "i2cslave.hpp"
 #include "bitin.hpp"

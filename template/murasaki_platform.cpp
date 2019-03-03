@@ -130,9 +130,9 @@ void ExecPlatform()
     }
 
     {
-        // Create a slave specifier. This object specify the protocol and slave select pin
-        murasaki::SpiSlaveSpecifierStrategy * slave_spec;
-        slave_spec = new murasaki::SpiSlaveSpecifier(
+        // Create a slave adapter. This object specify the protocol and slave select pin
+        murasaki::SpiSlaveAdapterStrategy * slave_spec;
+        slave_spec = new murasaki::SpiSlaveAdapter(
                                                    murasaki::kspoFallThenRise,
                                                    murasaki::ksphLatchThenShift,
                                                    SPI_SLAVE_SEL_GPIO_Port,

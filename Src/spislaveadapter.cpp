@@ -1,11 +1,11 @@
 /*
- * spislavespecifier.cpp
+ * spislaveadapter.cpp
  *
  *  Created on: 2018/02/17
  *      Author: Seiichi "Suikan" Horie
  */
 
-#include <spislavespecifier.hpp>
+#include <spislaveadapter.hpp>
 #include "murasaki_assert.hpp"
 
 // Check if CubeMX generated SPI modules.
@@ -13,11 +13,11 @@
 
 namespace murasaki {
 
-SpiSlaveSpecifier::SpiSlaveSpecifier(murasaki::SpiClockPolarity pol,
+SpiSlaveAdapter::SpiSlaveAdapter(murasaki::SpiClockPolarity pol,
                                      murasaki::SpiClockPhase pha,
                                      ::GPIO_TypeDef* port,
                                      uint16_t pin)
-        : SpiSlaveSpecifierStrategy(pol, pha),
+        : SpiSlaveAdapterStrategy(pol, pha),
           port_(port),
           pin_(pin)
 {
@@ -25,8 +25,8 @@ SpiSlaveSpecifier::SpiSlaveSpecifier(murasaki::SpiClockPolarity pol,
     HAL_GPIO_WritePin(port_, pin_, GPIO_PIN_SET);   // deassert at first.
 }
 
-SpiSlaveSpecifier::SpiSlaveSpecifier(unsigned int pol, unsigned int pha, ::GPIO_TypeDef* port, uint16_t pin)
-        : SpiSlaveSpecifierStrategy(pol, pha),
+SpiSlaveAdapter::SpiSlaveAdapter(unsigned int pol, unsigned int pha, ::GPIO_TypeDef* port, uint16_t pin)
+        : SpiSlaveAdapterStrategy(pol, pha),
           port_(port),
           pin_(pin)
 {
@@ -34,12 +34,12 @@ SpiSlaveSpecifier::SpiSlaveSpecifier(unsigned int pol, unsigned int pha, ::GPIO_
     HAL_GPIO_WritePin(port_, pin_, GPIO_PIN_SET);   // deassert at first
 }
 
-void SpiSlaveSpecifier::AssertCs()
+void SpiSlaveAdapter::AssertCs()
 {
     HAL_GPIO_WritePin(port_, pin_, GPIO_PIN_RESET);
 }
 
-void SpiSlaveSpecifier::DeassertCs()
+void SpiSlaveAdapter::DeassertCs()
 {
     HAL_GPIO_WritePin(port_, pin_, GPIO_PIN_SET);
 }

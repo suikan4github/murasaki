@@ -5,48 +5,48 @@
  *      Author: Seiichi "Suikan" Horie
  */
 
-#include <spislavespecifierstrategy.hpp>
+#include <spislaveadapterstrategy.hpp>
 #include "murasaki_assert.hpp"
 
 namespace murasaki {
 
 
 
-SpiSlaveSpecifierStrategy::~SpiSlaveSpecifierStrategy()
+SpiSlaveAdapterStrategy::~SpiSlaveAdapterStrategy()
 {
     // Do nothing.
 }
 
-void SpiSlaveSpecifierStrategy::AssertCs()
+void SpiSlaveAdapterStrategy::AssertCs()
 {
     // Do nothing here
     // Must be overriden
 }
 
-void SpiSlaveSpecifierStrategy::DeassertCs()
+void SpiSlaveAdapterStrategy::DeassertCs()
 {
     // Do nothing here
     // Must be overriden
 }
 
-murasaki::SpiClockPhase SpiSlaveSpecifierStrategy::GetCpha()
+murasaki::SpiClockPhase SpiSlaveAdapterStrategy::GetCpha()
 {
     return cpha_;
 }
 
-murasaki::SpiClockPolarity SpiSlaveSpecifierStrategy::GetCpol()
+murasaki::SpiClockPolarity SpiSlaveAdapterStrategy::GetCpol()
 {
     return cpol_;
 }
 
 
-SpiSlaveSpecifierStrategy::SpiSlaveSpecifierStrategy(murasaki::SpiClockPolarity pol, murasaki::SpiClockPhase pha)
+SpiSlaveAdapterStrategy::SpiSlaveAdapterStrategy(murasaki::SpiClockPolarity pol, murasaki::SpiClockPhase pha)
         : cpol_(pol),
           cpha_(pha)
 {
 }
 
-SpiSlaveSpecifierStrategy::SpiSlaveSpecifierStrategy(unsigned int pol, unsigned int pha)
+SpiSlaveAdapterStrategy::SpiSlaveAdapterStrategy(unsigned int pol, unsigned int pha)
         : cpol_(static_cast<murasaki::SpiClockPolarity>(pol)),
           cpha_(static_cast<murasaki::SpiClockPhase>(pha))
 {

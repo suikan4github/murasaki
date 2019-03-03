@@ -1,15 +1,15 @@
 /**
- * @file spislavespecifier.hpp
+ * @file spislaveadapter.hpp
  *
  * @date 2018/02/17
  * @author Seiichi "Suikan" Horie
  * @brief STM32 SPI slave speifire
  */
 
-#ifndef SPISLAVESPECIFIER_HPP_
-#define SPISLAVESPECIFIER_HPP_
+#ifndef SPISLAVEADAPTER_HPP_
+#define SPISLAVEADAPTER_HPP_
 
-#include <spislavespecifierstrategy.hpp>
+#include <spislaveadapterstrategy.hpp>
 
 // Check if CubeMx geenrates the SPI modeule
 #ifdef HAL_SPI_MODULE_ENABLED
@@ -29,10 +29,10 @@ namespace murasaki {
  *
  * @ingroup MURASAKI_GROUP
  */
-class SpiSlaveSpecifier : public SpiSlaveSpecifierStrategy
+class SpiSlaveAdapter : public SpiSlaveAdapterStrategy
 {
  public:
-    SpiSlaveSpecifier();
+    SpiSlaveAdapter();
     /**
      * @brief Constructor
      * @param pol Polarity setting
@@ -44,7 +44,7 @@ class SpiSlaveSpecifier : public SpiSlaveSpecifierStrategy
      * The port and pin have to be configured by CubeMX correctly.
      *
      */
-    SpiSlaveSpecifier(murasaki::SpiClockPolarity pol, murasaki::SpiClockPhase pha, ::GPIO_TypeDef * port, uint16_t pin);
+    SpiSlaveAdapter(murasaki::SpiClockPolarity pol, murasaki::SpiClockPhase pha, ::GPIO_TypeDef * port, uint16_t pin);
     /**
      * @brief Constructor
      * @param pol Polarity setting
@@ -55,7 +55,7 @@ class SpiSlaveSpecifier : public SpiSlaveSpecifierStrategy
      * The port and pin parameters are passed to the HAL_GPIO_WritePin().
      * The port and pin have to be configured by CubeMX correctly.
      */
-    SpiSlaveSpecifier(unsigned int pol, unsigned int pha, ::GPIO_TypeDef * const port, uint16_t pin);
+    SpiSlaveAdapter(unsigned int pol, unsigned int pha, ::GPIO_TypeDef * const port, uint16_t pin);
     /**
      * @brief Chip select assertion
      * @details
@@ -78,4 +78,4 @@ class SpiSlaveSpecifier : public SpiSlaveSpecifierStrategy
 
 #endif //HAL_SPI_MODULE_ENABLED
 
-#endif /* SPISLAVESPECIFIER_HPP_ */
+#endif /* SPISLAVEADAPTER_HPP_ */

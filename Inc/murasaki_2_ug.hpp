@@ -304,14 +304,14 @@
  * \li CPHA configuration
  * \li GPIO port configuration to select a slave
  *
- * The flexibility to above configurations need special mechanism. In Murasaki, this flexibility is responsibility of the murasaki::SpiSlaveSpecifier class.
+ * The flexibility to above configurations need special mechanism. In Murasaki, this flexibility is responsibility of the murasaki::SpiSlaveAdapter class.
  * This class holds these configuration. Then, passed to the master class.
  *
- * So, you must create a murasaki::SpiSlaveSpecifier class object, at first.
+ * So, you must create a murasaki::SpiSlaveAdapter class object, at first.
  * @code
- *         // Create a slave specifier. This object specify the protocol and slave select pin
- *         murasaki::AbstractSpiSlaveSpecifier * slave_spec;
- *         slave_spec = new murasaki::SpiSlaveSpecifier(
+ *         // Create a slave adapter. This object specify the protocol and slave select pin
+ *         murasaki::SpiSlaveAdapterStrategy * slave_spec;
+ *         slave_spec = new murasaki::SpiSlaveAdapter(
  *                                                    murasaki::kspoFallThenRise,
  *                                                    murasaki::ksphLatchThenShift,
  *                                                    SPI_SLAVE_SEL_GPIO_Port,
@@ -319,7 +319,7 @@
  *                                                    );
  * @endcode
  *
- * Then, you can pass the SpiSlaveSpecifier class object to the murasaki::SpiMaster::TransmitAndRecieve() function.
+ * Then, you can pass the SpiSlaveAdapter class object to the murasaki::SpiMaster::TransmitAndRecieve() function.
  * @code
  *         // Transmit and receive data through SPI
  *         uint8_t tx_data[5] = { 1, 2, 3, 4, 5 };
