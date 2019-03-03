@@ -56,7 +56,7 @@ mv foo.txt `ls ../startup/startup_stm32*.s`
 cat `ls ../Src/stm32*_it.c` | awk -f <(cat - <<- 'EDO'
   {print $0}
   /USER CODE BEGIN Includes/{print "#include \"murasaki_platform.hpp\""}
-  /USER CODE BEGIN HardFault_IRQn 0/{print "CustomDefaultHandler();"}
+  /USER CODE BEGIN HardFault_IRQn 0/{print "  CustomDefaultHandler();"}
 EDO
 ) > foo.txt
-mv foo.txt `ls Src/stm32*_it.c`
+mv foo.txt `ls ../Src/stm32*_it.c`
