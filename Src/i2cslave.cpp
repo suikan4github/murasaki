@@ -45,7 +45,7 @@ I2cSlave::~I2cSlave()
 murasaki::I2cStatus I2cSlave::Transmit(
                                        const uint8_t* tx_data,
                                        unsigned int tx_size,
-                                       uint * transfered_count,
+                                       unsigned int * transfered_count,
                                        WaitMilliSeconds timeout_ms)
                                        {
     I2C_SYSLOG("Enter");
@@ -115,7 +115,7 @@ murasaki::I2cStatus I2cSlave::Transmit(
 murasaki::I2cStatus I2cSlave::Receive(
                                       uint8_t* rx_data,
                                       unsigned int rx_size,
-                                      uint * transfered_count,
+                                      unsigned int * transfered_count,
                                       WaitMilliSeconds timeout_ms)
                                       {
     I2C_SYSLOG("Enter");

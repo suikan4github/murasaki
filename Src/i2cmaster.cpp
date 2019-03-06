@@ -43,10 +43,10 @@ I2cMaster::~I2cMaster() {
 }
 
 murasaki::I2cStatus I2cMaster::Transmit(
-                                        uint addrs,
+                                        unsigned int addrs,
                                         const uint8_t* tx_data,
                                         unsigned int tx_size,
-                                        uint * transfered_count,
+                                        unsigned int * transfered_count,
                                         WaitMilliSeconds timeout_ms) {
 
     I2C_SYSLOG("Enter");
@@ -114,10 +114,10 @@ murasaki::I2cStatus I2cMaster::Transmit(
 }
 
 murasaki::I2cStatus I2cMaster::Receive(
-                                       uint addrs,
+                                       unsigned int addrs,
                                        uint8_t* rx_data,
                                        unsigned int rx_size,
-                                       uint * transfered_count,
+                                       unsigned int * transfered_count,
                                        WaitMilliSeconds timeout_ms) {
 
     I2C_SYSLOG("Enter");
@@ -188,13 +188,13 @@ murasaki::I2cStatus I2cMaster::Receive(
 }
 
 murasaki::I2cStatus I2cMaster::TransmitThenReceive(
-                                                   uint addrs,
+                                                   unsigned int addrs,
                                                    const uint8_t* tx_data,
                                                    unsigned int tx_size,
                                                    uint8_t* rx_data,
                                                    unsigned int rx_size,
-                                                   uint * tx_transfered_count,
-                                                   uint * rx_transfered_count,
+                                                   unsigned int * tx_transfered_count,
+                                                   unsigned int * rx_transfered_count,
         WaitMilliSeconds timeout_ms) {
 
     I2C_SYSLOG("Enter");

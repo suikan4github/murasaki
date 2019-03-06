@@ -106,7 +106,7 @@ class I2cSlave : public I2cSlaveStrategy {
     virtual murasaki::I2cStatus Transmit(
                                          const uint8_t * tx_data,
                                          unsigned int tx_size,
-                                         uint * transfered_count,
+                                         unsigned int * transfered_count,
                                          WaitMilliSeconds timeout_ms);
     /**
      * @brief Thread safe, blocking receiving over I2C.
@@ -130,7 +130,7 @@ class I2cSlave : public I2cSlaveStrategy {
     virtual murasaki::I2cStatus Receive(
                                         uint8_t * rx_data,
                                         unsigned int rx_size,
-                                        uint * transfered_count,
+                                        unsigned int * transfered_count,
                                         WaitMilliSeconds timeout_ms);
 
     /**
