@@ -56,18 +56,29 @@ void InitPlatform()
     // On Nucleo, the port connected to the USB port of ST-Link is
     // referred here.
     murasaki::platform.uart_console = new murasaki::DebuggerUart(&huart3);
+    while (nullptr == murasaki::platform.uart_console)
+        ;   // stop here on the memory allocation failure.
+
     // UART is used for logging port.
     // At least one logger is needed to run the debugger class.
     murasaki::platform.logger = new murasaki::UartLogger(murasaki::platform.uart_console);
+    while (nullptr == murasaki::platform.logger)
+        ;   // stop here on the memory allocation failure.
+
     // Setting the debugger
     murasaki::debugger = new murasaki::Debugger(murasaki::platform.logger);
+    while (nullptr == murasaki::debugger)
+        ;   // stop here on the memory allocation failure.
+
     // Set the debugger as AutoRePrint mode, for the easy operation.
     murasaki::debugger->AutoRePrint();  // type any key to show history.
+
 
 
     // For demonstration, one GPIO LED port is reserved.
     // The port and pin names are fined by CubeMX.
     murasaki::platform.led = new murasaki::BitOut(LD2_GPIO_Port, LD2_Pin);
+    MURASAKI_ASSERT(nullptr != murasaki::platform.led)
 
     // For demonstration of FreeRTOS task.
     murasaki::platform.task1 = new murasaki::Task(
@@ -77,6 +88,7 @@ void InitPlatform()
                                                   nullptr,
                                                   &TaskBodyFunction
                                                   );
+    MURASAKI_ASSERT(nullptr != murasaki::platform.task1)
 
     // Following block is just for sample.
 #if 0
