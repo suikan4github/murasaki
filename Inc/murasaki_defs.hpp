@@ -32,6 +32,15 @@
     defined(STM32F030x6) || defined(STM32F031x6) || defined(STM32F038xx) || defined(STM32F070x6) || \
     defined(STM32F070xB) || defined(STM32F030x6)
 #include "stm32f0xx_hal.h"
+// As of 2019/Mar
+#elif defined (STM32F405xx) || defined (STM32F415xx) || defined (STM32F407xx) || defined (STM32F417xx) || \
+    defined (STM32F427xx) || defined (STM32F437xx) || defined (STM32F429xx) || defined (STM32F439xx) || \
+    defined (STM32F401xC) || defined (STM32F401xE) || defined (STM32F410Tx) || defined (STM32F410Cx) || \
+    defined (STM32F410Rx) || defined (STM32F411xE) || defined (STM32F446xx) || defined (STM32F469xx) || \
+    defined (STM32F479xx) || defined (STM32F412Cx) || defined (STM32F412Rx) || defined (STM32F412Vx) || \
+    defined (STM32F412Zx) || defined (STM32F413xx) || defined (STM32F423xx)
+#include "stm32f4xx_hal.h"
+
 #else
 #error "Unknown core"
 #endif

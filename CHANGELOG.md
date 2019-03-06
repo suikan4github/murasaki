@@ -4,6 +4,7 @@ Record of the modification in project development.
 ## [Unreleased]
 
 ### Added
+- [Issue 27 : ADD STM32F4xx support](https://github.com/suikan4github/murasaki/issues/27)
 ### Changed
 - [Issue 24 : SpiSlaveSpecifier class name should be refactored](https://github.com/suikan4github/murasaki/issues/24)
 - [Issue 23 : Change MURASAKI_ASSERT to raise an exception](https://github.com/suikan4github/murasaki/issues/23)

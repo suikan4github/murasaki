@@ -7,6 +7,7 @@
 
 #include <debugger.hpp>
 #include <string.h>
+#include <stdio.h>
 #include <stdarg.h>
 #include <FreeRTOS.h>
 #include <task.h>
