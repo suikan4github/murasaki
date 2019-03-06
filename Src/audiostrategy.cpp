@@ -8,7 +8,7 @@
 #include "audiostrategy.hpp"
 
 namespace murasaki {
-
+/*
 AudioStrategy::AudioStrategy()
 {
     // TODO Auto-generated constructor stub
@@ -19,5 +19,5 @@ AudioStrategy::~AudioStrategy()
 {
     // TODO Auto-generated destructor stub
 }
-
+ */
 } /* namespace murasaki */
