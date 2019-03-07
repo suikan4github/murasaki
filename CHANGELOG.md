@@ -10,6 +10,7 @@ Record of the modification in project development.
 - [Issue 23 : Change MURASAKI_ASSERT to raise an exception](https://github.com/suikan4github/murasaki/issues/23)
 - [Issue 26 : InitPlatform needs to check the result of new](https://github.com/suikan4github/murasaki/issues/26)
 - [Issue 28 : uint should be changed unsigned int](https://github.com/suikan4github/murasaki/issues/28)
+- [Issue 29 : Update Inc/murasaki_defs.hpp](https://github.com/suikan4github/murasaki/issues/29)
 ### Deprecated
 ### Removed
 ### Fixed

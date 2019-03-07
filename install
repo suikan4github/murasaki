@@ -1,7 +1,24 @@
 #!/bin/bash
 
-cp template/*.hpp ../Inc
-cp template/*.cpp ../Src
+if [ ! -f ../Src/murasaki_platform.cpp ]; then
+  cp template/*.hpp ../Inc
+  cp template/*.cpp ../Src
+  echo template files copied
+else
+  echo template files exist. No change.
+fi
+
+# check whether string $2 is found in file $1
+# if exist, do nothing. 
+# if not exist, quit script. 
+function check_target_string() {
+  grep "$2" $1 > /dev/null
+  if [ $? -ne 0 ] ; then
+    echo \"$2\" not found in $1
+    exit 1
+  fi
+}
+
 
 # Modify the Src/main.c like following
 # 1. Insert include file.
@@ -17,14 +34,28 @@ cp template/*.cpp ../Src
 #    add the following line before that one.
 #    CustomAssertFailed(file, line);
 #
-cat  ../Src/main.c  | awk -f <(cat - <<- 'EDO'
-  /USER CODE END 6/{print "    CustomAssertFailed(file, line);"}
-  {print $0}
-  /USER CODE BEGIN Includes/{print "#include \"murasaki_platform.hpp\""}
-  /USER CODE BEGIN 5/{print "  InitPlatform();"; print "  ExecPlatform();"}
+
+# Check whether appropriate file and string exist
+TARGET_FILE=../Src/main.c
+check_target_string ${TARGET_FILE} "USER CODE BEGIN Includes"
+check_target_string ${TARGET_FILE} "USER CODE END 6"
+check_target_string ${TARGET_FILE} "USER CODE BEGIN 5"
+
+# Is murasaki already isntalled in this file? 
+grep "CustomAssertFailed" ${TARGET_FILE} > /dev/null
+if [ $? -ne 0 ]; then 
+  cat  ../Src/main.c  | awk -f <(cat - <<- 'EDO'
+    /USER CODE END 6/{print "    CustomAssertFailed(file, line);"}
+    {print $0}
+    /USER CODE BEGIN Includes/{print "#include \"murasaki_platform.hpp\""}
+    /USER CODE BEGIN 5/{print "  InitPlatform();"; print "  ExecPlatform();"}
 EDO
-) > foo.txt
-mv foo.txt ../Src/main.c
+  ) > foo.txt
+  mv foo.txt ../Src/main.c
+  echo ${TARGET_FILE} modified.
+else
+  echo ${TARGET_FILE} have been already modified. No change.
+fi
 
 # Modify the startup/startup_stm32*.s like following.
 # Find the line which has "Deafult_Handler:" and then,
@@ -34,14 +65,24 @@ mv foo.txt ../Src/main.c
 #   bl CustomDefaultHandler
 #
 
-cat `ls ../startup/startup_stm32*.s` | awk -f <(cat - <<- 'EDO'
-  /Default_Handler\:/{print "    .global CustomDefaultHandler"}
-  {print $0}
-  /Default_Handler\:/{print "  bl CustomDefaultHandler"}
-EDO
-) > foo.txt
-mv foo.txt `ls ../startup/startup_stm32*.s`
+# Check whether appropriate file and string exist
+TARGET_FILE=`ls ../startup/startup_stm32*.s` 
+check_target_string ${TARGET_FILE} "Default_Handler\:"
 
+# Is murasaki already isntalled in this file? 
+grep "CustomDefaultHandler" ${TARGET_FILE} > /dev/null
+if [ $? -ne 0 ]; then # if not, install
+  cat `ls ../startup/startup_stm32*.s` | awk -f <(cat - <<- 'EDO'
+    /Default_Handler\:/{print "    .global CustomDefaultHandler"}
+    {print $0}
+    /Default_Handler\:/{print "  bl CustomDefaultHandler"}
+EDO
+  ) > foo.txt
+  mv foo.txt `ls ../startup/startup_stm32*.s`
+  echo ${TARGET_FILE} modified.
+else
+  echo ${TARGET_FILE} have been already modified. No change.
+fi
 
 
 # Modify the Src/stm32*_it.c like following.
@@ -53,10 +94,77 @@ mv foo.txt `ls ../startup/startup_stm32*.s`
 #    Find the line which has "USER CODE BEGIN HardFault_IRQn 0" and then,
 #    add the following lines after that one.
 #    CustomDefaultHandler();
-cat `ls ../Src/stm32*_it.c` | awk -f <(cat - <<- 'EDO'
-  {print $0}
-  /USER CODE BEGIN Includes/{print "#include \"murasaki_platform.hpp\""}
-  /USER CODE BEGIN HardFault_IRQn 0/{print "  CustomDefaultHandler();"}
+
+# Check whether appropriate file and string exist
+TARGET_FILE=`ls ../Src/stm32*_it.c`
+check_target_string ${TARGET_FILE} "USER CODE BEGIN Includes"
+check_target_string ${TARGET_FILE} "USER CODE BEGIN HardFault_IRQn 0"
+
+# Is murasaki already isntalled in this file? 
+grep "CustomDefaultHandler" ${TARGET_FILE} > /dev/null
+if [ $? -ne 0 ]; then # if not, install
+  cat `ls ../Src/stm32*_it.c` | awk -f <(cat - <<- 'EDO'
+    {print $0}
+    /USER CODE BEGIN Includes/{print "#include \"murasaki_platform.hpp\""}
+    /USER CODE BEGIN HardFault_IRQn 0/{print "  CustomDefaultHandler();"}
 EDO
-) > foo.txt
-mv foo.txt `ls ../Src/stm32*_it.c`
+  ) > foo.txt
+  mv foo.txt `ls ../Src/stm32*_it.c`
+  echo ${TARGET_FILE} modified.
+else
+  echo ${TARGET_FILE} have been already modified. No change.
+fi
+
+# Make an include stub for murasaki like following. 
+# 1. Detect the interrupt include file
+#    CubeMX generate a ../Inc/stm32*_it.h file as interrupt conrol header file.
+#    Pick up this file by ls command. 
+#    Now, the string in pipe is ../Inc/stm32?????_it.h
+# 2. Remove the path
+#    xargs command applies this string the pipe, to the basename command as parameter. 
+#    basename command takes the path out. 
+#    Now, the string in pipe is stm32?????_it.h
+# 3. Change the file name. 
+#    substitute it with hal. 
+#    Now, the string pipe is stm32????_hal.h
+# 4. Construct the include statement in C language. 
+#    Surround the given string by the #include statement. 
+#    Now, the string is #include<stm32?????_hal.h>
+#    This is the include statement to include the appropriate HAL file. 
+# Is murasaki already isntalled in this file? 
+cat > ../Inc/murasaki_include_stub.h <<EOF
+/**
+* @file murasaki_include_stub.h
+* @brief Stub to include the HAL headers. 
+* @details
+* The CubeMX add the STM32 microprocessor product name as pre-defined macro when a file is compiled. 
+* For example, following is the macro definition for STM32F446 processor at the compiler command line. 
+* @code
+* -DSTM32F446xx
+* @endcode
+* 
+* On the other hand, this is not enough to determine the appropriate include file inside murasaki_defs.hpp. 
+* As a result, there are difficulties to include the appropriate file. 
+* 
+* One of the naive appropach is to enumulate all possible pre-defined macro to determine the filename as following.
+* 
+* @code
+* #elif defined (STM32F405xx) || defined (STM32F415xx) || defined (STM32F407xx) || defined (STM32F417xx) || \
+*    defined (STM32F427xx) || defined (STM32F437xx) || defined (STM32F429xx) || defined (STM32F439xx) || \
+*    defined (STM32F401xC) || defined (STM32F401xE) || defined (STM32F410Tx) || defined (STM32F410Cx) || \
+*    defined (STM32F410Rx) || defined (STM32F411xE) || defined (STM32F446xx) || defined (STM32F469xx) || \
+*    defined (STM32F479xx) || defined (STM32F412Cx) || defined (STM32F412Rx) || defined (STM32F412Vx) || \
+*    defined (STM32F412Zx) || defined (STM32F413xx) || defined (STM32F423xx)
+* #include "stm32f4xx_hal.h"
+* @endcode
+* 
+* This is easy to understand. But boring to maintain. 
+* 
+* This stub is alternate way. @ref murasaki_defs.hpp is including this file (murasaki_include_stub.h).
+* And this stub file include the appropriate HAL header file. 
+* This stub file is generated by murasaki/install script. 
+* Thus, user doesn't need to maintain this file. 
+*/
+EOF
+ls ../Inc/stm32*it.h  | xargs  basename  | sed s/it/hal/ - | awk '{print("#include<" $0 ">")}' >> ../Inc/murasaki_include_stub.h
+echo  ../Inc/murasaki_include_stub.h created

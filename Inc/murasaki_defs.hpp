@@ -9,42 +9,7 @@
 #ifndef MURASAKI_DEFS_HPP_
 #define MURASAKI_DEFS_HPP_
 
-// Following symbols are at the moment of 2018/Apr
-#if defined (STM32F756xx) || defined (STM32F746xx) || defined (STM32F745xx) || defined (STM32F767xx) || \
-    defined (STM32F769xx) || defined (STM32F777xx) || defined (STM32F779xx) || defined (STM32F722xx) || \
-	defined (STM32F723xx) || defined (STM32F732xx) || defined (STM32F733xx)
-#include "stm32f7xx_hal.h"
-
-#elif defined (STM32F301x8) || defined (STM32F302x8) || defined (STM32F318xx) || \
-    defined (STM32F302xC) || defined (STM32F303xC) || defined (STM32F358xx) || \
-    defined (STM32F303x8) || defined (STM32F334x8) || defined (STM32F328xx) || \
-    defined (STM32F302xE) || defined (STM32F303xE) || defined (STM32F398xx) || \
-    defined (STM32F373xC) || defined (STM32F378xx)
-#include "stm32f3xx_hal.h"
-
-#elif defined (STM32L100xB) || defined (STM32L100xBA) || defined (STM32L100xC) || \
-    defined (STM32L151xB) || defined (STM32L151xBA) || defined (STM32L151xC) || defined (STM32L151xCA) || defined (STM32L151xD) || defined (STM32L151xDX) || defined (STM32L151xE) || \
-    defined (STM32L152xB) || defined (STM32L152xBA) || defined (STM32L152xC) || defined (STM32L152xCA) || defined (STM32L152xD) || defined (STM32L152xDX) || defined (STM32L152xE) || \
-    defined (STM32L162xC) || defined (STM32L162xCA) || defined (STM32L162xD) || defined (STM32L162xDX) || defined (STM32L162xE)
-#include "stm32l1xx_hal.h"
-
-#elif defined(STM32F091xC) || defined(STM32F098xx) || defined(STM32F042x6) || defined(STM32F048xx) || \
-    defined(STM32F030x6) || defined(STM32F031x6) || defined(STM32F038xx) || defined(STM32F070x6) || \
-    defined(STM32F070xB) || defined(STM32F030x6)
-#include "stm32f0xx_hal.h"
-// As of 2019/Mar
-#elif defined (STM32F405xx) || defined (STM32F415xx) || defined (STM32F407xx) || defined (STM32F417xx) || \
-    defined (STM32F427xx) || defined (STM32F437xx) || defined (STM32F429xx) || defined (STM32F439xx) || \
-    defined (STM32F401xC) || defined (STM32F401xE) || defined (STM32F410Tx) || defined (STM32F410Cx) || \
-    defined (STM32F410Rx) || defined (STM32F411xE) || defined (STM32F446xx) || defined (STM32F469xx) || \
-    defined (STM32F479xx) || defined (STM32F412Cx) || defined (STM32F412Rx) || defined (STM32F412Vx) || \
-    defined (STM32F412Zx) || defined (STM32F413xx) || defined (STM32F423xx)
-#include "stm32f4xx_hal.h"
-
-#else
-#error "Unknown core"
-#endif
-
+#include "murasaki_include_stub.h"
 
 
 #include <FreeRTOS.h>
