@@ -14,7 +14,12 @@ assignees: suikan4github
 - [ ] Check all entry in Unreleased is moved to vX.Y.Z
 
 ```
+git checkout master
+git merge release --no-ff
+git push origin master
+
 git tag
-git add tag vX.Y.Z
+git tag vX.Y.Z
+git tag
 git push origin vX.Y.Z
 ```
