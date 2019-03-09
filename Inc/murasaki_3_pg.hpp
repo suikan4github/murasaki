@@ -84,6 +84,7 @@
  * See \ref MURASAKI_CONFIG_NODEBUG for details.
  *
  * The platform_config.hpp is better to be copied in the /Inc directory of the application.
+ * The @ref sec_ds_4 will copy this file to /Src directory of application for programmer.
  *
  * \subsection sec_ds_3_2 platform_defs.hpp
  * As same as \ref platform_config.hpp, the \ref platform_defs.hpp is not the core part
@@ -100,12 +101,14 @@
  * better to be a member variable of the mruasaki::Platform type.
  *
  * The platform_defs.hpp is better to be copied in the /Inc directory of the application.
+ * The @ref sec_ds_4 will copy this file to /Src directory of application for programmer.
  *
  * See \ref MURASAKI_PLATFORM_GROUP as usage sample.
  *
  * @subsection sec_ds_3_3 murasaki_platform.hpp
  * A header file of the @ref murasaki_platform.cpp. This file is better to be copied in the
  * /Inc directory of the application.
+ * The @ref sec_ds_4 will copy this file to /Src directory of application for programmer.
  *
  * @subsection sec_ds_3_4 murasaki_platform.cpp
  * The murasaki_platform.cpp is the interface between the application and the HAL/RTOS.
@@ -118,6 +121,17 @@
  * \li \link murasaki_pg_error HAL assertion function and Custome default exception handler \endlink
  *
  * The murasaki_platform.cpp is better to be copied in the /Src directory of the application.
+ * The @ref sec_ds_4 will copy this file to /Src directory of application for programmer.
+ *
+ * \section sec_ds_4 install script
+ * The install script have mainly 4 tasks.
+ * @li Copy template files to the appropriate application directories from @ref sec_ds_3
+ * @li Modify main.c to call the @ref InitPlatform() and @ref ExecPlatform() from the default task.
+ * @li Modify main.c to call the @ref CustomAssertFailed() from the HAL assertion
+ * @li Modify the hard fault handler to call the CustomDefaultHandler()
+ * @li Generate @ref murasaki_include_stub.h to let the Murasaki library to include HAL headers.
+ *
+ * Last one is little tricky to do it manually. Refer @ref murasaki_include_stub.h for details.
  */
 
 
