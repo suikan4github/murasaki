@@ -2,7 +2,7 @@
  * \file criticalsection.hpp
  *
  * \date 2018/01/27
- * \author takemasa
+ * \author Seiichi "Suikan" Horie
  * @brief Class to protect a certain section from the interference.
  */
 

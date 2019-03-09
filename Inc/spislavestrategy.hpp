@@ -2,7 +2,7 @@
  * @file spislavestrategy.hpp
  *
  * @date 2018/02/11
- * @author: takemasa
+ * @author: Seiichi "Suikan" Horie
  * @brief SPI master root class.
  */
 

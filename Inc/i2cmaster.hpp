@@ -2,7 +2,7 @@
  * @file i2cmaster.hpp
  *
  * @date 2018/02/12
- * @author: takemasa
+ * @author: Seiichi "Suikan" Horie
  * @brief I2C master. Thread safe, blocking IO
  */
 
@@ -111,10 +111,10 @@ class I2cMaster : public I2CMasterStrategy
      * @li other value : Unhandled error. I2C device are re-initialized.
      */
     virtual murasaki::I2cStatus Transmit(
-                                         uint addrs,
+                                         unsigned int addrs,
                                          const uint8_t * tx_data,
                                          unsigned int tx_size,
-                                         uint * transfered_count,
+                                         unsigned int * transfered_count,
                                          WaitMilliSeconds timeout_ms);
 
     /**
@@ -138,10 +138,10 @@ class I2cMaster : public I2CMasterStrategy
      * @li other value : Unhandled error. I2C device are re-initialized.
      */
     virtual murasaki::I2cStatus Receive(
-                                        uint addrs,
+                                        unsigned int addrs,
                                         uint8_t * rx_data,
                                         unsigned int rx_size,
-                                        uint * transfered_count,
+                                        unsigned int * transfered_count,
                                         WaitMilliSeconds timeout_ms);
     /**
      * @brief Thread safe, blocking transmission and then receiving over I2C.
@@ -170,13 +170,13 @@ class I2cMaster : public I2CMasterStrategy
      * @li other value : Unhandled error. I2C device are re-initialized.
      */
     virtual murasaki::I2cStatus TransmitThenReceive(
-                                                    uint addrs,
+                                                    unsigned int addrs,
                                                     const uint8_t * tx_data,
                                                     unsigned int tx_size,
                                                     uint8_t * rx_data,
                                                     unsigned int rx_size,
-                                                    uint * tx_transfered_count,
-                                                    uint * rx_transfered_count,
+                                                    unsigned int * tx_transfered_count,
+                                                    unsigned int * rx_transfered_count,
                                                     WaitMilliSeconds timeout_ms);
     /**
      * \brief Call back to be called notify the transfer is complete.

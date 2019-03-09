@@ -2,7 +2,7 @@
  * \file platform_config.hpp
  *
  * \date 2018/01/07
- * \author takemasa
+ * \author Seiichi "Suikan" Horie
  * \brief Application dependent configuration.
  * \details
  * If you want to override the macro definition inside platform_config.hpp,

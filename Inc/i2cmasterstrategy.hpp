@@ -2,7 +2,7 @@
  * \file i2cmasterstrategy.hpp
  *
  *  \date  2018/02/11
- *  \author: takemasa
+ *  \author: Seiichi "Suikan" Horie
  *  \brief Root class definition of the I2C Master.
  */
 
@@ -44,10 +44,10 @@ class I2CMasterStrategy : murasaki::PeripheralStrategy
      * exclusive between multiple task access. In other word, it should be thread save.
      */
     virtual murasaki::I2cStatus Transmit(
-                                         uint addrs,
+                                         unsigned int addrs,
                                          const uint8_t * tx_data,
                                          unsigned int tx_size,
-                                         uint * transfered_count = nullptr,
+                                         unsigned int * transfered_count = nullptr,
                                          WaitMilliSeconds timeout_ms = murasaki::kwmsIndefinitely) = 0;
     /**
      * @brief Thread safe, blocking receiving over I2C.
@@ -62,10 +62,10 @@ class I2CMasterStrategy : murasaki::PeripheralStrategy
      * exclusive between multiple task access. In other word, it should be thread save.
      */
     virtual murasaki::I2cStatus Receive(
-                                        uint addrs,
+                                        unsigned int addrs,
                                         uint8_t * rx_data,
                                         unsigned int rx_size,
-                                        uint * transfered_count = nullptr,
+                                        unsigned int * transfered_count = nullptr,
                                         WaitMilliSeconds timeout_ms = murasaki::kwmsIndefinitely) = 0;
     /**
      * @brief Thread safe, blocking transmission and then receiving over I2C.
@@ -87,13 +87,13 @@ class I2CMasterStrategy : murasaki::PeripheralStrategy
      *
      */
     virtual murasaki::I2cStatus TransmitThenReceive(
-                                                    uint addrs,
+                                                    unsigned int addrs,
                                                     const uint8_t * tx_data,
                                                     unsigned int tx_size,
                                                     uint8_t * rx_data,
                                                     unsigned int rx_size,
-                                                    uint * tx_transfered_count = nullptr,
-                                                    uint * rx_transfered_count = nullptr,
+                                                    unsigned int * tx_transfered_count = nullptr,
+                                                    unsigned int * rx_transfered_count = nullptr,
                                                     WaitMilliSeconds timeout_ms = murasaki::kwmsIndefinitely) =0;
     /**
      * \brief Call back to be called notify the transfer is complete.

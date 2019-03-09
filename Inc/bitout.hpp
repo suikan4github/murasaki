@@ -2,7 +2,7 @@
  * @file bitout.hpp
  *
  * @date 2018/05/07
- * @author takemasa
+ * @author Seiichi "Suikan" Horie
  * @brief GPIO bit out class
  */
 

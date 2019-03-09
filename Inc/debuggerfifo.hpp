@@ -2,7 +2,7 @@
  * @file debuggerfifo.hpp
  *
  * @date 2018/03/01
- * @author takemasa
+ * @author Seiichi "Suikan" Horie
  * @brief Dedicated FIFO to logging the debug message.
  */
 

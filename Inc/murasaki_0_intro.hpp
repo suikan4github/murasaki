@@ -2,7 +2,7 @@
  * \file murasaki_0_intro.hpp
  *
  * \date 2018/02/01
- * \author takemasa
+ * \author Seiichi "Suikan" Horie
  * \brief Doxygen document file. No need to include.
  */
 
@@ -134,4 +134,4 @@
 
 
 
-#endif /* MURASAKI_0_UG_HPP_ */
+#endif /* MURASAKI_0_INTRO_HPP_ */

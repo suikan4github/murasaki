@@ -2,7 +2,7 @@
  * \file spislave.hpp
  *
  * @date 2018/02/14
- * @author takemasa
+ * @author Seiichi "Suikan" Horie
  * @brief SPI Slave. Thread safe and blocking IO
  */
 

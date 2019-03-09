@@ -2,7 +2,7 @@
  * \file murasaki_assert.hpp
  *
  * \date 2018/01/31
- * \author takemasa
+ * \author Seiichi "Suikan" Horie
  * \brief Assertion definition
  */
 
@@ -22,6 +22,8 @@
 #define __MURASAKI__FILE__  (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
 #endif
 
+
+
 /**
  * \def MURASAKI_ASSERT
  * \param COND Condition as bool type.
@@ -29,8 +31,15 @@
  * \details
  * Print the COND expression to the logging port if COND is false. Do nothing if CODN is true.
  *
- * After printing the assertion failure message, currently running task is suspended.
- * If it is the interrupt context, just continue the processing.
+ * After printing the assertion failure message, this aspersion triggers the Hard Fault exception.
+ * The Hard Fault Exception is caught by @ref HardFault_Handler() and eventually invoke the
+ * murasaki::debugger->DoPostMortem(), to put the system into the post mortem debug mode.
+ *
+ * Following code in the macro definition calls a non-existing function located address 1.
+ * Such the access causes a hard fault execusion.
+ * @code
+ *         { void (*foo)(void) = (void (*)())1; foo();}\
+ * @endcode
  *
  * This assertion do nothing if programmer defines \ref MURASAKI_CONFIG_NODEBUG macro as true.
  * This macro is defined in the file \ref platform_config.hpp.
@@ -46,8 +55,7 @@
         murasaki::debugger->Printf("--------------------\n");\
         murasaki::debugger->Printf(MURASAKI_ASSERT_MSG,  __func__, __LINE__,__MURASAKI__FILE__ );\
         murasaki::debugger->Printf("Fail expression : %s\n", #COND);\
-        if ( murasaki::IsTaskContext() )\
-            vTaskSuspend(nullptr);\
+        { void (*foo)(void) = (void (*)())1; foo();}\
     }
 #endif
 

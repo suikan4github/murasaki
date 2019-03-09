@@ -2,7 +2,7 @@
  * \file spimaster.hpp
  *
  * @date 2018/02/14
- * @author takemasa
+ * @author Seiichi "Suikan" Horie
  * @brief SPI Master. Thread safe and blocking IO
  */
 
@@ -101,7 +101,7 @@ class SpiMaster : public SpiMasterStrategy
      * @li Other : Unhandled error . SPI re-initialized.
      */
     virtual SpiStatus TransmitAndReceive(
-                                         murasaki::SpiSlaveSpecifierStrategy * spi_spec,
+                                         murasaki::SpiSlaveAdapterStrategy * spi_spec,
                                          const uint8_t * tx_data,
                                          uint8_t * rx_data,
                                          unsigned int size,

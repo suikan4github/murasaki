@@ -2,7 +2,7 @@
  * \file murasaki_2_ug.hpp
  *
  * \date 2018/02/01
- * \author takemasa
+ * \author Seiichi "Suikan" Horie
  * \brief Doxygen document file. No need to include.
  */
 
@@ -304,14 +304,14 @@
  * \li CPHA configuration
  * \li GPIO port configuration to select a slave
  *
- * The flexibility to above configurations need special mechanism. In Murasaki, this flexibility is responsibility of the murasaki::SpiSlaveSpecifier class.
+ * The flexibility to above configurations need special mechanism. In Murasaki, this flexibility is responsibility of the murasaki::SpiSlaveAdapter class.
  * This class holds these configuration. Then, passed to the master class.
  *
- * So, you must create a murasaki::SpiSlaveSpecifier class object, at first.
+ * So, you must create a murasaki::SpiSlaveAdapter class object, at first.
  * @code
- *         // Create a slave specifier. This object specify the protocol and slave select pin
- *         murasaki::AbstractSpiSlaveSpecifier * slave_spec;
- *         slave_spec = new murasaki::SpiSlaveSpecifier(
+ *         // Create a slave adapter. This object specify the protocol and slave select pin
+ *         murasaki::SpiSlaveAdapterStrategy * slave_spec;
+ *         slave_spec = new murasaki::SpiSlaveAdapter(
  *                                                    murasaki::kspoFallThenRise,
  *                                                    murasaki::ksphLatchThenShift,
  *                                                    SPI_SLAVE_SEL_GPIO_Port,
@@ -319,7 +319,7 @@
  *                                                    );
  * @endcode
  *
- * Then, you can pass the SpiSlaveSpecifier class object to the murasaki::SpiMaster::TransmitAndRecieve() function.
+ * Then, you can pass the SpiSlaveAdapter class object to the murasaki::SpiMaster::TransmitAndRecieve() function.
  * @code
  *         // Transmit and receive data through SPI
  *         uint8_t tx_data[5] = { 1, 2, 3, 4, 5 };
@@ -375,6 +375,7 @@
  * @li @subpage ug_sect_6_1
  * @li @subpage ug_sect_6_2
  * @li @subpage ug_sect_6_3
+ * @li @subpage ug_sect_6_31
  * @li @subpage ug_sect_6_4
  * @li @subpage ug_sect_6_5
  */
@@ -579,6 +580,25 @@
  * void CustomDefaultHandler() {
  *     // Call debugger's post mortem processing. Never return again.
  *     murasaki::debugger->DoPostMortem();
+ * }
+ * @endcode
+ */
+
+/**
+ * @page ug_sect_6_31 Assertion flow
+ * @brief The assertion flow is similar to the Spurious Interrupt flow.
+ *
+ * Once assertion is raised, assertion macro raised Hard Fault execption.
+ * The Hard Fault exception handler in the  Src/st32****_it.c calles
+ * CustomDefaultHandler.
+ *
+ * @code
+ * void HardFault_Handler(void)
+ * {
+ *   CustomDefaultHandler();
+ *   while (1)
+ *   {
+ *   }
  * }
  * @endcode
  */

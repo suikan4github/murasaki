@@ -2,7 +2,7 @@
  * spislave.cpp
  *
  *  Created on: 2018/02/14
- *      Author: takemasa
+ *      Author: Seiichi "Suikan" Horie
  */
 
 #include <spislave.hpp>

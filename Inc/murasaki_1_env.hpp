@@ -2,11 +2,11 @@
  * \file murasaki_1_env.hpp
  *
  * \date 2018/02/01
- * \author takemasa
+ * \author Seiichi "Suikan" Horie
  * \brief Doxygen document file. No need to include.
  */
 
-#ifndef MURASAKI_0_ENV_HPP_
+#ifndef MURASAKI_1_ENV_HPP_
 #define MURASAKI_1_ENV_HPP_
 
 
@@ -30,4 +30,4 @@
  */
 
 
-#endif /* MURASAKI_0_UG_HPP_ */
+#endif /* MURASAKI_1_ENV_HPP_ */

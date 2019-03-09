@@ -2,7 +2,7 @@
  * \file debugger.hpp
  *
  * \date 2018/01/03
- * \author takemasa
+ * \author Seiichi "Suikan" Horie
  * \brief Debug print class. For both ISR and task.
  * \details
  * This class serves printf function for both task context and ISR context.

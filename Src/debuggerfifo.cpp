@@ -2,7 +2,7 @@
  * debuggerfifo.cpp
  *
  *  Created on: 2018/03/01
- *      Author: takemasa
+ *      Author: Seiichi "Suikan" Horie
  */
 
 #include <FreeRTOS.h>

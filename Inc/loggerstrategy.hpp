@@ -2,7 +2,7 @@
  * \file loggerstrategy.hpp
  *
  * \date 2018/01/20
- * \author: takemasa
+ * \author: Seiichi "Suikan" Horie
  * \brief Simplified logging function.
  */
 

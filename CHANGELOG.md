@@ -1,7 +1,39 @@
-# Changelog
+# Change log
 Record of the modification in project development.
-
 ## [Unreleased]
+
+### Added
+### Changed
+### Deprecated
+### Removed
+### Fixed
+### Security
+### Known Issue
+- The SPI slave transfer is not tested.
+
+## [0.3.0] - 2019-03-09
+Major change at the MURASAKI_ASSERTION to enforce the hard fault. This makes debug easier. The HAL header file include mechanism is now eaiser to catch up the ST Micro's new processor. 
+
+### Added
+- [Issue 27 : ADD STM32F4xx support](https://github.com/suikan4github/murasaki/issues/27)
+
+### Changed
+- [Issue 24 : SpiSlaveSpecifier class name should be refactored](https://github.com/suikan4github/murasaki/issues/24)
+- [Issue 23 : Change MURASAKI_ASSERT to raise an exception](https://github.com/suikan4github/murasaki/issues/23)
+- [Issue 26 : InitPlatform needs to check the result of new](https://github.com/suikan4github/murasaki/issues/26)
+- [Issue 28 : uint should be changed unsigned int](https://github.com/suikan4github/murasaki/issues/28)
+- [Issue 29 : Update Inc/murasaki_defs.hpp](https://github.com/suikan4github/murasaki/issues/29)
+- [Issue 31 : Update document with new HAL include scheme](https://github.com/suikan4github/murasaki/issues/31)
+
+### Deprecated
+### Removed
+### Fixed
+- [Pull Request 21 : Typo](https://github.com/suikan4github/murasaki/pull/21). Thanks osaboh.
+- [Issue 25 : "Takemasa" is wrong signature](https://github.com/suikan4github/murasaki/issues/25)
+
+### Security
+### Known Issue
+- The SPI slave transfer is not tested.
 
 ## [0.2.1] - 2019-02-24
 
@@ -58,7 +90,8 @@ Record of the modification in project development.
 ### Fixed
 ### Security
 
-[Unreleased]: https://github.com/suikan4github/murasaki/compare/v0.2.1...develop
+[Unreleased]: https://github.com/suikan4github/murasaki/compare/v0.3.0...develop
+[0.3.0]: https://github.com/suikan4github/murasaki/compare/v0.2.1...v0.3.0
 [0.2.1]: https://github.com/suikan4github/murasaki/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/suikan4github/murasaki/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/suikan4github/murasaki/compare/v0.0.0...v0.1.0

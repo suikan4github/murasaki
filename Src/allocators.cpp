@@ -2,7 +2,7 @@
  * \file allocators.cpp
  *
  * \date 2018/05/02
- * \author takemasa
+ * \author Seiichi "Suikan" Horie
  * \brief Alternative memory allocators.
  * \details
  * These definitions allows to used the FreeRTOS's heap instead of the system heap.

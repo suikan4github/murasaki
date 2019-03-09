@@ -2,7 +2,7 @@
  * spimaster.cpp
  *
  *  Created on: 2018/02/14
- *      Author: takemasa
+ *      Author: Seiichi "Suikan" Horie
  */
 
 #include <spimaster.hpp>
@@ -42,7 +42,7 @@ SpiMaster::~SpiMaster()
 
 }
 
-SpiStatus SpiMaster::TransmitAndReceive(murasaki::SpiSlaveSpecifierStrategy* spi_spec,
+SpiStatus SpiMaster::TransmitAndReceive(murasaki::SpiSlaveAdapterStrategy* spi_spec,
                          const uint8_t* tx_data,
                          uint8_t* rx_data,
                          unsigned int size,

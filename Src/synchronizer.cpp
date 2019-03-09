@@ -2,7 +2,7 @@
  * synchronizer.cpp
  *
  *  Created on: 2018/01/26
- *      Author: takemasa
+ *      Author: Seiichi "Suikan" Horie
  */
 
 #include <synchronizer.hpp>

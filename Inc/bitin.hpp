@@ -2,7 +2,7 @@
  * @file bitin.hpp
  *
  * @date 2018/05/07
- * @author takemasa
+ * @author Seiichi "Suikan" Horie
  * @brief GPIO bit in class
  */
 

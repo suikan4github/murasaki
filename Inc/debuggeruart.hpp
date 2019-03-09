@@ -2,7 +2,7 @@
  * \file debuggeruart.hpp
  *
  * \date 2018/09/23
- * \author takemasa
+ * \author Seiichi "Suikan" Horie
  * @brief UART. Thread safe and blocking IO
  */
 

@@ -2,7 +2,7 @@
  * umbadau1361.hpp
  *
  *  Created on: 2018/05/11
- *      Author: takemasa
+ *      Author: Seiichi "Suikan" Horie
  */
 
 #ifndef THIRD_PARTY_UMBADAU1361_HPP_

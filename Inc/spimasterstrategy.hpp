@@ -2,7 +2,7 @@
  * @file spimasterstrategy.hpp
  *
  * @date 2018/02/11
- * @author: takemasa
+ * @author: Seiichi "Suikan" Horie
  * @brief SPI master root class.
  */
 
@@ -10,7 +10,7 @@
 #define SPIMASTERSTRATEGY_HPP_
 
 #include <peripheralstrategy.hpp>
-#include <spislavespecifierstrategy.hpp>
+#include <spislaveadapterstrategy.hpp>
 
 namespace murasaki {
 
@@ -26,7 +26,7 @@ class SpiMasterStrategy:public murasaki::PeripheralStrategy
  public:
     /**
      * @brief Thread safe, blocking SPI transfer
-     * @param spi_spec Pointer to the SPI slave specifier which has clock configuraiton and chip select handling.
+     * @param spi_spec Pointer to the SPI slave adapter which has clock configuraiton and chip select handling.
      * @param tx_data Data to be transmitted
      * @param rx_data Data buffer to receive data
      * @param size Transfer data size [byte] for each way. Must be smaller than 65536
@@ -34,7 +34,7 @@ class SpiMasterStrategy:public murasaki::PeripheralStrategy
      * @return true if transfer complete, false if timeout
      */
     virtual SpiStatus TransmitAndReceive(
-                                         murasaki::SpiSlaveSpecifierStrategy * spi_spec,
+                                         murasaki::SpiSlaveAdapterStrategy * spi_spec,
                                          const uint8_t * tx_data,
                                          uint8_t * rx_data,
                                          unsigned int size,

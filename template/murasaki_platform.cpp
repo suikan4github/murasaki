@@ -2,7 +2,7 @@
  * @file murasaki_platform.cpp
  *
  * @date 2018/05/20
- * @author takemasa
+ * @author Seiichi "Suikan" Horie
  * @brief A glue file between the user application and HAL/RTOS.
  */
 
@@ -56,18 +56,29 @@ void InitPlatform()
     // On Nucleo, the port connected to the USB port of ST-Link is
     // referred here.
     murasaki::platform.uart_console = new murasaki::DebuggerUart(&huart3);
+    while (nullptr == murasaki::platform.uart_console)
+        ;   // stop here on the memory allocation failure.
+
     // UART is used for logging port.
     // At least one logger is needed to run the debugger class.
     murasaki::platform.logger = new murasaki::UartLogger(murasaki::platform.uart_console);
+    while (nullptr == murasaki::platform.logger)
+        ;   // stop here on the memory allocation failure.
+
     // Setting the debugger
     murasaki::debugger = new murasaki::Debugger(murasaki::platform.logger);
+    while (nullptr == murasaki::debugger)
+        ;   // stop here on the memory allocation failure.
+
     // Set the debugger as AutoRePrint mode, for the easy operation.
     murasaki::debugger->AutoRePrint();  // type any key to show history.
+
 
 
     // For demonstration, one GPIO LED port is reserved.
     // The port and pin names are fined by CubeMX.
     murasaki::platform.led = new murasaki::BitOut(LD2_GPIO_Port, LD2_Pin);
+    MURASAKI_ASSERT(nullptr != murasaki::platform.led)
 
     // For demonstration of FreeRTOS task.
     murasaki::platform.task1 = new murasaki::Task(
@@ -77,6 +88,7 @@ void InitPlatform()
                                                   nullptr,
                                                   &TaskBodyFunction
                                                   );
+    MURASAKI_ASSERT(nullptr != murasaki::platform.task1)
 
     // Following block is just for sample.
 #if 0
@@ -130,9 +142,9 @@ void ExecPlatform()
     }
 
     {
-        // Create a slave specifier. This object specify the protocol and slave select pin
-        murasaki::SpiSlaveSpecifierStrategy * slave_spec;
-        slave_spec = new murasaki::SpiSlaveSpecifier(
+        // Create a slave adapter. This object specify the protocol and slave select pin
+        murasaki::SpiSlaveAdapterStrategy * slave_spec;
+        slave_spec = new murasaki::SpiSlaveAdapter(
                                                    murasaki::kspoFallThenRise,
                                                    murasaki::ksphLatchThenShift,
                                                    SPI_SLAVE_SEL_GPIO_Port,
@@ -476,6 +488,8 @@ void CustomAssertFailed(uint8_t* file, uint32_t line)
                         {
     murasaki::debugger->Printf("Wrong parameters value: file %s on line %d\n",
                                file, line);
+    // To stop the execusion, raise assert.
+    MURASAKI_ASSERT(false);
 }
 
 void CustomDefaultHandler() {

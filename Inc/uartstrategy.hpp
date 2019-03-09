@@ -2,7 +2,7 @@
  * \file uartstrategy.hpp
  *
  * \date 2017/11/04
- * \author: Takemasa Nakamura
+ * \author: Seiichi "Suikan" Horie
  * \brief Root class definition of the UART driver
  */
 

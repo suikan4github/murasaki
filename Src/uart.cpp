@@ -2,7 +2,7 @@
  * Uart.cpp
  *
  *  Created on: 2017/11/05
- *      Author: takemasa
+ *      Author: Seiichi "Suikan" Horie
  */
 
 #include "uart.hpp"

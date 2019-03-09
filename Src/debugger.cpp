@@ -2,11 +2,12 @@
  * debug.cpp
  *
  *  Created on: 2018/01/03
- *      Author: takemasa
+ *      Author: Seiichi "Suikan" Horie
  */
 
 #include <debugger.hpp>
 #include <string.h>
+#include <stdio.h>
 #include <stdarg.h>
 #include <FreeRTOS.h>
 #include <task.h>

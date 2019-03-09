@@ -2,7 +2,7 @@
  * @file audiocodecstrategy.hpp
  *
  * @date 2018/05/11
- * @author: takemasa
+ * @author: Seiichi "Suikan" Horie
  */
 
 #ifndef THIRD_PARTY_ABSTRACTAUDIOCODEC_HPP_

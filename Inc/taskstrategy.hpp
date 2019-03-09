@@ -2,7 +2,7 @@
  * @file taskstrategy.hpp
  *
  * @date 2018/02/20
- * @author: takemasa
+ * @author: Seiichi "Suikan" Horie
  * @brief Mother of All Tasks.
  */
 
