@@ -4,9 +4,13 @@ Record of the modification in project development.
 
 ### Added
 ### Changed
+-[Issue 34 : Refactor SYSLOG message from "Return" to "Leave" ](https://github.com/suikan4github/murasaki/issues/34)
+
 ### Deprecated
 ### Removed
 ### Fixed
+-[Issue 33 : __VA_ARGS__ have problem if there are variable parameters.](https://github.com/suikan4github/murasaki/issues/33)
+
 ### Security
 ### Known Issue
 - The SPI slave transfer is not tested.

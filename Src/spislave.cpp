@@ -134,7 +134,7 @@ SpiStatus SpiSlave::TransmitAndReceive(
     }
     critical_section_->Leave();
 
-    SPIM_SYSLOG("Return");
+    SPIM_SYSLOG("Leave");
     return interrupt_status_;
 
 }
@@ -236,7 +236,7 @@ bool SpiSlave::HandleError(void* ptr)
 
 void* SpiSlave::GetPeripheralHandle() {
     SPIM_SYSLOG("Enter");
-    SPIM_SYSLOG("Return");
+    SPIM_SYSLOG("Leave");
 
 	return peripheral_;
 }

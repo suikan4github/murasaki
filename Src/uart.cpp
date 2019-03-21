@@ -86,7 +86,7 @@ void Uart::SetHardwareFlowControl(UartHardwareFlowControl control)
     result = HAL_UART_Init(peripheral_);
     MURASAKI_ASSERT(result == HAL_OK);
 
-    UART_SYSLOG("Return");
+    UART_SYSLOG("Leave");
 }
 
 murasaki::UartStatus Uart::Transmit(
@@ -134,7 +134,7 @@ murasaki::UartStatus Uart::Transmit(
     }
     tx_critical_section_->Leave();
 
-    UART_SYSLOG("Return");
+    UART_SYSLOG("Leave");
     return tx_interrupt_status_;
 }
 
@@ -156,7 +156,7 @@ UART_SYSLOG("Enter");
         return true;
     }
     else {
-        UART_SYSLOG("Return");
+        UART_SYSLOG("Leave");
         // this interrupt is not for this device
         return false;
     }
@@ -224,7 +224,7 @@ murasaki::UartStatus Uart::Receive(
     }
     rx_critical_section_->Leave();
 
-    UART_SYSLOG("Return");
+    UART_SYSLOG("Leave");
     return rx_interrupt_status_;
 }
 
@@ -242,7 +242,7 @@ void Uart::SetSpeed(unsigned int baud_rate)
     result = HAL_UART_Init(peripheral_);
     MURASAKI_ASSERT(result == HAL_OK);
 
-    UART_SYSLOG("Return");
+    UART_SYSLOG("Leave");
 }
 
 bool Uart::ReceiveCompleteCallback(void* const ptr)
@@ -262,7 +262,7 @@ bool Uart::ReceiveCompleteCallback(void* const ptr)
         return true;
     }
     else {
-        UART_SYSLOG("Return");
+        UART_SYSLOG("Leave");
         // This interrupt was not for this device
         return false;
     }
@@ -319,7 +319,7 @@ bool Uart::HandleError(void* const ptr)
             rx_sync_->Release();
         }
 
-        UART_SYSLOG("Return");
+        UART_SYSLOG("Leave");
         return true;    // report the ptr matched
     }
     else {
@@ -330,7 +330,7 @@ bool Uart::HandleError(void* const ptr)
 
 void* Uart::GetPeripheralHandle() {
     UART_SYSLOG("Enter");
-    UART_SYSLOG("Return");
+    UART_SYSLOG("Leave");
 
 	return peripheral_;
 }

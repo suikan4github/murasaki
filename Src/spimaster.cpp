@@ -148,7 +148,7 @@ SpiStatus SpiMaster::TransmitAndReceive(murasaki::SpiSlaveAdapterStrategy* spi_s
     }
     critical_section_->Leave();
 
-    SPIM_SYSLOG("Return");
+    SPIM_SYSLOG("Leave");
     return interrupt_status_;
 
 }
@@ -250,7 +250,7 @@ bool SpiMaster::HandleError(void* ptr)
 
 void* SpiMaster::GetPeripheralHandle() {
     SPIM_SYSLOG("Enter");
-    SPIM_SYSLOG("Return");
+    SPIM_SYSLOG("Leave");
 
 	return peripheral_;
 }

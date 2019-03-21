@@ -108,7 +108,7 @@ murasaki::I2cStatus I2cSlave::Transmit(
     }
     critical_section_->Leave();
 
-    I2C_SYSLOG("Return");
+    I2C_SYSLOG("Leave");
     return interrupt_status_;
 }
 
@@ -180,7 +180,7 @@ murasaki::I2cStatus I2cSlave::Receive(
     }
     critical_section_->Leave();
 
-    I2C_SYSLOG("Return");
+    I2C_SYSLOG("Leave");
     return interrupt_status_;
 }
 
@@ -201,7 +201,7 @@ bool I2cSlave::TransmitCompleteCallback(void* ptr)
         // This interrupt was for this device.
         return true;
     } else {
-        I2C_SYSLOG("Return");
+        I2C_SYSLOG("Leave");
         // This interrupt is not for this device
         return false;
     }
@@ -224,7 +224,7 @@ bool I2cSlave::ReceiveCompleteCallback(void* ptr)
         // This interrupt was for this device.
         return true;
     } else {
-        I2C_SYSLOG("Return");
+        I2C_SYSLOG("Leave");
         // This interrupt is not for this device
         return false;
     }
@@ -292,7 +292,7 @@ bool I2cSlave::HandleError(void* ptr)
         I2C_SYSLOG("Return with match");
         return true;    // report the ptr matched
     } else {
-        I2C_SYSLOG("Return");
+        I2C_SYSLOG("Leave");
         return false;   // report the ptr doesn't match
     }
 
@@ -301,7 +301,7 @@ bool I2cSlave::HandleError(void* ptr)
 void* I2cSlave::GetPeripheralHandle()
 {
     I2C_SYSLOG("Enter");
-    I2C_SYSLOG("Return");
+    I2C_SYSLOG("Leave");
 
     return peripheral_;
 }
