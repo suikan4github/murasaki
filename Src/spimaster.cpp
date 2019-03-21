@@ -10,7 +10,7 @@
 #include "murasaki_syslog.hpp"
 
 // Macro for easy-to-read
-#define SPIM_SYSLOG(fmt, ...)    MURASAKI_SYSLOG(kfaSpiMaster, kseDebug, fmt, __VA_ARGS__)
+#define SPIM_SYSLOG(fmt, ...)    MURASAKI_SYSLOG(kfaSpiMaster, kseDebug, fmt, ##__VA_ARGS__)
 
 // Check if CubeMX generated SPI Module
 #ifdef HAL_SPI_MODULE_ENABLED

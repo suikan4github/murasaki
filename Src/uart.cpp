@@ -10,7 +10,7 @@
 #include "murasaki_syslog.hpp"
 
 // Macro for easy-to-read
-#define UART_SYSLOG(fmt, ...)    MURASAKI_SYSLOG(kfaSerial, kseDebug, fmt, __VA_ARGS__)
+#define UART_SYSLOG(fmt, ...)    MURASAKI_SYSLOG(kfaSerial, kseDebug, fmt, ##__VA_ARGS__)
 
 
 // Check if CubeMX generates UART module
