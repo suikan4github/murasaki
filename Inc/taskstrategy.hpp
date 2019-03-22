@@ -65,6 +65,29 @@ class TaskStrategy
      * @return A name of task.
      */
     const char * GetName();
+
+    /**
+     * @brief Obtain the size of the stack.
+     * @return Total depth of the task stack [byte]
+     */
+    unsigned int getStackDepth();
+
+    /**
+     * @brief Obtain the headroom of the stack.
+     * @return The remained headroom in stack [byte]. 0 mean stack is overflown. -1 mean Stack overflow check is not provided.
+     * @details
+     * Return value is the avairable stack size in byte.
+     *
+     * Internally, this function uses <a href= "https://www.freertos.org/Stacks-and-stack-overflow-checking.html">
+     * Stack Usage and Stack Overflow Checking</a>.
+     *
+     * Thus,
+     * - INCLUDE_uxTaskGetStackHighWaterMark have to be non zero
+     * - configCHECK_FOR_STACK_OVERFLOW have to be non zero
+     *
+     * If above conditions are not met, this function returns -1.
+     */
+    int getStackMinHeadroom();
  protected:
     TaskHandle_t task_;                 // Task handle of FreeRTOS
     const char * const name_;           // Name of task in FreeRTOS

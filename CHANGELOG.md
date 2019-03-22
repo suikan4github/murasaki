@@ -3,6 +3,8 @@ Record of the modification in project development.
 ## [Unreleased]
 
 ### Added
+-[Issue 35 : Add getMinStackHeadroom() to TaskStrategy class](https://github.com/suikan4github/murasaki/issues/35)
+
 ### Changed
 -[Issue 34 : Refactor SYSLOG message from "Return" to "Leave" ](https://github.com/suikan4github/murasaki/issues/34)
 

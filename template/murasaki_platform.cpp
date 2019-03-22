@@ -82,7 +82,7 @@ void InitPlatform()
 
     // For demonstration of FreeRTOS task.
     murasaki::platform.task1 = new murasaki::Task(
-                                                  "Master",
+                                                  "task1",
                                                   256,
                                                   1,
                                                   nullptr,
@@ -496,6 +496,13 @@ void CustomDefaultHandler() {
     // Call debugger's post mortem processing. Never return again.
     murasaki::debugger->DoPostMortem();
 }
+
+void vApplicationStackOverflowHook(TaskHandle_t xTask,
+                                   signed char *pcTaskName) {
+    murasaki::debugger->Printf("Stack overflow at task :  %s \n", pcTaskName);
+    MURASAKI_ASSERT(false);
+}
+
 
 /* ------------------ User Function -------------------------- */
 // Task body of the murasaki::platform.task1

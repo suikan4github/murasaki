@@ -63,6 +63,20 @@ const char* TaskStrategy::GetName()
     return name_;
 }
 
+unsigned int TaskStrategy::getStackDepth() {
+    return stack_depth_;
+}
+
+int TaskStrategy::getStackMinHeadroom()
+{
+#if ( INCLUDE_uxTaskGetStackHighWaterMark > 0 ) && ( configCHECK_FOR_STACK_OVERFLOW > 0 )
+    return uxTaskGetStackHighWaterMark(task_);
+#else
+    return -1;
+#endif
+}
+
+
 // This is a static member function
 void TaskStrategy::Launch(void * ptr)
 {
@@ -79,3 +93,4 @@ void TaskStrategy::Launch(void * ptr)
 
 
 } /* namespace murasaki */
+

@@ -99,7 +99,17 @@ void CustomAssertFailed(uint8_t* file, uint32_t line);
  *     b Infinite_Loop
  * @endcode
  */
-void CustomDefaultHandler();
+
+/**
+ * @brief StackOverflow hook for FreeRTOS
+ * @param xTask Task ID which causes stack overflow.
+ * @param pcTaskName Name of the task which cuases stack overflow.
+ * @fn vApplicationStackOverflowHook
+ * @details
+ * This function will be called from FreeRTOS when some task causes overflow.
+ * See TaskStrategy::getStackMinHeadroom() for details.
+ */
+
 #ifdef __cplusplus
 }
 #endif
