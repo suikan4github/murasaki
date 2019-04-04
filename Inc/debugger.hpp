@@ -18,7 +18,7 @@
 
 #include "murasaki_config.hpp"
 #include "debuggerfifo.hpp"
-#include "task.hpp"
+#include "simpletask.hpp"
 
 
 

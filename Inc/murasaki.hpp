@@ -25,7 +25,7 @@
 #include "murasaki_defs.hpp"
 
 // Task and Stack
-#include "task.hpp"
+#include "simpletask.hpp"
 
 // Peripherals
 #include "uart.hpp"

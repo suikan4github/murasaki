@@ -5,7 +5,7 @@
  *      Author: Seiichi "Suikan" Horie
  */
 
-#include <task.hpp>
+#include <simpletask.hpp>
 
 // Pass through the parameters to the person class. Also, set the task body funciton pointer.
 murasaki::Task::Task(

@@ -1,13 +1,13 @@
 /**
- * \file task.hpp
+ * \file simpletask.hpp
  *
  * @date 2019/02/03
  * @author Seiichi "Suikan" Horie
  * @brief Simplified Task class.
  */
 
-#ifndef TASK_HPP_
-#define TASK_HPP_
+#ifndef SIMPLETASK_HPP_
+#define SIMPLETASK_HPP_
 
 #include <taskstrategy.hpp>
 
@@ -80,4 +80,4 @@ class Task : public murasaki::TaskStrategy {
     };
 
 };
-#endif /* TASK_HPP_ */
+#endif /* SIMPLETASK_HPP_ */
