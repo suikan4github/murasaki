@@ -7,7 +7,7 @@ Record of the modification in project development.
 
 ### Changed
 - [Issue 34 : Refactor SYSLOG message from "Return" to "Leave" ](https://github.com/suikan4github/murasaki/issues/34)
-
+- [Issue 37 : Rename Task class to SimpleTask](https://github.com/suikan4github/murasaki/issues/37)
 ### Deprecated
 ### Removed
 ### Fixed
