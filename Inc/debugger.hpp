@@ -124,12 +124,12 @@ class Debugger
     /**
      * \brief Handle to the transmission control task.
      */
-    murasaki::Task * const tx_task_;
+    murasaki::SimpleTask * const tx_task_;
 
     /**
      * @brief Handle to the auto reprint task.
      */
-    murasaki::Task * auto_reprint_task;
+    murasaki::SimpleTask * auto_reprint_task;
 
     /**
      * @brief For protecting from double enabled.

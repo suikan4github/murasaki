@@ -21,7 +21,7 @@ namespace murasaki {
  * A task can be created easy like :
  * @code
  *     // For demonstration of FreeRTOS task.
- *     murasaki::platform.task1 = new murasaki::Task(
+ *     murasaki::platform.task1 = new murasaki::SimpleTask(
  *                                                   "Master",
  *                                                   256,
  *                                                   (( configMAX_PRIORITIES > 1) ? 1 : 0),
@@ -37,7 +37,7 @@ namespace murasaki {
  * @endcode
  *
  */
-class Task : public murasaki::TaskStrategy {
+class SimpleTask : public murasaki::TaskStrategy {
  public:
     /**
      * @brief Ease to use task class.
@@ -54,7 +54,7 @@ class Task : public murasaki::TaskStrategy {
      * to the task body function without modification.
      *
      */
-    Task(
+    SimpleTask(
          const char * task_name,
          unsigned short stack_depth,
          UBaseType_t task_priority,

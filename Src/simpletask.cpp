@@ -8,7 +8,7 @@
 #include <simpletask.hpp>
 
 // Pass through the parameters to the person class. Also, set the task body funciton pointer.
-murasaki::Task::Task(
+murasaki::SimpleTask::SimpleTask(
                      const char* task_name,
                      unsigned short stack_depth,
                      UBaseType_t task_priority,
@@ -24,7 +24,7 @@ murasaki::Task::Task(
                                        {
 }
 
-void murasaki::Task::TaskBody(const void* ptr)
+void murasaki::SimpleTask::TaskBody(const void* ptr)
                               {
     // Call task body function
     task_body_func_(ptr);

@@ -32,7 +32,7 @@ Debugger::Debugger(LoggerStrategy * logger):
 			logger
 		},
           tx_task_(
-                   new murasaki::Task("DebugTask",                   // name of task
+                   new murasaki::SimpleTask("DebugTask",                   // name of task
                            PLATFORM_CONFIG_DEBUG_TASK_STACK_SIZE,    // stack depth
                            PLATFORM_CONFIG_DEBUG_TASK_PRIORITY,      // execusion priority of task
                            &helpers_,                                // parameter to task
@@ -133,7 +133,7 @@ void Debugger::AutoRePrint()
         return;
     else
     {
-        auto_reprint_task = new murasaki::Task("AutoRePrint",  // name of task
+        auto_reprint_task = new murasaki::SimpleTask("AutoRePrint",  // name of task
                 PLATFORM_CONFIG_DEBUG_TASK_STACK_SIZE,       // stack depth
                 PLATFORM_CONFIG_DEBUG_TASK_PRIORITY,         // execusion priority of task
                 &helpers_,                                   // parameter to task

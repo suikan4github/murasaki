@@ -196,9 +196,9 @@
 
 /**
  * \page ug_sec_4 Tasking
- * @brief murasaki::Task is a type of the task of the FreeRTOS.
+ * @brief murasaki::SimpleTask is a type of the task of the FreeRTOS.
  *
- * By using murasaki::Task, a programmer can easily create a task object.
+ * By using murasaki::SimpleTask, a programmer can easily create a task object.
  * This object encapsulate the task of the FreeRTOS.
  *
  * First of all, you must define a task body function.
@@ -230,7 +230,7 @@
  *
  * @code
  *     // For demonstration of FreeRTOS task.
- *     murasaki::platform.task1 = new murasaki::Task(
+ *     murasaki::platform.task1 = new murasaki::SimpleTask(
  *                                                   "Master",
  *                                                   256,
  *                                                   (( configMAX_PRIORITIES > 1) ? 1 : 0),
@@ -443,7 +443,7 @@
  *    murasaki::platform.sync_with_button = new murasaki::Synchronizer();
 
  *    // For demonstration of FreeRTOS task.
- *    murasaki::platform.task1 = new murasaki::Task(
+ *    murasaki::platform.task1 = new murasaki::SimpleTask(
  *                                                  "Master",
  *                                                  256,
  *                                                  1,
