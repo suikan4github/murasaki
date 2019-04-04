@@ -3,15 +3,16 @@ Record of the modification in project development.
 ## [Unreleased]
 
 ### Added
--[Issue 35 : Add getMinStackHeadroom() to TaskStrategy class](https://github.com/suikan4github/murasaki/issues/35)
+- [Issue 35 : Add getMinStackHeadroom() to TaskStrategy class](https://github.com/suikan4github/murasaki/issues/35)
 
 ### Changed
--[Issue 34 : Refactor SYSLOG message from "Return" to "Leave" ](https://github.com/suikan4github/murasaki/issues/34)
+- [Issue 34 : Refactor SYSLOG message from "Return" to "Leave" ](https://github.com/suikan4github/murasaki/issues/34)
 
 ### Deprecated
 ### Removed
 ### Fixed
--[Issue 33 : __VA_ARGS__ have problem if there are variable parameters.](https://github.com/suikan4github/murasaki/issues/33)
+- [Issue 33 : \_\_VA_ARGS__ have problem if there are variable parameters.](https://github.com/suikan4github/murasaki/issues/33)
+- [Issue 36 : "Sample" section is missed in the TOC of README.md](https://github.com/suikan4github/murasaki/issues/36)
 
 ### Security
 ### Known Issue
