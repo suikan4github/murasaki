@@ -185,6 +185,9 @@ bool DebuggerUart::HandleError(void* const ptr)
         MURASAKI_PRINT_ERROR(peripheral_->ErrorCode & HAL_UART_ERROR_FE);
         MURASAKI_PRINT_ERROR(peripheral_->ErrorCode & HAL_UART_ERROR_ORE);
         MURASAKI_PRINT_ERROR(peripheral_->ErrorCode & HAL_UART_ERROR_DMA);
+
+        // Force exception by any error.
+        MURASAKI_ASSERT(false);
         return true;    // report the ptr matched
     }
     else {

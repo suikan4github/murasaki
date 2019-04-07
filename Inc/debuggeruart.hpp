@@ -186,7 +186,9 @@ class DebuggerUart : public UartStrategy
      * @details
      * A handle to print out the error message.
      *
-     * Checks whether handle has error and if there is, print appropriate error. Then return.
+     * Checks whether handle has error and if there is, print appropriate error.
+     * Then trigger an assertion.
+     *
      */
     virtual bool HandleError(void * const ptr);
 protected:

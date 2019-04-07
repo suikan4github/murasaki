@@ -4,6 +4,7 @@ Record of the modification in project development.
 
 ### Added
 - [Issue 35 : Add getMinStackHeadroom() to TaskStrategy class](https://github.com/suikan4github/murasaki/issues/35)
+^ [Issue 39 : Raise Assert failure at the DebugUart error handler.](https://github.com/suikan4github/murasaki/issues/39)
 
 ### Changed
 - [Issue 34 : Refactor SYSLOG message from "Return" to "Leave" ](https://github.com/suikan4github/murasaki/issues/34)
