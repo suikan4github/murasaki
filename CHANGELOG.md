@@ -3,6 +3,18 @@ Record of the modification in project development.
 ## [Unreleased]
 
 ### Added
+### Changed
+### Deprecated
+### Removed
+### Fixed
+### Security
+### Known Issue
+- The SPI slave transfer is not tested.
+
+## [0.4.0] - 2019-04-07
+Major change is the renaming Task class to SimpleTask. It loses backword compatibility. Also, severe problem bug of the cache control was fixed.
+
+### Added
 - [Issue 35 : Add getMinStackHeadroom() to TaskStrategy class](https://github.com/suikan4github/murasaki/issues/35)
 ^ [Issue 39 : Raise Assert failure at the DebugUart error handler.](https://github.com/suikan4github/murasaki/issues/39)
 
@@ -100,7 +112,8 @@ Major change at the MURASAKI_ASSERTION to enforce the hard fault. This makes deb
 ### Fixed
 ### Security
 
-[Unreleased]: https://github.com/suikan4github/murasaki/compare/v0.3.0...develop
+[Unreleased]: https://github.com/suikan4github/murasaki/compare/v0.4.0...develop
+[0.4.0]: https://github.com/suikan4github/murasaki/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/suikan4github/murasaki/compare/v0.2.1...v0.3.0
 [0.2.1]: https://github.com/suikan4github/murasaki/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/suikan4github/murasaki/compare/v0.1.0...v0.2.0
