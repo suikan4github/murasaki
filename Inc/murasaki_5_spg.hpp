@@ -243,5 +243,75 @@
  * @image html "Screenshot from 2019-02-18 09-12-04.png" "Add Murasaki source path"
  * @image latex "Screenshot from 2019-02-18 09-12-04.png" "Add Murasaki source path"
  *
+ * Note on the STM32H7 family. This family's default LSF maps DTCM as default data/bss
+ * section. Unfrotunately, the DTCM is unable to access by peripheral DMA. As a result,
+ * if the DMA buffer is located, it raises execption. To prevent it, programmer have to
+ * edit the LSF by hand.
+ *
+ * By default, the LSF maps data and bss to DTCMRAM segment, as like below.
+ * @code
+ *  .data :
+ *  {
+ *    . = ALIGN(4);
+ *    _sdata = .;        // create a global symbol at data start
+ *    *(.data)           // .data sections * /
+ *    *(.data*)          // .data* sections
+ *
+ *    . = ALIGN(4);
+ *    _edata = .;        // define a global symbol at data end
+ *  } >DTCMRAM AT> FLASH    // <<=========== !!! Watch !!!
+ *
+ *
+ *  // Uninitialized data section
+ *  . = ALIGN(4);
+ *  .bss :
+ *  {
+ *    // This is used by the startup in order to initialize the .bss secion
+ *    _sbss = .;         // define a global symbol at bss start
+ *    __bss_start__ = _sbss;
+ *    *(.bss)
+ *    *(.bss*)
+ *    *(COMMON)
+ *
+ *    . = ALIGN(4);
+ *    _ebss = .;         // define a global symbol at bss end
+ *    __bss_end__ = _ebss;
+ *  } >DTCMRAM              // <<=========== !!! Watch !!!
+ *
+ * @endcode
+ *
+ * To map them to D1 SRAM, you have to change DTCMRAM to RAM_D1 as like below.
+ *
+ * @code
+ *  .data :
+ *  {
+ *    . = ALIGN(4);
+ *    _sdata = .;        // create a global symbol at data start
+ *    *(.data)           // .data sections
+ *    *(.data*)          // .data* sections
+ *
+ *    . = ALIGN(4);
+ *    _edata = .;        // define a global symbol at data end
+ *  } >RAM_D1 AT> FLASH  // <<=========== ***** Modifiled *****
+ *
+ *
+ *  // Uninitialized data section
+ *  . = ALIGN(4);
+ *  .bss :
+ *  {
+ *    // This is used by the startup in order to initialize the .bss secion
+ *    _sbss = .;         // define a global symbol at bss start
+ *    __bss_start__ = _sbss;
+ *    *(.bss)
+ *    *(.bss*)
+ *    *(COMMON)
+ *
+ *    . = ALIGN(4);
+ *    _ebss = .;         // define a global symbol at bss end
+ *    __bss_end__ = _ebss;
+ *  } >RAM_D1          // <<=========== ***** Modifiled *****
+ *
+ * @endcode
+ *
  */
 
