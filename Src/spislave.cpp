@@ -68,10 +68,12 @@ SpiStatus SpiSlave::TransmitAndReceive(
         SPIM_SYSLOG("Start SPI slave transferring");
 
         // Keep coherence between the L2 and cache before DMA
-        murasaki::InvalidateDataCacheByAddress(
-                                               const_cast<uint8_t *>(tx_data),
-                                               size);
-        murasaki::InvalidateDataCacheByAddress(rx_data, size);
+        // No Need to invalidate for TX
+        murasaki::CleanDataCacheByAddress(
+                                          const_cast<uint8_t *>(tx_data),
+                                          size);
+        // Need to invalidate for RX
+        murasaki::CleanAndInvalidateDataCacheByAddress(rx_data, size);
 
         // Transmit over SPI
         HAL_StatusTypeDef status = HAL_SPI_TransmitReceive_DMA(

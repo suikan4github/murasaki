@@ -8,11 +8,13 @@ Record of the modification in project development.
 ### Changed
 - [Issue 34 : Refactor SYSLOG message from "Return" to "Leave" ](https://github.com/suikan4github/murasaki/issues/34)
 - [Issue 37 : Rename Task class to SimpleTask](https://github.com/suikan4github/murasaki/issues/37)
+
 ### Deprecated
 ### Removed
 ### Fixed
 - [Issue 33 : \_\_VA_ARGS__ have problem if there are variable parameters.](https://github.com/suikan4github/murasaki/issues/33)
 - [Issue 36 : "Sample" section is missed in the TOC of README.md](https://github.com/suikan4github/murasaki/issues/36)
+- [Issue 40 : Cache in-coherency crashes the program ](https://github.com/suikan4github/murasaki/issues/40)
 
 ### Security
 ### Known Issue

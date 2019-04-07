@@ -81,7 +81,7 @@ void InitPlatform()
     MURASAKI_ASSERT(nullptr != murasaki::platform.led)
 
     // For demonstration of FreeRTOS task.
-    murasaki::platform.task1 = new murasaki::Task(
+    murasaki::platform.task1 = new murasaki::SimpleTask(
                                                   "task1",
                                                   256,
                                                   1,

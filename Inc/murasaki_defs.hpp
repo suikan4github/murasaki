@@ -258,7 +258,7 @@ static inline bool IsTaskContext()
  *
  * Once this function is returned, the specific region is coherent.
  */
-static inline void InvalidateDataCacheByAddress(void * address, size_t size)
+static inline void CleanAndInvalidateDataCacheByAddress(void * address, size_t size)
 {
 #ifdef __CORE_CM7_H_GENERIC
     unsigned int aligned_address = reinterpret_cast<unsigned int>(address);
@@ -269,7 +269,38 @@ static inline void InvalidateDataCacheByAddress(void * address, size_t size)
     aligned_address -= adjustment;  // aligne to 32byte boarder
     size += adjustment;             // Because the start address is lower, the size is bigger.
 
-    ::SCB_InvalidateDCache_by_Addr(reinterpret_cast<long unsigned int *>(aligned_address), size);
+    ::SCB_CleanInvalidateDCache_by_Addr(reinterpret_cast<long unsigned int *>(aligned_address), size);
+#elif defined ( __CORE_CM0_H_GENERIC ) ||defined ( __CORE_CM0PLUS_H_GENERIC ) ||defined ( __CORE_CM3_H_GENERIC ) ||defined ( __CORE_CM4_H_GENERIC )
+    // Do nothing. These core doesn't have d-cache.
+#else
+#error "Unknown core"
+#endif
+}
+
+/**
+ * @brief Clean the specific region of data cache.
+ * @param address Start address of region
+ * @param size Size of region
+ * @details
+ * Keep coherence between the L2 memory and d-cache, between specific region.
+ *
+ * The region is specified by address and size. If address si not 32byte aligned,
+ * it is truncated to the 32byte alignment, and size is adjusted to follow this alignment.
+ *
+ * Once this function is returned, the specific region is coherent.
+ */
+static inline void CleanDataCacheByAddress(void * address, size_t size)
+                                           {
+#ifdef __CORE_CM7_H_GENERIC
+    unsigned int aligned_address = reinterpret_cast<unsigned int>(address);
+
+    // extract modulo 32. The address have to be aligned to 32byte.
+    unsigned int adjustment = aligned_address & 0x1F;
+    // Adjust the address and size.
+    aligned_address -= adjustment;  // aligne to 32byte boarder
+    size += adjustment;             // Because the start address is lower, the size is bigger.
+
+    ::SCB_CleanDCache_by_Addr(reinterpret_cast<long unsigned int *>(aligned_address), size);
 #elif defined ( __CORE_CM0_H_GENERIC ) ||defined ( __CORE_CM0PLUS_H_GENERIC ) ||defined ( __CORE_CM3_H_GENERIC ) ||defined ( __CORE_CM4_H_GENERIC )
     // Do nothing. These core doesn't have d-cache.
 #else

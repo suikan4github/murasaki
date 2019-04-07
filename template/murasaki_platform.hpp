@@ -50,8 +50,8 @@ void InitPlatform();
  * By default, it toggles LED as sample program.
  * Inside this function can be customized freely.
  */
-
 void ExecPlatform();
+
 /**
  * @brief Hook for the assert_failure() in main.c
  * @ingroup MURASAKI_PLATFORM_GROUP
@@ -70,8 +70,8 @@ void ExecPlatform();
  * By default, this routine output a message with location informaiton
  * to the debugger console.
  */
-
 void CustomAssertFailed(uint8_t* file, uint32_t line);
+
 /**
  * @brief Hook for the default exception handler. Never return.
  * @ingroup MURASAKI_PLATFORM_GROUP
@@ -99,6 +99,7 @@ void CustomAssertFailed(uint8_t* file, uint32_t line);
  *     b Infinite_Loop
  * @endcode
  */
+void CustomDefaultHandler();
 
 /**
  * @brief StackOverflow hook for FreeRTOS

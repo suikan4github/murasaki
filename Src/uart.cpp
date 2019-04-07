@@ -106,8 +106,10 @@ murasaki::UartStatus Uart::Transmit(
         // The value will be filled by interrupt.
         tx_interrupt_status_ = murasaki::kursTimeOut;
         // Keep coherence between the L2 and cache before DMA
-		murasaki::InvalidateDataCacheByAddress(const_cast<uint8_t *>(data),
-				size);
+        // No need to invalidate
+        murasaki::CleanDataCacheByAddress(
+                                          const_cast<uint8_t *>(data),
+                                          size);
 
         HAL_StatusTypeDef status = HAL_UART_Transmit_DMA(peripheral_, const_cast<uint8_t *>(data), size);
         MURASAKI_ASSERT(HAL_OK == status);
@@ -181,7 +183,8 @@ murasaki::UartStatus Uart::Receive(
 
         rx_interrupt_status_ = murasaki::kursTimeOut;
         // Keep coherence between the L2 and cache before DMA
-        murasaki::InvalidateDataCacheByAddress(data, size);
+        // Need to invalidate
+        murasaki::CleanAndInvalidateDataCacheByAddress(data, size);
 
         HAL_StatusTypeDef status = HAL_UART_Receive_DMA(peripheral_, data, size);
         MURASAKI_ASSERT(HAL_OK == status);
