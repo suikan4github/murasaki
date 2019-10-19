@@ -10,8 +10,9 @@
 
 namespace murasaki {
 
-Synchronizer::Synchronizer():
-		semaphore_ (xSemaphoreCreateBinary())      // create semaphore as "empty" state
+Synchronizer::Synchronizer()
+        :
+          semaphore_(xSemaphoreCreateBinary())      // create semaphore as "empty" state
 {
 
     MURASAKI_ASSERT(semaphore_ != nullptr)
@@ -24,7 +25,7 @@ Synchronizer::~Synchronizer()
 }
 
 bool Synchronizer::Wait(WaitMilliSeconds timeout_ms)
-{
+                        {
     MURASAKI_ASSERT(IsTaskContext());
     return (pdTRUE == xSemaphoreTake(semaphore_, timeout_ms / portTICK_PERIOD_MS));
 
@@ -34,8 +35,10 @@ void Synchronizer::Release()
 {
     if (IsTaskContext())
         ::xSemaphoreGive(semaphore_ );
-    else
+    else {
         ::xSemaphoreGiveFromISR(semaphore_, nullptr);
+        portYIELD_FROM_ISR(true)
+    }
 
 }
 

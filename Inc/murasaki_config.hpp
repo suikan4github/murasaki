@@ -11,7 +11,7 @@
 #ifndef MURASAKI_CONFIG_HPP_
 #define MURASAKI_CONFIG_HPP_
 
-#include <FreeRTOS.h>
+#include <cmsis_os.h>
 
 // Read the overriding definitions by programmer.
 #include <platform_config.hpp>
@@ -88,13 +88,13 @@
  * To override the definition here, define same macro inside @ref platform_config.hpp.
  */
 #ifndef PLATFORM_CONFIG_DEBUG_TASK_PRIORITY
-#define PLATFORM_CONFIG_DEBUG_TASK_PRIORITY  (( configMAX_PRIORITIES-1 > 0 ) ? configMAX_PRIORITIES-1 : 0)
+#define PLATFORM_CONFIG_DEBUG_TASK_PRIORITY  (osPriorityHigh - osPriorityIdle)
 #endif
 
 // For assertion ******************************************************
 /**
  * \def MURASAKI_CONFIG_NODEBUG
- * \brief Surpress \ref MURASAKI_ASSERT macro.
+ * \brief Suppress \ref MURASAKI_ASSERT macro.
  * \details
  * Set this macro to true, to discard the assertion \ref MURASAKI_ASSERT. Set this macro false, to use the assertion.
  *
@@ -108,7 +108,7 @@
 // For syslog ******************************************************
 /**
  * \def MURASAKI_CONFIG_NOSYSLOG
- * \brief Surpress \ref MURASAKI_SYSLOG macro.
+ * \brief Suppress \ref MURASAKI_SYSLOG macro.
  * \details
  * Set this macro to true, to discard the  \ref MURASAKI_SYSLOG. Set this macro false, to use the syslog.
  *
@@ -119,6 +119,17 @@
 #define MURASAKI_CONFIG_NOSYSLOG false
 #endif
 
+/**
+ * @def MURASAKI_CONFIG_NOCYCCNT
+ * @brief Doesn't run the CYCCNT counter.
+ * @details
+ * Set this macro to true, to halt the CYCCNT counter. Set this macro false, to run.
+ *
+ * To override the definition here, define same macro inside @ref platform_config.hpp.
+ */
+#ifndef MURASAKI_CONFIG_NOCYCCNT
+#define MURASAKI_CONFIG_NOCYCCNT false
+#endif
 
 /**
  * \}

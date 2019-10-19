@@ -13,7 +13,6 @@
 #include "murasaki_defs.hpp"
 #include "string.h"
 
-
 namespace murasaki {
 /**
  * @brief Set the syslog severity threshold
@@ -66,7 +65,7 @@ void RemoveSyslogFacilityFromMask(murasaki::SyslogFacility facility);
  * @li The facility is "1" in the corresponding bit of the internal facility mask.
  */
 bool AllowedSyslogOut(murasaki::SyslogFacility facility,
-                             murasaki::SyslogSeverity severity);
+                      murasaki::SyslogSeverity severity);
 
 }
 
@@ -101,11 +100,8 @@ bool AllowedSyslogOut(murasaki::SyslogFacility facility,
 #define MURASAKI_SYSLOG( FACILITY, SEVERITY, FORMAT, ... )\
     if ( murasaki::AllowedSyslogOut(FACILITY, SEVERITY) )\
     {\
-        murasaki::debugger->Printf("%s, %s: %s, line %4d, %s(): ", #FACILITY, #SEVERITY, __MURASAKI__FILE__, __LINE__, __func__);\
-        murasaki::debugger->Printf( FORMAT, ##__VA_ARGS__ );\
-        murasaki::debugger->Printf("\n");\
+        murasaki::debugger->Printf("%10u, %s, %s: %s, line %4d, %s(): " FORMAT "\n", murasaki::GetCycleCounter(), #FACILITY, #SEVERITY, __MURASAKI__FILE__, __LINE__, __func__, ##__VA_ARGS__);\
     }
 #endif
-
 
 #endif /* MURASAKI_SYSLOG_HPP_ */

@@ -28,7 +28,7 @@ public:
 	 * @brief destructor
 	 */
 	virtual ~PeripheralStrategy(){};
-private:
+     protected:
 	/**
 	 * @brief pass the raw peripheral handler
 	 * @return pointer to the raw peripheral handler hidden in a class.

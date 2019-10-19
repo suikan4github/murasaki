@@ -37,7 +37,6 @@
  *
  */
 
-
 /**
  * \page murasaki_pg_directory Directory Structure
  * \brief Murasaki has four main directory and several user-modifiable files.
@@ -133,8 +132,6 @@
  *
  * Last one is little tricky to do it manually. Refer @ref murasaki_include_stub.h for details.
  */
-
-
 
 /**
  * \page murasaki_pg_cubemx CubeMX setting
@@ -434,8 +431,6 @@
  * @endcode
  */
 
-
-
 /**
  * \page murasaki_pg_interrupt Routing interrupts
  * \brief The murasaki_platform.cpp has skeletons of HAL callback.
@@ -499,7 +494,7 @@
  * }
  * @endcode
  *
- * To enable the assert_failed(), the porting programmer have to uncomment the @ref USE_FULL_ASSERT macro
+ * To enable the assert_failed(), the porting programmer have to uncomment the USE_FULL_ASSERT macro
  * inside stm32xxxx_hal_conf.h. The file name is depend on the target microprocessor.
  * Thus, the porting programmer have to search the all files inside project.
  *
@@ -551,7 +546,6 @@
  * @li Route the interrupts as described @ref murasaki_pg_interrupt.
  * @li Route the error handling as described @ref murasaki_pg_error
  */
-
 
 #endif /* MURASAKI_3_PG_HPP_ */
 

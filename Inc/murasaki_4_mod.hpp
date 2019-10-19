@@ -38,8 +38,7 @@
  * \ingroup MURASAKI_GROUP
  * \defgroup MURASAKI_DEFINITION_GROUP Definitions and Configuration
  * \brief Definitions and configuration collection of murasaki platform.
-*/
-
+ */
 
 /**
  * \ingroup MURASAKI_GROUP
@@ -94,20 +93,23 @@
  * \defgroup MURASAKI_ABSTRACT_GROUP Abstract Classes
  * \brief Generic classes as template of the concrete class.
  * \details
- * Usually, application dodesn't instanciate these classes. But pointer may be clecalared
+ * Usually, application dodesn't instantiate these classes. But pointer may be declared
  * as abstract class as geneic placeholder.
  */
-
 
 /**
  * @ingroup MURASAKI_GROUP
  * @defgroup MURASAKI_HELPER_GROUP Helper classes
  * @brief Classes to support the murasaki-class.
  * @details
- * These classess are not used by customer.
+ * These classes are not used by customer.
  */
 
-
+/**
+ * @ingroup MURASAKI_GROUP
+ * @defgroup MURASAKI_FUNCTION_GROUP Utility functions
+ * @brief Collection of the useful functions.
+ */
 
 #endif /* MURASAKI_4_MOD_HPP_ */
 

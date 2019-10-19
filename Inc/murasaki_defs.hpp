@@ -11,7 +11,6 @@
 
 #include "murasaki_include_stub.h"
 
-
 #include <FreeRTOS.h>
 #include <task.h>
 
@@ -43,9 +42,11 @@ enum SyslogFacility {
     kfaSpiSlave = 1 << 3,       //!< kfaSpi is specified when the message is from the SPI slave module
     kfaI2cMaster = 1 << 4,      //!< kfaI2c is specified when the message is from the I2C master module.
     kfaI2cSlave = 1 << 5,       //!< kfaI2c is specified when the message is from the I2C slave module.
-    kfaI2s = 1 << 6,            //!< kfaI2s is specified when the message is from the I2S module
-    kfaSai = 1 << 7,            //!< kfaSai is specified when the message is from the SAI module.
-    kfaLog = 1 << 8,            //!< kfaLog is specified when the message is from the logger and debugger module.
+    kfaAudio = 1 << 6,          //!< kfaI2c is specified when the message is from the Audio module.
+    kfaI2s = 1 << 7,            //!< kfaI2s is specified when the message is from the I2S module
+    kfaSai = 1 << 8,            //!< kfaSai is specified when the message is from the SAI module.
+    kfaLog = 1 << 9,            //!< kfaLog is specified when the message is from the logger and debugger module.
+    kfaAudioCodec = 1 << 10,    //!< kfaAudioCodec is specified when the message is from the Audio Codec module
     kfaNone = 1 << 22,          //!< Disable all facility
     kfaAll = 1 << 23,           //!< Enable all facility
     kfaUser0 = 1 << 24,         //!< User defined facility
@@ -88,9 +89,9 @@ enum SyslogSeverity {
  * kwmsIndefinitely means function will will not cause time out.
  */
 enum WaitMilliSeconds
-    : uint32_t
-    {
-        kwmsPolling = 0,               ///< Not waiting. Immediate timeout.
+: uint32_t
+{
+    kwmsPolling = 0,               ///< Not waiting. Immediate timeout.
     kwmsIndefinitely = HAL_MAX_DELAY   ///< Wait forever
 };
 
@@ -225,6 +226,20 @@ enum UartTimeout
     kutNoIdleTimeout = 0,           //!< kutNoIdleTimeout is specified when API should has normal timeout.
     kutIdleTimeout                  //!< kutIdleTimeout is specified when API should time out by Idle line
 };
+
+/**
+ * \}
+ * end of ingroup MURASAKI_DEFINITION_GROUP Definitions
+ *
+ */
+
+/*------------------------------- function ---------------------------------*/
+
+/**
+ * @ingroup MURASAKI_FUNCTION_GROUP
+ * \{
+ */
+
 /**
  * \brief determine task or ISR context
  * \returns true if task context, false if ISR context.
@@ -253,13 +268,13 @@ static inline bool IsTaskContext()
  * @details
  * Keep coherence between the L2 memory and d-cache, between specific region.
  *
- * The region is specified by address and size. If address si not 32byte aligned,
+ * The region is specified by address and size. If address is not 32byte aligned,
  * it is truncated to the 32byte alignment, and size is adjusted to follow this alignment.
  *
  * Once this function is returned, the specific region is coherent.
  */
 static inline void CleanAndInvalidateDataCacheByAddress(void * address, size_t size)
-{
+                                                        {
 #ifdef __CORE_CM7_H_GENERIC
     unsigned int aligned_address = reinterpret_cast<unsigned int>(address);
 
@@ -284,7 +299,7 @@ static inline void CleanAndInvalidateDataCacheByAddress(void * address, size_t s
  * @details
  * Keep coherence between the L2 memory and d-cache, between specific region.
  *
- * The region is specified by address and size. If address si not 32byte aligned,
+ * The region is specified by address and size. If address is not 32byte aligned,
  * it is truncated to the 32byte alignment, and size is adjusted to follow this alignment.
  *
  * Once this function is returned, the specific region is coherent.
@@ -309,6 +324,27 @@ static inline void CleanDataCacheByAddress(void * address, size_t size)
 }
 
 /**
+ * @brief Initializa and start the cycle counter
+ * @details
+ * This cycle counter ( CYCNT ) is implemented inside CORTEX-Mx core.
+ * To implement or not is up to the SoC vender.
+ * The STM32 series seems to have.
+ */
+static inline void InitCycleCounter() {
+    DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
+    DWT->CYCCNT = 0;
+}
+
+/**
+ * @brief Obtain the current cycle count of CYCCNT register.
+ * @return current core cycle.
+ */
+static inline unsigned int GetCycleCounter()
+{
+    return DWT->CYCCNT;
+}
+
+/**
  *
  * @brief Keep task sleeping during the specific duration.
  * @param duration Sleeping time by milliseconds.
@@ -325,16 +361,13 @@ static inline void CleanDataCacheByAddress(void * address, size_t size)
 static inline void Sleep(murasaki::WaitMilliSeconds duration) {
     vTaskDelay(pdMS_TO_TICKS(duration));
 }
+
 /**
  * \}
- * end of ingroup MURASAKI_DEFINITION_GROUP Definitions
+ * end of ingroup MURASAKI_FUNCTION_GROUP Definitions
  *
  */
 
-
-
-
 }     // namespace
-
 
 #endif /* MURASAKI_DEFS_HPP_ */
