@@ -8,10 +8,10 @@ Note that issue #46 makes incompatibility from the past code.
 ### Added
 - [Issue 22 : Add Stereo Audio Class](https://github.com/suikan4github/murasaki/issues/22)
 - [Issue 44 : Support STM32CubeIDE startup code](https://github.com/suikan4github/murasaki/issues/44)
-- [Issue 49 : Add SAI interrupt handler template](Add SAI interrupt handler template. #49)
+- [Issue 49 : Add SAI interrupt handler template](https://github.com/suikan4github/murasaki/issues/49)
 
 ### Changed
-- [Issue 46 : Task priority is passed incorrectly](Task priority is passed incorrectly. #46)
+- [Issue 46 : Task priority is passed incorrectly](https://github.com/suikan4github/murasaki/issues/46)
 
 ### Deprecated
 ### Removed
