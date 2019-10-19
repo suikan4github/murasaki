@@ -4,6 +4,7 @@ Record of the modification in project development.
 
 ### Added
 - [Issue 44 : Support STM32CubeIDE startup code](https://github.com/suikan4github/murasaki/issues/44)
+- [Issue 22 : Add Stereo Audio Class](https://github.com/suikan4github/murasaki/issues/22)
 
 ### Changed
 ### Deprecated
