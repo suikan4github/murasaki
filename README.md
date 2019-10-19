@@ -97,13 +97,13 @@ stat = murasaki::platform.i2cMaster->Transmit(
 Task is also encapsulated by class.
 ```C++
 // For demonstration of FreeRTOS task.
-murasaki::platform.task1 = new murasaki::Task(
-                                               "Master",             // Name of task.
-                                               256,                  // Task stack size
-                                               3,                    // Task priority
-                                               nullptr,              // parameter to task
-                                               &TaskBodyFunction     // Pointer to the task body function
-                                               );
+    murasaki::platform.task1 = new murasaki::SimpleTask(
+                                                        "task1",                /* Task name */
+                                                        2048,                   /* Stack size */
+                                                        murasaki::ktpNormal,    /* Task priority */
+                                                        nullptr,                /* Stack must be allocated by system */
+                                                        &TaskBodyFunction       /* Pointer to the task body */
+                                                        );
 // Start a task
 murasaki::platform.task1->Start();
 

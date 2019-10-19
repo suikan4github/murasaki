@@ -55,11 +55,11 @@ class SimpleTask : public murasaki::TaskStrategy {
      *
      */
     SimpleTask(
-         const char * task_name,
-         unsigned short stack_depth,
-         UBaseType_t task_priority,
-         const void * task_parameter,
-         void (*task_body_func)(const void *));
+               const char * task_name,
+               unsigned short stack_depth,
+               murasaki::TaskPriority task_priority,
+               const void * task_parameter,
+               void (*task_body_func)(const void *));
 
  protected:
     /**
@@ -77,7 +77,8 @@ class SimpleTask : public murasaki::TaskStrategy {
      * @brief A storage for the pointer to the task body function.
      */
     void (*task_body_func_)(const void *);
-    };
-
 };
+
+}
+;
 #endif /* SIMPLETASK_HPP_ */

@@ -22,22 +22,22 @@ static void AutoRePrintTaskBody(const void* ptr);
 // Copy data from FIFO to Logger.
 static void TxTaskBody(const void* ptr);
 
-
 namespace murasaki {
 
-
-Debugger::Debugger(LoggerStrategy * logger):
-		helpers_{
-			new murasaki::DebuggerFifo(PLATFORM_CONFIG_DEBUG_BUFFER_SIZE),
-			logger
-		},
+Debugger::Debugger(LoggerStrategy * logger)
+        :
+          helpers_ {
+                  new murasaki::DebuggerFifo(PLATFORM_CONFIG_DEBUG_BUFFER_SIZE),
+                  logger
+          },
           tx_task_(
-                   new murasaki::SimpleTask("DebugTask",                   // name of task
-                           PLATFORM_CONFIG_DEBUG_TASK_STACK_SIZE,    // stack depth
-                           PLATFORM_CONFIG_DEBUG_TASK_PRIORITY,      // execusion priority of task
-                           &helpers_,                                // parameter to task
-                           &TxTaskBody                               // Task body
-	                                            ))
+                   new murasaki::SimpleTask(
+                                            "DebugTask", /* name of task */
+                                            PLATFORM_CONFIG_DEBUG_TASK_STACK_SIZE, /* stack depth */
+                                            PLATFORM_CONFIG_DEBUG_TASK_PRIORITY, /* execusion priority of task */
+                                            &helpers_, /* parameter to task */
+                                            &TxTaskBody /* Task body */
+                                            ))
 
 {
     // initialize internal variable;
@@ -45,10 +45,8 @@ Debugger::Debugger(LoggerStrategy * logger):
     MURASAKI_ASSERT(helpers_.fifo != nullptr)
     MURASAKI_ASSERT(tx_task_ != nullptr);
 
-
     auto_reprint_enable_ = false;
     auto_reprint_task = nullptr;
-
 
     tx_task_->Start();
 
@@ -70,14 +68,14 @@ Debugger::~Debugger()
 }
 
 void Debugger::Printf(const char * fmt, ...)
-{
-        // obtain variable parameter list
-        va_list argp;
+                      {
+    // obtain variable parameter list
+    va_list argp;
 
-        MURASAKI_ASSERT(nullptr != fmt);// nullptr check. Perhaps, overkill.
+    MURASAKI_ASSERT(nullptr != fmt);  // nullptr check. Perhaps, overkill.
 
-        portDISABLE_INTERRUPTS();// ARM dependent API. OK to use in task and ISR.
-        {
+    portDISABLE_INTERRUPTS();  // ARM dependent API. OK to use in task and ISR.
+    {
 #if 0
             // Test the remains of task stack in byte.
             // To use the uxTaskGetStackHighWaterMark(), Add following to the
@@ -90,19 +88,19 @@ void Debugger::Printf(const char * fmt, ...)
                     (int) uxTaskGetStackHighWaterMark(tx_task_));
             AppendToBuffer();
 #endif
-            ::va_start(argp, fmt);
-            // convert the number with formt string to the line string.
-            // The string length have to be N - 1. Where N is the length of the destination variable.
-            ::vsnprintf((char *) line_, sizeof(line_) - 1, fmt, argp);
+        ::va_start(argp, fmt);
+        // convert the number with formt string to the line string.
+        // The string length have to be N - 1. Where N is the length of the destination variable.
+        ::vsnprintf((char *) line_, sizeof(line_) - 1, fmt, argp);
 
-            ::va_end(argp);
-            // Append the line to the buffer to be sent.
-            helpers_.fifo->Put(reinterpret_cast<uint8_t*>(line_), ::strlen(line_));
+        ::va_end(argp);
+        // Append the line to the buffer to be sent.
+        helpers_.fifo->Put(reinterpret_cast<uint8_t*>(line_), ::strlen(line_));
 
-        }
-        portENABLE_INTERRUPTS();
+    }
+    portENABLE_INTERRUPTS();
 
-        // Notify to the consumer task, the new data has come.
+    // Notify to the consumer task, the new data has come.
     helpers_.fifo->NotifyData();
 
 }
@@ -113,8 +111,6 @@ char Debugger::GetchFromTask()
 
     return helpers_.logger->getCharacter();
 }
-
-
 
 /*
  * This function is not protected from interrupt.
@@ -133,12 +129,13 @@ void Debugger::AutoRePrint()
         return;
     else
     {
-        auto_reprint_task = new murasaki::SimpleTask("AutoRePrint",  // name of task
-                PLATFORM_CONFIG_DEBUG_TASK_STACK_SIZE,       // stack depth
-                PLATFORM_CONFIG_DEBUG_TASK_PRIORITY,         // execusion priority of task
-                &helpers_,                                   // parameter to task
-                &AutoRePrintTaskBody
-                );
+        auto_reprint_task = new murasaki::SimpleTask(
+                                                     "AutoRePrint", /* name of task */
+                                                     PLATFORM_CONFIG_DEBUG_TASK_STACK_SIZE, /* stack depth */
+                                                     PLATFORM_CONFIG_DEBUG_TASK_PRIORITY, /* execusion priority of task */
+                                                     &helpers_, /* parameter to task */
+                                                     &AutoRePrintTaskBody
+                                                     );
         MURASAKI_ASSERT(auto_reprint_task != nullptr);
 
         auto_reprint_task->Start();
@@ -148,13 +145,11 @@ void Debugger::AutoRePrint()
 }
 
 void Debugger::DoPostMortem() {
-	// Call post mortem processing. Never return.
-	helpers_.logger->DoPostMortem( helpers_.fifo);
+    // Call post mortem processing. Never return.
+    helpers_.logger->DoPostMortem(helpers_.fifo);
 }
 
-
 } /* namespace platform */
-
 
 /*
  * Keep watching the input from the loggin device. If some input comes, call the RwWind()
@@ -194,7 +189,6 @@ static void TxTaskBody(const void* ptr)
     const int block_size = 100;
     uint8_t block[block_size];
 
-
     while (true) {
         // Copy data from FIFO
         unsigned int copy_size = helpers->fifo->Get(block, block_size);
@@ -203,6 +197,5 @@ static void TxTaskBody(const void* ptr)
         if (copy_size != 0)
             helpers->logger->putMessage(reinterpret_cast<char *>(block), copy_size);
     }
-
 
 }

@@ -10,16 +10,17 @@
 
 namespace murasaki {
 
-TaskStrategy::TaskStrategy(const char * task_name, unsigned short stack_depth, UBaseType_t priority, const void * parameter)
+TaskStrategy::TaskStrategy(const char * task_name, unsigned short stack_depth, murasaki::TaskPriority priority,
+                           const void * parameter)
         : name_(task_name),
           stack_depth_(stack_depth),
           parameter_(parameter),
           priority_(priority)
 {
-    MURASAKI_ASSERT(nullptr!= task_name);
-    MURASAKI_ASSERT(0 != stack_depth);                  // reject only very explict fault.
-    MURASAKI_ASSERT(configMAX_PRIORITIES > priority);   // priority is allowed till ( configMAX_PRIORITIES - 1 )
-    MURASAKI_ASSERT(0 < priority);                      // priority 0 is idle task
+    MURASAKI_ASSERT(nullptr != task_name);
+    MURASAKI_ASSERT(0 != stack_depth);  // reject only very explict fault.
+    MURASAKI_ASSERT(configMAX_PRIORITIES > priority);  // priority is allowed till ( configMAX_PRIORITIES - 1 )
+    MURASAKI_ASSERT(0 < priority);  // priority 0 is idle task
     task_ = 0;
 }
 
@@ -37,13 +38,13 @@ void TaskStrategy::Start()
     // So FreeRTOS API can start the as task.
     // The passed static function calls TaskBody() member funciton, which is
     // defined by user.
-    BaseType_t task_result = ::xTaskCreate(TaskStrategy::Launch,         // task entity;
-                                           name_,                        // name of task
-                                           stack_depth_,                 // stack depth [byte]
-                                           this,                         // See AbstractTask::Launch for the details.
-            priority_,                    // Execution priority of task
-                                           &task_                        // receive the task handle if success.
-                                           );
+    BaseType_t task_result = ::xTaskCreate(TaskStrategy::Launch,  // task entity;
+            name_,  // name of task
+            stack_depth_,  // stack depth [byte]
+            this,  // See AbstractTask::Launch for the details.
+            priority_,  // Execution priority of task
+            &task_  // receive the task handle if success.
+            );
     MURASAKI_ASSERT(task_result != errCOULD_NOT_ALLOCATE_REQUIRED_MEMORY);
 
 }
@@ -76,10 +77,9 @@ int TaskStrategy::getStackMinHeadroom()
 #endif
 }
 
-
 // This is a static member function
 void TaskStrategy::Launch(void * ptr)
-{
+                          {
     MURASAKI_ASSERT(nullptr != ptr);
 
     // Enforce the ptr to be AbstractTask * type. This is safe because this class member funciton is called from
@@ -90,7 +90,6 @@ void TaskStrategy::Launch(void * ptr)
     // the TaksBody is always the member function of the callee class ( Descendants of AbstractTask ).
     this_ptr->TaskBody(this_ptr->parameter_);
 }
-
 
 } /* namespace murasaki */
 

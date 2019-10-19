@@ -1,15 +1,23 @@
 # Change log
 Record of the modification in project development.
+
+Note that issue #46 makes incompatibility from the past code. 
+
 ## [Unreleased]
 
 ### Added
-- [Issue 44 : Support STM32CubeIDE startup code](https://github.com/suikan4github/murasaki/issues/44)
 - [Issue 22 : Add Stereo Audio Class](https://github.com/suikan4github/murasaki/issues/22)
+- [Issue 44 : Support STM32CubeIDE startup code](https://github.com/suikan4github/murasaki/issues/44)
+- [Issue 49 : Add SAI interrupt handler template](Add SAI interrupt handler template. #49)
 
 ### Changed
+- [Issue 46 : Task priority is passed incorrectly](Task priority is passed incorrectly. #46)
+
 ### Deprecated
 ### Removed
 ### Fixed
+- [Issue 48 : README.md has old Task based sample. Need to update](https://github.com/suikan4github/murasaki/issues/48)
+
 ### Security
 ### Known Issue
 - The SPI slave transfer is not tested.

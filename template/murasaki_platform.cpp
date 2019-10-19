@@ -56,18 +56,18 @@ void InitPlatform()
     // referred here.
     murasaki::platform.uart_console = new murasaki::DebuggerUart(&huart3);
     while (nullptr == murasaki::platform.uart_console)
-        ;   // stop here on the memory allocation failure.
+        ;  // stop here on the memory allocation failure.
 
     // UART is used for logging port.
     // At least one logger is needed to run the debugger class.
     murasaki::platform.logger = new murasaki::UartLogger(murasaki::platform.uart_console);
     while (nullptr == murasaki::platform.logger)
-        ;   // stop here on the memory allocation failure.
+        ;  // stop here on the memory allocation failure.
 
     // Setting the debugger
     murasaki::debugger = new murasaki::Debugger(murasaki::platform.logger);
     while (nullptr == murasaki::debugger)
-        ;   // stop here on the memory allocation failure.
+        ;  // stop here on the memory allocation failure.
 
     // Set the debugger as AutoRePrint mode, for the easy operation.
     murasaki::debugger->AutoRePrint();  // type any key to show history.
@@ -81,7 +81,7 @@ void InitPlatform()
     murasaki::platform.task1 = new murasaki::SimpleTask(
                                                         "task1",
                                                         256,
-                                                        1,
+                                                        murasaki::ktpNormal,
                                                         nullptr,
                                                         &TaskBodyFunction
                                                         );
@@ -442,6 +442,55 @@ void HAL_I2C_ErrorCallback(I2C_HandleTypeDef * hi2c) {
 
 #endif
 
+/* ------------------ SAI  -------------------------- */
+#ifdef HAL_SAI_MODULE_ENABLED
+/**
+ * @brief Optional SAI interrupt handler at buffer transfer halfway.
+ * @ingroup MURASAKI_PLATFORM_GROUP
+ * @param hsai Handler of the SAI device.
+ * @details
+ * Invoked after SAI RX DMA complete interrupt is at halfway.
+ * This interrupt have to be forwarded to the  murasaki::DuplexAudio::ReceiveCallback().
+ * The second parameter of the ReceiveCallback() have to be 0 which mean the halfway interrupt.
+ */
+void HAL_SAI_RxHalfCpltCallback(SAI_HandleTypeDef * hsai) {
+    if (murasaki::platform.audio->DmaCallback(hsai, 0)) {
+        return;
+    }
+}
+
+/**
+ * @brief Optional SAI interrupt handler at buffer transfer complete.
+ * @ingroup MURASAKI_PLATFORM_GROUP
+ * @param hsai Handler of the SAI device.
+ * @details
+ * Invoked after SAI RX DMA complete interrupt is at halfway.
+ * This interrupt have to be forwarded to the  murasaki::DuplexAudio::ReceiveCallback().
+ * The second parameter of the ReceiveCallback() have to be 1 which mean the complete interrupt.
+ */
+void HAL_SAI_RxCpltCallback(SAI_HandleTypeDef * hsai) {
+    if (murasaki::platform.audio->DmaCallback(hsai, 1)) {
+        return;
+    }
+}
+
+/**
+ * @brief Optional SAI error interrupt handler.
+ * @ingroup MURASAKI_PLATFORM_GROUP
+ * @param hsai Handler of the SAI device.
+ * @details
+ * The error have to be forwarded to murasaki::DuplexAudio::ErrorCallback().
+ * Note that DuplexAudio::ErrorCallback() trigger a hard fault.
+ * So, never return.
+ */
+
+void HAL_SAI_ErrorCallback(SAI_HandleTypeDef * hsai) {
+    if (murasaki::platform.audio->ErrorCallback(hsai))
+        return;
+}
+
+#endif
+
 /* -------------------------- GPIO ---------------------------------- */
 
 /**
@@ -505,7 +554,7 @@ void vApplicationStackOverflowHook(TaskHandle_t xTask,
 void TaskBodyFunction(const void* ptr)
                       {
 
-    while (true)    // dummy loop
+    while (true)  // dummy loop
     {
         murasaki::platform.led->Toggle();  // toggling LED
         murasaki::Sleep(static_cast<murasaki::WaitMilliSeconds>(700));

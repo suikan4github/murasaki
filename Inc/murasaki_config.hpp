@@ -88,7 +88,7 @@
  * To override the definition here, define same macro inside @ref platform_config.hpp.
  */
 #ifndef PLATFORM_CONFIG_DEBUG_TASK_PRIORITY
-#define PLATFORM_CONFIG_DEBUG_TASK_PRIORITY  (osPriorityHigh - osPriorityIdle)
+#define PLATFORM_CONFIG_DEBUG_TASK_PRIORITY  murasaki::ktpHigh
 #endif
 
 // For assertion ******************************************************

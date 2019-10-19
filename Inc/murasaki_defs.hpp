@@ -12,6 +12,7 @@
 #include "murasaki_include_stub.h"
 
 #include <FreeRTOS.h>
+#include <cmsis_os.h>
 #include <task.h>
 
 /**
@@ -227,6 +228,24 @@ enum UartTimeout
     kutIdleTimeout                  //!< kutIdleTimeout is specified when API should time out by Idle line
 };
 
+/**
+ * @brief Task class dedicated priority
+ * @details
+ * The task class priority have to be speicified by this enum class.
+ * This is essential to avoid the imcompatibility with cmsis-os which uses negative
+ * priority while FreeRTOS uses positive.
+ */
+// @formatter:off
+enum TaskPriority {
+    ktpIdle = 0,                                                 //!< ktpIdle
+    ktpLow =            osPriorityLow           - osPriorityIdle,//!< ktpLow
+    ktpBelowNormal =    osPriorityBelowNormal   - osPriorityIdle,//!< ktpBelowNormal is for the relatively low priority task.
+    ktpNormal =         osPriorityNormal        - osPriorityIdle,//!< ktpNormal is for the default processing.
+    ktpAboveNormal =    osPriorityAboveNormal   - osPriorityIdle,//!< ktpAboveNormal is for the relatively high priority task.
+    ktpHigh =           osPriorityHigh          - osPriorityIdle,//!< ktpHigh is considered for the debug task.
+    ktpRealtime =       osPriorityRealtime      - osPriorityIdle //!< ktpRealtime is dedicated for the realtime signal processing.
+};
+// @formatter:on
 /**
  * \}
  * end of ingroup MURASAKI_DEFINITION_GROUP Definitions
