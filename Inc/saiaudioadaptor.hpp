@@ -21,14 +21,6 @@ class SaiAudioAdaptor : public AudioAdapterStrategy {
                     );
 
     virtual ~SaiAudioAdaptor();
-    /**
-     * @brief Call this function from the error interrupt handler.
-     * @param peripheral pointer to the peripheral device.
-     * @return True if the peripheral matches with own peripheral which was given by constructor. Otherwise false.
-     *
-     * Note, we assume once this error call back is called, we can't recover.
-     */
-    virtual bool ErrorCallback(void * peripheral);
 
     /**
      * @brief Kick start routine to start the TX DMA transfer.
@@ -83,6 +75,21 @@ class SaiAudioAdaptor : public AudioAdapterStrategy {
      * @return 2 or 4. The unit is [Byte]
      */
     virtual unsigned int GetSampleWordSizeRx();
+    /**
+     * @brief Handling error report of device.
+     * @param ptr Pointer for generic use. Usually, points a struct of a device control
+     * @return true if ptr matches with device and handle the error. false if ptr doesn't match
+     * A member function to detect error.
+     *
+     * The error handling is depend on the implementation.
+     */
+    virtual bool HandleError(void * ptr);
+    /**
+     * @details Check if peripheral handle matched with given handle.
+     * @param peripheral_handle
+     * @return true if match, false if not match.
+     */
+    virtual bool Match(void * peripheral_handle);
 
     /**
      * @brief pass the raw peripheral handler

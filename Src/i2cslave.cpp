@@ -14,7 +14,6 @@
 // check if I2C module is enabled by CubeMX
 #ifdef HAL_I2C_MODULE_ENABLED
 
-
 namespace murasaki {
 
 I2cSlave::I2cSlave(I2C_HandleTypeDef * i2c_handle)
@@ -76,7 +75,6 @@ murasaki::I2cStatus I2cSlave::Transmit(
         // And then XferCunt is decremented for each interrupt.
         if (transfered_count != nullptr)
             *transfered_count = tx_size - peripheral_->XferCount;
-
 
         switch (interrupt_status_)
         {
@@ -236,7 +234,7 @@ bool I2cSlave::HandleError(void* ptr)
 
     MURASAKI_ASSERT(nullptr != ptr)
 
-    if (peripheral_ == ptr) {
+    if (this->Match(ptr)) {
         // Check error and halde it.
         if (peripheral_->ErrorCode & HAL_I2C_ERROR_AF) {
             MURASAKI_SYSLOG(kfaI2cSlave, kseWarning, "HAL_I2C_ERROR_AF");
@@ -290,10 +288,10 @@ bool I2cSlave::HandleError(void* ptr)
             sync_->Release();
         }
         I2C_SYSLOG("Return with match");
-        return true;    // report the ptr matched
+        return true;  // report the ptr matched
     } else {
         I2C_SYSLOG("Leave");
-        return false;   // report the ptr doesn't match
+        return false;  // report the ptr doesn't match
     }
 
 }

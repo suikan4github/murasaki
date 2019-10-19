@@ -186,7 +186,7 @@ bool SpiMaster::HandleError(void* ptr)
 
     MURASAKI_ASSERT(nullptr != ptr)
 
-    if (peripheral_ == ptr) {
+    if (this->Match(ptr)) {
 
         // Check error and halde it.
         if (peripheral_->ErrorCode & HAL_SPI_ERROR_CRC) {

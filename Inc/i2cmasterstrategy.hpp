@@ -27,7 +27,7 @@ namespace murasaki {
  * Transmit/Receive.
  */
 
-class I2CMasterStrategy : murasaki::PeripheralStrategy
+class I2CMasterStrategy : public murasaki::PeripheralStrategy
 {
  public:
 

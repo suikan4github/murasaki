@@ -64,10 +64,10 @@ murasaki::I2cStatus I2cMaster::Transmit(
         interrupt_status_ = murasaki::ki2csTimeOut;
         // Transmit over I2C. Address shift is required by HAL specification.
         HAL_StatusTypeDef status = HAL_I2C_Master_Transmit_IT(
-                peripheral_,
-                addrs << 1,
-                const_cast<uint8_t *>(tx_data),
-                tx_size);
+                                                              peripheral_,
+                                                              addrs << 1,
+                                                              const_cast<uint8_t *>(tx_data),
+                                                              tx_size);
         MURASAKI_ASSERT(HAL_OK == status);
 
         // wait for the completion
@@ -195,7 +195,7 @@ murasaki::I2cStatus I2cMaster::TransmitThenReceive(
                                                    unsigned int rx_size,
                                                    unsigned int * tx_transfered_count,
                                                    unsigned int * rx_transfered_count,
-        WaitMilliSeconds timeout_ms) {
+                                                   WaitMilliSeconds timeout_ms) {
 
     I2C_SYSLOG("Enter");
 
@@ -372,7 +372,7 @@ bool I2cMaster::HandleError(void* ptr) {
 
     MURASAKI_ASSERT(nullptr != ptr)
 
-    if (peripheral_ == ptr) {
+    if (this->Match(ptr)) {
         // Check error and halde it.
         if (peripheral_->ErrorCode & HAL_I2C_ERROR_AF) {
             MURASAKI_SYSLOG(kfaI2cMaster, kseWarning, "HAL_I2C_ERROR_AF");
@@ -417,7 +417,7 @@ bool I2cMaster::HandleError(void* ptr) {
             // abort the processing
             sync_->Release();
         }
-#endif
+        #endif
         else {
             MURASAKI_SYSLOG(kfaI2cMaster, kseEmergency, "Unknown error");
             // Unknown interrupt. Must be updated this program by the newest HAL spec.
@@ -426,10 +426,10 @@ bool I2cMaster::HandleError(void* ptr) {
             sync_->Release();
         }
         I2C_SYSLOG("Return with match");
-        return true;    // report the ptr matched
+        return true;  // report the ptr matched
     } else {
         I2C_SYSLOG("Leave");
-        return false;   // report the ptr doesn't match
+        return false;  // report the ptr doesn't match
     }
 }
 

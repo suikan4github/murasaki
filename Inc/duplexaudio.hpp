@@ -206,10 +206,10 @@ class DuplexAudio {
      * @param peripheral pointer to the peripheral device.
      * @return True if the peripheral matches with own peripheral which was given by constructor. Otherwise false.
      * @details
-     * This function calls the @ref AudioAdapterStrategy::ErrorCallback() which knows how to handle.
+     * This function calls the @ref AudioAdapterStrategy::HandleError() which knows how to handle.
      * Usually, this error call back is unable to recover. So, assertion may be triggered.
      */
-    virtual bool ErrorCallback(void * peripheral);
+    virtual bool HandleError(void * peripheral);
 
  private:
 

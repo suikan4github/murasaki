@@ -479,13 +479,13 @@ void HAL_SAI_RxCpltCallback(SAI_HandleTypeDef * hsai) {
  * @ingroup MURASAKI_PLATFORM_GROUP
  * @param hsai Handler of the SAI device.
  * @details
- * The error have to be forwarded to murasaki::DuplexAudio::ErrorCallback().
- * Note that DuplexAudio::ErrorCallback() trigger a hard fault.
+ * The error have to be forwarded to murasaki::DuplexAudio::HandleError().
+ * Note that DuplexAudio::HandleError() trigger a hard fault.
  * So, never return.
  */
 
 void HAL_SAI_ErrorCallback(SAI_HandleTypeDef * hsai) {
-    if (murasaki::platform.audio->ErrorCallback(hsai))
+    if (murasaki::platform.audio->HandleError(hsai))
         return;
 }
 

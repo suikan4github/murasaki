@@ -21,7 +21,7 @@ namespace murasaki {
  * @details
  * Template class of the audio device adaptor.
  */
-class AudioAdapterStrategy : PeripheralStrategy {
+class AudioAdapterStrategy : public murasaki::PeripheralStrategy {
  public:
     /**
      * @brief Destructor to enforce the virtual type function.
@@ -29,15 +29,6 @@ class AudioAdapterStrategy : PeripheralStrategy {
     virtual ~AudioAdapterStrategy() {
     }
     ;
-
-    /**
-     * @brief Call this function from the error interrupt handler.
-     * @param peripheral pointer to the peripheral device.
-     * @return True if the peripheral matches with own peripheral which was given by constructor. Otherwise false.
-     *
-     * Note, we assume once this error call back is called, we can't recover.
-     */
-    virtual bool ErrorCallback(void * peripheral)=0;
 
     /**
      * @brief Kick start routine to start the TX DMA transfer.
@@ -108,6 +99,24 @@ class AudioAdapterStrategy : PeripheralStrategy {
                                      unsigned int phase) {
         return phase;
     }
+
+    /**
+     * @brief Handling error report of device.
+     * @param ptr Pointer for generic use. Usually, points a struct of a device control
+     * @return true if ptr matches with device and handle the error. false if ptr doesn't match
+     * A member function to detect error.
+     *
+     * Note, we assume once this error call back is called, we can't recover.
+     */
+    virtual bool HandleError(void * ptr)= 0;
+
+    /**
+     * @details Check if peripheral handle matched with given handle.
+     * @param peripheral_handle
+     * @return true if match, false if not match.
+     */
+    virtual bool Match(void * peripheral_handle) = 0;
+
     /**
      * @brief pass the raw peripheral handler
      * @return pointer to the raw peripheral handler hidden in a class.

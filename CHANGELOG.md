@@ -12,6 +12,7 @@ Note that issue #46 makes incompatibility from the past code.
 
 ### Changed
 - [Issue 46 : Task priority is passed incorrectly](https://github.com/suikan4github/murasaki/issues/46)
+- [Issue 47 : Add Match() method to peripheral class](https://github.com/suikan4github/murasaki/issues/47)
 
 ### Deprecated
 ### Removed

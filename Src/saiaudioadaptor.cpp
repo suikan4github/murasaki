@@ -24,20 +24,20 @@ SaiAudioAdaptor::SaiAudioAdaptor(
           rx_peripheral_(rx_peripheral)
 
 {
-
+    MURASAKI_ASSERT(tx_peripheral_ != nullptr || rx_peripheral_ != nullptr)
 }
 
 SaiAudioAdaptor::~SaiAudioAdaptor()
 {
 }
 
-bool SaiAudioAdaptor::ErrorCallback(void* peripheral) {
-    SAIAUDIO_SYSLOG("Enter %p", peripheral);
+bool SaiAudioAdaptor::HandleError(void * ptr) {
+    SAIAUDIO_SYSLOG("Enter %p", ptr);
 
-    MURASAKI_ASSERT(nullptr != peripheral);
+    MURASAKI_ASSERT(nullptr != ptr);
 
     // Is this interrupt for this peripheral?
-    if (peripheral == reinterpret_cast<void *>(rx_peripheral_)) {
+    if (this->Match(ptr)) {
         SAIAUDIO_SYSLOG("Pointer matched")
         uint32_t error_code = rx_peripheral_->ErrorCode;
         // Check error and display it.
@@ -127,7 +127,7 @@ unsigned int SaiAudioAdaptor::GetNumberOfChannelsRx()
     MURASAKI_ASSERT(rx_peripheral_ != nullptr)
 
     unsigned int return_val =
-            rx_peripheral_->SlotInit.SlotNumber;   // Extract number of channels from SAI setting
+            rx_peripheral_->SlotInit.SlotNumber;  // Extract number of channels from SAI setting
 
     SAIAUDIO_SYSLOG("Exit with %d.", return_val)
     return return_val;
@@ -149,7 +149,7 @@ unsigned int SaiAudioAdaptor::GetNumberOfChannelsTx()
     SAIAUDIO_SYSLOG("Enter.")
     MURASAKI_ASSERT(tx_peripheral_ != nullptr)
     unsigned int return_val =
-            tx_peripheral_->SlotInit.SlotNumber;      // Extract number of channels from SAI setting
+            tx_peripheral_->SlotInit.SlotNumber;  // Extract number of channels from SAI setting
 
     SAIAUDIO_SYSLOG("Exit with %d.", return_val)
     return return_val;
@@ -165,6 +165,22 @@ unsigned int SaiAudioAdaptor::GetSampleWordSizeTx()
 
     SAIAUDIO_SYSLOG("Exit with %d.", return_val)
     return return_val;
+}
+
+bool SaiAudioAdaptor::Match(void* peripheral_handle) {
+    SAIAUDIO_SYSLOG("Enter.")
+    MURASAKI_ASSERT(peripheral_handle != nullptr)
+
+    bool return_val;
+
+    if (rx_peripheral_ != nullptr)
+        return_val = rx_peripheral_ == peripheral_handle;
+    else if (tx_peripheral_ != nullptr)
+        return_val = tx_peripheral_ == peripheral_handle;
+
+    SAIAUDIO_SYSLOG("Exit with %d.", return_val)
+    return return_val;
+
 }
 
 void* SaiAudioAdaptor::GetPeripheralHandle()

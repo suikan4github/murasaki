@@ -12,18 +12,16 @@
 // Macro for easy-to-read
 #define UART_SYSLOG(fmt, ...)    MURASAKI_SYSLOG(kfaSerial, kseDebug, fmt, ##__VA_ARGS__)
 
-
 // Check if CubeMX generates UART module
 #ifdef HAL_UART_MODULE_ENABLED
-
 
 namespace murasaki {
 
 Uart::Uart(UART_HandleTypeDef * const uart)
         : peripheral_(uart),
-		  tx_sync_(new murasaki::Synchronizer),
-		  rx_sync_(new murasaki::Synchronizer),
-		  tx_critical_section_( new murasaki::CriticalSection),
+          tx_sync_(new murasaki::Synchronizer),
+          rx_sync_(new murasaki::Synchronizer),
+          tx_critical_section_(new murasaki::CriticalSection),
           rx_critical_section_(new murasaki::CriticalSection),
           tx_interrupt_status_(kursUnknown),
           rx_interrupt_status_(kursUnknown)
@@ -58,26 +56,25 @@ Uart::~Uart()
 }
 
 void Uart::SetHardwareFlowControl(UartHardwareFlowControl control)
-{
+                                  {
     UART_SYSLOG("Enter");
 
     // stop UART activity. This is required by UART HAL specification.
     int result = HAL_UART_DeInit(peripheral_);
     MURASAKI_ASSERT(result == HAL_OK);
 
-
     // Change the Hardware flow control
     switch (control) {
-        case kuhfcCts :  // Control CTS only ( Flow control on TX )
+        case kuhfcCts:  // Control CTS only ( Flow control on TX )
             peripheral_->Init.HwFlowCtl = UART_HWCONTROL_CTS;
             break;
-        case kuhfcRts :  // Control RTS only ( Flow control on RX )
+        case kuhfcRts:  // Control RTS only ( Flow control on RX )
             peripheral_->Init.HwFlowCtl = UART_HWCONTROL_RTS;
             break;
-        case kuhfcCtsRts :  // Control CTS and RTS ( Flow control on TX and RX )
+        case kuhfcCtsRts:  // Control CTS and RTS ( Flow control on TX and RX )
             peripheral_->Init.HwFlowCtl = UART_HWCONTROL_RTS_CTS;
             break;
-        default:            // Nor hardware flow control.
+        default:  // Nor hardware flow control.
             peripheral_->Init.HwFlowCtl = UART_HWCONTROL_NONE;
             break;
 
@@ -93,7 +90,7 @@ murasaki::UartStatus Uart::Transmit(
                                     const uint8_t * data,
                                     unsigned int size,
                                     WaitMilliSeconds timeout_ms)
-{
+                                    {
     UART_SYSLOG("Enter");
 
     MURASAKI_ASSERT(nullptr != data)
@@ -140,10 +137,9 @@ murasaki::UartStatus Uart::Transmit(
     return tx_interrupt_status_;
 }
 
-
 bool Uart::TransmitCompleteCallback(void* const ptr)
-{
-UART_SYSLOG("Enter");
+                                    {
+    UART_SYSLOG("Enter");
 
     MURASAKI_ASSERT(nullptr != ptr)
 
@@ -170,7 +166,7 @@ murasaki::UartStatus Uart::Receive(
                                    unsigned int * transfered_count,
                                    UartTimeout uart_timeout,
                                    WaitMilliSeconds timeout_ms)
-{
+                                   {
     UART_SYSLOG("Enter");
 
     MURASAKI_ASSERT(nullptr != data);
@@ -232,7 +228,7 @@ murasaki::UartStatus Uart::Receive(
 }
 
 void Uart::SetSpeed(unsigned int baud_rate)
-{
+                    {
     UART_SYSLOG("Enter");
     // stop UART activity. This is required by UART HAL specification.
     int result = HAL_UART_DeInit(peripheral_);
@@ -249,7 +245,7 @@ void Uart::SetSpeed(unsigned int baud_rate)
 }
 
 bool Uart::ReceiveCompleteCallback(void* const ptr)
-{
+                                   {
     UART_SYSLOG("Enter");
 
     MURASAKI_ASSERT(nullptr != ptr)
@@ -272,12 +268,12 @@ bool Uart::ReceiveCompleteCallback(void* const ptr)
 }
 
 bool Uart::HandleError(void* const ptr)
-{
+                       {
     UART_SYSLOG("Enter");
 
     MURASAKI_ASSERT(nullptr != ptr)
 
-    if (peripheral_ == ptr) {
+    if (this->Match(ptr)) {
         // Check error and halde it.
         if (peripheral_->ErrorCode & HAL_UART_ERROR_PE) {
             MURASAKI_SYSLOG(kfaSerial, kseWarning, "HAL_UART_ERROR_PE");
@@ -323,11 +319,11 @@ bool Uart::HandleError(void* const ptr)
         }
 
         UART_SYSLOG("Leave");
-        return true;    // report the ptr matched
+        return true;  // report the ptr matched
     }
     else {
         UART_SYSLOG("Return with match");
-        return false;   // report the ptr doesn't match
+        return false;  // report the ptr doesn't match
     }
 }
 
@@ -335,7 +331,7 @@ void* Uart::GetPeripheralHandle() {
     UART_SYSLOG("Enter");
     UART_SYSLOG("Leave");
 
-	return peripheral_;
+    return peripheral_;
 }
 
 } /* namespace platform */

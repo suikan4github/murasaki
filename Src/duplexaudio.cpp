@@ -103,19 +103,6 @@ void DuplexAudio::TransmitAndReceive(
     AUDIO_SYSLOG("Return");
 }
 
-bool DuplexAudio::ErrorCallback(void* peripheral)
-                                {
-    AUDIO_SYSLOG("Enter, peripheral : %p", peripheral);
-
-    bool retval = protocol_adapter_->ErrorCallback(peripheral);
-
-    AUDIO_SYSLOG(
-                 "Return with %s",
-                 (retval ? "true" : "false"));
-
-    return retval;
-}
-
 void DuplexAudio::TransmitAndReceive(
                                      float** tx_channels,
                                      float** rx_channels,
@@ -314,4 +301,16 @@ bool DuplexAudio::DmaCallback(
 
 }
 
+bool DuplexAudio::HandleError(void* peripheral)
+                              {
+    AUDIO_SYSLOG("Enter, peripheral : %p", peripheral);
+
+    bool retval = protocol_adapter_->Match(peripheral);
+
+    AUDIO_SYSLOG(
+                 "Return with %s",
+                 (retval ? "true" : "false"));
+
+    return retval;
+}
 } /* namespace murasaki */
