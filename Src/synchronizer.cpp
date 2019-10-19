@@ -12,7 +12,7 @@ namespace murasaki {
 
 Synchronizer::Synchronizer()
         :
-          semaphore_(xSemaphoreCreateBinary())      // create semaphore as "empty" state
+          semaphore_(xSemaphoreCreateBinary())  // create semaphore as "empty" state
 {
 
     MURASAKI_ASSERT(semaphore_ != nullptr)
@@ -27,7 +27,13 @@ Synchronizer::~Synchronizer()
 bool Synchronizer::Wait(WaitMilliSeconds timeout_ms)
                         {
     MURASAKI_ASSERT(IsTaskContext());
-    return (pdTRUE == xSemaphoreTake(semaphore_, timeout_ms / portTICK_PERIOD_MS));
+
+    // If the timeout_ms is the kmsIndefinitely, pass portMAX_DELAY which means indefinitely.
+    // If not, pass the timeout_ms after converting to mS.
+    if (murasaki::kwmsIndefinitely == timeout_ms)
+        return (pdTRUE == xSemaphoreTake(semaphore_, portMAX_DELAY));
+    else
+        return (pdTRUE == xSemaphoreTake(semaphore_, timeout_ms / portTICK_PERIOD_MS));
 
 }
 

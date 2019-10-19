@@ -16,6 +16,7 @@ Note that issue #46 makes incompatibility from the past code.
 ### Deprecated
 ### Removed
 ### Fixed
+- [Issue 45 : Synchronizer::Wait() is incorrectly handling the timeout parameter](https://github.com/suikan4github/murasaki/issues/45)
 - [Issue 48 : README.md has old Task based sample. Need to update](https://github.com/suikan4github/murasaki/issues/48)
 
 ### Security
