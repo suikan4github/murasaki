@@ -37,27 +37,27 @@ namespace murasaki {
  * Internally, these value will be used as bit position in mask.
  */
 enum SyslogFacility {
-    kfaKernel = 1 << 0,         //!< kfaKernel is specified when the message is bound with the kernel issue.
-    kfaSerial = 1 << 1,         //!< kfaSerial is specified when the message is from the serial module.
-    kfaSpiMaster = 1 << 2,      //!< kfaSpi is specified when the message is from the SPI master module
-    kfaSpiSlave = 1 << 3,       //!< kfaSpi is specified when the message is from the SPI slave module
-    kfaI2cMaster = 1 << 4,      //!< kfaI2c is specified when the message is from the I2C master module.
-    kfaI2cSlave = 1 << 5,       //!< kfaI2c is specified when the message is from the I2C slave module.
-    kfaAudio = 1 << 6,          //!< kfaI2c is specified when the message is from the Audio module.
-    kfaI2s = 1 << 7,            //!< kfaI2s is specified when the message is from the I2S module
-    kfaSai = 1 << 8,            //!< kfaSai is specified when the message is from the SAI module.
-    kfaLog = 1 << 9,            //!< kfaLog is specified when the message is from the logger and debugger module.
-    kfaAudioCodec = 1 << 10,    //!< kfaAudioCodec is specified when the message is from the Audio Codec module
-    kfaNone = 1 << 22,          //!< Disable all facility
-    kfaAll = 1 << 23,           //!< Enable all facility
-    kfaUser0 = 1 << 24,         //!< User defined facility
-    kfaUser1 = 1 << 25,         //!< User defined facility
-    kfaUser2 = 1 << 26,         //!< User defined facility
-    kfaUser3 = 1 << 27,         //!< User defined facility
-    kfaUser4 = 1 << 28,         //!< User defined facility
-    kfaUser5 = 1 << 29,         //!< User defined facility
-    kfaUser6 = 1 << 30,         //!< User defined facility
-    kfaUser7 = 1 << 31          //!< User defined facility
+    kfaKernel = 1 << 0,  //!< kfaKernel is specified when the message is bound with the kernel issue.
+    kfaSerial = 1 << 1,  //!< kfaSerial is specified when the message is from the serial module.
+    kfaSpiMaster = 1 << 2,  //!< kfaSpi is specified when the message is from the SPI master module
+    kfaSpiSlave = 1 << 3,  //!< kfaSpi is specified when the message is from the SPI slave module
+    kfaI2cMaster = 1 << 4,  //!< kfaI2c is specified when the message is from the I2C master module.
+    kfaI2cSlave = 1 << 5,  //!< kfaI2c is specified when the message is from the I2C slave module.
+    kfaAudio = 1 << 6,  //!< kfaI2c is specified when the message is from the Audio module.
+    kfaI2s = 1 << 7,  //!< kfaI2s is specified when the message is from the I2S module
+    kfaSai = 1 << 8,  //!< kfaSai is specified when the message is from the SAI module.
+    kfaLog = 1 << 9,  //!< kfaLog is specified when the message is from the logger and debugger module.
+    kfaAudioCodec = 1 << 10,  //!< kfaAudioCodec is specified when the message is from the Audio Codec module
+    kfaNone = 1 << 22,  //!< Disable all facility
+    kfaAll = 1 << 23,  //!< Enable all facility
+    kfaUser0 = 1 << 24,  //!< User defined facility
+    kfaUser1 = 1 << 25,  //!< User defined facility
+    kfaUser2 = 1 << 26,  //!< User defined facility
+    kfaUser3 = 1 << 27,  //!< User defined facility
+    kfaUser4 = 1 << 28,  //!< User defined facility
+    kfaUser5 = 1 << 29,  //!< User defined facility
+    kfaUser6 = 1 << 30,  //!< User defined facility
+    kfaUser7 = 1 << 31  //!< User defined facility
 };
 
 /**
@@ -66,14 +66,14 @@ enum SyslogFacility {
  * The lower value is the more serious condition.
  */
 enum SyslogSeverity {
-    kseEmergency = 0,    //!< kseEmergency means the system is unusable.
-    kseAlert,        //!< kseAlert means some acution must be taken immediately.
-    kseCritical,         //!< kseCritical means critical condition.
-    kseError,            //!< kseError means error conditions.
-    kseWarning,          //!< kseWarning means warning condition.
-    kseNotice,           //!< kseNotice means normal but significant condition.
-    kseInfomational,     //!< kseInfomational means infomational message.
-    kseDebug             //!< kseDebug means debug-level message
+    kseEmergency = 0,  //!< kseEmergency means the system is unusable.
+    kseAlert,  //!< kseAlert means some acution must be taken immediately.
+    kseCritical,  //!< kseCritical means critical condition.
+    kseError,  //!< kseError means error conditions.
+    kseWarning,  //!< kseWarning means warning condition.
+    kseNotice,  //!< kseNotice means normal but significant condition.
+    kseInfomational,  //!< kseInfomational means infomational message.
+    kseDebug  //!< kseDebug means debug-level message
 };
 
 /**
@@ -92,8 +92,8 @@ enum SyslogSeverity {
 enum WaitMilliSeconds
 : uint32_t
 {
-    kwmsPolling = 0,               ///< Not waiting. Immediate timeout.
-    kwmsIndefinitely = HAL_MAX_DELAY   ///< Wait forever
+    kwmsPolling = 0,  ///< Not waiting. Immediate timeout.
+    kwmsIndefinitely = HAL_MAX_DELAY  ///< Wait forever
 };
 
 /**
@@ -103,10 +103,10 @@ enum WaitMilliSeconds
  */
 enum UartHardwareFlowControl
 {
-    kuhfcNone,      ///< No hardware flow control
-    kuhfcCts,       ///< Control CTS, but RTS
-    kuhfcRts,       ///< Control RTS, but CTS
-    kuhfcCtsRts     ///< Control Both CTS and RTS
+    kuhfcNone,  ///< No hardware flow control
+    kuhfcCts,  ///< Control CTS, but RTS
+    kuhfcRts,  ///< Control RTS, but CTS
+    kuhfcCtsRts  ///< Control Both CTS and RTS
 };
 /**
  * \brief SPI clock configuration for Master.
@@ -116,8 +116,8 @@ enum UartHardwareFlowControl
  */
 enum SpiClockPolarity
 {
-    kspoRiseThenFall = 0,       //!< kscpRiseThenFall POL = 0
-    kspoFallThenRise            //!< kscpFallThenrise POL = 1
+    kspoRiseThenFall = 0,  //!< kscpRiseThenFall POL = 0
+    kspoFallThenRise  //!< kscpFallThenrise POL = 1
 };
 
 /**
@@ -128,8 +128,8 @@ enum SpiClockPolarity
  */
 enum SpiClockPhase
 {
-    ksphLatchThenShift = 0,     //!< kscpLatchThenShift PHA=0. The first edge is latching. The second edge is shifting.
-    ksphShiftThenLatch          //!< kscpShiftThenLatch PHA = 1. The first edge is shifting. The second edge is latching.
+    ksphLatchThenShift = 0,  //!< kscpLatchThenShift PHA=0. The first edge is latching. The second edge is shifting.
+    ksphShiftThenLatch  //!< kscpShiftThenLatch PHA = 1. The first edge is shifting. The second edge is latching.
 };
 
 /**
@@ -154,15 +154,15 @@ enum SpiClockPhase
  */
 enum I2cStatus
 {
-    ki2csOK = 0,                //!< ki2csOK
-    ki2csTimeOut,               //!< Master mode error. No response from device.
-    ki2csNak,                   //!< Master mode error. Device answeres NAK
-    ki2csBussError,             //!< Master&Slave mode error. START/STOP condition at irregular location.
-    ki2csArbitrationLost,       //!< Master&Slave mode error. Lost arbitration against other master device.
-    ki2csOverrun,               //!< Slave mode error. Overrun or Underrun was detected.
-    ki2csDMA,                   //!< Some error detected in DMA module.
+    ki2csOK = 0,  //!< ki2csOK
+    ki2csTimeOut,  //!< Master mode error. No response from device.
+    ki2csNak,  //!< Master mode error. Device answeres NAK
+    ki2csBussError,  //!< Master&Slave mode error. START/STOP condition at irregular location.
+    ki2csArbitrationLost,  //!< Master&Slave mode error. Lost arbitration against other master device.
+    ki2csOverrun,  //!< Slave mode error. Overrun or Underrun was detected.
+    ki2csDMA,  //!< Some error detected in DMA module.
     ki2csSizeError,
-    ki2csUnknown                //!< Unknown error
+    ki2csUnknown  //!< Unknown error
 };
 
 /**
@@ -178,16 +178,16 @@ enum I2cStatus
  */
 enum SpiStatus
 {
-    kspisOK = 0,                //!< ki2csOK
-    kspisTimeOut,               //!< Master mode error. No response from device.
-    kspisModeFault,             //!< SPI mode fault error. Two master corrision
-    kspisModeCRC,               //!< CRC protocol error
-    kspisOverflow,              //!< Over run.
-    kspisFrameError,            //!< Error on TI frame mode.
-    kspisDMA,                   //!< DMA error
-    kspisErrorFlag,             //!< Other error flag.
-    kspisAbort,                 //!< Problem in abort process. No way to recover.
-    kspisUnknown                //!< Unknown error
+    kspisOK = 0,  //!< ki2csOK
+    kspisTimeOut,  //!< Master mode error. No response from device.
+    kspisModeFault,  //!< SPI mode fault error. Two master corrision
+    kspisModeCRC,  //!< CRC protocol error
+    kspisOverflow,  //!< Over run.
+    kspisFrameError,  //!< Error on TI frame mode.
+    kspisDMA,  //!< DMA error
+    kspisErrorFlag,  //!< Other error flag.
+    kspisAbort,  //!< Problem in abort process. No way to recover.
+    kspisUnknown  //!< Unknown error
 };
 
 /**
@@ -205,13 +205,13 @@ enum SpiStatus
  */
 enum UartStatus
 {
-    kursOK = 0,     //!< No error
-    kursTimeOut,    //!< Time out during transmission / receive.
-    kursParity,     //!< Parity error
-    kursNoise,      //!< Error by Noise
-    kursFrame,      //!< Frame error
-    kursOverrun,    //!< Overrun error
-    kursDMA,        //!< Error inside DMA module.
+    kursOK = 0,  //!< No error
+    kursTimeOut,  //!< Time out during transmission / receive.
+    kursParity,  //!< Parity error
+    kursNoise,  //!< Error by Noise
+    kursFrame,  //!< Frame error
+    kursOverrun,  //!< Overrun error
+    kursDMA,  //!< Error inside DMA module.
     kursUnknown
 
 };
@@ -224,8 +224,8 @@ enum UartStatus
  */
 enum UartTimeout
 {
-    kutNoIdleTimeout = 0,           //!< kutNoIdleTimeout is specified when API should has normal timeout.
-    kutIdleTimeout                  //!< kutIdleTimeout is specified when API should time out by Idle line
+    kutNoIdleTimeout = 0,  //!< kutNoIdleTimeout is specified when API should has normal timeout.
+    kutIdleTimeout  //!< kutIdleTimeout is specified when API should time out by Idle line
 };
 
 /**
@@ -265,18 +265,22 @@ enum TaskPriority {
  */
 static inline bool IsTaskContext()
 {
-    // portNVIC_INT_CTRL_REG is mapped to the address 0xe000ed04 by portmacro.h. This register is
-    // officially called as NVIC ICSR by ARM
-    // This register is common among CORTX-M3, M4 and M7 ( Not checked M0 and M1 )
-    // The bit field 8:0 displays the on-going ISR number. So, if this field is 0, it is task context.
-    // ( Note : This is just guess. ARM technical manual is not cleear when this field is 0 ).
-    // This register and field is suggested to use to detect the context in this page.
-    // https://www.freertos.org/FreeRTOS_Support_Forum_Archive/September_2014/freertos_How_to_determine_current_context_type_-_interrupt_or_task_87aef448j.html
-    // But the answer in this page seems to be wrong. It is referring only LSB 5bits. For the specific
-    // LPC4330 which is focused in this page, 0x1F is still too short.
-    // To extract the entire bit field 8:0, the bit mask have to be 0x1FF
+    // To check the task/interrupt context is done by ISPR.
+    // The ISPR has ISR number which is on going.
+    // If this field is zero, CPU is in the thread mode which is task context.
+    // If this field is non-zero, CPU is in the handler mode which is interrupt context.
+    // The field length is depend on the CORE type.
+    // For the detail of the ISPR, see the "Cortex-Mx Devices Generic User Guide", where Mx is one of M0, M0+, M1, M3, M4, M7
 
-    return ((portNVIC_INT_CTRL_REG & 0x1FF) == 0);
+#if defined( __CORE_CM7_H_GENERIC ) ||defined ( __CORE_CM3_H_GENERIC ) ||defined ( __CORE_CM4_H_GENERIC )
+    const unsigned int active_interrupt_mask = 0x1FF; /* bit 8:0 */
+#elif defined ( __CORE_CM0_H_GENERIC ) ||defined ( __CORE_CM0PLUS_H_GENERIC ) || defined ( __CORE_CM1_H_GENERIC )
+    const unsigned int active_interrupt_mask = 0x03F;    /* bit 5:0 */
+#else
+#error "Unknown core"
+#endif
+
+    return !(__get_IPSR() && active_interrupt_mask);
 
 }
 
@@ -301,10 +305,10 @@ static inline void CleanAndInvalidateDataCacheByAddress(void * address, size_t s
     unsigned int adjustment = aligned_address & 0x1F;
     // Adjust the address and size.
     aligned_address -= adjustment;  // aligne to 32byte boarder
-    size += adjustment;             // Because the start address is lower, the size is bigger.
+    size += adjustment;  // Because the start address is lower, the size is bigger.
 
     ::SCB_CleanInvalidateDCache_by_Addr(reinterpret_cast<long unsigned int *>(aligned_address), size);
-#elif defined ( __CORE_CM0_H_GENERIC ) ||defined ( __CORE_CM0PLUS_H_GENERIC ) ||defined ( __CORE_CM3_H_GENERIC ) ||defined ( __CORE_CM4_H_GENERIC )
+#elif defined ( __CORE_CM0_H_GENERIC ) ||defined ( __CORE_CM0PLUS_H_GENERIC ) ||defined ( __CORE_CM3_H_GENERIC ) ||defined ( __CORE_CM4_H_GENERIC ) ||defined ( __CORE_CM1_H_GENERIC )
     // Do nothing. These core doesn't have d-cache.
 #else
 #error "Unknown core"
@@ -332,10 +336,10 @@ static inline void CleanDataCacheByAddress(void * address, size_t size)
     unsigned int adjustment = aligned_address & 0x1F;
     // Adjust the address and size.
     aligned_address -= adjustment;  // aligne to 32byte boarder
-    size += adjustment;             // Because the start address is lower, the size is bigger.
+    size += adjustment;  // Because the start address is lower, the size is bigger.
 
     ::SCB_CleanDCache_by_Addr(reinterpret_cast<long unsigned int *>(aligned_address), size);
-#elif defined ( __CORE_CM0_H_GENERIC ) ||defined ( __CORE_CM0PLUS_H_GENERIC ) ||defined ( __CORE_CM3_H_GENERIC ) ||defined ( __CORE_CM4_H_GENERIC )
+#elif defined ( __CORE_CM0_H_GENERIC ) ||defined ( __CORE_CM0PLUS_H_GENERIC ) ||defined ( __CORE_CM3_H_GENERIC ) ||defined ( __CORE_CM4_H_GENERIC ) ||defined ( __CORE_CM1_H_GENERIC )
     // Do nothing. These core doesn't have d-cache.
 #else
 #error "Unknown core"
@@ -387,6 +391,6 @@ static inline void Sleep(murasaki::WaitMilliSeconds duration) {
  *
  */
 
-}     // namespace
+}  // namespace
 
 #endif /* MURASAKI_DEFS_HPP_ */
