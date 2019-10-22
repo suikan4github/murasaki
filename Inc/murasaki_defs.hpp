@@ -248,8 +248,9 @@ enum TaskPriority {
 // @formatter:on
 /**
  * \}
- * end of ingroup MURASAKI_DEFINITION_GROUP Definitions
- *
+ */
+/*
+ *  @ingroup MURASAKI_DEFINITION_GROUP
  */
 
 /*------------------------------- function ---------------------------------*/
@@ -347,7 +348,7 @@ static inline void CleanDataCacheByAddress(void * address, size_t size)
 }
 
 /**
- * @brief Initializa and start the cycle counter
+ * @brief Initialize and start the cycle counter
  * @details
  * This cycle counter ( CYCNT ) is implemented inside CORTEX-Mx core.
  * To implement or not is up to the SoC vender.
@@ -387,8 +388,10 @@ static inline void Sleep(murasaki::WaitMilliSeconds duration) {
 
 /**
  * \}
- * end of ingroup MURASAKI_FUNCTION_GROUP Definitions
  *
+ */
+/* 
+ * end of ingroup MURASAKI_FUNCTION_GROUP Definitions
  */
 
 }  // namespace

@@ -49,10 +49,10 @@ class Synchronizer
     /**
      * \brief Release the task.
      * \details
-     * Release the task waiting. This member function must be called from both task and the interrupt context.
+     * Release the task waiting. This member function can be called from both task and the interrupt context.
      */
     void Release();
- protected:
+     protected:
     SemaphoreHandle_t const semaphore_;
 };
 

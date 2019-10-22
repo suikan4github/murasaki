@@ -27,15 +27,15 @@ class Adau1361 : public AudioCodecStrategy {
     /**
      * \brief constructor.
      * \param fs Sampling frequency[Hz]
-     * @param master_clock Input master clock frequency[Hz]
-     * \param controler Pass the I2C controler object.
+     * @param master_clock Input master clock frequency to the MCLK pin[Hz]
+     * \param controller Pass the I2C controller object.
      * \param i2c_device_addr I2C device address. value range is from 0 to 127
      * \details
      *   initialize the internal variables.
      *   This constructor assumes the codec receive a master clock from outside. And output
      *   the I2C clocks as clock master.
      *
-     *   The fs parameter is the sampling frequency of the CODEC. This parameter is limited as
+     *   The fs parameter is the sampling frequency of the CODEC in Hz. This parameter is limited as
      *   one of the following :
      *   @li 24000
      *   @li 32000
@@ -45,7 +45,7 @@ class Adau1361 : public AudioCodecStrategy {
      *   @li 44100
      *   @li 88200
      *
-     *   The master_clock parameter is the MCLK input to the ADAU1361.
+     *   The master_clock parameter is the MCLK input to the ADAU1361 in Hz.
      *   This parameter must be one of followings :
      *   @li  8000000
      *   @li 12000000
@@ -60,12 +60,17 @@ class Adau1361 : public AudioCodecStrategy {
      *   @li 12288000
      *   @li 24576000
      *
-     *   Note : Only 8, 12, 13, 14.4, 12.288MHz are tested by software.
+     *   Note : Only 8, 12, 13, 14.4, 12.288MHz are tested.
+     *
+     *   The analog signals are routed as following :
+     *   @li Line In  : LINN/RINN single ended.
+     *   @li LINE out : LOUTP/ROUTP single ended
+     *   @li HP out   : LHP/RHP
      */
     Adau1361(
              unsigned int fs,
              unsigned int master_clock,
-             murasaki::I2CMasterStrategy * controler,
+             murasaki::I2CMasterStrategy * controller,
              unsigned int i2c_device_addr);
 
     /**
