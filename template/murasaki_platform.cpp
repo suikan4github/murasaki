@@ -538,8 +538,45 @@ void CustomAssertFailed(uint8_t* file, uint32_t line)
     MURASAKI_ASSERT(false);
 }
 
-void CustomDefaultHandler() {
-    // Call debugger's post mortem processing. Never return again.
+__asm volatile (
+        ".global CustomDefaultHandler \n"
+        "CustomDefaultHandler: \n"
+        " movs r0,#4       \n"
+        " movs r1, lr      \n"
+        " tst r0, r1       \n"
+        " beq _MSP         \n"
+        " mrs r0, psp      \n"
+        " b _HALT          \n"
+        "_MSP:               \n"
+        " mrs r0, msp      \n"
+        "_HALT:              \n"
+        " ldr r1,[r0,#20]  \n"
+        " b PrintFaultResult \n"
+        " bkpt #0          \n"
+);
+
+void PrintFaultResult(unsigned int * stack_pointer) {
+
+    murasaki::debugger->Printf("\nSpurious exception or hardfault occured.  \n");
+    murasaki::debugger->Printf("Stacked R0  : 0x%08X \n", stack_pointer[0]);
+    murasaki::debugger->Printf("Stacked R1  : 0x%08X \n", stack_pointer[1]);
+    murasaki::debugger->Printf("Stacked R2  : 0x%08X \n", stack_pointer[2]);
+    murasaki::debugger->Printf("Stacked R3  : 0x%08X \n", stack_pointer[3]);
+    murasaki::debugger->Printf("Stacked R12 : 0x%08X \n", stack_pointer[4]);
+    murasaki::debugger->Printf("Stacked LR  : 0x%08X \n", stack_pointer[5]);
+    murasaki::debugger->Printf("Stacked PC  : 0x%08X \n", stack_pointer[6]);
+    murasaki::debugger->Printf("Stacked PSR : 0x%08X \n", stack_pointer[7]);
+
+    murasaki::debugger->Printf("       CFSR : 0x%08X \n", *(unsigned int *) 0xE000ED28);
+    murasaki::debugger->Printf("       HFSR : 0x%08X \n", *(unsigned int *) 0xE000ED2C);
+    murasaki::debugger->Printf("       DFSR : 0x%08X \n", *(unsigned int *) 0xE000ED30);
+    murasaki::debugger->Printf("       AFSR : 0x%08X \n", *(unsigned int *) 0xE000ED3C);
+
+    murasaki::debugger->Printf("       MMAR : 0x%08X \n", *(unsigned int *) 0xE000ED34);
+    murasaki::debugger->Printf("       BFAR : 0x%08X \n", *(unsigned int *) 0xE000ED38);
+
+    murasaki::debugger->Printf("(Note : To avoid the stacking by C compiler, use release build to investigate the fault. ) \n");
+
     murasaki::debugger->DoPostMortem();
 }
 

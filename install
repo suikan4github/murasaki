@@ -62,7 +62,7 @@ fi
 # Substitute that line with following lines :
 #   .global CustomDefaultHandler
 #   Default_Handler:
-#   bl CustomDefaultHandler
+#   b CustomDefaultHandler
 #
 
 # Check whether appropriate file and string exist
@@ -81,7 +81,7 @@ if [ $? -ne 0 ]; then # if not, install
   cat ${TARGET_FILE} | awk -f <(cat - <<- 'EDO'
     /Default_Handler\:/{print "    .global CustomDefaultHandler"}
     {print $0}
-    /Default_Handler\:/{print "  bl CustomDefaultHandler"}
+    /Default_Handler\:/{print "  b CustomDefaultHandler"}
 EDO
   ) > foo.txt
   mv foo.txt ${TARGET_FILE}
