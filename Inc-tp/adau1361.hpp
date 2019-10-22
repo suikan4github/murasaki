@@ -64,6 +64,7 @@ class Adau1361 : public AudioCodecStrategy {
      *
      *   The analog signals are routed as following :
      *   @li Line In  : LINN/RINN single ended.
+     *   @li Aux In : LAUX/RAUX input
      *   @li LINE out : LOUTP/ROUTP single ended
      *   @li HP out   : LHP/RHP
      */
@@ -146,6 +147,10 @@ class Adau1361 : public AudioCodecStrategy {
      * \param size number of bytes in the command, including the regsiter address.
      * \details
      *   Send one complete command to ADAU3161 by I2C.
+     *   In the typical case, the command length is 3.
+     *  \li command[0] : USB of the register address. 0x40.
+     *  \li command[1] : LSB of the register address.
+     *  \li command[2] : Value to right the register.
      */
     virtual void SendCommand(const uint8_t command[], int size);
     /**

@@ -20,13 +20,13 @@ namespace murasaki {
  * @details
  *
  * This class provides an interface to the audio data flow. Also the internal buffer allocation, multi-phase buffering, and synchronization are provided. The features are :
- * \li From stereo to multi-ch audio
- * \li 32bit floating point buffer as interface with application.
+ * @li Support from mono to multi-ch audio
+ * @li 32bit floating point data buffer as interface with application.
  * @li data range is [-1.0, 1.0) as interface with application.
  * @li blocking and synchronous API
  * @li Internal DMA operation.
  *
- * Note this class assumes the Fs of the TX and RX are same and both Rx and RX are fully synchronized.
+ * Note : this class assumes the Fs of the TX and RX are same and both Tx and RX are fully synchronized.
  *
  * Internally, this class provides a multi-buffers DMA operation between the audio peripheral and caller algorithm.
  * The key API is the @ref TransmitAndReceive() member function.
@@ -37,7 +37,7 @@ namespace murasaki {
  *
  * Thus, user doesn't need to care about above things.
  *
- * Because of the complicated audio data structure, there several terminology which programmer must know.
+ * Because of the complicated audio data structure, there are several terminologies which programmer must know.
  * @li Word : An atomic data of audio sample. For example, stereo sample has two word.
  * Note that in murasaki::DuplexAudio, the size of word is given from murasaki::AudioAdapterStrategy.
  * @li Channel : Input / Output port of audio. For example, the stereo audio has two channels named left and right. The 5.1 surround audio has 6 channels.
@@ -72,7 +72,7 @@ class DuplexAudio {
     virtual ~DuplexAudio();
 
     /**
-     * @brief Multi-channels audio transmission/receiving.
+     * @brief Stereo audio transmission/receiving.
      * @param tx_channels Array of pointers. The number of the array element have to be same with the number of channel. Each pointer points the TX channel buffers.
      * @param rx_channels Array of pointers. The number of the array element have to be same with the number of channel. Each pointer points the RX channel buffers.
      *
@@ -87,7 +87,7 @@ class DuplexAudio {
      * Following is the typical usage of this function.
      *
      * @code
-     * #define NUM_CH 8
+     * #define NUM_CH 2
      * #define CH_LEN 48
      *
      * float * tx_channels_array[NUM_CH];
@@ -95,15 +95,9 @@ class DuplexAudio {
      *
      * tx_channles_array[0] = new float[CH_LEN];
      * tx_channles_array[1] = new float[CH_LEN];
-     * tx_channles_array[2] = new float[CH_LEN];
-     * ...
-     * tx_channles_array[NUM_CH-1] = new float[CH_LEN];
      *
      * rx_channles_array[0] = new float[CH_LEN];
      * rx_channles_array[1] = new float[CH_LEN];
-     * rx_channles_array[2] = new float[CH_LEN];
-     * ...
-     * rx_channles_array[NUM_CH-1] = new float[CH_LEN];
      *
      * while(1)
      * {
@@ -267,7 +261,39 @@ class DuplexAudio {
      * This privaite function is the common base for the other 2 public TransmitAndRecieve().
      * To serve both of them, this function receives the number of channels explictly.
      *
-     */
+     * @code
+     * #define NUM_CH 8
+     * #define CH_LEN 48
+     *
+     * float * tx_channels_array[NUM_CH];
+     * float * rx_channels_array[NUM_CH];
+     *
+     * tx_channles_array[0] = new float[CH_LEN];
+     * tx_channles_array[1] = new float[CH_LEN];
+     * tx_channles_array[2] = new float[CH_LEN];
+     * ...
+     * tx_channles_array[NUM_CH-1] = new float[CH_LEN];
+     *
+     * rx_channles_array[0] = new float[CH_LEN];
+     * rx_channles_array[1] = new float[CH_LEN];
+     * rx_channles_array[2] = new float[CH_LEN];
+     * ...
+     * rx_channles_array[NUM_CH-1] = new float[CH_LEN];
+     *
+     * while(1)
+     * {
+     *     // prepare TX data into rx_channlels_array.
+     *     ...
+     *     murasaki::platform.audio->TransmitAndReceive(
+     *                                          tx_channels_array,
+     *                                          rx_channels_array,
+     *                                          NUM_CH,
+     *                                          NUM_CH );
+     *
+     *     // process RX data in rx_channels_array
+     *     ...
+     * }
+     * @endcode     */
 
     void TransmitAndReceive(
                             float ** tx_channels,
