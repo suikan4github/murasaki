@@ -9,11 +9,11 @@ Note that issue #46 makes incompatibility from the past code.
 - [Issue 22 : Add Stereo Audio Class](https://github.com/suikan4github/murasaki/issues/22)
 - [Issue 44 : Support STM32CubeIDE startup code](https://github.com/suikan4github/murasaki/issues/44)
 - [Issue 49 : Add SAI interrupt handler template](https://github.com/suikan4github/murasaki/issues/49)
-^ [Issue 42 : Print the context information on the hard fault.](https://github.com/suikan4github/murasaki/issues/42)
+- [Issue 42 : Print the context information on the hard fault.](https://github.com/suikan4github/murasaki/issues/42)
+- [Issue 47 : Add Match() method to peripheral class](https://github.com/suikan4github/murasaki/issues/47)
 
 ### Changed
 - [Issue 46 : Task priority is passed incorrectly](https://github.com/suikan4github/murasaki/issues/46)
-- [Issue 47 : Add Match() method to peripheral class](https://github.com/suikan4github/murasaki/issues/47)
 
 ### Deprecated
 ### Removed
@@ -21,6 +21,7 @@ Note that issue #46 makes incompatibility from the past code.
 - [Issue 41 : Confirm context check between ARMv6M and ARMv7M](https://github.com/suikan4github/murasaki/issues/41)
 - [Issue 45 : Synchronizer::Wait() is incorrectly handling the timeout parameter](https://github.com/suikan4github/murasaki/issues/45)
 - [Issue 48 : README.md has old Task based sample. Need to update](https://github.com/suikan4github/murasaki/issues/48)
+- [Issue 57 : DuplexAudio::TransmitAndReceive is incorrectly private member function](https://github.com/suikan4github/murasaki/issues/57)
 
 ### Security
 ### Known Issue
