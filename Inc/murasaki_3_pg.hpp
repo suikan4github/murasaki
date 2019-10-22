@@ -54,7 +54,7 @@
  * This directory contains the include files, the project setting must
  * refer this directory as an include directory.
  *
- * \section sec_ds_1_5 Src-tp and Inc-tp directory
+ * \section sec_ds_1_5 Src/Thirdparty and Inc/Thirdparty directory
  * The class collection of the third party peripherals. The "third party" means, the
  * outside of the microprocessor.
  *

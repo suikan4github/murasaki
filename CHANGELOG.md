@@ -1,7 +1,7 @@
 # Change log
 Record of the modification in project development.
 
-Note that issue #46 makes incompatibility from the past code. 
+Note that issue #46 and #56 made incompatibility from the past code. 
 
 ## [Unreleased]
 
@@ -14,6 +14,7 @@ Note that issue #46 makes incompatibility from the past code.
 
 ### Changed
 - [Issue 46 : Task priority is passed incorrectly](https://github.com/suikan4github/murasaki/issues/46)
+- [Issue 56 : The Inc-tp and Src-tp should be moved to under Inc and Src, respectively](https://github.com/suikan4github/murasaki/issues/56)
 
 ### Deprecated
 ### Removed

@@ -72,11 +72,14 @@ class DuplexAudio {
     virtual ~DuplexAudio();
 
     /**
-     * @brief Stereo audio transmission/receiving.
+     * @brief Multi-channel audio transmission/receiving.
      * @param tx_channels Array of pointers. The number of the array element have to be same with the number of channel. Each pointer points the TX channel buffers.
      * @param rx_channels Array of pointers. The number of the array element have to be same with the number of channel. Each pointer points the RX channel buffers.
      *
      * Blocking and synchronous API.
+     * The number of TX/RX channels are retrieved from the peripheral_adapter_.
+     * Thus, it is programmer's responsibility to aligh the number of the channels in the prameter, with peripheral_adapter_.
+     *
      * Inside this member function,
      *  -# wait for the complete of the RX data transfer by waiting for the DmaCallback().
      *  -# Given tx_channels buffers are scaled and copied to the DMA buffer.
@@ -87,7 +90,7 @@ class DuplexAudio {
      * Following is the typical usage of this function.
      *
      * @code
-     * #define NUM_CH 2
+     * #define NUM_CH 8
      * #define CH_LEN 48
      *
      * float * tx_channels_array[NUM_CH];
@@ -95,9 +98,15 @@ class DuplexAudio {
      *
      * tx_channles_array[0] = new float[CH_LEN];
      * tx_channles_array[1] = new float[CH_LEN];
+     * tx_channles_array[2] = new float[CH_LEN];
+     * ...
+     * tx_channles_array[NUM_CH-1] = new float[CH_LEN];
      *
      * rx_channles_array[0] = new float[CH_LEN];
      * rx_channles_array[1] = new float[CH_LEN];
+     * rx_channles_array[2] = new float[CH_LEN];
+     * ...
+     * rx_channles_array[NUM_CH-1] = new float[CH_LEN];
      *
      * while(1)
      * {
@@ -173,7 +182,8 @@ class DuplexAudio {
      * @brief Multi channel audio transmission/receiving.
      * @param tx_channels Array of pointers. The number of the array element have to be same with the number of channel. Each pointer points the TX channel buffers.
      * @param rx_channels Array of pointers. The number of the array element have to be same with the number of channel. Each pointer points the RX channel buffers.
-     * @param num_of_channels Any number <= num_of_channels given audio peripheral adapter.
+     * @param tx_num_of_channels Any number which is smaller than or equal to num_of_channels given audio peripheral adapter.
+     * @param rx_num_of_channels Any number which is smaller than or equal to num_of_channels given audio peripheral adapter.
      *
      * Infrastructure function for the public functions.
      *

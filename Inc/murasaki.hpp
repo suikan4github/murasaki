@@ -40,7 +40,7 @@
 #include "saiaudioadaptor.hpp"
 
 // Third party
-#include "adau1361.hpp"
+#include "Thirdparty/adau1361.hpp"
 
 // Debuggers
 #include "uartlogger.hpp"

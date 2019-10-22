@@ -3,7 +3,6 @@
  * @brief Step by Step Porting guide
  */
 
-
 /**
  * @page spg Step-by-Step Porting Guide
  * @brief This chapter goes through the actual operation of the CubeMX and SW4STM32 to
@@ -150,8 +149,6 @@
  * @image latex "Screenshot from 2019-02-18 08-52-28.png" "Clock Configuration"
  */
 
-
-
 /**
  * @page spg_5 Project configuration and code generation
  * @brief At last, we configure the SW4STM32 project and generate a skeleton code.
@@ -240,8 +237,8 @@
  *
  * Next, click the Source Location tab, and add "murasaki/Src" .
  *
- * @image html "Screenshot from 2019-02-18 09-12-04.png" "Add Murasaki source path"
- * @image latex "Screenshot from 2019-02-18 09-12-04.png" "Add Murasaki source path"
+ * @image html "Screenshot from 2019-10-22 22-47-35.png" "Add Murasaki source path"
+ * @image latex "Screenshot from 2019-10-22 22-47-35.png" "Add Murasaki source path"
  *
  * Note on the STM32H7 family. This family's default LSF maps DTCM as default data/bss
  * section. Unfrotunately, the DTCM is unable to access by peripheral DMA. As a result,
