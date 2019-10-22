@@ -133,12 +133,6 @@ class Adau1361 : public AudioCodecStrategy {
      */
     virtual void SetHpOutputGain(float left_gain, float right_gain,
                                  bool mute = false);
-
- protected:
-    const unsigned int master_clock_;
-    murasaki::I2CMasterStrategy * const i2c_;
-    const unsigned int device_addr_;
-
     /**
      *  Service function for the ADAu1361 board implementer.
      *
@@ -161,9 +155,14 @@ class Adau1361 : public AudioCodecStrategy {
      *   Service function for the ADAu1361 board implementer.
      *
      *   Send a list of command to ADAU1361. All commands has 3 bytes length. That mean, after two byte register
-     *   address, only 1 byte data payload is allowed. Commadns are sent by I2C
+     *   address, only 1 byte data pay load is allowed. Commadns are sent by I2C
      */
     virtual void SendCommandTable(const uint8_t table[][3], int rows);
+
+ protected:
+    const unsigned int master_clock_;
+    murasaki::I2CMasterStrategy * const i2c_;
+    const unsigned int device_addr_;
 
     /**
      * \brief wait until PLL locks.

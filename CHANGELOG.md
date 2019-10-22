@@ -22,6 +22,7 @@ Note that issue #46 makes incompatibility from the past code.
 - [Issue 45 : Synchronizer::Wait() is incorrectly handling the timeout parameter](https://github.com/suikan4github/murasaki/issues/45)
 - [Issue 48 : README.md has old Task based sample. Need to update](https://github.com/suikan4github/murasaki/issues/48)
 - [Issue 57 : DuplexAudio::TransmitAndReceive is incorrectly private member function](https://github.com/suikan4github/murasaki/issues/57)
+- [Issue 58 : Adau1361::SendCommand and SendCommandTable are incorrectly private member funcitons](https://github.com/suikan4github/murasaki/issues/58)
 
 ### Security
 ### Known Issue
