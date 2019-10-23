@@ -15,20 +15,26 @@
 namespace murasaki {
 
 DuplexAudio::DuplexAudio(
-                         murasaki::AudioAdapterStrategy * protocol_adapter,
+                         murasaki::AudioAdapterStrategy * peripheral_adapter,
                          unsigned int channel_length
                          )
         :
-          protocol_adapter_(protocol_adapter),
+          peripheral_adapter_(peripheral_adapter),
           channel_len_(channel_length),
-          block_size_tx_(channel_len_ * protocol_adapter_->GetNumberOfChannelsTx() * protocol_adapter_->GetSampleWordSizeTx()),
-          block_size_rx_(channel_len_ * protocol_adapter_->GetNumberOfChannelsRx() * protocol_adapter_->GetSampleWordSizeRx()),
-          buffer_size_tx_(protocol_adapter_->GetNumberOfDMAPhase() * block_size_tx_),
-          buffer_size_rx_(protocol_adapter_->GetNumberOfDMAPhase() * block_size_rx_),
+          // Calcurate a DMA buffer size per interrupt [Byte]
+          block_size_tx_(channel_len_ * peripheral_adapter_->GetNumberOfChannelsTx() * peripheral_adapter_->GetSampleWordSizeTx()),
+          block_size_rx_(channel_len_ * peripheral_adapter_->GetNumberOfChannelsRx() * peripheral_adapter_->GetSampleWordSizeRx()),
+          // Calcurate a entire DMA buffer size. 
+          buffer_size_tx_(peripheral_adapter_->GetNumberOfDMAPhase() * block_size_tx_),
+          buffer_size_rx_(peripheral_adapter_->GetNumberOfDMAPhase() * block_size_rx_),
+          // Allocate DMA buffer
           tx_dma_buffer_(new uint8_t[buffer_size_tx_]),
           rx_dma_buffer_(new uint8_t[buffer_size_rx_]),
+          // Initialize for the first execusion
           current_dma_phase_(0),
+          // Set it true to trigger the first DMA transfer. 
           first_transfer_(true),
+          // Create an sync object between interrupt and TransmitAndReceive member function. 
           sync_(new murasaki::Synchronizer())
 {
 
@@ -36,19 +42,19 @@ DuplexAudio::DuplexAudio(
                  channel_length);
 
     // Check the values
-    MURASAKI_ASSERT(protocol_adapter_ != nullptr)
+    MURASAKI_ASSERT(peripheral_adapter_ != nullptr)
     MURASAKI_ASSERT(tx_dma_buffer_ != nullptr)
     MURASAKI_ASSERT(rx_dma_buffer_ != nullptr)
     MURASAKI_ASSERT(sync_ != nullptr)
 
     // only dual or triple buffer is acceptable.
-    MURASAKI_ASSERT(2 == protocol_adapter_->GetNumberOfDMAPhase() || 3 == protocol_adapter_->GetNumberOfDMAPhase())
+    MURASAKI_ASSERT(2 == peripheral_adapter_->GetNumberOfDMAPhase() || 3 == peripheral_adapter_->GetNumberOfDMAPhase())
 
-    // Initialize the buffer contents.
+    // Initialize the DNA buffer.
     for (unsigned int i = 0; i < buffer_size_tx_; i++)
-        tx_dma_buffer_[i] = 0xAA;
+        tx_dma_buffer_[i] = 0;
     for (unsigned int i = 0; i < buffer_size_rx_; i++)
-        rx_dma_buffer_[i] = 0x55;
+        rx_dma_buffer_[i] = 0;
 
     AUDIO_SYSLOG("Return")
 }
@@ -56,6 +62,7 @@ DuplexAudio::DuplexAudio(
 DuplexAudio::~DuplexAudio() {
     AUDIO_SYSLOG("Enter.")
 
+    // Deallocate the DMA buffer and sync object.
     delete[] tx_dma_buffer_;
     delete[] rx_dma_buffer_;
     delete sync_;
@@ -68,11 +75,13 @@ void DuplexAudio::TransmitAndReceive(
                                      float** tx_channels,
                                      float** rx_channels) {
     AUDIO_SYSLOG("Enter. tx_channels : %08p, rx_channels : %08p", tx_channels, rx_channels);
+
+    // Delegate the processing. We assume this function receives the same change with hardware configuration. 
     TransmitAndReceive(
                        tx_channels,
                        rx_channels,
-                       protocol_adapter_->GetNumberOfChannelsTx(),
-                       protocol_adapter_->GetNumberOfChannelsRx());  // All channels.
+                       peripheral_adapter_->GetNumberOfChannelsTx(),
+                       peripheral_adapter_->GetNumberOfChannelsRx());  // All channels.
     AUDIO_SYSLOG("Return");
 }
 
@@ -95,6 +104,7 @@ void DuplexAudio::TransmitAndReceive(
     rx_stereo_[0] = rx_left;
     rx_stereo_[1] = rx_right;
 
+    // Delegate the processing.
     TransmitAndReceive(
                        tx_stereo_,
                        rx_stereo_,
@@ -113,11 +123,17 @@ void DuplexAudio::TransmitAndReceive(
                  tx_num_of_channels,
                  rx_num_of_channels);
 
-    if (first_transfer_) {
-        AUDIO_SYSLOG("Starting Transfer");
-        protocol_adapter_->StartTransferTx(tx_dma_buffer_, channel_len_);
-        protocol_adapter_->StartTransferRx(rx_dma_buffer_, channel_len_);
+    MURASAKI_ASSERT(peripheral_adapter_->GetNumberOfChannelsTx() == tx_num_of_channels)
+    MURASAKI_ASSERT(peripheral_adapter_->GetNumberOfChannelsRx() == rx_num_of_channels)
 
+    if (first_transfer_) { /* Is first time transfer? Then, trigger the DMA */
+        AUDIO_SYSLOG("Starting Transfer");
+
+        // Actual DMA transfer is done by the peripheral_adapter_
+        peripheral_adapter_->StartTransferTx(tx_dma_buffer_, channel_len_);
+        peripheral_adapter_->StartTransferRx(rx_dma_buffer_, channel_len_);
+
+        // Mark it to avoid the second kick. 
         first_transfer_ = false;
     }
 
@@ -129,11 +145,11 @@ void DuplexAudio::TransmitAndReceive(
 
     // Check whether DMA phase is OK.
     // current_dma_phase_ is updated in the DmaCallback()
-    MURASAKI_ASSERT(current_dma_phase_ < protocol_adapter_->GetNumberOfDMAPhase())
+    MURASAKI_ASSERT(current_dma_phase_ < peripheral_adapter_->GetNumberOfDMAPhase())
 
     // Processing is depend on the word size. So, get the Word size.
     // Note that we check only the TX word size. We assume the word TX and RX are identical, in the duplex audio.
-    switch (protocol_adapter_->GetSampleWordSizeRx()) {
+    switch (peripheral_adapter_->GetSampleWordSizeRx()) {
         case 1: {
             AUDIO_SYSLOG("Case:Word size is 1");
 
@@ -269,7 +285,7 @@ bool DuplexAudio::DmaCallback(
                               void* peripheral,
                               unsigned int phase) {
     AUDIO_SYSLOG("Enter with peripheral : %p, phase : %d", peripheral, phase);
-    if (protocol_adapter_->GetPeripheralHandle() == peripheral) {
+    if (peripheral_adapter_->GetPeripheralHandle() == peripheral) {
         AUDIO_SYSLOG("peripheral matched");
 
         // Up to date the DMA phase.
@@ -279,12 +295,12 @@ bool DuplexAudio::DmaCallback(
         // the parameter and check hardware by itself
 
         // Check the validity of the given DMA phase.
-        MURASAKI_ASSERT(0 <= phase && phase < protocol_adapter_->GetNumberOfDMAPhase())
+        MURASAKI_ASSERT(0 <= phase && phase < peripheral_adapter_->GetNumberOfDMAPhase())
 
-        current_dma_phase_ = protocol_adapter_->DetectPhase(phase);
+        current_dma_phase_ = peripheral_adapter_->DetectPhase(phase);
 
         // Check the validity of the obtained DMA phase.
-        MURASAKI_ASSERT(0 <= current_dma_phase_ && current_dma_phase_ < protocol_adapter_->GetNumberOfDMAPhase())
+        MURASAKI_ASSERT(0 <= current_dma_phase_ && current_dma_phase_ < peripheral_adapter_->GetNumberOfDMAPhase())
 
         // Notice the waiting task the buffer is ready.
         AUDIO_SYSLOG("Releasing Sync");
@@ -305,7 +321,7 @@ bool DuplexAudio::HandleError(void* peripheral)
                               {
     AUDIO_SYSLOG("Enter, peripheral : %p", peripheral);
 
-    bool retval = protocol_adapter_->Match(peripheral);
+    bool retval = peripheral_adapter_->Match(peripheral);
 
     AUDIO_SYSLOG(
                  "Return with %s",

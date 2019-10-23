@@ -24,6 +24,7 @@ Note that issue #46 and #56 made incompatibility from the past code.
 - [Issue 48 : README.md has old Task based sample. Need to update](https://github.com/suikan4github/murasaki/issues/48)
 - [Issue 57 : DuplexAudio::TransmitAndReceive is incorrectly private member function](https://github.com/suikan4github/murasaki/issues/57)
 - [Issue 58 : Adau1361::SendCommand and SendCommandTable are incorrectly private member funcitons](https://github.com/suikan4github/murasaki/issues/58)
+- [Issue 59 : DuplexAudio visibility must be back](https://github.com/suikan4github/murasaki/issues/59)
 
 ### Security
 ### Known Issue

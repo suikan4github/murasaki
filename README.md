@@ -20,6 +20,8 @@ A set of classes provides the abstraction of the following peripherals.
  * SPI slave
  * I2C master
  * I2C slave
+ * GPIO
+ * SAI
 
 Note that above peripheral abstraction provides the thread-safe, interrupt/DMA based, and blocking IO.
 
