@@ -15,6 +15,7 @@ Note that issue #46 and #56 made incompatibility from the past code.
 ### Changed
 - [Issue 46 : Task priority is passed incorrectly](https://github.com/suikan4github/murasaki/issues/46)
 - [Issue 56 : The Inc-tp and Src-tp should be moved to under Inc and Src, respectively](https://github.com/suikan4github/murasaki/issues/56)
+- [Issue 61 : Change timeout parameter as integer](https://github.com/suikan4github/murasaki/issues/61)
 
 ### Deprecated
 ### Removed

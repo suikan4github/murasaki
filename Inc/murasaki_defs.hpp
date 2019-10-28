@@ -382,15 +382,15 @@ static inline unsigned int GetCycleCounter()
  *
  * For example, if the tick period is 10mS, the worst error is 10mS.
  */
-static inline void Sleep(murasaki::WaitMilliSeconds duration) {
-    vTaskDelay(pdMS_TO_TICKS(duration));
+static inline void Sleep(unsigned int duration_ms) {
+    vTaskDelay(pdMS_TO_TICKS(duration_ms));
 }
 
 /**
  * \}
  *
  */
-/* 
+/*
  * end of ingroup MURASAKI_FUNCTION_GROUP Definitions
  */
 

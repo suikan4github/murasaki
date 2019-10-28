@@ -24,7 +24,7 @@ Synchronizer::~Synchronizer()
         vSemaphoreDelete(semaphore_);
 }
 
-bool Synchronizer::Wait(WaitMilliSeconds timeout_ms)
+bool Synchronizer::Wait(unsigned int timeout_ms)
                         {
     MURASAKI_ASSERT(IsTaskContext());
 

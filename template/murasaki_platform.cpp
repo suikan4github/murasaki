@@ -186,7 +186,7 @@ void ExecPlatform()
         count++;
 
         // wait for a while
-        murasaki::Sleep(static_cast<murasaki::WaitMilliSeconds>(500));
+        murasaki::Sleep(500);
     }
 }
 
@@ -594,6 +594,6 @@ void TaskBodyFunction(const void* ptr)
     while (true)  // dummy loop
     {
         murasaki::platform.led->Toggle();  // toggling LED
-        murasaki::Sleep(static_cast<murasaki::WaitMilliSeconds>(700));
+        murasaki::Sleep(700);
     }
 }

@@ -107,7 +107,7 @@ class I2cSlave : public I2cSlaveStrategy {
                                          const uint8_t * tx_data,
                                          unsigned int tx_size,
                                          unsigned int * transfered_count,
-                                         WaitMilliSeconds timeout_ms);
+                                         unsigned int timeout_ms);
     /**
      * @brief Thread safe, blocking receiving over I2C.
      * @param rx_data Data array to transmit.
@@ -131,7 +131,7 @@ class I2cSlave : public I2cSlaveStrategy {
                                         uint8_t * rx_data,
                                         unsigned int rx_size,
                                         unsigned int * transfered_count,
-                                        WaitMilliSeconds timeout_ms);
+                                        unsigned int timeout_ms);
 
     /**
      * \brief Call back to be called notify the transfer is complete.
@@ -177,11 +177,11 @@ class I2cSlave : public I2cSlaveStrategy {
      * specific device.
      */
     virtual void * GetPeripheralHandle();
- protected:
-    I2C_HandleTypeDef * const peripheral_;          // SPI peripheral handle
-    Synchronizer * const sync_;                     // sync between task and interrupt
-    CriticalSection * const critical_section_;      // protect member function
-    volatile I2cStatus interrupt_status_;           // status variable from interrupt
+     protected:
+    I2C_HandleTypeDef * const peripheral_;  // SPI peripheral handle
+    Synchronizer * const sync_;  // sync between task and interrupt
+    CriticalSection * const critical_section_;  // protect member function
+    volatile I2cStatus interrupt_status_;  // status variable from interrupt
 };
 
 } /* namespace murasaki */

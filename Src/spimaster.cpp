@@ -46,7 +46,7 @@ SpiStatus SpiMaster::TransmitAndReceive(murasaki::SpiSlaveAdapterStrategy* spi_s
                          const uint8_t* tx_data,
                          uint8_t* rx_data,
                          unsigned int size,
-                         murasaki::WaitMilliSeconds timeout_ms)
+                         unsigned int timeout_ms)
 {
 
     SPIM_SYSLOG("Enter");

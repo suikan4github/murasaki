@@ -48,7 +48,7 @@ SpiStatus SpiSlave::TransmitAndReceive(
                                        uint8_t* rx_data,
                                        unsigned int size,
                                        unsigned int * transfered_count,
-                                       murasaki::WaitMilliSeconds timeout_ms)
+                                       unsigned int timeout_ms)
 {
 
     SPIM_SYSLOG("Enter");

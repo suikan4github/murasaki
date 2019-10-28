@@ -48,7 +48,7 @@ class I2CMasterStrategy : public murasaki::PeripheralStrategy
                                          const uint8_t * tx_data,
                                          unsigned int tx_size,
                                          unsigned int * transfered_count = nullptr,
-                                         WaitMilliSeconds timeout_ms = murasaki::kwmsIndefinitely) = 0;
+                                         unsigned int timeout_ms = murasaki::kwmsIndefinitely) = 0;
     /**
      * @brief Thread safe, blocking receiving over I2C.
      * @param addrs 7bit address of the I2C device.
@@ -66,7 +66,7 @@ class I2CMasterStrategy : public murasaki::PeripheralStrategy
                                         uint8_t * rx_data,
                                         unsigned int rx_size,
                                         unsigned int * transfered_count = nullptr,
-                                        WaitMilliSeconds timeout_ms = murasaki::kwmsIndefinitely) = 0;
+                                        unsigned int timeout_ms = murasaki::kwmsIndefinitely) = 0;
     /**
      * @brief Thread safe, blocking transmission and then receiving over I2C.
      * @param addrs 7bit address of the I2C device.
@@ -94,7 +94,7 @@ class I2CMasterStrategy : public murasaki::PeripheralStrategy
                                                     unsigned int rx_size,
                                                     unsigned int * tx_transfered_count = nullptr,
                                                     unsigned int * rx_transfered_count = nullptr,
-                                                    WaitMilliSeconds timeout_ms = murasaki::kwmsIndefinitely) =0;
+                                                    unsigned int timeout_ms = murasaki::kwmsIndefinitely) =0;
     /**
      * \brief Call back to be called notify the transfer is complete.
      * \param ptr Pointer for generic use. Usually, points a struct of a peripheral control

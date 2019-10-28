@@ -9,7 +9,6 @@
 #ifndef MURASAKI_2_UG_HPP_
 #define MURASAKI_2_UG_HPP_
 
-
 /**
  * \page murasaki_ug_usage Usage Introduction
  * \brief In this introduction, we see how to use  Murasaki class library in the STM32 program.
@@ -66,7 +65,6 @@
  * the real time process.
  */
 
-
 /**
  * \page ug_sec_2 Serial communication
  * \brief murasaki::Uart is the asynchronous serial communication.
@@ -89,7 +87,6 @@
  * Beside of transmit, also Receive() member function exists.
  *
  */
-
 
 /**
  * \page ug_sec_3 Debugging with Murasaki.
@@ -213,7 +210,7 @@
  *     while (true)    // dummy loop
  *     {
  *         murasaki::platform.led2->Toggle();  // toggling LED
- *         murasaki::Sleep(static_cast<murasaki::WaitMilliSeconds>(700));
+ *         murasaki::Sleep(700);
  *     }
  * }
  * @endcode
@@ -247,7 +244,6 @@
  *
  * Then, task you can call Start() member function to run.
  */
-
 
 /**
  * @page ug_sec_5 Other peripheral
@@ -361,8 +357,6 @@
  * @endcode
  * In addition to the Toggle(), BitIn has Set() and Clear() member function.
  */
-
-
 
 /**
  * @page ug_sec_6 Program flow
@@ -671,6 +665,5 @@
  * @endcode
  *
  */
-
 
 #endif /* MURASAKI_2_UG_HPP_ */

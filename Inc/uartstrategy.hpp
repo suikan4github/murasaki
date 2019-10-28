@@ -33,14 +33,14 @@ namespace murasaki {
  */
 
 class UartStrategy : public murasaki::PeripheralStrategy {
-public:
+ public:
 
     /**
      * \brief Set the behavior of the hardware flow control
      * \param control The control mode.
      */
     virtual void SetHardwareFlowControl(UartHardwareFlowControl control)
-    {
+                                        {
     }
     ;
     /**
@@ -48,7 +48,7 @@ public:
      * @param speed BAUD rate ( 110, 300, ... 9600,... )
      */
     virtual void SetSpeed(unsigned int speed)
-    {
+                          {
     }
     ;
     /**
@@ -61,7 +61,7 @@ public:
     virtual murasaki::UartStatus Transmit(
                                           const uint8_t * data,
                                           unsigned int size,
-                                          WaitMilliSeconds timeout_ms = murasaki::kwmsIndefinitely) = 0;
+                                          unsigned int timeout_ms = murasaki::kwmsIndefinitely) = 0;
     /**
      * \brief buffer receive over the UART. Blocking
      * \param data Pointer to the buffer to save the received data.
@@ -76,7 +76,7 @@ public:
                                          unsigned int size,
                                          unsigned int * transfered_count = nullptr,
                                          UartTimeout uart_timeout = murasaki::kutNoIdleTimeout,
-                                         WaitMilliSeconds timeout_ms = murasaki::kwmsIndefinitely) = 0;
+                                         unsigned int timeout_ms = murasaki::kwmsIndefinitely) = 0;
     /**
      * \brief Call back to be called notify the transfer is complete.
      * \param ptr Pointer for generic use. Usually, points a struct of a UART device control

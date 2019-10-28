@@ -115,7 +115,7 @@ class I2cMaster : public I2CMasterStrategy
                                          const uint8_t * tx_data,
                                          unsigned int tx_size,
                                          unsigned int * transfered_count,
-                                         WaitMilliSeconds timeout_ms);
+                                         unsigned int timeout_ms);
 
     /**
      * @brief Thread safe, blocking receiving over I2C.
@@ -142,7 +142,7 @@ class I2cMaster : public I2CMasterStrategy
                                         uint8_t * rx_data,
                                         unsigned int rx_size,
                                         unsigned int * transfered_count,
-                                        WaitMilliSeconds timeout_ms);
+                                        unsigned int timeout_ms);
     /**
      * @brief Thread safe, blocking transmission and then receiving over I2C.
      * @param addrs 7bit address of the I2C device.
@@ -177,7 +177,7 @@ class I2cMaster : public I2CMasterStrategy
                                                     unsigned int rx_size,
                                                     unsigned int * tx_transfered_count,
                                                     unsigned int * rx_transfered_count,
-                                                    WaitMilliSeconds timeout_ms);
+                                                    unsigned int timeout_ms);
     /**
      * \brief Call back to be called notify the transfer is complete.
      * \param ptr Pointer for generic use. Usually, points a struct of a peripheral control
@@ -213,7 +213,7 @@ class I2cMaster : public I2CMasterStrategy
      * Checks whether handle has error and if there is, print appropriate error. Then return.
      */
     virtual bool HandleError(void * ptr);
- private:
+     private:
     /**
      * @brief Return the Platform dependent device control handle.
      * @return Handle of device.
@@ -224,10 +224,10 @@ class I2cMaster : public I2CMasterStrategy
     virtual void * GetPeripheralHandle();
 
  protected:
-    I2C_HandleTypeDef * const peripheral_;          // SPI peripheral handle
-    Synchronizer * const sync_;                     // sync between task and interrupt
-    CriticalSection * const critical_section_;      // protect memberfunction
-    volatile I2cStatus interrupt_status_;           // status variable from interrupt
+    I2C_HandleTypeDef * const peripheral_;  // SPI peripheral handle
+    Synchronizer * const sync_;  // sync between task and interrupt
+    CriticalSection * const critical_section_;  // protect memberfunction
+    volatile I2cStatus interrupt_status_;  // status variable from interrupt
 };
 
 } /* namespace murasaki */

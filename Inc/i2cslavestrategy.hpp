@@ -42,7 +42,7 @@ class I2cSlaveStrategy : public murasaki::PeripheralStrategy {
                                          const uint8_t * tx_data,
                                          unsigned int tx_size,
                                          unsigned int * transfered_count = nullptr,
-                                         murasaki::WaitMilliSeconds timeout_ms = murasaki::kwmsIndefinitely) = 0;
+                                         unsigned int timeout_ms = murasaki::kwmsIndefinitely) = 0;
     /**
      * @brief Thread safe, blocking receiving over I2C.
      * @param rx_data Data array to transmit.
@@ -58,7 +58,7 @@ class I2cSlaveStrategy : public murasaki::PeripheralStrategy {
                                         uint8_t * rx_data,
                                         unsigned int rx_size,
                                         unsigned int * transfered_count = nullptr,
-                                        murasaki::WaitMilliSeconds timeout_ms = murasaki::kwmsIndefinitely) = 0;
+                                        unsigned int timeout_ms = murasaki::kwmsIndefinitely) = 0;
 
     /**
      * \brief Call back to be called notify the transfer is complete.

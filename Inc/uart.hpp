@@ -122,7 +122,7 @@ class Uart : public UartStrategy
     virtual murasaki::UartStatus Transmit(
                                           const uint8_t * data,
                                           unsigned int size,
-                                          WaitMilliSeconds timeout_ms);
+                                          unsigned int timeout_ms);
     /**
      * \brief Receive raw data through an UART by blocking mode.
      * \param data Data buffer to place the received data..
@@ -154,7 +154,7 @@ class Uart : public UartStrategy
                                          unsigned int count,
                                          unsigned int * transfered_count,
                                          UartTimeout uart_timeout,
-                                         WaitMilliSeconds timeout_ms);
+                                         unsigned int timeout_ms);
     /**
      * \brief Call back for entire block transfer completion.
      * \param ptr Pointer to UART_HandleTypeDef struct.
@@ -205,7 +205,7 @@ class Uart : public UartStrategy
      * Checks whether handle has error and if there is, print appropriate error. Then return.
      */
     virtual bool HandleError(void * const ptr);
-protected:
+     protected:
     UART_HandleTypeDef* const peripheral_;
 
     Synchronizer * const tx_sync_;
@@ -213,16 +213,16 @@ protected:
 
     CriticalSection * const tx_critical_section_;
     CriticalSection * const rx_critical_section_;
-private:
+     private:
     murasaki::UartStatus tx_interrupt_status_, rx_interrupt_status_;
-	/**
-	 * @brief Return the Platform dependent device control handle.
-	 * @return Handle of device.
-	 * @details
-	 * The handle is the pointer ( or some ID ) which specify the control data of
-	 * specific device.
-	 */
-	virtual void * GetPeripheralHandle();
+    /**
+     * @brief Return the Platform dependent device control handle.
+     * @return Handle of device.
+     * @details
+     * The handle is the pointer ( or some ID ) which specify the control data of
+     * specific device.
+     */
+    virtual void * GetPeripheralHandle();
 
 };
 

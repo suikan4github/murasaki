@@ -103,7 +103,7 @@ class SpiSlave : public SpiSlaveStrategy
                                          uint8_t * rx_data,
                                          unsigned int size,
                                          unsigned int * transfered_count,
-                                         murasaki::WaitMilliSeconds timeout_ms = murasaki::kwmsIndefinitely);
+                                         unsigned int timeout_ms = murasaki::kwmsIndefinitely);
     /**
      * @brief Callback to notify the end of transfer
      * @param ptr Pointer to the control object.

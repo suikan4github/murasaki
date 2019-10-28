@@ -47,7 +47,7 @@ murasaki::I2cStatus I2cMaster::Transmit(
                                         const uint8_t* tx_data,
                                         unsigned int tx_size,
                                         unsigned int * transfered_count,
-                                        WaitMilliSeconds timeout_ms) {
+                                        unsigned int timeout_ms) {
 
     I2C_SYSLOG("Enter");
 
@@ -118,7 +118,7 @@ murasaki::I2cStatus I2cMaster::Receive(
                                        uint8_t* rx_data,
                                        unsigned int rx_size,
                                        unsigned int * transfered_count,
-                                       WaitMilliSeconds timeout_ms) {
+                                       unsigned int timeout_ms) {
 
     I2C_SYSLOG("Enter");
 
@@ -195,7 +195,7 @@ murasaki::I2cStatus I2cMaster::TransmitThenReceive(
                                                    unsigned int rx_size,
                                                    unsigned int * tx_transfered_count,
                                                    unsigned int * rx_transfered_count,
-                                                   WaitMilliSeconds timeout_ms) {
+                                                   unsigned int timeout_ms) {
 
     I2C_SYSLOG("Enter");
 

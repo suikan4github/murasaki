@@ -89,7 +89,7 @@ void Uart::SetHardwareFlowControl(UartHardwareFlowControl control)
 murasaki::UartStatus Uart::Transmit(
                                     const uint8_t * data,
                                     unsigned int size,
-                                    WaitMilliSeconds timeout_ms)
+                                    unsigned int timeout_ms)
                                     {
     UART_SYSLOG("Enter");
 
@@ -165,7 +165,7 @@ murasaki::UartStatus Uart::Receive(
                                    unsigned int size,
                                    unsigned int * transfered_count,
                                    UartTimeout uart_timeout,
-                                   WaitMilliSeconds timeout_ms)
+                                   unsigned int timeout_ms)
                                    {
     UART_SYSLOG("Enter");
 

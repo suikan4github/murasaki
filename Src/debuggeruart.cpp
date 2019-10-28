@@ -77,7 +77,7 @@ void DebuggerUart::SetHardwareFlowControl(UartHardwareFlowControl control)
 murasaki::UartStatus DebuggerUart::Transmit(
                                             const uint8_t * data,
                                             unsigned int size,
-                                            WaitMilliSeconds timeout_ms)
+                                            unsigned int timeout_ms)
                                             {
     MURASAKI_ASSERT(nullptr != data)
     MURASAKI_ASSERT(65536 >= size);
@@ -121,7 +121,7 @@ murasaki::UartStatus DebuggerUart::Receive(
                                            unsigned int size,
                                            unsigned int * transfered_count,
                                            UartTimeout uart_timeout,
-                                           WaitMilliSeconds timeout_ms)
+                                           unsigned int timeout_ms)
                                            {
 
     MURASAKI_ASSERT(nullptr != data);

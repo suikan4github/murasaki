@@ -405,7 +405,7 @@
  *         count++;
  *
  *         // wait for a while
- *         murasaki::Sleep(static_cast<murasaki::WaitMilliSeconds>(500));
+ *         murasaki::Sleep(500);
  *     }
  * }
  * @endcode

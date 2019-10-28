@@ -37,7 +37,7 @@ class SpiSlaveStrategy : public murasaki::PeripheralStrategy
                                          uint8_t * rx_data,
                                          unsigned int size,
                                          unsigned int * transfered_count = nullptr,
-                                         murasaki::WaitMilliSeconds timeout_ms = murasaki::kwmsIndefinitely)=0;
+                                         unsigned int timeout_ms = murasaki::kwmsIndefinitely)=0;
     /**
      * @brief Callback to notifiy the end of transfer
      * @param ptr Pointer to the control object.

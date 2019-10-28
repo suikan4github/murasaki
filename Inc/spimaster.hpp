@@ -105,7 +105,7 @@ class SpiMaster : public SpiMasterStrategy
                                          const uint8_t * tx_data,
                                          uint8_t * rx_data,
                                          unsigned int size,
-                                         murasaki::WaitMilliSeconds timeout_ms = murasaki::kwmsIndefinitely);
+                                         unsigned int timeout_ms = murasaki::kwmsIndefinitely);
     /**
      * @brief Callback to notify the end of transfer
      * @param ptr Pointer to the control object.

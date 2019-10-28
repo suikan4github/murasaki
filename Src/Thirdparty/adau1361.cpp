@@ -192,7 +192,7 @@ void Adau1361::WaitPllLock(void) {
 
         // Otherwise, sleep 100mS and then try again.
         murasaki::Sleep(
-                        static_cast<murasaki::WaitMilliSeconds>(100));
+                        100);
     } while (true);
 
     CODEC_SYSLOG("Leave.")

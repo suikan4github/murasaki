@@ -45,7 +45,7 @@ class Synchronizer
      * This member function have to be called from the task context. Otherwise, the behavior is
      * not predictable.
      */
-    bool Wait(WaitMilliSeconds timeout_ms = kwmsIndefinitely);
+    bool Wait(unsigned int timeout_ms = kwmsIndefinitely);
     /**
      * \brief Release the task.
      * \details
