@@ -383,7 +383,11 @@ static inline unsigned int GetCycleCounter()
  * For example, if the tick period is 10mS, the worst error is 10mS.
  */
 static inline void Sleep(unsigned int duration_ms) {
-    vTaskDelay(pdMS_TO_TICKS(duration_ms));
+    // if the parameter is Indefinitely, pass it through. If not, convert to milisecond.
+    if (duration_ms == murasaki::kwmsIndefinitely)
+        ::vTaskDelay(duration_ms);
+    else
+        ::vTaskDelay(pdMS_TO_TICKS(duration_ms));
 }
 
 /**
