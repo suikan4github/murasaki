@@ -158,7 +158,9 @@ void DuplexAudio::TransmitAndReceive(
             int8_t * const rx_current_dma_data = reinterpret_cast<int8_t *>(&rx_dma_buffer_[current_dma_phase_ * block_size_rx_]);
 
             // Scale factor to convert between integer type on the DMA and normalized floating point data
-            const float scale = INT8_MAX;
+            // Too keep the absolute maximum number as 1.0, using the _MIN value. 
+            //  | INT8_MAX | +1 = | INT8_MIN |
+            const float scale = -1.0 * INT8_MIN;
 
             AUDIO_SYSLOG("block_size_tx_ : %d", block_size_tx_);
             AUDIO_SYSLOG("block_size_rx_ : %d", block_size_rx_);
@@ -199,7 +201,9 @@ void DuplexAudio::TransmitAndReceive(
             int16_t * const tx_current_dma_data = reinterpret_cast<int16_t*>(&tx_dma_buffer_[current_dma_phase_ * block_size_tx_]);
             int16_t * const rx_current_dma_data = reinterpret_cast<int16_t*>(&rx_dma_buffer_[current_dma_phase_ * block_size_rx_]);
             // Scale factor to convert between integer type on the DMA and normalized floating point data
-            const float scale = INT16_MAX;
+            // Too keep the absolute maximum number as 1.0, using the _MIN value. 
+            //  | INT16_MAX | +1 = | INT16_MIN |
+            const float scale = -1.0 * INT16_MIN;
 
             AUDIO_SYSLOG("block_size_tx_ : %d", block_size_tx_);
             AUDIO_SYSLOG("block_size_rx_ : %d", block_size_rx_);
@@ -240,7 +244,10 @@ void DuplexAudio::TransmitAndReceive(
             int32_t * const tx_current_dma_data = reinterpret_cast<int32_t*>(&tx_dma_buffer_[current_dma_phase_ * block_size_tx_]);
             int32_t * const rx_current_dma_data = reinterpret_cast<int32_t*>(&rx_dma_buffer_[current_dma_phase_ * block_size_rx_]);
             // Scale factor to convert between integer type on the DMA and normalized floating point data
-            const float scale = INT32_MAX;
+            // Too keep the absolute maximum number as 1.0, using the _MIN value. 
+            //  | INT32_MAX | +1 = | INT32_MIN |
+            const float scale = -1.0 * INT32_MIN;
+
             AUDIO_SYSLOG("block_size_tx_ : %d", block_size_tx_);
             AUDIO_SYSLOG("block_size_rx_ : %d", block_size_rx_);
 

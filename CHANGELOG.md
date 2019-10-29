@@ -27,6 +27,7 @@ Note that issue #46 and #56 made incompatibility from the past code.
 - [Issue 58 : Adau1361::SendCommand and SendCommandTable are incorrectly private member funcitons](https://github.com/suikan4github/murasaki/issues/58)
 - [Issue 59 : DuplexAudio visibility must be back](https://github.com/suikan4github/murasaki/issues/59)
 - [Issue 63 : The sleep function doesn't handle the indefinite wait correctly](https://github.com/suikan4github/murasaki/issues/63)
+- [Issue 64 : The scale constant of DuplexAudio is incorrectly calculated](https://github.com/suikan4github/murasaki/issues/64)
 
 ### Security
 ### Known Issue
