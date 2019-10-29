@@ -11,6 +11,7 @@ Note that issue #46 and #56 made incompatibility from the past code.
 - [Issue 49 : Add SAI interrupt handler template](https://github.com/suikan4github/murasaki/issues/49)
 - [Issue 42 : Print the context information on the hard fault.](https://github.com/suikan4github/murasaki/issues/42)
 - [Issue 47 : Add Match() method to peripheral class](https://github.com/suikan4github/murasaki/issues/47)
+- [Issue 62 : Add the I2C Search function to the template](https://github.com/suikan4github/murasaki/issues/62)
 
 ### Changed
 - [Issue 46 : Task priority is passed incorrectly](https://github.com/suikan4github/murasaki/issues/46)

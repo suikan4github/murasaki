@@ -15,16 +15,18 @@
 
 // Include the prototype  of functions of this file.
 
+/* -------------------- PLATFORM Macros -------------------------- */
+
 /* -------------------- PLATFORM Type and classes -------------------------- */
 
-/* -------------------- PLATFORM VARIABLES-------------------------- */
+/* -------------------- PLATFORM Variables-------------------------- */
 
 // Essential definition.
 // Do not delete
 murasaki::Platform murasaki::platform;
 murasaki::Debugger * murasaki::debugger;
 
-/* ------------------------ PERIPHERAL ----------------------------- */
+/* ------------------------ STM32 Peripherals ----------------------------- */
 
 /*
  * Platform dependent peripheral declaration.
@@ -45,9 +47,11 @@ extern UART_HandleTypeDef huart2;
 #endif
 extern UART_HandleTypeDef huart3;
 
-/* -------------------- PLATFORM ALGORITHM ------------------------- */
+/* -------------------- PLATFORM Prototypes ------------------------- */
 
 void TaskBodyFunction(const void* ptr);
+
+/* -------------------- PLATFORM Implementation ------------------------- */
 
 void InitPlatform()
 {
@@ -529,6 +533,15 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 
 /* ------------------ ASSERTION AND ERROR -------------------------- */
 
+/*
+ * 
+ * @brief  Sub-function of the assert_failed() in main.c. 
+ * @param  file: pointer to the source file name
+ * @param  line: assert_param error line source number
+ * @details
+ * The assert_failed() is the assert stub for the STM32 CubeHAL.
+ * Once called, print a message and then halt by assert. 
+ */
 void CustomAssertFailed(uint8_t* file, uint32_t line)
                         {
     murasaki::debugger->Printf("Wrong parameters value: file %s on line %d\n",
@@ -538,6 +551,19 @@ void CustomAssertFailed(uint8_t* file, uint32_t line)
     MURASAKI_ASSERT(false);
 }
 
+/*
+ * CustmDefaultHanlder : 
+ * 
+ * An entry of the exception. Especialy for the Hard Fault exception.
+ * In this function, the Stack pointer just before exception is retrieved 
+ * and pass as the first parameter of the PrintFaultResult().
+ * 
+ * Note : To print the correct information, this function have to be
+ * Jumped in from the exception entry without any data push to the stack.
+ * To avoid the pushing extra data to stack or making stack frame, 
+ * Compile the program without debug information and with certain 
+ * optimization leve, when you investigate the Hard Fault. 
+ */
 __asm volatile (
         ".global CustomDefaultHandler \n"
         "CustomDefaultHandler: \n"
@@ -555,6 +581,11 @@ __asm volatile (
         " bkpt #0          \n"
 );
 
+/*
+ * Called from the CustomDefaultHandler. 
+ * 
+ * Do not call from other function. 
+ */
 void PrintFaultResult(unsigned int * stack_pointer) {
 
     murasaki::debugger->Printf("\nSpurious exception or hardfault occured.  \n");
@@ -580,14 +611,26 @@ void PrintFaultResult(unsigned int * stack_pointer) {
     murasaki::debugger->DoPostMortem();
 }
 
+/**
+ * @brief Dedicated overflow hook for the FreeRTOS task. 
+ * @param xTask Handle of the task which cause over flow. 
+ * @param pcTaskName Name of the task. 
+ */
 void vApplicationStackOverflowHook(TaskHandle_t xTask,
                                    signed char *pcTaskName) {
-    murasaki::debugger->Printf("Stack overflow at task :  %s \n", pcTaskName);
+    murasaki::debugger->Printf("Stack overflow at task : %s \n", pcTaskName);
     MURASAKI_ASSERT(false);
 }
 
-/* ------------------ User Function -------------------------- */
-// Task body of the murasaki::platform.task1
+/* ------------------ User Functions -------------------------- */
+/**
+ * @brief Demonstration task.
+ * @param ptr Pointer to the parameter block
+ * @details
+ * Task body function as demonstration of the @ref murasaki::SimpleTask.
+ * 
+ * You can delete this function if you don't use.  
+ */
 void TaskBodyFunction(const void* ptr)
                       {
 
@@ -597,3 +640,42 @@ void TaskBodyFunction(const void* ptr)
         murasaki::Sleep(700);
     }
 }
+
+/**
+ * @brief I2C device serach function 
+ * @param master Pointer to the I2C master controller object.
+ * @details
+ * Poll all device address and check the response. If no response(NAK),
+ * there is no device.
+ * 
+ * This function can be deleted if you don't use. 
+ */
+#if 0
+void I2cSearch(murasaki::I2CMasterStrategy * master)
+               {
+    uint8_t tx_buf[1];
+
+    murasaki::debugger->Printf("            Probing I2C devices \n");
+    murasaki::debugger->Printf("   | 00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F\n");
+    murasaki::debugger->Printf("---+------------------------------------------------\n");
+
+    // Search raw
+    for (int raw = 0; raw < 128; raw += 16) {
+        // Search column
+        murasaki::debugger->Printf("%2x |", raw);
+        for (int col = 0; col < 16; col++) {
+            murasaki::I2cStatus result;
+            // check whether device exist or not.
+            result = master->Transmit(raw + col, tx_buf, 0);
+            if (result == murasaki::ki2csOK)  // device acknowledged.
+                murasaki::debugger->Printf(" %2X", raw + col); // print address
+            else if (result == murasaki::ki2csNak)  // no device
+                murasaki::debugger->Printf(" --"); 
+            else
+                murasaki::debugger->Printf(" ??");  // unpredicted error.
+        }
+        murasaki::debugger->Printf("\n");
+    }
+
+}
+#endif
