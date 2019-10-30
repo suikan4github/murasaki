@@ -29,6 +29,7 @@ Note that issue #46 and #56 made incompatibility from the past code.
 - [Issue 59 : DuplexAudio visibility must be back](https://github.com/suikan4github/murasaki/issues/59)
 - [Issue 63 : The sleep function doesn't handle the indefinite wait correctly](https://github.com/suikan4github/murasaki/issues/63)
 - [Issue 64 : The scale constant of DuplexAudio is incorrectly calculated](https://github.com/suikan4github/murasaki/issues/64)
+- [Issue 65 : murasaki_platform.hpp have to be updated](https://github.com/suikan4github/murasaki/issues/65)
 
 ### Security
 ### Known Issue

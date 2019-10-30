@@ -533,14 +533,23 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 
 /* ------------------ ASSERTION AND ERROR -------------------------- */
 
-/*
- * 
- * @brief  Sub-function of the assert_failed() in main.c. 
- * @param  file: pointer to the source file name
- * @param  line: assert_param error line source number
+/**
+ * @brief Hook for the assert_failure() in main.c
+ * @ingroup MURASAKI_PLATFORM_GROUP
+ * @param file Name of the source file where assertion happen
+ * @param line Number of the line where assertion happen
  * @details
- * The assert_failed() is the assert stub for the STM32 CubeHAL.
- * Once called, print a message and then halt by assert. 
+ * This routine provides a custom hook for the assertion inside STM32Cube HAL.
+ * All assertion raised in HAL will be redirected here.
+ *
+ * @code
+ * void assert_failed(uint8_t* file, uint32_t line)
+ * {
+ *     CustomAssertFailed(file, line);
+ * }
+ * @endcode
+ * By default, this routine output a message with location informaiton
+ * to the debugger console.
  */
 void CustomAssertFailed(uint8_t* file, uint32_t line)
                         {
@@ -552,17 +561,17 @@ void CustomAssertFailed(uint8_t* file, uint32_t line)
 }
 
 /*
- * CustmDefaultHanlder : 
- * 
+ * CustmDefaultHanlder :
+ *
  * An entry of the exception. Especialy for the Hard Fault exception.
- * In this function, the Stack pointer just before exception is retrieved 
+ * In this function, the Stack pointer just before exception is retrieved
  * and pass as the first parameter of the PrintFaultResult().
- * 
+ *
  * Note : To print the correct information, this function have to be
  * Jumped in from the exception entry without any data push to the stack.
- * To avoid the pushing extra data to stack or making stack frame, 
- * Compile the program without debug information and with certain 
- * optimization leve, when you investigate the Hard Fault. 
+ * To avoid the pushing extra data to stack or making stack frame,
+ * Compile the program without debug information and with certain
+ * optimization leve, when you investigate the Hard Fault.
  */
 __asm volatile (
         ".global CustomDefaultHandler \n"
@@ -581,10 +590,12 @@ __asm volatile (
         " bkpt #0          \n"
 );
 
-/*
- * Called from the CustomDefaultHandler. 
- * 
- * Do not call from other function. 
+/**
+ * @brief Printing out the context information.
+ * @param stack_pointer retrieved stack pointer before interrupt / exception.
+ * @details
+ * Do not call from application. This is murasaki_internal_only.
+ *
  */
 void PrintFaultResult(unsigned int * stack_pointer) {
 
@@ -612,9 +623,13 @@ void PrintFaultResult(unsigned int * stack_pointer) {
 }
 
 /**
- * @brief Dedicated overflow hook for the FreeRTOS task. 
- * @param xTask Handle of the task which cause over flow. 
- * @param pcTaskName Name of the task. 
+ * @brief StackOverflow hook for FreeRTOS
+ * @param xTask Task ID which causes stack overflow.
+ * @param pcTaskName Name of the task which cuases stack overflow.
+ * @fn vApplicationStackOverflowHook
+ * @details
+ * This function will be called from FreeRTOS when some task causes overflow.
+ * See TaskStrategy::getStackMinHeadroom() for details.
  */
 void vApplicationStackOverflowHook(TaskHandle_t xTask,
                                    signed char *pcTaskName) {
@@ -628,8 +643,8 @@ void vApplicationStackOverflowHook(TaskHandle_t xTask,
  * @param ptr Pointer to the parameter block
  * @details
  * Task body function as demonstration of the @ref murasaki::SimpleTask.
- * 
- * You can delete this function if you don't use.  
+ *
+ * You can delete this function if you don't use.
  */
 void TaskBodyFunction(const void* ptr)
                       {
@@ -642,13 +657,13 @@ void TaskBodyFunction(const void* ptr)
 }
 
 /**
- * @brief I2C device serach function 
+ * @brief I2C device serach function
  * @param master Pointer to the I2C master controller object.
  * @details
  * Poll all device address and check the response. If no response(NAK),
  * there is no device.
- * 
- * This function can be deleted if you don't use. 
+ *
+ * This function can be deleted if you don't use.
  */
 #if 0
 void I2cSearch(murasaki::I2CMasterStrategy * master)
@@ -670,7 +685,7 @@ void I2cSearch(murasaki::I2CMasterStrategy * master)
             if (result == murasaki::ki2csOK)  // device acknowledged.
                 murasaki::debugger->Printf(" %2X", raw + col); // print address
             else if (result == murasaki::ki2csNak)  // no device
-                murasaki::debugger->Printf(" --"); 
+                murasaki::debugger->Printf(" --");
             else
                 murasaki::debugger->Printf(" ??");  // unpredicted error.
         }
