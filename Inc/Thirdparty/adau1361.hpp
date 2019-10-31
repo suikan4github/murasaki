@@ -88,8 +88,8 @@ class Adau1361 : public AudioCodecStrategy {
 
     /**
      * \brief Set the line input gain and enable the relevant mixer.
-     * \param left_gain Gain by dB. The gain value outside of the acceptable range will be saturated.
-     * \param right_gain Gain by dB. The gain value outside of the acceptable range will be saturated.
+     * \param left_gain Gain by dB. [6 .. -12],  The gain value outside of the acceptable range will be saturated.
+     * \param right_gain Gain by dB. [6 .. -12], The gain value outside of the acceptable range will be saturated.
      * \param mute set true to mute
      * \details
      *   As same as start(), this gain control function uses the single-end negative input only. Other
@@ -102,8 +102,8 @@ class Adau1361 : public AudioCodecStrategy {
 
     /**
      * \brief Set the aux input gain and enable the relevant mixer.
-     * \param left_gain Gain by dB. The gain value outside of the acceptable range will be saturated.
-     * \param right_gain Gain by dB. The gain value outside of the acceptable range will be saturated.
+     * \param left_gain Gain by dB. [6 .. -12], The gain value outside of the acceptable range will be saturated.
+     * \param right_gain Gain by dB. [6 .. -12], The gain value outside of the acceptable range will be saturated.
      * \param mute set true to mute
      * \details
      *   Other input lines are not killed. To kill it, user have to mute them explicitly.
@@ -113,8 +113,8 @@ class Adau1361 : public AudioCodecStrategy {
 
     /**
      * \brief Set the line output gain and enable the relevant mixer.
-     * \param left_gain Gain by dB. The gain value outside of the acceptable range will be saturated.
-     * \param right_gain Gain by dB. The gain value outside of the acceptable range will be saturated.
+     * \param left_gain Gain by dB. [6 .. -12], The gain value outside of the acceptable range will be saturated.
+     * \param right_gain Gain by dB. [6 .. -12], The gain value outside of the acceptable range will be saturated.
      * \param mute set true to mute
      * \details
      *   Other output lines are not killed. To kill it, user have to mute them explicitly.
@@ -125,8 +125,8 @@ class Adau1361 : public AudioCodecStrategy {
 
     /**
      * \brief Set the headphone output gain and enable the relevant mixer.
-     * \param left_gain Gain by dB. The gain value outside of the acceptable range will be saturated.
-     * \param right_gain Gain by dB. The gain value outside of the acceptable range will be saturated.
+     * \param left_gain Gain by dB. [6 .. -12], The gain value outside of the acceptable range will be saturated.
+     * \param right_gain Gain by dB. [6 .. -12], The gain value outside of the acceptable range will be saturated.
      * \param mute set true to mute
      * \details
      *   Other out line like line in are not killed. To kill it, user have to mute them explicitly.

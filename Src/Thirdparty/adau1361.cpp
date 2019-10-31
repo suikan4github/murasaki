@@ -579,7 +579,11 @@ void Adau1361::Start(void) {
 #define ADDL 1  /* lower address of register */
 
 #define SET_INPUT_GAIN( x ) ((x<<1)|1)
-
+/*
+ * This function assumes the single-end input. The gain control is LINNG.
+ * See Figure 31 "Record Singal Path" in the ADAU1361 data sheet
+ *
+ */
 void Adau1361::SetLineInputGain(
                                 float left_gain,
                                 float right_gain,
@@ -624,6 +628,10 @@ void Adau1361::SetLineInputGain(
     CODEC_SYSLOG("Leave.")
 }
 
+/*
+ * This function assumes the input is the single end. Then, the differential BOOST (LDBOOST ) is
+ * muted.
+ */
 void Adau1361::SetAuxInputGain(
                                float left_gain,
                                float right_gain,
@@ -644,7 +652,7 @@ void Adau1361::SetAuxInputGain(
         i2c_->Transmit(device_addr_, data, 3);  // R7: mixer 2 R aux mute
     } else {
 
-        // set left gain
+        // set left gain LDBOOST is muted.
         left = (left_gain + 15) / 3;  // See table 31 LINNG
         left = std::max(left, 0);
         left = std::min(left, 7);
@@ -653,7 +661,7 @@ void Adau1361::SetAuxInputGain(
         data[ADDL] = 0x0b;
         i2c_->Transmit(device_addr_, data, 3);  // R5: mixer 1 enable
 
-        // set right gain
+        // set right gain. LDBOOST is muted.
         right = (right_gain + 15) / 3;  // See table 31 LINNG
         right = std::max(right, 0);
         right = std::min(right, 7);

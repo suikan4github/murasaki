@@ -30,6 +30,7 @@ Note that issue #46 and #56 made incompatibility from the past code.
 - [Issue 63 : The sleep function doesn't handle the indefinite wait correctly](https://github.com/suikan4github/murasaki/issues/63)
 - [Issue 64 : The scale constant of DuplexAudio is incorrectly calculated](https://github.com/suikan4github/murasaki/issues/64)
 - [Issue 65 : murasaki_platform.hpp have to be updated](https://github.com/suikan4github/murasaki/issues/65)
+- [Issue 55 : Adau1361::SetAuxInputGain seems to by buggy](https://github.com/suikan4github/murasaki/issues/55)
 
 ### Security
 ### Known Issue
