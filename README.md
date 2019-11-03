@@ -171,6 +171,6 @@ Once CubeMx generated the code, a programmer can run the install script to set u
 The detail of the install procedure is described in the
 [doc/refman.pdf](https://github.com/suikan4github/murasaki/blob/master/doc/refman.pdf)
 ## License
-The Murasaki library is distributed under [MIT License](https://github.com/suikan4github/murasaki/blob/master/LICENSE)
+The Murasaki library is distributed under [MIT License](LICENSE)
 ## Author
 [Seiichi "Suikan" Horie](https://github.com/suikan4github)
