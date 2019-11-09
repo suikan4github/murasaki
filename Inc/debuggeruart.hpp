@@ -3,7 +3,7 @@
  *
  * \date 2018/09/23
  * \author Seiichi "Suikan" Horie
- * @brief UART. Thread safe and blocking IO
+ * @brief UART. Thread safe and synchronous IO
  */
 
 #ifndef DEBUGGER_UART_HPP_
@@ -54,11 +54,11 @@ namespace murasaki {
  *
  * Once the instance and callbacks are correctly prepared, we can use the Tx/Rx member function.
  *
- * The @ref Uart::Transmit() member function is a blocking function. A programmer can specify the
+ * The @ref Uart::Transmit() member function is a synchrnous function. A programmer can specify the
  * timeout by timeout_ms parameter. By default, this parameter is set by kwmsIndefinitely
  * which specifes never time out.
  *
- * The @ref Uart::Receive() member function is a blocking function.  A programmer can specify the
+ * The @ref Uart::Receive() member function is a synchronous function.  A programmer can specify the
  * timeout by timeout_ms parameter. By default, this parameter is set by kwmsIndefinitely
  * which specifes never time out.
  *
@@ -104,7 +104,7 @@ class DebuggerUart : public UartStrategy
     virtual void SetSpeed(unsigned int baud_rate);
 
     /**
-     * \brief Transmit raw data through an UART by blocking mode.
+     * \brief Transmit raw data through an UART by synchronous mode.
      * \param data Data buffer to be transmitted.
      * \param size The count of the data ( byte ) to be transfered. Must be smaller than 65536
      * \param timeout_ms Time out limit by milliseconds.
@@ -112,7 +112,7 @@ class DebuggerUart : public UartStrategy
      * \details
      * Transmit given data buffer through an UART device.
      *
-     * The transmission mode is blocking. That means, function returns when all data has been transmitted, except timeout.
+     * The transmission mode is synchronous. That means, function returns when all data has been transmitted, except timeout.
      * Passing \ref murasaki::kwmsIndefinitely to the parameter timeout_ms orders not to return until complete transmission. Other value of
      * timeout_ms parameter specifies the time out by millisecond. If time out happen, function returns false. If not happen, it returns true.
      *
@@ -124,7 +124,7 @@ class DebuggerUart : public UartStrategy
                                           unsigned int size,
                                           unsigned int timeout_ms);
     /**
-     * \brief Receive raw data through an UART by blocking mode.
+     * \brief Receive raw data through an UART by synchronous mode.
      * \param data Data buffer to place the received data..
      * \param count The count of the data ( byte ) to be transfered. Must be smaller than 65536
      * \param transfered_count This parameter is ignored.
@@ -134,7 +134,7 @@ class DebuggerUart : public UartStrategy
      * \details
      * Receive to given data buffer through an UART device.
      *
-     * The receiving mode is blocking. That means, function returns when specified number of data has been received, except timeout.
+     * The receiving mode is synchronous. That means, function returns when specified number of data has been received, except timeout.
      * Passing \ref murasaki::kwmsIndefinitely to the parameter timeout_ms orders not to return until complete receiving. Other value of
      * timeout_ms parameter specifies the time out by millisecond.
      * If time out happen, function returns false. If not happen, it returns true.

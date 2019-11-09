@@ -25,7 +25,7 @@ namespace murasaki {
  *
  * As a service class to Debug. This class's two member functions ( putMessage() and getCharacter() )
  * have to be able to run in the task context. Both member functions also have to be the
- * blocking function.
+ * blocking and synchronous function.
  */
 class LoggerStrategy
 {
@@ -53,7 +53,7 @@ class LoggerStrategy
      * \brief Character input member function.
      * \return A character from input is returned.
      * \details
-     * This function is considered as blocking. That mean, the function will wait for
+     * This function is considered as blocking and synchronous. That mean, the function will wait for
      * any user input forever.
      */
     virtual char getCharacter() = 0;
@@ -65,7 +65,10 @@ class LoggerStrategy
      * By default this is not implemented. But in case user implments a method, it should call the
      * Debugger::SetPostMortem() internaly.
      */
-    virtual void DoPostMortem( void * debugger_fifo){while(true);}
+    virtual void DoPostMortem(void * debugger_fifo) {
+        while (true)
+            ;
+    }
  protected:
     /**
      * \brief This special method helps derived loggers. The loggers can access the raw device, in case of the
@@ -80,9 +83,9 @@ class LoggerStrategy
 } /* namespace murasaki */
 
 inline void* murasaki::LoggerStrategy::GetPeripheralHandle(
-		murasaki::PeripheralStrategy* peripheral)
-{
-	return(peripheral->GetPeripheralHandle());
+                                                           murasaki::PeripheralStrategy* peripheral)
+                                                           {
+    return (peripheral->GetPeripheralHandle());
 }
 
 #endif /* LOGGERSTRATEGY_HPP_ */

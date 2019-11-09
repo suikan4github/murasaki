@@ -34,6 +34,7 @@ Note that issue #46 and #56 made incompatibility from the past code.
 - [Issue 65 : murasaki_platform.hpp have to be updated](https://github.com/suikan4github/murasaki/issues/65)
 - [Issue 67 : Adau1361::Set*Gain() functions overwrite the non-related field](https://github.com/suikan4github/murasaki/issues/67)
 - [Issue 68 : README has wrong link to the LICENSE](https://github.com/suikan4github/murasaki/issues/68)
+- [Issue 70 : "Blocking" should be changed to "Synchronous"](https://github.com/suikan4github/murasaki/issues/70)
 
 ### Security
 ### Known Issue

@@ -25,7 +25,7 @@ namespace murasaki {
  * UART peripheral.
  *
  * This prototype assumes the derived class will transmit / receive data in the
- * task context on RTOS. And both method should be blocking. That men, until the transmit / receve
+ * task context on RTOS. And both method should be synchronous. That men, until the transmit / receve
  * terminates, both method doesn't return.
  *
  * Two call back methods are prepared to sync with the interrutp which tells the end of
@@ -52,7 +52,7 @@ class UartStrategy : public murasaki::PeripheralStrategy {
     }
     ;
     /**
-     * \brief buffer transmission over the UART. Blocking
+     * \brief buffer transmission over the UART. synchronous
      * \param data Pointer to the buffer to be sent.
      * \param size Number of the data to be sent.
      * \param timeout_ms Time out by mili Second.
@@ -63,7 +63,7 @@ class UartStrategy : public murasaki::PeripheralStrategy {
                                           unsigned int size,
                                           unsigned int timeout_ms = murasaki::kwmsIndefinitely) = 0;
     /**
-     * \brief buffer receive over the UART. Blocking
+     * \brief buffer receive over the UART. synchronous
      * \param data Pointer to the buffer to save the received data.
      * \param size Number of the data to be received.
      * \param transfered_count Number of bytes transfered. The nullPtr means no need to return value.

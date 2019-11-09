@@ -19,7 +19,7 @@ namespace murasaki {
  * A prototype of the I2C master peripheral.
  *
  * This prototype assumes the derived class will transmit / receive data in the
- * task context on RTOS. And these member functions should be blocking.
+ * task context on RTOS. And these member functions should be synchronous.
  * That mean, until the transmit / receive
  * terminates, both method doesn't return.
  *
@@ -32,7 +32,7 @@ class I2CMasterStrategy : public murasaki::PeripheralStrategy
  public:
 
     /**
-     * @brief Thread safe, blocking transmission over I2C.
+     * @brief Thread safe, synchronous transmission over I2C.
      * @param addrs 7bit address of the I2C device.
      * @param tx_data Data array to transmit.
      * @param tx_size Data counts[bytes] to transmit.
@@ -50,7 +50,7 @@ class I2CMasterStrategy : public murasaki::PeripheralStrategy
                                          unsigned int * transfered_count = nullptr,
                                          unsigned int timeout_ms = murasaki::kwmsIndefinitely) = 0;
     /**
-     * @brief Thread safe, blocking receiving over I2C.
+     * @brief Thread safe, synchronous receiving over I2C.
      * @param addrs 7bit address of the I2C device.
      * @param rx_data Data array to transmit.
      * @param rx_size Data counts[bytes] to transmit.
@@ -68,7 +68,7 @@ class I2CMasterStrategy : public murasaki::PeripheralStrategy
                                         unsigned int * transfered_count = nullptr,
                                         unsigned int timeout_ms = murasaki::kwmsIndefinitely) = 0;
     /**
-     * @brief Thread safe, blocking transmission and then receiving over I2C.
+     * @brief Thread safe, synchronous transmission and then receiving over I2C.
      * @param addrs 7bit address of the I2C device.
      * @param tx_data Data array to transmit.
      * @param tx_size Data counts[bytes] to transmit.

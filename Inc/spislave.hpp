@@ -3,7 +3,7 @@
  *
  * @date 2018/02/14
  * @author Seiichi "Suikan" Horie
- * @brief SPI Slave. Thread safe and blocking IO
+ * @brief SPI Slave. Thread safe and synchronous IO
  */
 
 #ifndef SPISLAVE_HPP_
@@ -18,7 +18,7 @@
 
 namespace murasaki {
 /**
- * @brief Thread safe, blocking IO. Encapsulating SPI slave. Based on STM32Cube HAL driver and FreeRTOS
+ * @brief Thread safe, synchronous and blocking IO. Encapsulating SPI slave. Based on STM32Cube HAL driver and FreeRTOS
  * \details
  * The SpiSlave class is the wrapper of the SPI controller. To use the SpiSlave class,
  * make an instance with SPI_HandleTypeDef * type pointer. For example, to create
@@ -50,7 +50,7 @@ namespace murasaki {
  *
  * Once the instance and callback are correctly prepared, we can use the Transfer member function.
  *
- * The @ref SpiSlave::TransmitAndReceive() member function is a blocking function. A programmer can specify the
+ * The @ref SpiSlave::TransmitAndReceive() member function is a synchronous function. A programmer can specify the
  * timeout by timeout_ms parameter. By default, this parameter is set by kwmsIndefinitely
  * which specifies never time out.
  *

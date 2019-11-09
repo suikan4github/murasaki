@@ -19,7 +19,7 @@ namespace murasaki {
  * A prototype of the I2C slave peripheral.
  *
  * This prototype assumes the derived class will transmit / receive data in the
- * task context on RTOS. And these member functions should be blocking.
+ * task context on RTOS. And these member functions should be synchronous.
  * That mean, until the transmit / receive terminates, both method doesn't return.
  *
  * Two call back member functions are prepared to sync with the interrupt which tells the end of
@@ -28,7 +28,7 @@ namespace murasaki {
 class I2cSlaveStrategy : public murasaki::PeripheralStrategy {
  public:
     /**
-     * @brief Thread safe, blocking transmission over I2C.
+     * @brief Thread safe, synchronous transmission over I2C.
      * @param tx_data Data array to transmit.
      * @param tx_size Data counts[bytes] to transmit.
      * @param transfered_count the count of the bytes transfered during the API execution.
@@ -44,7 +44,7 @@ class I2cSlaveStrategy : public murasaki::PeripheralStrategy {
                                          unsigned int * transfered_count = nullptr,
                                          unsigned int timeout_ms = murasaki::kwmsIndefinitely) = 0;
     /**
-     * @brief Thread safe, blocking receiving over I2C.
+     * @brief Thread safe, synchronous receiving over I2C.
      * @param rx_data Data array to transmit.
      * @param rx_size Data counts[bytes] to transmit.
      * @param transfered_count the count of the bytes transfered during the API execution.

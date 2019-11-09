@@ -54,27 +54,27 @@
  * a good way to develop a large program easier.
  * And the more important point, it is easier to maintain.
  *
- * \page intro_sec3 Blocking IO
- * \brief The blocking IO is one of the most important features of Murasaki.
+ * \page intro_sec3 synchronous IO
+ * \brief The synchronous IO is one of the most important features of Murasaki.
  *
  * The peripheral wrapping class like murasaki::Uart provides a set of member functions
  * to do the data transmission/receiving. Such the member functions are programmed
- * as "blocking" IO.
+ * as "synchronous" IO.
  *
- * The blocking IO function doesn't return until each IO function finished completely.
+ * The synchronous IO function doesn't return until each IO function finished completely.
  * For example, if you transmit 10bytes through the UART, the IO member function
  * transmits the 10bytes data, and then, return.
  *
  * Note: Sometimes, the "completion" means the end of the DMA transfer session, rather than
- * the true transmission of the last byte. In this case, system generates a completon
+ * the true transmission of the last byte. In this case, system generates a completion
  * interrupt while the data is still in FIFO of the peripheral. This is a hardware issue.
  *
- * To provide the blocking IO, some member functions are restricted to use only in
+ * To provide the synchronous IO, some member functions are restricted to use only in
  * the task context.
  *
  * \page intro_sec4 Thread safe IO
- * \brief The blocking IO and the  preemptive multi-task provide easier programming.
- * In the other hand, there is a possibility that two different task accesses
+ * \brief The synchronous IO and the  preemptive multi-task provide easier programming.
+ * On the other hand, there is a possibility that two different task accesses
  * one peripheral simultaneously.
  * This kind of access messes the peripheral's behavior.
  *
@@ -82,7 +82,7 @@
  * by mutex.
  *
  * By this mechanism, if two tasks try to transmit though one peripheral, one task
- * is kept waiting until the other finished to transmit.
+ * is kept waiting until the other finished to transmit. This is blocking behavior. 
  *
  * \page intro_sec5 Versatile printf() logger
  * \brief Logging or "printf debug" is a strong tool in the embedded system development.
@@ -130,8 +130,5 @@
  * The programmer can customize the Murasaki for example, task stack size.
  *
  */
-
-
-
 
 #endif /* MURASAKI_0_INTRO_HPP_ */

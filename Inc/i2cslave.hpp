@@ -3,7 +3,7 @@
  *
  * @date 2018/10/07
  * @author Seiichi "Suikan" Horie
- * @brief I2C slave. Thread safe, blocking IO
+ * @brief I2C slave. Thread safe, synchronous IO
  *
  */
 
@@ -20,7 +20,7 @@
 namespace murasaki {
 /**
  * \ingroup MURASAKI_GROUP
- * @brief Thread safe, blocking IO. Encapsulating I2C slave. Based on STM32Cube HAL driver and FreeRTOS
+ * @brief Thread safe, synchronous and blocking IO. Encapsulating I2C slave. Based on STM32Cube HAL driver and FreeRTOS
  * \details
  * The I2cSlave class is the wrapper of the I2C controller. To use the I2cSlave class,
  * make an instance with I2C_HandleTypeDef * type pointer. For example, to create
@@ -62,11 +62,11 @@ namespace murasaki {
  *
  * Once the instance and callbacks are correctly prepared, we can use the Tx/Rx member function.
  *
- * The @ref I2cSlave::Transmit() member function is a blocking function. A programmer can specify the
+ * The @ref I2cSlave::Transmit() member function is a synchronous function. A programmer can specify the
  * timeout by timeout_ms parameter. By default, this parameter is set by kwmsIndefinitely
  * which specifes never time out.
  *
- * The @ref  I2cSlave::Receive() member function is a blocking function.  A programmer can specify the
+ * The @ref  I2cSlave::Receive() member function is a synchronous function.  A programmer can specify the
  * timeout by timeout_ms parameter. By default, this parameter is set by kwmsIndefinitely
  * which specifes never time out.
  *
@@ -85,7 +85,7 @@ class I2cSlave : public I2cSlaveStrategy {
     I2cSlave(I2C_HandleTypeDef * i2c_handle);
     virtual ~I2cSlave();
     /**
-     * @brief Thread safe, blocking transmission over I2C.
+     * @brief Thread safe, synchronous transmission over I2C.
      * @param tx_data Data array to transmit.
      * @param tx_size Data counts[bytes] to transmit. Must be smaller than 65536
      * @param transfered_count ( Currently, Just ignored) the count of the bytes transfered during the API execution.
@@ -109,7 +109,7 @@ class I2cSlave : public I2cSlaveStrategy {
                                          unsigned int * transfered_count,
                                          unsigned int timeout_ms);
     /**
-     * @brief Thread safe, blocking receiving over I2C.
+     * @brief Thread safe, synchronous receiving over I2C.
      * @param rx_data Data array to transmit.
      * @param rx_size Data counts[bytes] to transmit. Must be smaller than 65536
      * @param transfered_count ( Currently, Just ignored) the count of the bytes transfered during the API execution.

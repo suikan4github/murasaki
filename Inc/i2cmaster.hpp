@@ -3,7 +3,7 @@
  *
  * @date 2018/02/12
  * @author: Seiichi "Suikan" Horie
- * @brief I2C master. Thread safe, blocking IO
+ * @brief I2C master. Thread safe, synchronous IO
  */
 
 #ifndef I2CMASTER_HPP_
@@ -20,7 +20,7 @@ namespace murasaki {
 
 /**
  * \ingroup MURASAKI_GROUP
- * @brief Thread safe, blocking IO. Encapsulating I2C master. Based on STM32Cube HAL driver and FreeRTOS
+ * @brief Thread safe, synchronous and blocking IO. Encapsulating I2C master. Based on STM32Cube HAL driver and FreeRTOS
  * \details
  * The I2cMaster class is the wrapper of the I2C controller. To use the I2cMaster class,
  * make an instance with I2C_HandleTypeDef * type pointer. For example, to create
@@ -53,15 +53,15 @@ namespace murasaki {
  *
  * Once the instance and callback are correctly prepared, we can use the Tx/Rx member function.
  *
- * The @ref I2cMaster::Transmit() member function is a blocking function. A programmer can specify the
+ * The @ref I2cMaster::Transmit() member function is a synchronous function. A programmer can specify the
  * timeout by timeout_ms parameter. By default, this parameter is set by kwmsIndefinitely
  * which specifes never time out.
  *
- * The @ref  I2cMaster::Receive() member function is a blocking function.  A programmer can specify the
+ * The @ref  I2cMaster::Receive() member function is a synchronous function.  A programmer can specify the
  * timeout by timeout_ms parameter. By default, this parameter is set by kwmsIndefinitely
  * which species never time out.
  *
- * The @ref I2cMaster::TransmitThenReceive() member function is blocking function.
+ * The @ref I2cMaster::TransmitThenReceive() member function is synchronous function.
  * A programmer can specify the timeout by timeout_ms parameter.
  * By default, this parameter is set by kwmsIndefinitely
  * which species never time out.
@@ -91,7 +91,7 @@ class I2cMaster : public I2CMasterStrategy
      */
     virtual ~I2cMaster();
     /**
-     * @brief Thread safe, blocking transmission over I2C.
+     * @brief Thread safe, synchronous transmission over I2C.
      * @param addrs 7bit address of the I2C device.
      * @param tx_data Data array to transmit.
      * @param tx_size Data counts[bytes] to transmit. Must be smaller than 65536
@@ -118,7 +118,7 @@ class I2cMaster : public I2CMasterStrategy
                                          unsigned int timeout_ms);
 
     /**
-     * @brief Thread safe, blocking receiving over I2C.
+     * @brief Thread safe, synchronous receiving over I2C.
      * @param addrs 7bit address of the I2C device.
      * @param rx_data Data array to transmit.
      * @param rx_size Data counts[bytes] to transmit. Must be smaller than 65536
@@ -144,7 +144,7 @@ class I2cMaster : public I2CMasterStrategy
                                         unsigned int * transfered_count,
                                         unsigned int timeout_ms);
     /**
-     * @brief Thread safe, blocking transmission and then receiving over I2C.
+     * @brief Thread safe, synchronous transmission and then receiving over I2C.
      * @param addrs 7bit address of the I2C device.
      * @param tx_data Data array to transmit.
      * @param tx_size Data counts[bytes] to transmit. Must be smaller than 65536

@@ -58,6 +58,7 @@
  * The Printf() is designed as debugger message output for an embeded realtime system.
  * Thenk this function is :
  * \li Thread safe
+ * \li Asynchronous
  * \li Blocking
  * \li Buffered
  *
@@ -99,6 +100,7 @@
  * murasaki::debugger->prrntf() has several good feature.
  * \li Versatile printf() style format string.
  * \li Can call from both task and interrupt context
+ * \li Asyncronous
  * \li Non-blocking
  *
  * These features help the programmer to display the message in the real-time, multi-task application.
