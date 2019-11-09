@@ -6,7 +6,7 @@
  * @brief A glue file between the user application and HAL/RTOS.
  */
 
-// Include the definition created by CubeMX.
+// Include the definition created by CubeIDE.
 #include <murasaki_platform.hpp>
 #include "main.h"
 
@@ -77,7 +77,7 @@ void InitPlatform()
     murasaki::debugger->AutoRePrint();  // type any key to show history.
 
     // For demonstration, one GPIO LED port is reserved.
-    // The port and pin names are fined by CubeMX.
+    // The port and pin names are fined by CubeIDE.
     murasaki::platform.led = new murasaki::BitOut(LD2_GPIO_Port, LD2_Pin);
     MURASAKI_ASSERT(nullptr != murasaki::platform.led)
 
@@ -509,7 +509,7 @@ void HAL_SAI_ErrorCallback(SAI_HandleTypeDef * hsai) {
  * In the other hand, that function is declared as weak bound.
  * As a result, this function overrides the default error interrupt call back.
  *
- * The GPIO_Pin is the number of Pin. For example, if a programmer set the pin name by CubeMX as FOO, the
+ * The GPIO_Pin is the number of Pin. For example, if a programmer set the pin name by CubeIDE as FOO, the
  * macro to identify that EXTI is FOO_Pin
  */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)

@@ -86,7 +86,7 @@ void SaiAudioAdaptor::StartTransferTx(
     MURASAKI_ASSERT(nullptr != tx_peripheral_)
 
     // Start the Transfer and Transmit DMA.
-    // Assumes CubeMX configures these setting as circular mode. That mean, for each halfway,
+    // Assumes CubeIDE configures these setting as circular mode. That mean, for each halfway,
     // interrupt is raised, in addition to the end of buffer interrupt.
     // Note, STM32 HAL requirement of the size parameter is ambiguous. There is no description whether
     // It should be in Byte or Word.
@@ -108,7 +108,7 @@ void SaiAudioAdaptor::StartTransferRx(
     MURASAKI_ASSERT(nullptr != rx_peripheral_)
 
     // Start the Transfer and Receive DMA.
-    // Assumes CubeMX configures these setting as circular mode. That mean, for each halfway,
+    // Assumes CubeIDE configures these setting as circular mode. That mean, for each halfway,
     // Interrupt is raised, in addition to the end of buffer interrupt.
     // Note, HAL requirement of the size parameter is ambiguous. There is no description whether
     // It should be in Byte or Word.

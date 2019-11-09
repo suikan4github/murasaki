@@ -12,7 +12,7 @@
 // Macro for easy-to-read
 #define UART_SYSLOG(fmt, ...)    MURASAKI_SYSLOG(kfaSerial, kseDebug, fmt, ##__VA_ARGS__)
 
-// Check if CubeMX generates UART module
+// Check if CubeIDE generates UART module
 #ifdef HAL_UART_MODULE_ENABLED
 
 namespace murasaki {

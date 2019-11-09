@@ -9,7 +9,7 @@
 #include "murasaki_config.hpp"
 #include "murasaki_assert.hpp"
 
-// Check if CubeMX generates UART module
+// Check if CubeIDE generates UART module
 #ifdef HAL_UART_MODULE_ENABLED
 
 namespace murasaki {

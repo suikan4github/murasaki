@@ -134,8 +134,8 @@
  */
 
 /**
- * \page murasaki_pg_cubemx CubeMX setting
- * \brief There is several required CubeMX setting.
+ * \page murasaki_pg_cubemx CubeIDE setting
+ * \brief There is several required CubeIDE setting.
  * \details
  *
  * \li @subpage sec_cm_1
@@ -171,7 +171,7 @@
  * See @ref murasaki_pg_heap for detail.
  *
  * To avoid the heap allocation problem, it is better to have more than 8kB FreeRTOS heap.
- * The FreeRTOS heap size can be changed by CubeMX :
+ * The FreeRTOS heap size can be changed by CubeIDE :
  * @code
  * Tab => Pinout & Configuration => Middleware => FreeRTOS => Config Parameters Tab => TOTAL_HEAP_SIZE
  * @endcode
@@ -199,7 +199,7 @@
  *
  * The debugging in the ISR is not easy without assertion and printf().
  * To make them always possible, it is better to set the interrupt stack size bigger than 256 Bytes.
- * The interrupt stack size can be changed by CubeMX :
+ * The interrupt stack size can be changed by CubeIDE :
  * @code
  * Tab => Project Manager => Code Generator => Linker Settings
  * @endcode
@@ -211,7 +211,7 @@
  * This is not enough to use murasaki and its debugger output functionality.
  * It should be increased at smallest 256 Bytes.
  *
- * It can be changed by CubeMX:
+ * It can be changed by CubeIDE:
  * @code
  * Tab => Pinout & Configuration => Middleware => FreeRTOS => Config Parameters Tab => MINIMAL_STACK_SIZE
  *
@@ -353,7 +353,7 @@
  *     murasaki::debugger->AutoRePrint();  // type any key to show history.
  *
  *     // For demonstration, one GPIO LED port is reserved.
- *     // The port and pin names are fined by CubeMX.
+ *     // The port and pin names are fined by CubeIDE.
  *     murasaki::platform.led = new murasaki::BitOut(LD2_GPIO_Port, LD2_Pin);
  *
  *
@@ -414,7 +414,7 @@
  * Also, main.c must include the murasaki_platform.hpp to read the prototype of these functions.
  *
  * Following is the sample of the StartDefaultTask(). The actual code have a comment to work
- * together the code generator of the CubeMX. But this sample remove them because of the
+ * together the code generator of the CubeIDE. But this sample remove them because of the
  * documenattion tool ( doxygen ) limitation.
  * @code
  * void StartDefaultTask(void const * argument)
@@ -538,7 +538,7 @@
  * \page murasaki_pg_summary Summary of the porting
  * Following is the porting steps :
  * @li Adjust heap size and stack size as described in the @ref murasaki_pg_cubemx
- * @li Generate an application skeleton from CubeMX.
+ * @li Generate an application skeleton from CubeIDE.
  * @li Checkout Murasaki repository into your project.
  * @li Copy the template files as described in the @ref murasaki_pg_directory .
  * @li Configure Muraaski as described in the @ref murasaki_pg_configuration and the @ref murasaki_pg_task_priority_and_stack

@@ -12,7 +12,7 @@
 // Macro for easy-to-read
 #define I2C_SYSLOG(fmt, ...)    MURASAKI_SYSLOG(kfaI2cMaster, kseDebug, fmt, ##__VA_ARGS__)
 
-// check if I2C module is enabled by CubeMX
+// check if I2C module is enabled by CubeIDE
 #ifdef HAL_I2C_MODULE_ENABLED
 
 namespace murasaki {

@@ -140,15 +140,16 @@ So, the compiler can help a programmer to write a correct program.
 ## Requirement
 The Murasaki library is developed with the following environment :
  * [Ubuntu 16.04 LTS](http://releases.ubuntu.com/16.04/)
- * [STM32CubeMX](https://www.st.com/ja/development-tools/stm32cubemx.html) 5.0
- * [SW for STM32](https://www.st.com/ja/development-tools/sw4stm32.html) 1.6.0
+ * [STM32CubeIDE](https://www.st.com/ja/development-tools/stm32cubeide.html) 1.1.0
 
 The tested target is following :
+ * [Nucleo H743ZI](https://www.st.com/en/evaluation-tools/nucleo-h743zi.html)(Cortex-M7)
  * [Nucleo F746ZG](https://www.st.com/en/evaluation-tools/nucleo-f746zg.html)(Cortex-M7)
  * [Nucleo F722ZE](https://www.st.com/en/evaluation-tools/nucleo-f722ze.html)(Cortex-M7)
+ * [Nucleo F446RE](https://www.st.com/en/evaluation-tools/nucleo-f446re.html)(Cortex-M4)
+ * [Nucleo L412RB-P](https://www.st.com/en/evaluation-tools/nucleo-l412rb-p.html)(Cortex-M4)
  * [Nucleo L152RE](https://www.st.com/en/evaluation-tools/nucleo-l152re.html)(Cortex-M3)
  * [Nucleo F091RC](https://www.st.com/en/evaluation-tools/nucleo-f091rc.html)(Cortex-M0)
- * [Nucleo F303K8](https://www.st.com/en/evaluation-tools/nucleo-f303k8.html)(Cortex-M4)
 
 Pins, clocks, peripherals, and FreeRTOS have to be configured by CubeMX.
 

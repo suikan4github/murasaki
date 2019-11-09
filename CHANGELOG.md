@@ -35,6 +35,7 @@ Note that issue #46 and #56 made incompatibility from the past code.
 - [Issue 67 : Adau1361::Set*Gain() functions overwrite the non-related field](https://github.com/suikan4github/murasaki/issues/67)
 - [Issue 68 : README has wrong link to the LICENSE](https://github.com/suikan4github/murasaki/issues/68)
 - [Issue 70 : "Blocking" should be changed to "Synchronous"](https://github.com/suikan4github/murasaki/issues/70)
+- [Issue 72 : The word "CubeMX" should be substituted "CubeIDE"](https://github.com/suikan4github/murasaki/issues/72)
 
 ### Security
 ### Known Issue

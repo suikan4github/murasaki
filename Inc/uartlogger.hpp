@@ -12,7 +12,7 @@
 #include <loggerstrategy.hpp>
 #include <uartstrategy.hpp>
 
-// Check if CubeMX generates UART module
+// Check if CubeIDE generates UART module
 #ifdef HAL_UART_MODULE_ENABLED
 
 

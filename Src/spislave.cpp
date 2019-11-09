@@ -12,7 +12,7 @@
 // Macro for easy-to-read
 #define SPIM_SYSLOG(fmt, ...)    MURASAKI_SYSLOG(kfaSpiSlave, kseDebug, fmt, ##__VA_ARGS__)
 
-// Check if CubeMX generated SPI Module
+// Check if CubeIDE generated SPI Module
 #ifdef HAL_SPI_MODULE_ENABLED
 
 namespace murasaki {
