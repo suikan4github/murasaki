@@ -70,21 +70,6 @@ DuplexAudio::~DuplexAudio() {
     AUDIO_SYSLOG("Return.")
 }
 
-// Multi-channel transfer
-void DuplexAudio::TransmitAndReceive(
-                                     float** tx_channels,
-                                     float** rx_channels) {
-    AUDIO_SYSLOG("Enter. tx_channels : %08p, rx_channels : %08p", tx_channels, rx_channels);
-
-    // Delegate the processing. We assume this function receives the same change with hardware configuration. 
-    TransmitAndReceive(
-                       tx_channels,
-                       rx_channels,
-                       peripheral_adapter_->GetNumberOfChannelsTx(),
-                       peripheral_adapter_->GetNumberOfChannelsRx());  // All channels.
-    AUDIO_SYSLOG("Return");
-}
-
 // Stereo dedicated transfer.
 void DuplexAudio::TransmitAndReceive(
                                      float* tx_left,
