@@ -204,9 +204,19 @@ void Adau1361::ConfigurePll(void) {
 
     if (fs_ == 24000 || fs_ == 32000 || fs_ == 48000 || fs_ == 96000) {
 
-        // Configure the PLL depend on the master clock frequency of the CODEC.
+        // Configure the PLL. Target PLL out is 49.152MHz = 1024xfs
+        // Regarding X, R, M, N, check ADAU1361 Datasheet register R1.
+        // In the following code, the config_pll[0] and config_pll[1] contains regsiter address of R1.
+
         switch (master_clock_) {
             case 8000000: {
+                /**
+                 * X : 1
+                 * R : 6
+                 * M : 125
+                 * N : 18
+                 * PLL = ( MCLK / X ) * ( R + N/M ) = 49.152MHz
+                 */
                 uint8_t config_pll[] =
                         { 0x40, 0x02, 0x00, 0x7D, 0x00, 0x12, 0x31, 0x01 };
 
@@ -215,6 +225,13 @@ void Adau1361::ConfigurePll(void) {
             }
 
             case 12000000: {
+                /**
+                 * X : 1
+                 * R : 4
+                 * M : 125
+                 * N : 12
+                 * PLL = ( MCLK / X ) * ( R + N/M ) = 49.152MHz
+                 */
                 uint8_t config_pll[] =
                         { 0x40, 0x02, 0x00, 0x7D, 0x00, 0x0C, 0x21, 0x01 };
 
@@ -223,6 +240,13 @@ void Adau1361::ConfigurePll(void) {
             }
 
             case 13000000: {
+                /**
+                 * X : 1
+                 * R : 3
+                 * M : 1625
+                 * N : 1269
+                 * PLL = ( MCLK / X ) * ( R + N/M ) = 49.152MHz
+                 */
                 uint8_t config_pll[] =
                         { 0x40, 0x02, 0x06, 0x59, 0x04, 0xF5, 0x19, 0x01 };
 
@@ -231,6 +255,13 @@ void Adau1361::ConfigurePll(void) {
             }
 
             case 14400000: {
+                /**
+                 * X : 2
+                 * R : 6
+                 * M : 75
+                 * N : 62
+                 * PLL = ( MCLK / X ) * ( R + N/M ) = 49.152MHz
+                 */
                 uint8_t config_pll[] =
                         { 0x40, 0x02, 0x00, 0x4B, 0x00, 0x3E, 0x33, 0x01 };
 
@@ -239,6 +270,13 @@ void Adau1361::ConfigurePll(void) {
             }
 
             case 19200000: {
+                /**
+                 * X : 2
+                 * R : 4
+                 * M : 25
+                 * N : 3
+                 * PLL = ( MCLK / X ) * ( R + N/M ) = 49.152MHz
+                 */
                 uint8_t config_pll[] =
                         { 0x40, 0x02, 0x00, 0x19, 0x00, 0x03, 0x2B, 0x01 };
 
@@ -247,6 +285,13 @@ void Adau1361::ConfigurePll(void) {
             }
 
             case 19680000: {
+                /**
+                 * X : 2
+                 * R : 4
+                 * M : 205
+                 * N : 204
+                 * PLL = ( MCLK / X ) * ( R + N/M ) = 49.152MHz
+                 */
                 uint8_t config_pll[] =
                         { 0x40, 0x02, 0x00, 0xCD, 0x00, 0xCC, 0x23, 0x01 };
 
@@ -255,6 +300,13 @@ void Adau1361::ConfigurePll(void) {
             }
 
             case 19800000: {
+                /**
+                 * X : 2
+                 * R : 4
+                 * M : 825
+                 * N : 796
+                 * PLL = ( MCLK / X ) * ( R + N/M ) = 49.152MHz
+                 */
                 uint8_t config_pll[] =
                         { 0x40, 0x02, 0x03, 0x39, 0x03, 0x1C, 0x23, 0x01 };
 
@@ -263,6 +315,13 @@ void Adau1361::ConfigurePll(void) {
             }
 
             case 24000000: {
+                /**
+                 * X : 2
+                 * R : 4
+                 * M : 125
+                 * N : 12
+                 * PLL = ( MCLK / X ) * ( R + N/M ) = 49.152MHz
+                 */
                 uint8_t config_pll[] =
                         { 0x40, 0x02, 0x00, 0x7D, 0x00, 0x0C, 0x23, 0x01 };
 
@@ -271,6 +330,13 @@ void Adau1361::ConfigurePll(void) {
             }
 
             case 26000000: {
+                /**
+                 * X : 2
+                 * R : 3
+                 * M : 1625
+                 * N : 1269
+                 * PLL = ( MCLK / X ) * ( R + N/M ) = 49.152MHz
+                 */
                 uint8_t config_pll[] =
                         { 0x40, 0x02, 0x06, 0x59, 0x04, 0xF5, 0x1B, 0x01 };
 
@@ -279,6 +345,13 @@ void Adau1361::ConfigurePll(void) {
             }
 
             case 27000000: {
+                /**
+                 * X : 2
+                 * R : 3
+                 * M : 1125
+                 * N : 721
+                 * PLL = ( MCLK / X ) * ( R + N/M ) = 49.152MHz
+                 */
                 uint8_t config_pll[] =
                         { 0x40, 0x02, 0x04, 0x65, 0x02, 0xD1, 0x1B, 0x01 };
 
@@ -287,6 +360,13 @@ void Adau1361::ConfigurePll(void) {
             }
 
             case 12288000: {
+                /**
+                 * X : 1
+                 * R : 4
+                 * M : Don't care
+                 * N : Don't care
+                 * PLL = ( MCLK / X ) * ( R + N/M ) = 49.152MHz
+                 */
                 uint8_t config_pll[] =
                         { 0x40, 0x02, 0x04, 0x65, 0x02, 0xD1, 0x20, 0x01 };
 
@@ -295,6 +375,13 @@ void Adau1361::ConfigurePll(void) {
             }
 
             case 24576000: {
+                /**
+                 * X : 1
+                 * R : 4
+                 * M : Don't care
+                 * N : Don't care
+                 * PLL = ( MCLK / X ) * ( R + N/M ) = 49.152MHz
+                 */
                 uint8_t config_pll[] =
                         { 0x40, 0x02, 0x04, 0x65, 0x02, 0xD1, 0x10, 0x01 };
 
@@ -360,10 +447,17 @@ void Adau1361::ConfigurePll(void) {
     }
     else if (fs_ == 22050 || fs_ == 44100 || fs_ == 88200) {
 
-        // Configure the PLL
+        // Configure the PLL. Target PLL out is 45.1584MHz = 1024xfs
 
         switch (master_clock_) {
             case 8000000: {
+                /**
+                 * X : 1
+                 * R : 5
+                 * M : 625
+                 * N : 403
+                 * PLL = ( MCLK / X ) * ( R + N/M ) = 45.1584MHz
+                 */
                 uint8_t config_pll[] =
                         { 0x40, 0x02, 0x02, 0x71, 0x01, 0x93, 0x29, 0x01 };
 
@@ -372,6 +466,13 @@ void Adau1361::ConfigurePll(void) {
             }
 
             case 12000000: {
+                /**
+                 * X : 1
+                 * R : 3
+                 * M : 625
+                 * N : 477
+                 * PLL = ( MCLK / X ) * ( R + N/M ) = 45.1584MHz
+                 */
                 uint8_t config_pll[] =
                         { 0x40, 0x02, 0x02, 0x71, 0x01, 0xDD, 0x19, 0x01 };
 
@@ -380,6 +481,13 @@ void Adau1361::ConfigurePll(void) {
             }
 
             case 13000000: {
+                /**
+                 * X : 1
+                 * R : 3
+                 * M : 8125
+                 * N : 3849
+                 * PLL = ( MCLK / X ) * ( R + N/M ) = 45.1584MHz
+                 */
                 uint8_t config_pll[] =
                         { 0x40, 0x02, 0x1F, 0xBD, 0x0F, 0x09, 0x19, 0x01 };
 
@@ -388,6 +496,13 @@ void Adau1361::ConfigurePll(void) {
             }
 
             case 14400000: {
+                /**
+                 * X : 2
+                 * R : 6
+                 * M : 125
+                 * N : 34
+                 * PLL = ( MCLK / X ) * ( R + N/M ) = 45.1584MHz
+                 */
                 uint8_t config_pll[] =
                         { 0x40, 0x02, 0x00, 0x7D, 0x00, 0x22, 0x33, 0x01 };
 
@@ -396,6 +511,13 @@ void Adau1361::ConfigurePll(void) {
             }
 
             case 19200000: {
+                /**
+                 * X : 2
+                 * R : 4
+                 * M : 125
+                 * N : 88
+                 * PLL = ( MCLK / X ) * ( R + N/M ) = 45.1584MHz
+                 */
                 uint8_t
                 config_pll[] =
                         { 0x40, 0x02, 0x00, 0x7D, 0x00, 0x58, 0x23, 0x01 };
@@ -405,6 +527,13 @@ void Adau1361::ConfigurePll(void) {
             }
 
             case 19680000: {
+                /**
+                 * X : 2
+                 * R : 4
+                 * M : 1025
+                 * N : 604
+                 * PLL = ( MCLK / X ) * ( R + N/M ) = 45.1584MHz
+                 */
                 uint8_t
                 config_pll[] =
                         { 0x40, 0x02, 0x04, 0x01, 0x02, 0x5C, 0x23, 0x01 };
@@ -414,6 +543,13 @@ void Adau1361::ConfigurePll(void) {
             }
 
             case 19800000: {
+                /**
+                 * X : 2
+                 * R : 4
+                 * M : 1375
+                 * N : 772
+                 * PLL = ( MCLK / X ) * ( R + N/M ) = 45.1584MHz
+                 */
                 uint8_t
                 config_pll[] =
                         { 0x40, 0x02, 0x05, 0x5F, 0x03, 0x04, 0x23, 0x01 };
@@ -423,6 +559,13 @@ void Adau1361::ConfigurePll(void) {
             }
 
             case 24000000: {
+                /**
+                 * X : 2
+                 * R : 3
+                 * M : 625
+                 * N : 477
+                 * PLL = ( MCLK / X ) * ( R + N/M ) = 45.1584MHz
+                 */
                 uint8_t
                 config_pll[] =
                         { 0x40, 0x02, 0x02, 0x71, 0x01, 0xDD, 0x1B, 0x01 };
@@ -432,6 +575,13 @@ void Adau1361::ConfigurePll(void) {
             }
 
             case 26000000: {
+                /**
+                 * X : 1
+                 * R : 3
+                 * M : 8125
+                 * N : 3849
+                 * PLL = ( MCLK / X ) * ( R + N/M ) = 45.1584MHz
+                 */
                 uint8_t
                 config_pll[] =
                         { 0x40, 0x02, 0x1F, 0xBD, 0x0F, 0x09, 0x1B, 0x01 };
@@ -441,6 +591,13 @@ void Adau1361::ConfigurePll(void) {
             }
 
             case 27000000: {
+                /**
+                 * X : 2
+                 * R : 3
+                 * M : 1875
+                 * N : 647
+                 * PLL = ( MCLK / X ) * ( R + N/M ) = 45.1584MHz
+                 */
                 uint8_t
                 config_pll[] =
                         { 0x40, 0x02, 0x07, 0x53, 0x02, 0x87, 0x1B, 0x01 };
@@ -450,6 +607,13 @@ void Adau1361::ConfigurePll(void) {
             }
 
             case 12288000: {
+                /**
+                 * X : 1
+                 * R : 3
+                 * M : 1000
+                 * N : 675
+                 * PLL = ( MCLK / X ) * ( R + N/M ) = 45.1584MHz
+                 */
                 uint8_t config_pll[] =
                         { 0x40, 0x02, 0x03, 0xE8, 0x02, 0xA3, 0x19, 0x01 };
 
@@ -458,6 +622,13 @@ void Adau1361::ConfigurePll(void) {
             }
 
             case 24576000: {
+                /**
+                 * X : 2
+                 * R : 3
+                 * M : 1000
+                 * N : 675
+                 * PLL = ( MCLK / X ) * ( R + N/M ) = 45.1584MHz
+                 */
                 uint8_t config_pll[] =
                         { 0x40, 0x02, 0x03, 0xE8, 0x02, 0xA3, 0x1B, 0x01 };
 
