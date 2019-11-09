@@ -53,7 +53,7 @@ class DuplexAudio {
     DuplexAudio() = delete;
     /**
      * @brief Constructor
-     * @param protocol_adapter Pointer to the audio interface peripheral class
+     * @param peripheral_adapter Pointer to the audio interface peripheral class
      * @param channel_length Specify how many data are in one channel buffer.
      *
      * Initialize the internal variables and allocate the buffer based on the given parameters.

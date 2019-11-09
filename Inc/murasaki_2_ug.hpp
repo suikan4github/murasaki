@@ -118,8 +118,9 @@
  * \endcode
  *
  * And then, you should modify assert_failure() in main.c, to call output function
- * (Note, this modification is altered by the install script. See @ref spg_6 of the @ref spg.
- * Still USE_FULL_ASSERT macro is a responsibility of the porting programmer ).
+ * (Note, this modification is altered by the murasaki/install script.
+ * While the install script works well,
+ * still the USE_FULL_ASSERT macro is a responsibility of the porting programmer ).
  *
  * \code
  * void assert_failed(uint8_t* file, uint32_t line)
@@ -385,7 +386,7 @@
  *
  * From this function, two Murasaki function is called. One is InitPlatoform().
  * The other is ExecPlatform(). Note that both function calls are inserted by
- * installer. See @ref spg_6 of the @ref spg for details.
+ * murasaki/install script.
  *
  * @code
  * void StartDefaultTask(void const * argument)
