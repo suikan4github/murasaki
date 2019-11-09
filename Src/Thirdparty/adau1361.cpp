@@ -93,10 +93,10 @@ static const uint8_t config_Adau1361[][3] = {
         { 0x40, 0x20, 0x00 },  // R26: Play L/R mixer left
         { 0x40, 0x21, 0x00 },  // R27: Play L/R mixer right
         { 0x40, 0x22, 0x00 },  // R28: Play L/R mixer monot
-        { 0x40, 0x23, 0x02 },  // R29: Play HP Left vol
-        { 0x40, 0x24, 0x02 },  // R30: Play HP Right vol
-        { 0x40, 0x25, 0x02 },  // R31: Line output Left vol
-        { 0x40, 0x26, 0x02 },  // R32: Line output Right vol
+        { 0x40, 0x23, 0x03 },  // R29: Play HP Left vol : Mute, Enable
+        { 0x40, 0x24, 0x03 },  // R30: Play HP Right vol : Mute, HP Mode
+        { 0x40, 0x25, 0x02 },  // R31: Line output Left vol : Mute, Line out mode
+        { 0x40, 0x26, 0x02 },  // R32: Line output Right vol : Mute, Line out mode
         { 0x40, 0x27, 0x02 },  // R33: Play Mono output
         { 0x40, 0x28, 0x00 },  // R34: Pop surpress
         { 0x40, 0x29, 0x00 },  // R35: Play Power Management
@@ -577,182 +577,309 @@ void Adau1361::Start(void) {
 
 #define DATA 2  /* data payload of register */
 #define ADDL 1  /* lower address of register */
+#define ADDH 0  /* upper address of register */
 
-#define SET_INPUT_GAIN( x ) ((x<<1)|1)
+#define SET_INPUT_GAIN( x, mute ) ((mute)? 0x00 : (x<<1))
 /*
  * This function assumes the single-end input. The gain control is LINNG.
- * See Figure 31 "Record Singal Path" in the ADAU1361 data sheet
+ * See Figure 31 "Record Signal Path" in the ADAU1361 data sheet
  *
  */
 void Adau1361::SetLineInputGain(
                                 float left_gain,
                                 float right_gain,
                                 bool mute) {
-
-    CODEC_SYSLOG("Enter. %f4.1, %f4.1, %d", left_gain, right_gain, mute)
-
-    uint8_t data[3];
+    uint8_t txbuf[3];
+    uint8_t rxbuf[1];
     int left, right;
 
-    data[0] = 0x40;  // Upper address of register
+    CODEC_SYSLOG("Enter. %d, %d, %d", (int )left_gain, (int )right_gain, mute)
 
-    if (mute) {
-        data[ADDL] = 0x0a;
-        data[DATA] = 0x01;
-        i2c_->Transmit(device_addr_, data, 3);  // R4: mixer 1 enable
-        data[ADDL] = 0x0c;
-        data[DATA] = 0x01;
-        i2c_->Transmit(device_addr_, data, 3);  // R6: mixer 2 enable
-    } else {
+    // set left gain
+    left = std::max(left, -12);
+    left = std::min(left, 6);
+    left = (left_gain + 15) / 3;  // See table 31 LINNG
 
-        // set left gain
-        left = (left_gain + 15) / 3;  // See table 31 LINNG
-        left = std::max(left, 0);
-        left = std::min(left, 7);
-        data[DATA] = SET_INPUT_GAIN(left);
+    // set right gain
+    right = std::max(right, -12);
+    right = std::min(right, 6);
+    right = (right_gain + 15) / 3;  // See table 31 LINNG
 
-        data[ADDL] = 0x0a;
-        i2c_->Transmit(device_addr_, data, 3);  // R4: mixer 1 enable
+    /*
+     *  *************** Read Modify light the Left Channel Gain *********************
+     */
+    // R4 : Record Mixer Left
+    txbuf[ADDH] = 0x40;  // Upper address of register
+    txbuf[ADDL] = 0x0a;
 
-        // set right gain
-        right = (right_gain + 15) / 3;  // See table 31 LINNG
-        right = std::max(right, 0);
-        right = std::min(right, 7);
-        data[DATA] = SET_INPUT_GAIN(right);
+    // Obtain the Register
+    i2c_->TransmitThenReceive(
+                              device_addr_, /*  CODEC device address */
+                              txbuf, /*  CODEC regsiter address*/
+                              2, /* Address are 2byte  */
+                              rxbuf, /* Retrieve data buffer */
+                              1); /* retrieve a register */
+    CODEC_SYSLOG("R4 : 0x%02x", rxbuf[0]);
+    // Create a register value
+    txbuf[DATA] = (rxbuf[0] & 0xF1) | SET_INPUT_GAIN(left, mute);
+    CODEC_SYSLOG("Transmitting %02x, %02x, %02x", txbuf[0], txbuf[1], txbuf[2]);
 
-        data[ADDL] = 0x0c;
-        i2c_->Transmit(device_addr_, data, 3);  // R4: mixer 1 enable
+    // Set the R4.
+    i2c_->Transmit(device_addr_, txbuf, 3);  // R4: Record Mixer Left
 
-    }
+    /*
+     *  *************** Read Modify light the Right Channel Gain *********************
+     */
+    // R6 : Record Mixer 2
+    txbuf[ADDH] = 0x40;  // Upper address of register
+    txbuf[ADDL] = 0x0c;
+
+    // Obtain the Register
+    i2c_->TransmitThenReceive(
+                              device_addr_, /*  CODEC device address */
+                              txbuf, /*  CODEC regsiter address*/
+                              2, /* Address are 2byte  */
+                              rxbuf, /* Retrieve data buffer */
+                              1); /* retrieve a register */
+    CODEC_SYSLOG("R6 : 0x%02x", rxbuf[0]);
+    // Create a register value
+    txbuf[DATA] = (rxbuf[0] & 0xF1) | SET_INPUT_GAIN(right, mute);
+    // Set the R4.
+    i2c_->Transmit(device_addr_, txbuf, 3);  // R4:  Record Mixer Right
 
     CODEC_SYSLOG("Leave.")
 }
 
+#define SET_AUX_GAIN( x, mute ) ((mute)? 0x00 : x )
+
 /*
- * This function assumes the input is the single end. Then, the differential BOOST (LDBOOST ) is
- * muted.
+ * This function assumes the input is the single end. Then,
  */
 void Adau1361::SetAuxInputGain(
                                float left_gain,
                                float right_gain,
                                bool mute) {
-    uint8_t data[3];
+    uint8_t txbuf[3];
+    uint8_t rxbuf[1];
     int left, right;
 
-    CODEC_SYSLOG("Enter. %f4.1, %f4.1, %d", left_gain, right_gain, mute)
+    CODEC_SYSLOG("Enter. %d, %d, %d", (int )left_gain, (int )right_gain, mute)
 
-    data[0] = 0x40;  // Upper address of register
+    // set left gain LDBOOST is muted.
+    left = std::max(left, -12);
+    left = std::min(left, 6);
+    left = (left_gain + 15) / 3;  // See table 32 MX1AUGXG
+    // set right gain. LDBOOST is muted.
+    right = std::max(right, -12);
+    right = std::min(right, 6);
+    right = (right_gain + 15) / 3;  // See table 34 MX1AUGXG
 
-    if (mute) {
-        data[ADDL] = 0x0b;
-        data[DATA] = 0x00;
-        i2c_->Transmit(device_addr_, data, 3);  // R5: mixer 1 L aux mute
-        data[ADDL] = 0x0d;
-        data[DATA] = 0x00;
-        i2c_->Transmit(device_addr_, data, 3);  // R7: mixer 2 R aux mute
-    } else {
+    /*
+     *  *************** Read Modify light the Left Channel Gain *********************
+     */
+    // R5 : Record Mixer Left Control 1
+    txbuf[ADDH] = 0x40;  // Upper address of register
+    txbuf[ADDL] = 0x0b;
 
-        // set left gain LDBOOST is muted.
-        left = (left_gain + 15) / 3;  // See table 31 LINNG
-        left = std::max(left, 0);
-        left = std::min(left, 7);
-        data[DATA] = left;
+    // Obtain the Register
+    i2c_->TransmitThenReceive(
+                              device_addr_, /*  CODEC device address */
+                              txbuf, /*  CODEC regsiter address*/
+                              2, /* Address are 2byte  */
+                              rxbuf, /* Retrieve data buffer */
+                              1); /* retrieve a register */
+    CODEC_SYSLOG("Obtain R5 : 0x%02x", rxbuf[0]);
+    // Create a register value
+    txbuf[DATA] = (rxbuf[0] & 0xF8) | SET_AUX_GAIN(left, mute);
+    CODEC_SYSLOG("Transmitting %02x, %02x, %02x", txbuf[0], txbuf[1], txbuf[2]);
+    // Set the R5.
+    i2c_->Transmit(device_addr_, txbuf, 3);  // R5:
 
-        data[ADDL] = 0x0b;
-        i2c_->Transmit(device_addr_, data, 3);  // R5: mixer 1 enable
+    /*
+     *  *************** Read Modify light the Right Channel Gain *********************
+     */
+    // R7 : Record Mixer Right Control 1
+    txbuf[ADDH] = 0x40;  // Upper address of register
+    txbuf[ADDL] = 0x0d;
 
-        // set right gain. LDBOOST is muted.
-        right = (right_gain + 15) / 3;  // See table 31 LINNG
-        right = std::max(right, 0);
-        right = std::min(right, 7);
-        data[DATA] = right;
-
-        data[ADDL] = 0x0d;
-        i2c_->Transmit(device_addr_, data, 3);  // R4: mixer 1 enable
-
-    }
+    // Obtain the Register
+    i2c_->TransmitThenReceive(
+                              device_addr_, /*  CODEC device address */
+                              txbuf, /*  CODEC regsiter address*/
+                              2, /* Address are 2byte  */
+                              rxbuf, /* Retrieve data buffer */
+                              1); /* retrieve a register */
+    CODEC_SYSLOG("Obtain R7 : 0x%02x", rxbuf[0]);
+    // Create a register value
+    txbuf[DATA] = (rxbuf[0] & 0xF8) | SET_AUX_GAIN(left, mute);
+    CODEC_SYSLOG("Transmitting %02x, %02x, %02x", txbuf[0], txbuf[1], txbuf[2]);
+    // Set the R7.
+    i2c_->Transmit(device_addr_, txbuf, 3);  // R7:
 
     CODEC_SYSLOG("Leave.")
 }
 
-#define SET_LO_GAIN( x ) ((x<<2)|2)
+#define SET_LO_GAIN( x, unmute, headphone ) ((x<<2)|(unmute <<1) | (headphone))
 
+// Read modify right the R31 and R32
 void Adau1361::SetLineOutputGain(
                                  float left_gain,
                                  float right_gain,
                                  bool mute) {
-    uint8_t data[3];
+    uint8_t txbuf[3];
+    uint8_t rxbuf[1];
     int left, right;
 
-    CODEC_SYSLOG("Enter. %f4.1, %f4.1, %d", left_gain, right_gain, mute)
+    CODEC_SYSLOG("Enter. %d, %d, %d", (int )left_gain, (int )right_gain, mute)
 
-    data[0] = 0x40;  // Upper address of register
+    // set 0 if mute, set 1 if unmute;
+    int unmute_flag = mute ? 0 : 1;
 
-    if (mute) {
-        data[ADDL] = 0x25;  // R31: LOUTVOL
-        data[DATA] = 0x00;  // Mute, Line mode
-        i2c_->Transmit(device_addr_, data, 3);
-        data[ADDL] = 0x26;  // R32: ROUTVOL
-        data[DATA] = 0x00;  // Mute, Line mode
-        i2c_->Transmit(device_addr_, data, 3);
-    } else {
-        left = left_gain + 57;
-        left = std::max(left, 0);
-        left = std::min(left, 63);
+    // Calc left gain setting.
+    // LOUTVOL[5:0] = 0  ; -57dB
+    // LOUTVOL[5:0] = 63 ; 6dB
+    left = left_gain + 57;
+    left = std::max(left, 0);
+    left = std::min(left, 63);
 
-        right = right_gain + 57;
-        right = std::max(right, 0);
-        right = std::min(right, 63);
+    // Calc left gain setting.
+    // ROUTVOL[5:0] = 0  ; -57dB
+    // ROUTVOL[5:0] = 63 ; 6dB
+    right = right_gain + 57;
+    right = std::max(right, 0);
+    right = std::min(right, 63);
 
-        data[ADDL] = 0x25;
-        data[DATA] = SET_LO_GAIN(left);
-        i2c_->Transmit(device_addr_, data, 3);  // R31: LOUTVOL
-        data[ADDL] = 0x26;
-        data[DATA] = SET_LO_GAIN(right);
-        i2c_->Transmit(device_addr_, data, 3);  // R32: ROUTVOL
+    /*
+     *  *************** Read Modify light the Left Channel Gain *********************
+     */
+    txbuf[ADDH] = 0x40;  // Upper address of register
+    txbuf[ADDL] = 0x25;  // R31: LOUTVOL
 
-    }
+    // Obtain the R31
+    i2c_->TransmitThenReceive(
+                              device_addr_, /*  CODEC device address */
+                              txbuf, /*  CODEC regsiter address*/
+                              2, /* Address are 2byte : R31 */
+                              rxbuf, /* Retrieve R31 data */
+                              1); /* retrieve a register */
+    CODEC_SYSLOG("R31 : 0x%02x", rxbuf[0]);
+
+    // Set line out of Left
+    txbuf[DATA] = SET_LO_GAIN(
+                              left, /* GAIN */
+                              unmute_flag, /* UNMUTE */
+                              rxbuf[0] & 1); /* LOMODE of R31*/
+    CODEC_SYSLOG("Transmitting %02x, %02x, %02x", txbuf[0], txbuf[1], txbuf[2]);
+    // Set LOUTVOL : R31
+    i2c_->Transmit(device_addr_, txbuf, 3);
+
+    /*
+     *  *************** Read Modify light the Right Channel Gain *********************
+     */
+    txbuf[ADDH] = 0x40;  // Upper address of register
+    txbuf[ADDL] = 0x26;  // R32: ROUTVOL
+
+    // Obtain the R32
+    i2c_->TransmitThenReceive(
+                              device_addr_, /*  CODEC device address */
+                              txbuf, /*  CODEC regsiter address*/
+                              2, /* Address are 2byte : R31 */
+                              rxbuf, /* Retrieve R32 data */
+                              1); /* retrieve a register */
+    CODEC_SYSLOG("R32 : 0x%02x", rxbuf[0]);
+
+    txbuf[DATA] = SET_LO_GAIN(
+                              right, /* GAIN */
+                              unmute_flag, /* UNMUTE */
+                              rxbuf[0] & 1); /* ROMODE of R32 */
+    CODEC_SYSLOG("Transmitting %02x, %02x, %02x", txbuf[0], txbuf[1], txbuf[2]);
+    // Set ROUTVOL : R32
+    i2c_->Transmit(device_addr_, txbuf, 3);
+
     CODEC_SYSLOG("Leave.")
 }
 
-#define SET_HP_GAIN( x ) ((x<<2)|3)
+#define SET_HP_GAIN( x, unmute, headphone ) ((x<<2)|( unmute <<1) | (headphone))
+
+// Read modify right the R29 and R30
 
 void Adau1361::SetHpOutputGain(
                                float left_gain,
                                float right_gain,
                                bool mute) {
-    uint8_t data[3];
+    uint8_t txbuf[3];
+    uint8_t rxbuf[1];
     int left, right;
 
-    CODEC_SYSLOG("Enter. %f4.1, %f4.1, %d", left_gain, right_gain, mute)
+    CODEC_SYSLOG("Enter. %d, %d, %d", (int )left_gain, (int )right_gain, mute)
 
-    data[0] = 0x40;  // Upper address of register
+    // set 0 if mute, set 1 if unmute;
+    int unmute_flag = mute ? 0 : 1;
 
-    if (mute) {
+    // Calc left gain setting.
+    // LHPVOL[5:0] = 0  ; -57dB
+    // LHPVOL[5:0] = 63 ; 6dB
+    left = left_gain + 57;
+    left = std::max(left, 0);
+    left = std::min(left, 63);
 
-        data[ADDL] = 0x23;  // R29: LHPVOL
-        data[DATA] = 0x01;  // Mute, HP mode
-        i2c_->Transmit(device_addr_, data, 3);
-        data[ADDL] = 0x24;  // R30: RHPVOL
-        data[DATA] = 0x01;  // Mute, HP mode
-        i2c_->Transmit(device_addr_, data, 3);
-    } else {
-        left = left_gain + 57;
-        left = std::max(left, 0);
-        left = std::min(left, 63);
+    // Calc left gain setting.
+    // RHPVOL[5:0] = 0  ; -57dB
+    // RHPVOL[5:0] = 63 ; 6dB
+    right = right_gain + 57;
+    right = std::max(right, 0);
+    right = std::min(right, 63);
 
-        right = right_gain + 57;
-        right = std::max(right, 0);
-        right = std::min(right, 63);
+    /*
+     *  *************** Read Modify light the Left Channel Gain *********************
+     */
+    // R29: LHPVOL
+    txbuf[ADDH] = 0x40;  // Upper address of register
+    txbuf[ADDL] = 0x23;
 
-        data[ADDL] = 0x23;
-        data[DATA] = SET_HP_GAIN(left);
-        i2c_->Transmit(device_addr_, data, 3);  // R29: LHPVOL
-        data[ADDL] = 0x24;
-        data[DATA] = SET_HP_GAIN(right);
-        i2c_->Transmit(device_addr_, data, 3);  // R30: RHPVOL
+    // Obtain R29
+    i2c_->TransmitThenReceive(
+                              device_addr_, /*  CODEC device address */
+                              txbuf, /*  CODEC regsiter address*/
+                              2, /* Address are 2byte : R29 */
+                              rxbuf, /* Retrieve R29 data */
+                              1); /* retrieve a register1 */
+    CODEC_SYSLOG("R29 : 0x%02x", rxbuf[0]);
 
-    }
+    // HP left out control data
+    txbuf[DATA] = SET_HP_GAIN(
+                              left, /* GAIN */
+                              unmute_flag, /* UNMUTE */
+                              rxbuf[0] & 1); /* HPEN of R29*/
+    CODEC_SYSLOG("Transmitting %02x, %02x, %02x", txbuf[0], txbuf[1], txbuf[2]);
+    // SET LHPVOL : R29
+    i2c_->Transmit(device_addr_, txbuf, 3);
+
+    /*
+     *  *************** Read Modify light the Left Channel Gain *********************
+     */
+    // R30 : RHPVOL address
+    txbuf[ADDH] = 0x40;  // Upper address of register
+    txbuf[ADDL] = 0x24;
+
+    // Obtain R30
+    i2c_->TransmitThenReceive(
+                              device_addr_, /*  CODEC device address */
+                              txbuf, /*  CODEC regsiter address*/
+                              2, /* Address are 2byte : R30 */
+                              rxbuf, /* Retrieve R30 data */
+                              1); /* retrieve a register1 */
+    CODEC_SYSLOG("R30 : 0x%02x", rxbuf[0]);
+
+    // HP right out control data
+    txbuf[DATA] = SET_HP_GAIN(
+                              right, /* GAIN */
+                              unmute_flag, /* UNMUTE */
+                              rxbuf[0] & 1); /* HPMODE of R30*/
+    CODEC_SYSLOG("Transmitting %02x, %02x, %02x", txbuf[0], txbuf[1], txbuf[2]);
+    // SET RHPVOL : R30
+    i2c_->Transmit(device_addr_, txbuf, 3);
+
     CODEC_SYSLOG("Leave.")
 }
 
