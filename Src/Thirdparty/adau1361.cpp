@@ -815,6 +815,8 @@ void Adau1361::SetLineInputGain(
     CODEC_SYSLOG("R6 : 0x%02x", rxbuf[0]);
     // Create a register value
     txbuf[DATA] = (rxbuf[0] & 0xF1) | SET_INPUT_GAIN(right, mute);
+    CODEC_SYSLOG("Transmitting %02x, %02x, %02x", txbuf[0], txbuf[1], txbuf[2]);
+
     // Set the R4.
     i2c_->Transmit(device_addr_, txbuf, 3);  // R4:  Record Mixer Right
 
