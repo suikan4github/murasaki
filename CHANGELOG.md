@@ -7,10 +7,10 @@ Note that issue #46 and #56 made incompatibility from the past code.
 
 ### Added
 - [Issue 22 : Add Stereo Audio Class](https://github.com/suikan4github/murasaki/issues/22)
-- [Issue 44 : Support STM32CubeIDE startup code](https://github.com/suikan4github/murasaki/issues/44)
-- [Issue 49 : Add SAI interrupt handler template](https://github.com/suikan4github/murasaki/issues/49)
 - [Issue 42 : Print the context information on the hard fault.](https://github.com/suikan4github/murasaki/issues/42)
+- [Issue 44 : Support STM32CubeIDE startup code](https://github.com/suikan4github/murasaki/issues/44)
 - [Issue 47 : Add Match() method to peripheral class](https://github.com/suikan4github/murasaki/issues/47)
+- [Issue 49 : Add SAI interrupt handler template](https://github.com/suikan4github/murasaki/issues/49)
 - [Issue 62 : Add the I2C Search function to the template](https://github.com/suikan4github/murasaki/issues/62)
 
 ### Changed
@@ -24,13 +24,14 @@ Note that issue #46 and #56 made incompatibility from the past code.
 - [Issue 41 : Confirm context check between ARMv6M and ARMv7M](https://github.com/suikan4github/murasaki/issues/41)
 - [Issue 45 : Synchronizer::Wait() is incorrectly handling the timeout parameter](https://github.com/suikan4github/murasaki/issues/45)
 - [Issue 48 : README.md has old Task based sample. Need to update](https://github.com/suikan4github/murasaki/issues/48)
+- [Issue 55 : Adau1361::SetAuxInputGain seems to by buggy](https://github.com/suikan4github/murasaki/issues/55)
 - [Issue 57 : DuplexAudio::TransmitAndReceive is incorrectly private member function](https://github.com/suikan4github/murasaki/issues/57)
 - [Issue 58 : Adau1361::SendCommand and SendCommandTable are incorrectly private member funcitons](https://github.com/suikan4github/murasaki/issues/58)
 - [Issue 59 : DuplexAudio visibility must be back](https://github.com/suikan4github/murasaki/issues/59)
 - [Issue 63 : The sleep function doesn't handle the indefinite wait correctly](https://github.com/suikan4github/murasaki/issues/63)
 - [Issue 64 : The scale constant of DuplexAudio is incorrectly calculated](https://github.com/suikan4github/murasaki/issues/64)
 - [Issue 65 : murasaki_platform.hpp have to be updated](https://github.com/suikan4github/murasaki/issues/65)
-- [Issue 55 : Adau1361::SetAuxInputGain seems to by buggy](https://github.com/suikan4github/murasaki/issues/55)
+- [Issue 67 : Adau1361::Set*Gain() functions overwrite the non-related field](https://github.com/suikan4github/murasaki/issues/67)
 - [Issue 68 : README has wrong link to the LICENSE](https://github.com/suikan4github/murasaki/issues/68)
 
 ### Security
