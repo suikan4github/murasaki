@@ -670,7 +670,7 @@ void I2cSearch(murasaki::I2CMasterStrategy * master)
                {
     uint8_t tx_buf[1];
 
-    murasaki::debugger->Printf("            Probing I2C devices \n");
+    murasaki::debugger->Printf("\n            Probing I2C devices \n");
     murasaki::debugger->Printf("   | 00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F\n");
     murasaki::debugger->Printf("---+------------------------------------------------\n");
 

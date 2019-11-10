@@ -256,6 +256,7 @@
  * @li @subpage ug_sect_5_3
  * @li @subpage ug_sect_5_4
  * @li @subpage ug_sect_5_5
+ * @li @subpage ug_sect_5_6
  */
 
 /**
@@ -359,6 +360,69 @@
  *         murasaki::platform.led->Toggle();
  * @endcode
  * In addition to the Toggle(), BitIn has Set() and Clear() member function.
+ */
+
+/**
+ * @page ug_sect_5_6 Duplex Audio
+ * @brief  @ref murasaki::DuplexAudio class provide a real time audio IO for both
+ * TX and RX together
+ * @details
+ * This class need a murasaki::AudioAdapterStrategy object as interface with hardware.
+ *
+ * This class doesn't care the CODEC IC control.
+ * The CODEC initialization and control have to be done by external software.
+ *
+ * See following sample code :
+ *
+ * @code
+ *     // audio CODEC
+ *     murasaki::platform.codec = new murasaki::Adau1361(
+ *                                                       48000,
+ *                                                       12000000,
+ *                                                       murasaki::platform.i2cMaster,
+ *                                                       0x38);
+ *
+ *     murasaki::platform.audioAdapter = new murasaki::SaiAudioAdaptor(
+ *                                                                     &hsai_BlockA1,
+ *                                                                     &hsai_BlockB1);
+ *     murasaki::platform.audio = new murasaki::DuplexAudio(
+ *                                                          murasaki::platform.audioAdapter,
+ *                                                          CHANNEL_LEN);
+ *
+ * @endcode
+ *
+ * The processing of the audio is in real-time domain.
+ *
+ * The audio processing is recommended to run in a task wich has @ref murasaki::ktpRealtime priority.
+ * The TransmitAndReceive method is synchronous and blocking. Thus, the processing loop is pretty simple.
+ *
+ * @code
+ * void TaskBodyFunction(const void* ptr) {
+ *
+ *    // audio buffer
+ *    float * l_tx = new float[CHANNEL_LEN];
+ *    float * r_tx = new float[CHANNEL_LEN];
+ *    float * l_rx = new float[CHANNEL_LEN];
+ *    float * r_rx = new float[CHANNEL_LEN];
+ *
+ *    murasaki::platform.codec->Start();  // Start the audio codec
+ *
+ *
+ *    // Loop forever
+ *    while (true) {
+ *
+ *
+ *        // Talk through
+ *        for (int i = 0; i < CHANNEL_LEN; i++) {
+ *            l_tx[i] = l_rx[i];
+ *            r_tx[i] = r_rx[i];
+ *        }
+ *        murasaki::platform.audio->TransmitAndReceive(l_tx, r_tx, l_rx, r_rx);
+ *
+ *    }
+ *
+ * }
+ * @endcode
  */
 
 /**
