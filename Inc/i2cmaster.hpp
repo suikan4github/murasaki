@@ -9,6 +9,7 @@
 #ifndef I2CMASTER_HPP_
 #define I2CMASTER_HPP_
 
+#include<stm32l1xx_hal.h>
 #include <i2cmasterstrategy.hpp>
 #include <synchronizer.hpp>
 #include "criticalsection.hpp"
