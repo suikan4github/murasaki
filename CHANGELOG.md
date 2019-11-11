@@ -37,6 +37,7 @@ Note that issue #46 and #56 made incompatibility from the past code.
 - [Issue 68 : README has wrong link to the LICENSE](https://github.com/suikan4github/murasaki/issues/68)
 - [Issue 70 : "Blocking" should be changed to "Synchronous"](https://github.com/suikan4github/murasaki/issues/70)
 - [Issue 72 : The word "CubeMX" should be substituted "CubeIDE"](https://github.com/suikan4github/murasaki/issues/72)
+- (Issue 74 : Build failure for STM32L152)[https://github.com/suikan4github/murasaki/issues/74]
 
 ### Security
 ### Known Issue
