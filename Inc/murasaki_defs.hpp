@@ -352,12 +352,21 @@ static inline void CleanDataCacheByAddress(void * address, size_t size)
  * @details
  * This cycle counter ( CYCNT ) is implemented inside CORTEX-Mx core.
  * To implement or not is up to the SoC vender.
- * The STM32 series seems to have.
+ *
+ * Regarding CORTEX-M0 and M0+, there is no CYCCNT. THus, we do noting
+ * in this function.
+ *
+ * Programmer can override default function because this funciton is weakly bound.
  */
 extern void InitCycleCounter();
 /**
  * @brief Obtain the current cycle count of CYCCNT register.
  * @return current core cycle.
+ * @details
+ * Regarding CORTEX-M0 and M0+, there is no CYCCNT. THus, we do noting
+ * in this function.
+ *
+ * Programmer can override default function because this funciton is weakly bound.
  */
 extern unsigned int GetCycleCounter();
 
