@@ -12,8 +12,8 @@ namespace murasaki {
 
 Synchronizer::Synchronizer()
         :
-          // Create a semaphore as "empty" state. 
-          // Because it is empty, task is blocked if a task take that semaphore. 
+          // Create a semaphore as "empty" state.
+          // Because it is empty, task is blocked if a task take that semaphore.
           semaphore_(xSemaphoreCreateBinary())
 {
     MURASAKI_ASSERT(semaphore_ != nullptr)
@@ -40,16 +40,16 @@ bool Synchronizer::Wait(unsigned int timeout_ms)
 
 void Synchronizer::Release()
 {
-    // The FreeRTOS API is context dependent. 
-    // To work correctly, we have to refer the context informaiton. 
+    // The FreeRTOS API is context dependent.
+    // To work correctly, we have to refer the context informaiton.
     if (IsTaskContext())
         ::xSemaphoreGive(semaphore_ );
     else {
         ::xSemaphoreGiveFromISR(semaphore_, nullptr);
-        // This is essential part to trigger the context switch right after returning from ISR. 
+        // This is essential part to trigger the context switch right after returning from ISR.
         // Without calling this macro, context switch happens only at the next context switch request in task.
-        // This is very confusing design of FreeRTOS. 
-        portYIELD_FROM_ISR(true)
+        // This is very confusing design of FreeRTOS.
+        portYIELD_FROM_ISR(true);
     }
 
 }

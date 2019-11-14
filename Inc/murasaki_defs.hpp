@@ -276,7 +276,7 @@ static inline bool IsTaskContext()
 #if defined( __CORE_CM7_H_GENERIC ) ||defined ( __CORE_CM3_H_GENERIC ) ||defined ( __CORE_CM4_H_GENERIC )
     const unsigned int active_interrupt_mask = 0x1FF; /* bit 8:0 */
 #elif defined ( __CORE_CM0_H_GENERIC ) ||defined ( __CORE_CM0PLUS_H_GENERIC ) || defined ( __CORE_CM1_H_GENERIC )
-    const unsigned int active_interrupt_mask = 0x03F;    /* bit 5:0 */
+    const unsigned int active_interrupt_mask = 0x03F; /* bit 5:0 */
 #else
 #error "Unknown core"
 #endif
@@ -354,19 +354,12 @@ static inline void CleanDataCacheByAddress(void * address, size_t size)
  * To implement or not is up to the SoC vender.
  * The STM32 series seems to have.
  */
-static inline void InitCycleCounter() {
-    DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
-    DWT->CYCCNT = 0;
-}
-
+extern void InitCycleCounter();
 /**
  * @brief Obtain the current cycle count of CYCCNT register.
  * @return current core cycle.
  */
-static inline unsigned int GetCycleCounter()
-{
-    return DWT->CYCCNT;
-}
+extern unsigned int GetCycleCounter();
 
 /**
  *
