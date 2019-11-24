@@ -5,8 +5,8 @@
 # Display an error message and abort.
 # IF OK, Create variables to point the source directory and include directory. 
 
-# Count the source directories
-SRCDIRNUM=$(dirname `find .. -name main.c` | wc -l )
+# Count the include directories
+INCDIRNUM=$(dirname `find .. -name main.h` | wc -l )
 if [ $INCDIRNUM -lt "1" ] ; then
   echo "The main.h is not found. Process aborting"
   exit
@@ -16,8 +16,8 @@ if [ $INCDIRNUM -gt "1" ] ; then
   exit
 fi
 
-# Count the include directories
-INCDIRNUM=$(dirname `find .. -name main.h` | wc -l )
+# Count the source directories
+SRCDIRNUM=$(dirname `find .. -name main.c` | wc -l )
 if [ $SRCDIRNUM -lt "1" ] ; then
   echo "The main.c is not found. Process aborting"
   exit
@@ -44,9 +44,9 @@ INCDIR=$(dirname `find .. -name main.h`)
 SUPDIR=$(dirname `find .. -name startup_stm32*.s`)
 
 
-if [ ! -f $(SRCDIR)/murasaki_platform.cpp ]; then
-  cp template/*.hpp $(INCDIR)
-  cp template/*.cpp $(SRCDIR)
+if [ ! -f ${SRCDIR}/murasaki_platform.cpp ]; then
+  cp template/*.hpp ${INCDIR}
+  cp template/*.cpp ${SRCDIR}
   echo template files copied
 else
   echo template files exist. No change.
@@ -80,7 +80,7 @@ function check_target_string() {
 #
 
 # Check whether appropriate file and string exist
-TARGET_FILE=$(SRCDIR)/main.c
+TARGET_FILE=${SRCDIR}/main.c
 check_target_string ${TARGET_FILE} "USER CODE BEGIN Includes"
 check_target_string ${TARGET_FILE} "USER CODE END 6"
 check_target_string ${TARGET_FILE} "USER CODE BEGIN 5"
@@ -88,14 +88,14 @@ check_target_string ${TARGET_FILE} "USER CODE BEGIN 5"
 # Is murasaki already isntalled in this file? 
 grep "CustomAssertFailed" ${TARGET_FILE} > /dev/null
 if [ $? -ne 0 ]; then 
-  cat  $(SRCDIR)/main.c  | awk -f <(cat - <<- 'EDO'
+  cat  ${SRCDIR}/main.c  | awk -f <(cat - <<- 'EDO'
     /USER CODE END 6/{print "    CustomAssertFailed(file, line);"}
     {print $0}
     /USER CODE BEGIN Includes/{print "#include \"murasaki_platform.hpp\""}
     /USER CODE BEGIN 5/{print "  InitPlatform();"; print "  ExecPlatform();"}
 EDO
   ) > foo.txt
-  mv foo.txt $(SRCDIR)/main.c
+  mv foo.txt ${SRCDIR}/main.c
   echo ${TARGET_FILE} modified.
 else
   echo ${TARGET_FILE} have been already modified. No change.
@@ -110,7 +110,7 @@ fi
 #
 
 # Check whether appropriate file and string exist
-TARGET_FILE=`ls $(SUPDIR)/startup/startup_stm32*.s` 
+TARGET_FILE=`ls ${SUPDIR}/startup_stm32*.s` 
 
 check_target_string ${TARGET_FILE} "Default_Handler\:"
 
@@ -141,20 +141,20 @@ fi
 #    CustomDefaultHandler();
 
 # Check whether appropriate file and string exist
-TARGET_FILE=`ls $(SRCDIR)/stm32*_it.c`
+TARGET_FILE=`ls ${SRCDIR}/stm32*_it.c`
 check_target_string ${TARGET_FILE} "USER CODE BEGIN Includes"
 check_target_string ${TARGET_FILE} "USER CODE BEGIN HardFault_IRQn 0"
 
 # Is murasaki already isntalled in this file? 
 grep "CustomDefaultHandler" ${TARGET_FILE} > /dev/null
 if [ $? -ne 0 ]; then # if not, install
-  cat `ls $(SRCDIR)/stm32*_it.c` | awk -f <(cat - <<- 'EDO'
+  cat `ls ${SRCDIR}/stm32*_it.c` | awk -f <(cat - <<- 'EDO'
     {print $0}
     /USER CODE BEGIN Includes/{print "#include \"murasaki_platform.hpp\""}
     /USER CODE BEGIN HardFault_IRQn 0/{print "  CustomDefaultHandler();"}
 EDO
   ) > foo.txt
-  mv foo.txt `ls $(SRCDIR)/stm32*_it.c`
+  mv foo.txt `ls ${SRCDIR}/stm32*_it.c`
   echo ${TARGET_FILE} modified.
 else
   echo ${TARGET_FILE} have been already modified. No change.
@@ -162,9 +162,9 @@ fi
 
 # Make an include stub for murasaki like following. 
 # 1. Detect the interrupt include file
-#    CubeMX generate a $(INCDIR)/stm32*_it.h file as interrupt conrol header file.
+#    CubeMX generate a ${INCDIR}/stm32*_it.h file as interrupt conrol header file.
 #    Pick up this file by ls command. 
-#    Now, the string in pipe is $(INCDIR)/stm32?????_it.h
+#    Now, the string in pipe is ${INCDIR}/stm32?????_it.h
 # 2. Remove the path
 #    xargs command applies this string the pipe, to the basename command as parameter. 
 #    basename command takes the path out. 
@@ -177,7 +177,7 @@ fi
 #    Now, the string is #include<stm32?????_hal.h>
 #    This is the include statement to include the appropriate HAL file. 
 # Is murasaki already isntalled in this file? 
-cat > $(INCDIR)/murasaki_include_stub.h <<EOF
+cat > ${INCDIR}/murasaki_include_stub.h <<EOF
 /**
 * @file murasaki_include_stub.h
 * @brief Stub to include the HAL headers. 
@@ -211,5 +211,5 @@ cat > $(INCDIR)/murasaki_include_stub.h <<EOF
 * Thus, user doesn't need to maintain this file. 
 */
 EOF
-ls $(INCDIR)/stm32*it.h  | xargs  basename  | sed s/it/hal/ - | awk '{print("#include<" $0 ">")}' >> $(INCDIR)/murasaki_include_stub.h
-echo  $(INCDIR)/murasaki_include_stub.h created
+ls ${INCDIR}/stm32*it.h  | xargs  basename  | sed s/it/hal/ - | awk '{print("#include<" $0 ">")}' >> ${INCDIR}/murasaki_include_stub.h
+echo  ${INCDIR}/murasaki_include_stub.h created
