@@ -3,11 +3,10 @@
 # Check whether CubeMX/CubeIDE correctly generate the directory. 
 # If there is no or multpile main.c / main.h in the project, 
 # Display an error message and abort.
-# IF OK, Create the variable to poin the source directory and include directory. 
-SRCDIRNUM=$(dirname `find .. -name main.c` | wc -l )
-INCDIRNUM=$(dirname `find .. -name main.h` | wc -l )
-SUPDIRNUM=$(dirname `find .. -name startup_stm32*.s` | wc -l )
+# IF OK, Create variables to point the source directory and include directory. 
 
+# Count the source directories
+SRCDIRNUM=$(dirname `find .. -name main.c` | wc -l )
 if [ $INCDIRNUM -lt "1" ] ; then
   echo "The main.h is not found. Process aborting"
   exit
@@ -17,6 +16,8 @@ if [ $INCDIRNUM -gt "1" ] ; then
   exit
 fi
 
+# Count the include directories
+INCDIRNUM=$(dirname `find .. -name main.h` | wc -l )
 if [ $SRCDIRNUM -lt "1" ] ; then
   echo "The main.c is not found. Process aborting"
   exit
@@ -26,6 +27,8 @@ if [ $SRCDIRNUM -gt "1" ] ; then
   exit
 fi
 
+# Count the startup directories.
+SUPDIRNUM=$(dirname `find .. -name startup_stm32*.s` | wc -l )
 if [ $SUPDIRNUM -lt "1" ] ; then
   echo "The startup_stm32*.s is not found. Process aborting"
   exit
@@ -35,7 +38,7 @@ if [ $SUPDIRNUM -gt "1" ] ; then
   exit
 fi
 
-# Variables to poin the source / include directories. 
+# Variables to poin the source, include and startup directories. 
 SRCDIR=$(dirname `find .. -name main.c`)
 INCDIR=$(dirname `find .. -name main.h`)
 SUPDIR=$(dirname `find .. -name startup_stm32*.s`)
