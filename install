@@ -107,10 +107,17 @@ fi
 # Modify the startup/startup_stm32*.s like following.
 # Find the line which has "Deafult_Handler:" and then,
 # Substitute that line with following lines :
-#   .global CustomDefaultHandler
-#   Default_Handler:
-#   b CustomDefaultHandler
+#    .global CustomDefaultHandler
+# Default_Handler:
+# #if (__ARM_ARCH == 6 )
+#  ldr r0, = CustomDefaultHandler
+#  bx r0
+# #else
+#  b.w CustomDefaultHandler
+# #endif
 #
+# Note : Because of the restriction of the b instruction, 
+# ARM v6 architecture destroy the R0 register. 
 
 # Check whether appropriate file and string exist
 TARGET_FILE=`ls ${SUPDIR}/startup_stm32*.s` 
@@ -123,7 +130,7 @@ if [ $? -ne 0 ]; then # if not, install
   cat ${TARGET_FILE} | awk -f <(cat - <<- 'EDO'
     /Default_Handler\:/{print "    .global CustomDefaultHandler"}
     {print $0}
-    /Default_Handler\:/{print "  b CustomDefaultHandler"}
+    /Default_Handler\:/{print "#if (__ARM_ARCH == 6 )"; print "  ldr r0, = CustomDefaultHandler"; print "  bx r0"; print "#else";  print "  b.w CustomDefaultHandler"; print "#endif" }
 EDO
   ) > foo.txt
   mv foo.txt ${TARGET_FILE}
