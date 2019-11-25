@@ -43,6 +43,9 @@ SRCDIR=$(dirname `find .. -name main.c`)
 INCDIR=$(dirname `find .. -name main.h`)
 SUPDIR=$(dirname `find .. -name startup_stm32*.s`)
 
+echo Found $SRCDIR as the source directory.
+echo Found $INCDIR as the include directory.
+echo Found $SUPDIR as the startup directory.
 
 if [ ! -f ${SRCDIR}/murasaki_platform.cpp ]; then
   cp template/*.hpp ${INCDIR}
@@ -212,4 +215,4 @@ cat > ${INCDIR}/murasaki_include_stub.h <<EOF
 */
 EOF
 ls ${INCDIR}/stm32*it.h  | xargs  basename  | sed s/it/hal/ - | awk '{print("#include<" $0 ">")}' >> ${INCDIR}/murasaki_include_stub.h
-echo  ${INCDIR}/murasaki_include_stub.h created
+echo  ${INCDIR}/murasaki_include_stub.h created.
