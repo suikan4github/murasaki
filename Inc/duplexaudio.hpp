@@ -10,7 +10,7 @@
 #define DUPLEXAUDIO_HPP_
 
 #include <synchronizer.hpp>
-#include "audioadapterstrategy.hpp"
+#include "audioportadapterstrategy.hpp"
 
 namespace murasaki {
 
@@ -39,7 +39,7 @@ namespace murasaki {
  *
  * Because of the complicated audio data structure, there are several terminologies which programmer must know.
  * @li Word : An atomic data of audio sample. For example, stereo sample has two word.
- * Note that in murasaki::DuplexAudio, the size of word is given from murasaki::AudioAdapterStrategy.
+ * Note that in murasaki::DuplexAudio, the size of word is given from murasaki::AudioPortAdapterStrategy.
  * @li Channel : Input / Output port of audio. For example, the stereo audio has two channels named left and right. The 5.1 surround audio has 6 channels.
  * @li Phase : State of DMA. Usually audio DMA is configured as double or triple buffered to avoid the gap of the sound.
  * The index of the DMA buffere is called as phase. For example, the double buffere DMA can be phase 0 or 1 and
@@ -63,7 +63,7 @@ class DuplexAudio {
      * For example, a stereo data has 2 channel named left and right.
      */
     DuplexAudio(
-                murasaki::AudioAdapterStrategy * peripheral_adapter,
+                murasaki::AudioPortAdapterStrategy * peripheral_adapter,
                 unsigned int channel_length
                 );
     /**
@@ -201,7 +201,7 @@ class DuplexAudio {
      *
      * In certain system, the interrupts don't have explicit phase information.
      * For example, only one interrupt happens on both half way and end of buffer. In this case,
-     * @ref AudioAdapterStrategy::DetectPhase of the derived class must detect the phase. So, interrupt doesn't need to give
+     * @ref AudioPortAdapterStrategy::DetectPhase of the derived class must detect the phase. So, interrupt doesn't need to give
      * the meaningful phase.
      *
      * This function returns if peripheral parameter is match with the one passed by the constructor.
@@ -213,14 +213,14 @@ class DuplexAudio {
      * @param peripheral pointer to the peripheral device.
      * @return True if the peripheral matches with own peripheral which was given by constructor. Otherwise false.
      * @details
-     * This function calls the @ref AudioAdapterStrategy::HandleError() which knows how to handle.
+     * This function calls the @ref AudioPortAdapterStrategy::HandleError() which knows how to handle.
      * Usually, this error call back is unable to recover. So, assertion may be triggered.
      */
     virtual bool HandleError(void * peripheral);
 
  private:
 
-    murasaki::AudioAdapterStrategy * const peripheral_adapter_;
+    murasaki::AudioPortAdapterStrategy * const peripheral_adapter_;
     /**
      * @brief Length of a audio channel by one DMA transfer. The unit is [audio word].
      */

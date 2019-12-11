@@ -1,34 +1,26 @@
-/**
- * @file audioadapterstrategy.hpp
+/*
+ * saiportaudioadaptor.hpp
  *
- *  @date 2019/07/28
- *  @author Seiichi "Suikan" Horie
- *
- *  @brief Strategy of the Audio device adaptor.
+ *  Created on: 2019/07/28
+ *      Author: takemasa
  */
 
-#ifndef AUDIOADAPTERSTRATEGY_HPP_
-#define AUDIOADAPTERSTRATEGY_HPP_
+#ifndef SAIPORTAUDIOADAPTOR_HPP_
+#define SAIPORTAUDIOADAPTOR_HPP_
 
-#include "murasaki_defs.hpp"
-#include "peripheralstrategy.hpp"
+#include <audioportadapterstrategy.hpp>
 
 namespace murasaki {
 
-/**
- * @brief Strategy of the audio device adaptor..
- * \ingroup MURASAKI_ABSTRACT_GROUP
- * @details
- * Template class of the audio device adaptor.
- */
-class AudioAdapterStrategy : public murasaki::PeripheralStrategy {
+#ifdef   HAL_SAI_MODULE_ENABLED
+class SaiPortAdaptor : public AudioPortAdapterStrategy {
  public:
-    /**
-     * @brief Destructor to enforce the virtual type function.
-     */
-    virtual ~AudioAdapterStrategy() {
-    }
-    ;
+    SaiPortAdaptor(
+                    SAI_HandleTypeDef * tx_peripheral,
+                    SAI_HandleTypeDef * rx_peripheral
+                    );
+
+    virtual ~SaiPortAdaptor();
 
     /**
      * @brief Kick start routine to start the TX DMA transfer.
@@ -40,7 +32,7 @@ class AudioAdapterStrategy : public murasaki::PeripheralStrategy {
     virtual void StartTransferTx(
                                  uint8_t * tx_buffer,
                                  unsigned int channel_len
-                                 ) = 0;
+                                 );
 
     /**
      * @brief Kick start routine to start the RX DMA transfer.
@@ -52,78 +44,71 @@ class AudioAdapterStrategy : public murasaki::PeripheralStrategy {
     virtual void StartTransferRx(
                                  uint8_t * rx_buffer,
                                  unsigned int channel_len
-                                 ) = 0;
-
+                                 );
     /**
      * @brief Return how many DMA phase is implemented
-     * @return 2 for Double buffer, 3 for Tripple buffer.
+     * @return Always return 2 for STM32 SAI, becuase the cyclic DMA has halfway and complete interrupt.
      */
-    virtual unsigned int GetNumberOfDMAPhase() = 0;
-
-    /**
-     * @brief Return how many channels are in the transfer.
-     * @return 1 for Mono, 2 for stereo, 3... for multi-channel.
-     */
-    virtual unsigned int GetNumberOfChannelsTx() = 0;
-
-    /**
-     * @brief Return the size of the one sample.
-     * @return 2 or 4. The unit is [Byte]
-     */
-    virtual unsigned int GetSampleWordSizeTx() = 0;
-
-    /**
-     * @brief Return how many channels are in the transfer.
-     * @return 1 for Mono, 2 for stereo, 3... for multi-channel.
-     */
-    virtual unsigned int GetNumberOfChannelsRx() = 0;
-
-    /**
-     * @brief Return the size of the one sample.
-     * @return 2 or 4. The unit is [Byte]
-     */
-    virtual unsigned int GetSampleWordSizeRx() = 0;
-
-    /**
-     * @brief DMA phase detector.
-     * @param phase RX DMA phase : 0, 1, ...
-     * @return By default, returns phase parameter.
-     * @details
-     * If the DMA interrupt doesn't have the explicit phase information, need to override to detect it
-     * inside this function.
-     *
-     * By default, this function assumes the DMA phase is given though the interrupt handler. So,
-     * just pass the input parameter as return value.
-     */
-    virtual unsigned int DetectPhase(
-                                     unsigned int phase) {
-        return phase;
+    virtual unsigned int GetNumberOfDMAPhase() {
+        return 2;
     }
+    ;
+    /**
+     * @brief Return how many channels are in the transfer.
+     * @return 1 for Mono, 2 for stereo, 3... for multi-channel.
+     */
+    virtual unsigned int GetNumberOfChannelsTx();
 
+    /**
+     * @brief Return the size of the one sample.
+     * @return 2 or 4. The unit is [Byte]
+     */
+    virtual unsigned int GetSampleWordSizeTx();
+    /**
+     * @brief Return how many channels are in the transfer.
+     * @return 1 for Mono, 2 for stereo, 3... for multi-channel.
+     */
+    virtual unsigned int GetNumberOfChannelsRx();
+
+    /**
+     * @brief Return the size of the one sample.
+     * @return 2 or 4. The unit is [Byte]
+     */
+    virtual unsigned int GetSampleWordSizeRx();
     /**
      * @brief Handling error report of device.
      * @param ptr Pointer for generic use. Usually, points a struct of a device control
      * @return true if ptr matches with device and handle the error. false if ptr doesn't match
      * A member function to detect error.
      *
-     * Note, we assume once this error call back is called, we can't recover.
+     * The error handling is depend on the implementation.
      */
-    virtual bool HandleError(void * ptr)= 0;
-
+    virtual bool HandleError(void * ptr);
     /**
      * @details Check if peripheral handle matched with given handle.
      * @param peripheral_handle
      * @return true if match, false if not match.
+     * @details
+     * The SaiAudioAdapter type has two peripheral. TX and RX. This function checks RX paripheral
+     * and return with this value. That means, if RX is not nullptr, TX is not checked.
+     *
+     * TX is checked only when, RX is nullptr.
      */
-    virtual bool Match(void * peripheral_handle) = 0;
+    virtual bool Match(void * peripheral_handle);
 
     /**
      * @brief pass the raw peripheral handler
      * @return pointer to the raw peripheral handler hidden in a class.
      */
-    virtual void * GetPeripheralHandle()=0;
+    virtual void * GetPeripheralHandle();
+
+ private:
+    SAI_HandleTypeDef * const tx_peripheral_;
+    SAI_HandleTypeDef * const rx_peripheral_;
 };
+#endif // HAL_SAI_MODULE_ENABLED
 
-} /* namespace murasaki */
+}
+/* namespace murasaki */
 
-#endif /* AUDIOADAPTERSTRATEGY_HPP_ */
+#endif /* SAIAUDIOADAPTOR_HPP_ */

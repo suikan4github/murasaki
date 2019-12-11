@@ -5,8 +5,8 @@
  * @author: Seiichi "Suikan" Horie
  */
 
-#ifndef THIRD_PARTY_ABSTRACTAUDIOCODEC_HPP_
-#define THIRD_PARTY_ABSTRACTAUDIOCODEC_HPP_
+#ifndef AUDIO_CODEC_STRATEGY_HPP_
+#define AUDIO_CODEC_STRATEGY_HPP_
 
 namespace murasaki {
 

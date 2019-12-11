@@ -15,7 +15,7 @@
 namespace murasaki {
 
 DuplexAudio::DuplexAudio(
-                         murasaki::AudioAdapterStrategy * peripheral_adapter,
+                         murasaki::AudioPortAdapterStrategy * peripheral_adapter,
                          unsigned int channel_length
                          )
         :
