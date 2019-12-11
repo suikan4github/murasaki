@@ -88,6 +88,11 @@ class SaiAudioAdaptor : public AudioAdapterStrategy {
      * @details Check if peripheral handle matched with given handle.
      * @param peripheral_handle
      * @return true if match, false if not match.
+     * @details
+     * The SaiAudioAdapter type has two peripheral. TX and RX. This function checks RX paripheral
+     * and return with this value. That means, if RX is not nullptr, TX is not checked.
+     *
+     * TX is checked only when, RX is nullptr.
      */
     virtual bool Match(void * peripheral_handle);
 

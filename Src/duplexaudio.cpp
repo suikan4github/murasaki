@@ -277,7 +277,7 @@ bool DuplexAudio::DmaCallback(
                               void* peripheral,
                               unsigned int phase) {
     AUDIO_SYSLOG("Enter with peripheral : %p, phase : %d", peripheral, phase);
-    if (peripheral_adapter_->GetPeripheralHandle() == peripheral) {
+    if (peripheral_adapter_->Match(peripheral)) {
         AUDIO_SYSLOG("peripheral matched");
 
         // Up to date the DMA phase.
