@@ -1,5 +1,5 @@
 /**
- * @file audioadapterstrategy.hpp
+ * @file audioportadapterstrategy.hpp
  *
  *  @date 2019/07/28
  *  @author Seiichi "Suikan" Horie
@@ -7,8 +7,8 @@
  *  @brief Strategy of the Audio device adaptor.
  */
 
-#ifndef AUDIOADAPTERSTRATEGY_HPP_
-#define AUDIOADAPTERSTRATEGY_HPP_
+#ifndef AUDIOPORTADAPTERSTRATEGY_HPP_
+#define AUDIOPORTADAPTERSTRATEGY_HPP_
 
 #include "murasaki_defs.hpp"
 #include "peripheralstrategy.hpp"
@@ -21,12 +21,12 @@ namespace murasaki {
  * @details
  * Template class of the audio device adaptor.
  */
-class AudioAdapterStrategy : public murasaki::PeripheralStrategy {
+class AudioPortAdapterStrategy : public murasaki::PeripheralStrategy {
  public:
     /**
      * @brief Destructor to enforce the virtual type function.
      */
-    virtual ~AudioAdapterStrategy() {
+    virtual ~AudioPortAdapterStrategy() {
     }
     ;
 
@@ -126,4 +126,4 @@ class AudioAdapterStrategy : public murasaki::PeripheralStrategy {
 
 } /* namespace murasaki */
 
-#endif /* AUDIOADAPTERSTRATEGY_HPP_ */
+#endif /* AUDIOPORTADAPTERSTRATEGY_HPP_ */

@@ -20,6 +20,7 @@ Note that issue #46, #56 and #77 made incompatibility from the past code.
 - [Issue 61 : Change timeout parameter as integer](https://github.com/suikan4github/murasaki/issues/61)
 - [Issue 69 : Step-by-Step installation guide should be removed](https://github.com/suikan4github/murasaki/issues/69)
 - [Issue 77 : Add objectpointer parameter to MURASKI_SYSLOG](https://github.com/suikan4github/murasaki/issues/77)
+- [Issue 82 : Rename the AudioAdapterStrategy and SaiAudioAdaptor](https://github.com/suikan4github/murasaki/issues/82)
 
 ### Deprecated
 ### Removed
@@ -44,7 +45,6 @@ Note that issue #46, #56 and #77 made incompatibility from the past code.
 - [Issue 79 : The core clock counter initialization have to be moved.](https://github.com/suikan4github/murasaki/issues/79)
 - [Issue 80 : The sample peripheral name of the template has camel format](https://github.com/suikan4github/murasaki/issues/80)
 - [Issue 81 : DuplexAudio::DMACallback() should use match()](https://github.com/suikan4github/murasaki/issues/81)
-
 
 ### Security
 ### Known Issue

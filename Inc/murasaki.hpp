@@ -37,7 +37,7 @@
 #include "i2cslave.hpp"
 #include "bitin.hpp"
 #include "bitout.hpp"
-#include "saiaudioadaptor.hpp"
+#include "saiportadaptor.hpp"
 
 // Third party
 #include "Thirdparty/adau1361.hpp"

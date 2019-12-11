@@ -1,26 +1,26 @@
 /*
- * saiaudioadaptor.hpp
+ * saiportaudioadaptor.hpp
  *
  *  Created on: 2019/07/28
  *      Author: takemasa
  */
 
-#ifndef SAIAUDIOADAPTOR_HPP_
-#define SAIAUDIOADAPTOR_HPP_
+#ifndef SAIPORTAUDIOADAPTOR_HPP_
+#define SAIPORTAUDIOADAPTOR_HPP_
 
-#include <audioadapterstrategy.hpp>
+#include <audioportadapterstrategy.hpp>
 
 namespace murasaki {
 
 #ifdef   HAL_SAI_MODULE_ENABLED
-class SaiAudioAdaptor : public AudioAdapterStrategy {
+class SaiPortAdaptor : public AudioPortAdapterStrategy {
  public:
-    SaiAudioAdaptor(
+    SaiPortAdaptor(
                     SAI_HandleTypeDef * tx_peripheral,
                     SAI_HandleTypeDef * rx_peripheral
                     );
 
-    virtual ~SaiAudioAdaptor();
+    virtual ~SaiPortAdaptor();
 
     /**
      * @brief Kick start routine to start the TX DMA transfer.

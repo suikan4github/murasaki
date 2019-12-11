@@ -373,7 +373,7 @@ extern unsigned int GetCycleCounter();
 /**
  *
  * @brief Keep task sleeping during the specific duration.
- * @param duration Sleeping time by milliseconds.
+ * @param duration_ms Sleeping time by milliseconds.
  * @details
  * Whenever this function is called, that task gets into the sleeping ( or waiting, the name is up to RTOS ) immediately.
  * Then, wake up after specified duration.
