@@ -10,7 +10,7 @@
 #include "murasaki_assert.hpp"
 
 // Macro for easy-to-read
-#define SAIAUDIO_SYSLOG(fmt, ...)    MURASAKI_SYSLOG(kfaSai, kseDebug, fmt, ##__VA_ARGS__)
+#define SAIAUDIO_SYSLOG(fmt, ...)    MURASAKI_SYSLOG( this , kfaSai, kseDebug, fmt, ##__VA_ARGS__)
 
 namespace murasaki {
 #ifdef   HAL_SAI_MODULE_ENABLED
@@ -42,28 +42,28 @@ bool SaiAudioAdaptor::HandleError(void * ptr) {
         uint32_t error_code = rx_peripheral_->ErrorCode;
         // Check error and display it.
         if (HAL_SAI_ERROR_OVR | error_code) {
-            MURASAKI_SYSLOG(kfaSai, kseError, "HAL_SAI_ERROR_OVR")
+            MURASAKI_SYSLOG( this, kfaSai, kseError, "HAL_SAI_ERROR_OVR")
         }
         if (HAL_SAI_ERROR_UDR | error_code) {
-            MURASAKI_SYSLOG(kfaSai, kseError, "HAL_SAI_ERROR_UDR")
+            MURASAKI_SYSLOG( this, kfaSai, kseError, "HAL_SAI_ERROR_UDR")
         }
         if (HAL_SAI_ERROR_AFSDET | error_code) {
-            MURASAKI_SYSLOG(kfaSai, kseError, "HAL_SAI_ERROR_AFSDET")
+            MURASAKI_SYSLOG( this, kfaSai, kseError, "HAL_SAI_ERROR_AFSDET")
         }
         if (HAL_SAI_ERROR_LFSDET | error_code) {
-            MURASAKI_SYSLOG(kfaSai, kseError, "HAL_SAI_ERROR_LFSDET")
+            MURASAKI_SYSLOG( this, kfaSai, kseError, "HAL_SAI_ERROR_LFSDET")
         }
         if (HAL_SAI_ERROR_CNREADY | error_code) {
-            MURASAKI_SYSLOG(kfaSai, kseError, "HAL_SAI_ERROR_CNREADY")
+            MURASAKI_SYSLOG( this, kfaSai, kseError, "HAL_SAI_ERROR_CNREADY")
         }
         if (HAL_SAI_ERROR_WCKCFG | error_code) {
-            MURASAKI_SYSLOG(kfaSai, kseError, "HAL_SAI_ERROR_WCKCFG")
+            MURASAKI_SYSLOG( this, kfaSai, kseError, "HAL_SAI_ERROR_WCKCFG")
         }
         if (HAL_SAI_ERROR_TIMEOUT | error_code) {
-            MURASAKI_SYSLOG(kfaSai, kseError, "HAL_SAI_ERROR_TIMEOUT")
+            MURASAKI_SYSLOG( this, kfaSai, kseError, "HAL_SAI_ERROR_TIMEOUT")
         }
         if (HAL_SAI_ERROR_DMA | error_code) {
-            MURASAKI_SYSLOG(kfaSai, kseError, "HAL_SAI_ERROR_DMA")
+            MURASAKI_SYSLOG( this, kfaSai, kseError, "HAL_SAI_ERROR_DMA")
         }
         // This is fatal condition.
         SAIAUDIO_SYSLOG("Device matched.")

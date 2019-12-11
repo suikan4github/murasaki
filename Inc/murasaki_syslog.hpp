@@ -75,6 +75,7 @@ bool AllowedSyslogOut(murasaki::SyslogFacility facility,
 #endif
 /**
  * \def MURASAKI_SYSLOG
+ * @param OBJPTR the pointer to the object. Usually, path the "this" pointer here.
  * \param FACILITY Specify which facility makes this log. Choose from @ref murasaki::SyslogFacility
  * \param SEVERITY Specify how message is severe. Choose from @ref murasaki::SyslogSeverity
  * \param FORMAT Message format as printf style.
@@ -92,15 +93,25 @@ bool AllowedSyslogOut(murasaki::SyslogFacility facility,
  * @li murasaki::kseError for falty condtion from HAL or hardware.
  * @li murasaki::kseEmergency for software logic error like assert fail
  *
+ * The output format is as following :
+ * @li Clock cycles by @ref GetCycleCounter()
+ * @li Object address
+ * @li Facility
+ * @li Severity
+ * @li File name of source code
+ * @li Line number of source code
+ * @li Function name
+ * @li Other programmer specified infromation
+ *
  * \ingroup MURASAKI_GROUP
  */
 #if MURASAKI_CONFIG_NOSYSLOG
-#define MURASAKI_SYSLOG( FACILITY, SEVERITY, FORMAT, ... )
+#define MURASAKI_SYSLOG( OBJPTR, FACILITY, SEVERITY, FORMAT, ... )
 #else
-#define MURASAKI_SYSLOG( FACILITY, SEVERITY, FORMAT, ... )\
+#define MURASAKI_SYSLOG( OBJPTR, FACILITY, SEVERITY, FORMAT, ... )\
     if ( murasaki::AllowedSyslogOut(FACILITY, SEVERITY) )\
     {\
-        murasaki::debugger->Printf("%10u, %s, %s: %s, line %4d, %s(): " FORMAT "\n", murasaki::GetCycleCounter(), #FACILITY, #SEVERITY, __MURASAKI__FILE__, __LINE__, __func__, ##__VA_ARGS__);\
+        murasaki::debugger->Printf("%10u, %p, %s, %s: %s, line %4d, %s(): " FORMAT "\n", murasaki::GetCycleCounter(), OBJPTR, #FACILITY, #SEVERITY, __MURASAKI__FILE__, __LINE__, __func__, ##__VA_ARGS__);\
     }
 #endif
 

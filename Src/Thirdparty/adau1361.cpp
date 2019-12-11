@@ -14,7 +14,7 @@
 #include <algorithm>
 
 // Macro for easy-to-read
-#define CODEC_SYSLOG(fmt, ...)    MURASAKI_SYSLOG(kfaAudioCodec, kseDebug, fmt, ##__VA_ARGS__)
+#define CODEC_SYSLOG(fmt, ...)    MURASAKI_SYSLOG( this,  kfaAudioCodec, kseDebug, fmt, ##__VA_ARGS__)
 
 #ifdef   HAL_I2C_MODULE_ENABLED
 
@@ -182,7 +182,7 @@ void Adau1361::WaitPllLock(void) {
         count++;
         if (count > 10)
                 {
-            MURASAKI_SYSLOG(
+            MURASAKI_SYSLOG( this,
                             kfaAudioCodec,
                             kseCritical,
                             "Codec at I2C address 0x%02x doesn't lock",
@@ -390,7 +390,7 @@ void Adau1361::ConfigurePll(void) {
             }
 
             default:
-                MURASAKI_SYSLOG(
+                MURASAKI_SYSLOG( this,
                                 kfaAudioCodec,
                                 kseCritical,
                                 "Non supported master clock %dHz",
@@ -436,7 +436,7 @@ void Adau1361::ConfigurePll(void) {
                 break;
             }
             default:
-                MURASAKI_SYSLOG(
+                MURASAKI_SYSLOG( this,
                                 kfaAudioCodec,
                                 kseCritical,
                                 "Non supported fs %dHz",
@@ -637,7 +637,7 @@ void Adau1361::ConfigurePll(void) {
             }
 
             default:
-                MURASAKI_SYSLOG(
+                MURASAKI_SYSLOG( this,
                                 kfaAudioCodec,
                                 kseCritical,
                                 "Non supported master clock %dHz",
@@ -675,7 +675,7 @@ void Adau1361::ConfigurePll(void) {
                 break;
             }
             default:
-                MURASAKI_SYSLOG(
+                MURASAKI_SYSLOG( this,
                                 kfaAudioCodec,
                                 kseCritical,
                                 "Not supported fs %dHz",
@@ -684,7 +684,7 @@ void Adau1361::ConfigurePll(void) {
         }
     }
     else {  // if the required Fs is unknown, it is critical error.
-        MURASAKI_SYSLOG(
+        MURASAKI_SYSLOG( this,
                         kfaAudioCodec,
                         kseCritical,
                         "Not supported fs %dHz",
@@ -710,7 +710,7 @@ void Adau1361::Start(void) {
             {
         // If it I2C returns NAK, there is no CODEC device on the specific I2C address.
         // Report it
-        MURASAKI_SYSLOG(
+        MURASAKI_SYSLOG( this,
                         kfaAudioCodec,
                         kseCritical,
                         "Given audio codec at I2C address %02x doesn't response or something is wrong",

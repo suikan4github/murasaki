@@ -1,7 +1,7 @@
 # Change log
 Record of the modification in project development.
 
-Note that issue #46 and #56 made incompatibility from the past code. 
+Note that issue #46, #56 and #77 made incompatibility from the past code. 
 
 ## [Unreleased]
 
@@ -19,6 +19,7 @@ Note that issue #46 and #56 made incompatibility from the past code.
 - [Issue 56 : The Inc-tp and Src-tp should be moved to under Inc and Src, respectively](https://github.com/suikan4github/murasaki/issues/56)
 - [Issue 61 : Change timeout parameter as integer](https://github.com/suikan4github/murasaki/issues/61)
 - [Issue 69 : Step-by-Step installation guide should be removed](https://github.com/suikan4github/murasaki/issues/69)
+- [Issue 77 : Add objectpointer parameter to MURASKI_SYSLOG](https://github.com/suikan4github/murasaki/issues/77)
 
 ### Deprecated
 ### Removed

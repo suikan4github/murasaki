@@ -10,7 +10,7 @@
 #include "murasaki_syslog.hpp"
 
 // Macro for easy-to-read
-#define AUDIO_SYSLOG(fmt, ...)    MURASAKI_SYSLOG(kfaAudio, kseDebug, fmt, ##__VA_ARGS__)
+#define AUDIO_SYSLOG(fmt, ...)    MURASAKI_SYSLOG(this, kfaAudio, kseDebug, fmt, ##__VA_ARGS__)
 
 namespace murasaki {
 
@@ -266,7 +266,7 @@ void DuplexAudio::TransmitAndReceive(
             break;
         }
         default:
-            MURASAKI_SYSLOG(kfaAudio, kseError, "Unknown word size")
+            MURASAKI_SYSLOG(this, kfaAudio, kseError, "Unknown word size")
             MURASAKI_ASSERT(false)
     }
 

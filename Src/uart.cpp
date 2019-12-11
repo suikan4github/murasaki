@@ -10,7 +10,7 @@
 #include "murasaki_syslog.hpp"
 
 // Macro for easy-to-read
-#define UART_SYSLOG(fmt, ...)    MURASAKI_SYSLOG(kfaSerial, kseDebug, fmt, ##__VA_ARGS__)
+#define UART_SYSLOG(fmt, ...)    MURASAKI_SYSLOG( this, kfaSerial, kseDebug, fmt, ##__VA_ARGS__)
 
 // Check if CubeIDE generates UART module
 #ifdef HAL_UART_MODULE_ENABLED
@@ -121,11 +121,11 @@ murasaki::UartStatus Uart::Transmit(
                 UART_SYSLOG("Transmission complete successfully")
                 break;
             case murasaki::kursTimeOut:
-                MURASAKI_SYSLOG(kfaSerial, kseWarning, "Transmission timeout")
+                MURASAKI_SYSLOG( this, kfaSerial, kseWarning, "Transmission timeout")
                 // TODO: probably, we should think how to know the number of transmission.
                 break;
             default:
-                MURASAKI_SYSLOG(kfaSerial, kseEmergency, "Error is not handled")
+                MURASAKI_SYSLOG( this, kfaSerial, kseEmergency, "Error is not handled")
                 // Re-initializing device
                 HAL_UART_DeInit(peripheral_);
                 HAL_UART_Init(peripheral_);
@@ -195,26 +195,26 @@ murasaki::UartStatus Uart::Receive(
                 UART_SYSLOG("Receiving complete successfully")
                 break;
             case murasaki::kursTimeOut:
-                MURASAKI_SYSLOG(kfaSerial, kseWarning, "Receiving timeout")
+                MURASAKI_SYSLOG( this, kfaSerial, kseWarning, "Receiving timeout")
                 // return without resetting device.
                 break;
             case murasaki::kursFrame:
                 case murasaki::kursParity:
                 case murasaki::kursNoise:
-                MURASAKI_SYSLOG(kfaSerial, kseWarning, "Receiving error by frame, parity or noise error")
+                MURASAKI_SYSLOG( this, kfaSerial, kseWarning, "Receiving error by frame, parity or noise error")
                 // return without resetting device.
                 break;
             case murasaki::kursOverrun:
-                MURASAKI_SYSLOG(kfaSerial, kseError, "Overrun error on transmission. ")
+                MURASAKI_SYSLOG( this, kfaSerial, kseError, "Overrun error on transmission. ")
                 break;
             case murasaki::kursDMA:
-                MURASAKI_SYSLOG(kfaSerial, kseError, "Un-recoverable DMA error. Peripheral re-initialized")
+                MURASAKI_SYSLOG( this, kfaSerial, kseError, "Un-recoverable DMA error. Peripheral re-initialized")
                 // Re-initializing device
                 HAL_UART_DeInit(peripheral_);
                 HAL_UART_Init(peripheral_);
                 break;
             default:
-                MURASAKI_SYSLOG(kfaSerial, kseEmergency, "Error is not handled. Peripheral re-initialized.")
+                MURASAKI_SYSLOG( this, kfaSerial, kseEmergency, "Error is not handled. Peripheral re-initialized.")
                 // Re-initializing device
                 HAL_UART_DeInit(peripheral_);
                 HAL_UART_Init(peripheral_);
@@ -276,42 +276,42 @@ bool Uart::HandleError(void* const ptr)
     if (this->Match(ptr)) {
         // Check error and halde it.
         if (peripheral_->ErrorCode & HAL_UART_ERROR_PE) {
-            MURASAKI_SYSLOG(kfaSerial, kseWarning, "HAL_UART_ERROR_PE");
+            MURASAKI_SYSLOG( this, kfaSerial, kseWarning, "HAL_UART_ERROR_PE");
             // This interrupt happen when RX cause parity error.
             rx_interrupt_status_ = murasaki::kursParity;
             // abort the processing
             rx_sync_->Release();
         }
         else if (peripheral_->ErrorCode & HAL_UART_ERROR_FE) {
-            MURASAKI_SYSLOG(kfaSerial, kseWarning, "HAL_UART_ERROR_FE");
+            MURASAKI_SYSLOG( this, kfaSerial, kseWarning, "HAL_UART_ERROR_FE");
             // This interrupt happen when rx detect the character frame is wrong.
             rx_interrupt_status_ = murasaki::kursFrame;
             // abort the processing
             rx_sync_->Release();
         }
         else if (peripheral_->ErrorCode & HAL_UART_ERROR_NE) {
-            MURASAKI_SYSLOG(kfaSerial, kseWarning, "HAL_UART_ERROR_NE");
+            MURASAKI_SYSLOG( this, kfaSerial, kseWarning, "HAL_UART_ERROR_NE");
             // This interrupt happen when rx detect the problem by noise.
             rx_interrupt_status_ = murasaki::kursNoise;
             // abort the processing
             rx_sync_->Release();
         }
         else if (peripheral_->ErrorCode & HAL_UART_ERROR_ORE) {
-            MURASAKI_SYSLOG(kfaSerial, kseWarning, "HAL_UART_ERROR_ORE");
+            MURASAKI_SYSLOG( this, kfaSerial, kseWarning, "HAL_UART_ERROR_ORE");
             // This interrupt happen when rx register is full and next data comes.
             rx_interrupt_status_ = murasaki::kursOverrun;
             // abort the processing
             rx_sync_->Release();
         }
         else if (peripheral_->ErrorCode & HAL_UART_ERROR_DMA) {
-            MURASAKI_SYSLOG(kfaSerial, kseWarning, "HAL_UART_ERROR_DMA");
+            MURASAKI_SYSLOG( this, kfaSerial, kseWarning, "HAL_UART_ERROR_DMA");
             // This interrupt happen when something problem happen in DMA. This is fatal.
             rx_interrupt_status_ = murasaki::kursDMA;
             // abort the processing
             rx_sync_->Release();
         }
         else {
-            MURASAKI_SYSLOG(kfaSerial, kseEmergency, "Unknown error");
+            MURASAKI_SYSLOG( this, kfaSerial, kseEmergency, "Unknown error");
             // Unknown interrupt. Must be updated this program by the newest HAL spec.
             rx_interrupt_status_ = murasaki::kursUnknown;
             // abort the processing
