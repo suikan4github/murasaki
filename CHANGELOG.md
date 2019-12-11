@@ -40,6 +40,7 @@ Note that issue #46 and #56 made incompatibility from the past code.
 - [Issue 73 : Build failure for the CORTEX-M0](https://github.com/suikan4github/murasaki/issues/73)
 - [Issue 74 : Build failure for STM32L152](https://github.com/suikan4github/murasaki/issues/74)
 - [Issue 78 : Update install script](https://github.com/suikan4github/murasaki/issues/78)
+- [Issue 79 : The core clock counter initialization have to be moved.](https://github.com/suikan4github/murasaki/issues/79)
 - [Issue 80 : The sample peripheral name of the template has camel format](https://github.com/suikan4github/murasaki/issues/80)
 - [Issue 81 : DuplexAudio::DMACallback() should use match()](https://github.com/suikan4github/murasaki/issues/81)
 

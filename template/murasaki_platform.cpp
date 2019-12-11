@@ -55,6 +55,10 @@ void TaskBodyFunction(const void* ptr);
 
 void InitPlatform()
 {
+#if ! MURASAKI_CONFIG_NOCYCCNT
+    // Start the cycle counter to measure the cycle in MURASAKI_SYSLOG.
+    murasaki::InitCycleCounter();
+#endif
     // UART device setting for console interface.
     // On Nucleo, the port connected to the USB port of ST-Link is
     // referred here.
@@ -103,10 +107,6 @@ void InitPlatform()
     murasaki::platform.spiSlave = new murasaki::SpiSlave(&hspi4);
 #endif
 
-#if ! MURASAKI_CONFIG_NOCYCCNT
-    // Start the cycle counter to measure the cycle in MURASAKI_SYSLOG.
-    murasaki::InitCycleCounter();
-#endif
 }
 
 void ExecPlatform()
