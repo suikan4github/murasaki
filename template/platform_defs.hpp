@@ -44,10 +44,10 @@ struct Platform
 
 #if 0
     UartStrategy * uart;            ///< UART under test
-    SpiMasterStrategy * spiMaster;  ///< SPI Master under test
-    SpiSlaveStrategy * spiSlave;    ///< SPI Slave under test
-    I2CMasterStrategy * i2cMaster;  ///< I2C Master under test
-    I2cSlaveStrategy * i2cSlave;    ///< I2C Slave under test
+    SpiMasterStrategy * spi_master;  ///< SPI Master under test
+    SpiSlaveStrategy * spi_slave;    ///< SPI Slave under test
+    I2CMasterStrategy * i2c_master;  ///< I2C Master under test
+    I2cSlaveStrategy * i2c_slave;    ///< I2C Slave under test
 #endif
 
 };

@@ -345,8 +345,8 @@ void HAL_I2C_MasterTxCpltCallback(I2C_HandleTypeDef * hi2c)
     // Poll all I2C master tx related interrupt receivers.
     // If hit, return. If not hit,check next.
 #if 0
-//    if (murasaki::platform.i2c_master->TransmitCompleteCallback(hi2c))
-//        return;
+    if (murasaki::platform.i2c_master->TransmitCompleteCallback(hi2c))
+        return;
 #endif
 }
 
