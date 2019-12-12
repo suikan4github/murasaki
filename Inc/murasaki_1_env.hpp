@@ -27,7 +27,7 @@
  * \li <a href="http://www.st.com/en/evaluation-tools/nucleo-l412rb-p.html">Nucleo L412RB-P ( STM32L412RB : Cortex-M4 )</a>
  * \li <a href="http://www.st.com/en/evaluation-tools/nucleo-l152re.html">Nucleo L152RE ( STM32L152RE : Cortex-M3 )</a>
  * \li <a href="http://www.st.com/en/evaluation-tools/nucleo-f091rc.html">Nucleo F091RC ( STM32F091RC : Cortex-M0 )</a>
- * \li <a href="http://www.st.com/en/evaluation-tools/nucleo-l072rb.html">Nucleo L072RB ( STM32L072RB : Cortex-M0+ )</a>
+ * \li <a href="http://www.st.com/en/evaluation-tools/nucleo-g070rb.html">Nucleo G070RB ( STM32G070RB : Cortex-M0+ )</a>
  *
  */
 
