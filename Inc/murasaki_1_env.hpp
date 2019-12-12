@@ -19,13 +19,15 @@
  * \li <a href="http://releases.ubuntu.com/16.04/">Ubuntu 16.04 (64bit)</a>
  *
  * And then, confirmed portability with following boards :
- * \li <a href="http://www.st.com/en/evaluation-tools/nucleo-h743zi.html">Nucleo F743ZI ( STM32F743ZI : Cortex-M7 )</a>
+ * \li <a href="http://www.st.com/en/evaluation-tools/nucleo-h743zi.html">Nucleo H743ZI ( STM32H743ZI : Cortex-M7 )</a>
  * \li <a href="http://www.st.com/en/evaluation-tools/nucleo-f746zg.html">Nucleo F746ZG ( STM32F746ZG : Cortex-M7 )</a>
  * \li <a href="http://www.st.com/en/evaluation-tools/nucleo-f722ze.html">Nucleo F722ZE ( STM32F722ZE : Cortex-M7 )</a>
  * \li <a href="http://www.st.com/en/evaluation-tools/nucleo-f446re.html">Nucleo F446RE ( STM32F446RE : Cortex-M4 )</a>
+ * \li <a href="http://www.st.com/en/evaluation-tools/nucleo-g431rb.html">Nucleo G431RB ( STM32G431RB : Cortex-M4 )</a>
  * \li <a href="http://www.st.com/en/evaluation-tools/nucleo-l412rb-p.html">Nucleo L412RB-P ( STM32L412RB : Cortex-M4 )</a>
  * \li <a href="http://www.st.com/en/evaluation-tools/nucleo-l152re.html">Nucleo L152RE ( STM32L152RE : Cortex-M3 )</a>
  * \li <a href="http://www.st.com/en/evaluation-tools/nucleo-f091rc.html">Nucleo F091RC ( STM32F091RC : Cortex-M0 )</a>
+ * \li <a href="http://www.st.com/en/evaluation-tools/nucleo-l072rb.html">Nucleo L072RB ( STM32L072RB : Cortex-M0+ )</a>
  *
  */
 

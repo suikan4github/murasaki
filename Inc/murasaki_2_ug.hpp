@@ -376,17 +376,17 @@
  *
  * @code
  *     // audio CODEC
- *     murasaki::platform.codec = new murasaki::Adau1361(
- *                                                       48000,
- *                                                       12000000,
- *                                                       murasaki::platform.i2cMaster,
- *                                                       0x38);
+ *     murasaki::platform.codec = new @ref murasaki::Adau1361(
+ *                                                       48000,             // Fs
+ *                                                       12000000,          // ADAU1361 master clock frequency
+ *                                                       murasaki::platform.i2c_master, // CODEC connected port
+ *                                                       CODEC_ADDRESS);    // I2C device address
  *
- *     murasaki::platform.audioAdapter = new murasaki::SaiAudioAdaptor(
- *                                                                     &hsai_BlockA1,
- *                                                                     &hsai_BlockB1);
- *     murasaki::platform.audio = new murasaki::DuplexAudio(
- *                                                          murasaki::platform.audioAdapter,
+ *    murasaki::platform.sai = new @ref murasaki::SaiPortAdaptor(
+ *                                                          &hsai_BlockB1, // TX SAI block
+ *                                                          &hsai_BlockA1); // RX SAI block
+ *    murasaki::platform.audio = new @ref murasaki::DuplexAudio(
+ *                                                          murasaki::platform.sai,
  *                                                          CHANNEL_LEN);
  *
  * @endcode

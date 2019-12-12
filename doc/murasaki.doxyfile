@@ -773,8 +773,10 @@ WARN_LOGFILE           =
 
 INPUT                  = ../Inc \
                          ../../Inc \
+                         ../../Core/Inc \
                          ../Src \
-                         ../../Src
+                         ../../Src \
+                         ../../Core/Src
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding. Doxygen uses
@@ -2047,6 +2049,7 @@ PREDEFINED             = HAL_UART_MODULE_ENABLED \
                          HAL_I2C_MODULE_ENABLED \
                          HAL_SPI_MODULE_ENABLED \
                          HAL_GPIO_MODULE_ENABLED \
+                         HAL_SAI_MODULE_ENABLED \
                          USE_FULL_ASSERT \
                          MURASAKI_CONFIG_NOSYSLOG
 

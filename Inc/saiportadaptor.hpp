@@ -1,24 +1,47 @@
-/*
- * saiportaudioadaptor.hpp
+/**
+ * @file saiportadaptor.hpp
  *
- *  Created on: 2019/07/28
- *      Author: takemasa
+ *  @date 2019/07/28
+ *  @author takemasa
  */
 
-#ifndef SAIPORTAUDIOADAPTOR_HPP_
-#define SAIPORTAUDIOADAPTOR_HPP_
+#ifndef SAIPORTADAPTOR_HPP_
+#define SAIPORTADAPTOR_HPP_
 
 #include <audioportadapterstrategy.hpp>
 
 namespace murasaki {
 
 #ifdef   HAL_SAI_MODULE_ENABLED
+/**
+ * @brief Adapter as SAI audio port.
+ * @details
+ * Dedicated adapter for the @ref murasaki::DuplexAudio.
+ * By passing this adapter, the DuplexAudio class can handle audio through the SAI port.
+ *
+ * Caution : The size of the data in SAI and the width of the data in DMA must be aligned.
+ * This is responsibility of the programmer. The misaligned configuration gives broken audio.
+ *
+ * \ingroup MURASAKI_GROUP
+ *
+ */
 class SaiPortAdaptor : public AudioPortAdapterStrategy {
  public:
+    /**
+     * @brief Constructor.
+     * @param tx_peripheral SAI_HandleTypeDef type peripheral for TX. This is defined in main.c.
+     * @param rx_peripheral SAI_HandleTypeDef type peripheral for RX. This is defined in main.c.
+     * @details
+     * Receives handle of the SAI block peripherals.
+     *
+     * SAI has two block internally.
+     * This class assumes one is the TX and the other is RX.
+     * In case of a programmer use SAI as simplex audio, the unused block must be passed as nullptr.
+     */
     SaiPortAdaptor(
-                    SAI_HandleTypeDef * tx_peripheral,
-                    SAI_HandleTypeDef * rx_peripheral
-                    );
+                   SAI_HandleTypeDef *tx_peripheral,
+                   SAI_HandleTypeDef *rx_peripheral
+                   );
 
     virtual ~SaiPortAdaptor();
 
@@ -30,7 +53,7 @@ class SaiPortAdaptor : public AudioPortAdapterStrategy {
      * once after it starts.
      */
     virtual void StartTransferTx(
-                                 uint8_t * tx_buffer,
+                                 uint8_t *tx_buffer,
                                  unsigned int channel_len
                                  );
 
@@ -42,7 +65,7 @@ class SaiPortAdaptor : public AudioPortAdapterStrategy {
      * once after it starts.
      */
     virtual void StartTransferRx(
-                                 uint8_t * rx_buffer,
+                                 uint8_t *rx_buffer,
                                  unsigned int channel_len
                                  );
     /**
@@ -83,7 +106,7 @@ class SaiPortAdaptor : public AudioPortAdapterStrategy {
      *
      * The error handling is depend on the implementation.
      */
-    virtual bool HandleError(void * ptr);
+    virtual bool HandleError(void *ptr);
     /**
      * @details Check if peripheral handle matched with given handle.
      * @param peripheral_handle
@@ -94,21 +117,21 @@ class SaiPortAdaptor : public AudioPortAdapterStrategy {
      *
      * TX is checked only when, RX is nullptr.
      */
-    virtual bool Match(void * peripheral_handle);
+    virtual bool Match(void *peripheral_handle);
 
     /**
      * @brief pass the raw peripheral handler
      * @return pointer to the raw peripheral handler hidden in a class.
      */
-    virtual void * GetPeripheralHandle();
+    virtual void* GetPeripheralHandle();
 
  private:
-    SAI_HandleTypeDef * const tx_peripheral_;
-    SAI_HandleTypeDef * const rx_peripheral_;
+    SAI_HandleTypeDef *const tx_peripheral_;
+    SAI_HandleTypeDef *const rx_peripheral_;
 };
 #endif // HAL_SAI_MODULE_ENABLED
 
 }
 /* namespace murasaki */
 
-#endif /* SAIAUDIOADAPTOR_HPP_ */
+#endif /* SAIPORTADAPTOR_HPP_ */
