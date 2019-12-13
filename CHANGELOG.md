@@ -45,6 +45,7 @@ Note that issue #46, #56 and #77 made incompatibility from the past code.
 - [Issue 79 : The core clock counter initialization have to be moved.](https://github.com/suikan4github/murasaki/issues/79)
 - [Issue 80 : The sample peripheral name of the template has camel format](https://github.com/suikan4github/murasaki/issues/80)
 - [Issue 81 : DuplexAudio::DMACallback() should use match()](https://github.com/suikan4github/murasaki/issues/81)
+- [Issue 83 : Refactoring request of template. ](https://github.com/suikan4github/murasaki/issues/83)
 
 ### Security
 ### Known Issue
