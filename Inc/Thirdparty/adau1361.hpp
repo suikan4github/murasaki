@@ -85,6 +85,20 @@ class Adau1361 : public AudioCodecStrategy {
      *   The CODEC is configured as master mode. That mean, bclk and WS are given from ADAU1361 to the micro processor.
      */
     virtual void Start(void);
+    /**
+     * @brief Set channel gain
+     * @param channel
+     * @param left_gain
+     * @param right_gain
+     */
+    virtual void SetGain(murasaki::CodecChannel channel, float left_gain, float right_gain);
+
+    /**
+     * @brief Mute the specific channel.
+     * @param channel Channel to mute on / off
+     * @param mute On if true, off if false.
+     */
+    virtual void Mute(murasaki::CodecChannel channel, bool mute = true);
 
     /**
      * \brief Set the line input gain and enable the relevant mixer.
@@ -163,6 +177,23 @@ class Adau1361 : public AudioCodecStrategy {
     const unsigned int master_clock_;
     murasaki::I2CMasterStrategy * const i2c_;
     const unsigned int device_addr_;
+
+    float line_input_left_gain_;
+    float line_input_right_gain_;
+    float mic_input_left_gain_;
+    float mic_input_right_gain_;
+    float aux_input_left_gain_;
+    float aux_input_right_gain_;
+    float line_output_left_gain_;
+    float line_output_right_gain_;
+    float hp_output_left_gain_;     // headphone
+    float hp_output_right_gain_;
+
+    bool line_input_mute_;
+    bool mic_input_mute_;
+    bool aux_input_mute_;
+    bool line_output_mute_;
+    bool hp_output_mute_;        // headphone
 
     /**
      * \brief wait until PLL locks.

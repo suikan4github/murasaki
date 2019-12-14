@@ -229,6 +229,21 @@ enum UartTimeout
 };
 
 /**
+ * @brief Codec channel specifiler
+ * @details
+ * Codec channels are codec dependent.
+ * Thus, channels are not hard coded as member function, but coded as parameter of the member function.
+ */
+enum CodecChannel {
+    kccLineInput,  //!< kccLineInput
+    kccMicInput,  //!< kccMicInput Microphone Input
+    kccAuxInput,  //!< kccAuxInput Auxiliary Input
+    kccLineOutput,  //!< kccLineOutput
+    kccHeadphoneOutput   //!< kccHpOutput Headphone Output
+
+};
+
+/**
  * @brief Task class dedicated priority
  * @details
  * The task class priority have to be speicified by this enum class.

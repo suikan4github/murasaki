@@ -8,6 +8,8 @@
 #ifndef AUDIO_CODEC_STRATEGY_HPP_
 #define AUDIO_CODEC_STRATEGY_HPP_
 
+#include <murasaki_defs.hpp>
+
 namespace murasaki {
 
 /**
@@ -43,6 +45,20 @@ class AudioCodecStrategy
      */
     virtual void Start(void)=0;
 
+    /**
+     * @brief Set channel gain
+     * @param channel
+     * @param left_gain
+     * @param right_gain
+     */
+    virtual void SetGain(murasaki::CodecChannel channel, float left_gain, float right_gain) = 0;
+
+    /**
+     * @brief Mute the specific channel.
+     * @param channel Channel to mute on / off
+     * @param mute On if true, off if false.
+     */
+    virtual void Mute(murasaki::CodecChannel channel, bool mute = true) = 0;
     /**
      * \brief Set the line input gain and enable the relevant mixer.
      * \param left_gain Gain by dB. The gain value outside of the acceptable range will be saturated.
