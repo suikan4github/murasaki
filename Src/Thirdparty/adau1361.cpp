@@ -735,16 +735,106 @@ void Adau1361::Start(void) {
                      config_UMB_ADAU1361A,
                      sizeof(config_UMB_ADAU1361A) / 3);  // init UMB-ADAU1361 as default state.
 
-    // set line input gain as 0.0dB
-    // set all other input/output as muted.
-    SetLineInputGain(0, 0);  // unmute
-    SetAuxInputGain(0, 0, true);  // mute
-    SetMicInputGain(0, 0, true);  // mute
-    SetLineOutputGain(0, 0, true);  // mute
-    SetHpOutputGain(0, 0, true);  // mute
+    // Before calling mute() function, set the gain as appropriate value.
+    // The value is not problem if it is in the appropriate range.
+    // This value is not be able to set by SetGain() member function, because at this moment,
+    // Mute is not clealy specified.
+    line_input_left_gain_ = 0.0;
+    line_input_right_gain_ = 0.0;
+    aux_input_left_gain_ = 0.0;
+    aux_input_right_gain_ = 0.0;
+    line_output_left_gain_ = 0.0;
+    line_output_right_gain_ = 0.0;
+    hp_output_left_gain_ = 0.0;     // headphone
+    hp_output_right_gain_ = 0.0;
+    
+    // Mute all channels.
+    Mute(murasaki::kccLineInput);
+    Mute(murasaki::kccAuxInput);
+    Mute(murasaki::kccLineOutput);
+    Mute(murasaki::kccHeadphoneOutput);
+
 
     CODEC_SYSLOG("Leave.")
 }
+
+/*
+ * Set gain of the specific input channel.
+ * The mute status is not affected.
+ */
+void Adau1361::SetGain(murasaki::CodecChannel channel, float left_gain, float right_gain) {
+
+    CODEC_SYSLOG("Enter. %d, %f, %f ", channel, left_gain, right_gain)
+
+    switch (channel)
+    {
+        case murasaki::kccLineInput:
+            line_input_left_gain_ = left_gain;
+            line_input_right_gain_ = right_gain;
+            SetLineInputGain(line_input_left_gain_, line_input_right_gain_, line_input_mute_);
+            break;
+        case murasaki::kccAuxInput:
+            aux_input_left_gain_ = left_gain;
+            aux_input_right_gain_ = right_gain;
+            SetAuxInputGain(aux_input_left_gain_, aux_input_right_gain_, aux_input_mute_);
+            break;
+        case murasaki::kccLineOutput:
+            line_output_left_gain_ = left_gain;
+            line_output_right_gain_ = right_gain;
+            SetLineOutputGain(line_output_left_gain_, line_output_right_gain_, line_output_mute_);
+            break;
+
+        case murasaki::kccHeadphoneOutput:
+            hp_output_left_gain_ = left_gain;
+            hp_output_right_gain_ = right_gain;
+            SetHpOutputGain(hp_output_left_gain_, hp_output_right_gain_, hp_output_mute_);
+            break;
+        default:
+            MURASAKI_SYSLOG(this, kfaAudioCodec, kseCritical, "Unknown value in parameter channel : %d ", channel)
+            MURASAKI_ASSERT(false)
+            break;
+    }
+    CODEC_SYSLOG("Leave.")
+}
+
+/*
+ * Set mute status of specific channels.
+ * Channel gains are not affected.
+ */
+void Adau1361::Mute(murasaki::CodecChannel channel, bool mute) {
+
+    CODEC_SYSLOG("Enter. %d, %s ", channel, mute ? "true" : "false")
+
+    switch (channel)
+    {
+        case murasaki::kccLineInput:
+            line_input_mute_ = mute;
+            SetLineInputGain(line_input_left_gain_, line_input_right_gain_, line_input_mute_);
+            break;
+        case murasaki::kccAuxInput:
+            aux_input_mute_ = mute;
+            SetAuxInputGain(aux_input_left_gain_, aux_input_right_gain_, aux_input_mute_);
+            break;
+        case murasaki::kccLineOutput:
+            line_output_mute_ = mute;
+            SetLineOutputGain(line_output_left_gain_, line_output_right_gain_, line_output_mute_);
+            break;
+
+        case murasaki::kccHeadphoneOutput:
+            hp_output_mute_ = mute;
+            SetHpOutputGain(hp_output_left_gain_, hp_output_right_gain_, hp_output_mute_);
+            break;
+        default:
+            MURASAKI_SYSLOG(this, kfaAudioCodec, kseCritical, "Unknown value in parameter channel : %d ", channel)
+            MURASAKI_ASSERT(false)
+        break;
+    }
+    CODEC_SYSLOG("Leave.")
+}
+
+
+
+
 
 #define DATA 2  /* data payload of register */
 #define ADDL 1  /* lower address of register */
@@ -1057,5 +1147,6 @@ void Adau1361::SetHpOutputGain(
 }
 
 } /* namespace murasaki */
+
 
 #endif //  HAL_I2C_MODULE_ENABLED

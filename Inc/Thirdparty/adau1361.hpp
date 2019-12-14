@@ -83,56 +83,32 @@ class Adau1361 : public AudioCodecStrategy {
      *   specifies to do it. The positive in and diff in are killed. All biases are set as "normal".
      *
      *   The CODEC is configured as master mode. That mean, bclk and WS are given from ADAU1361 to the micro processor.
+     *
+     *   At initial state, ADAU1361 is set as :
+     *   @li All input and output channels are set as 0.0dB and muted.
      */
     virtual void Start(void);
+    /**
+     * @brief Set channel gain
+     * @param channel CODEC input output channels like line-in, line-out, aux-in, headphone-out
+     * @param left_gain Gain by dB. [6 .. -12],  The gain value outside of the acceptable range will be saturated.
+     * @param right_gain Gain by dB. [6 .. -12],  The gain value outside of the acceptable range will be saturated.
+     */
+    virtual void SetGain(
+                         murasaki::CodecChannel channel,
+                         float left_gain,
+                         float right_gain);
 
     /**
-     * \brief Set the line input gain and enable the relevant mixer.
-     * \param left_gain Gain by dB. [6 .. -12],  The gain value outside of the acceptable range will be saturated.
-     * \param right_gain Gain by dB. [6 .. -12], The gain value outside of the acceptable range will be saturated.
-     * \param mute set true to mute
-     * \details
-     *   As same as start(), this gain control function uses the single-end negative input only. Other
-     *   input signal of the line in like positive signal or diff signal are killed.
-     *
-     *   Other input line like aux are not killed. To kill it, user have to mute them explicitly.
+     * @brief Mute the specific channel.
+     * @param channel Channel to mute on / off
+     * @param mute On if true, off if false.
      */
-    virtual void SetLineInputGain(float left_gain, float right_gain,
-                                  bool mute = false);
+    virtual void Mute(
+                      murasaki::CodecChannel channel,
+                      bool mute = true);
 
-    /**
-     * \brief Set the aux input gain and enable the relevant mixer.
-     * \param left_gain Gain by dB. [6 .. -12], The gain value outside of the acceptable range will be saturated.
-     * \param right_gain Gain by dB. [6 .. -12], The gain value outside of the acceptable range will be saturated.
-     * \param mute set true to mute
-     * \details
-     *   Other input lines are not killed. To kill it, user have to mute them explicitly.
-     */
-    virtual void SetAuxInputGain(float left_gain, float right_gain,
-                                 bool mute = false);
 
-    /**
-     * \brief Set the line output gain and enable the relevant mixer.
-     * \param left_gain Gain by dB. [6 .. -12], The gain value outside of the acceptable range will be saturated.
-     * \param right_gain Gain by dB. [6 .. -12], The gain value outside of the acceptable range will be saturated.
-     * \param mute set true to mute
-     * \details
-     *   Other output lines are not killed. To kill it, user have to mute them explicitly.
-     *
-     */
-    virtual void SetLineOutputGain(float left_gain, float right_gain,
-                                   bool mute = false);
-
-    /**
-     * \brief Set the headphone output gain and enable the relevant mixer.
-     * \param left_gain Gain by dB. [6 .. -12], The gain value outside of the acceptable range will be saturated.
-     * \param right_gain Gain by dB. [6 .. -12], The gain value outside of the acceptable range will be saturated.
-     * \param mute set true to mute
-     * \details
-     *   Other out line like line in are not killed. To kill it, user have to mute them explicitly.
-     */
-    virtual void SetHpOutputGain(float left_gain, float right_gain,
-                                 bool mute = false);
     /**
      *  Service function for the ADAu1361 board implementer.
      *
@@ -146,23 +122,28 @@ class Adau1361 : public AudioCodecStrategy {
      *  \li command[1] : LSB of the register address.
      *  \li command[2] : Value to right the register.
      */
-    virtual void SendCommand(const uint8_t command[], int size);
-    /**
-     * \brief send one command to ADAU1361.
-     * \param table command table. All commands are stored in one row. Each row has only 1 byte data after reg address.
-     * \param rows number of the rows in the table.
-     * \details
-     *   Service function for the ADAu1361 board implementer.
-     *
-     *   Send a list of command to ADAU1361. All commands has 3 bytes length. That mean, after two byte register
-     *   address, only 1 byte data pay load is allowed. Commadns are sent by I2C
-     */
-    virtual void SendCommandTable(const uint8_t table[][3], int rows);
+    virtual void SendCommand(
+                             const uint8_t command[],
+                             int size);
 
  protected:
     const unsigned int master_clock_;
     murasaki::I2CMasterStrategy * const i2c_;
     const unsigned int device_addr_;
+
+    float line_input_left_gain_;
+    float line_input_right_gain_;
+    float aux_input_left_gain_;
+    float aux_input_right_gain_;
+    float line_output_left_gain_;
+    float line_output_right_gain_;
+    float hp_output_left_gain_;     // headphone
+    float hp_output_right_gain_;
+
+    bool line_input_mute_;
+    bool aux_input_mute_;
+    bool line_output_mute_;
+    bool hp_output_mute_;        // headphone
 
     /**
      * \brief wait until PLL locks.
@@ -179,7 +160,74 @@ class Adau1361 : public AudioCodecStrategy {
      * Then, setup the Converter sampling rate.
      */
     virtual void ConfigurePll(void);
+    /**
+     * \brief Set the line input gain and enable the relevant mixer.
+     * \param left_gain Gain by dB. [6 .. -12],  The gain value outside of the acceptable range will be saturated.
+     * \param right_gain Gain by dB. [6 .. -12], The gain value outside of the acceptable range will be saturated.
+     * \param mute set true to mute
+     * \details
+     *   As same as start(), this gain control function uses the single-end negative input only. Other
+     *   input signal of the line in like positive signal or diff signal are killed.
+     *
+     *   Other input line like aux are not killed. To kill it, user have to mute them explicitly.
+     */
+    virtual void SetLineInputGain(
+                                  float left_gain,
+                                  float right_gain,
+                                  bool mute = false);
 
+    /**
+     * \brief Set the aux input gain and enable the relevant mixer.
+     * \param left_gain Gain by dB. [6 .. -12], The gain value outside of the acceptable range will be saturated.
+     * \param right_gain Gain by dB. [6 .. -12], The gain value outside of the acceptable range will be saturated.
+     * \param mute set true to mute
+     * \details
+     *   Other input lines are not killed. To kill it, user have to mute them explicitly.
+     */
+    virtual void SetAuxInputGain(
+                                 float left_gain,
+                                 float right_gain,
+                                 bool mute = false);
+
+    /**
+     * \brief Set the line output gain and enable the relevant mixer.
+     * \param left_gain Gain by dB. [6 .. -12], The gain value outside of the acceptable range will be saturated.
+     * \param right_gain Gain by dB. [6 .. -12], The gain value outside of the acceptable range will be saturated.
+     * \param mute set true to mute
+     * \details
+     *   Other output lines are not killed. To kill it, user have to mute them explicitly.
+     *
+     */
+    virtual void SetLineOutputGain(
+                                   float left_gain,
+                                   float right_gain,
+                                   bool mute = false);
+
+    /**
+     * \brief Set the headphone output gain and enable the relevant mixer.
+     * \param left_gain Gain by dB. [6 .. -12], The gain value outside of the acceptable range will be saturated.
+     * \param right_gain Gain by dB. [6 .. -12], The gain value outside of the acceptable range will be saturated.
+     * \param mute set true to mute
+     * \details
+     *   Other out line like line in are not killed. To kill it, user have to mute them explicitly.
+     */
+    virtual void SetHpOutputGain(
+                                 float left_gain,
+                                 float right_gain,
+                                 bool mute = false);
+    /**
+     * \brief send one command to ADAU1361.
+     * \param table command table. All commands are stored in one row. Each row has only 1 byte data after reg address.
+     * \param rows number of the rows in the table.
+     * \details
+     *   Service function for the ADAu1361 board implementer.
+     *
+     *   Send a list of command to ADAU1361. All commands has 3 bytes length. That mean, after two byte register
+     *   address, only 1 byte data pay load is allowed. Commadns are sent by I2C
+     */
+    virtual void SendCommandTable(
+                                  const uint8_t table[][3],
+                                  int rows);
 };
 
 } /* namespace murasaki */
