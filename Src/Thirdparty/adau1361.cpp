@@ -741,8 +741,6 @@ void Adau1361::Start(void) {
     // Mute is not clealy specified.
     line_input_left_gain_ = 0.0;
     line_input_right_gain_ = 0.0;
-    mic_input_left_gain_ = 0.0;
-    mic_input_right_gain_ = 0.0;
     aux_input_left_gain_ = 0.0;
     aux_input_right_gain_ = 0.0;
     line_output_left_gain_ = 0.0;
@@ -752,18 +750,10 @@ void Adau1361::Start(void) {
     
     // Mute all channels.
     Mute(murasaki::kccLineInput);
-    Mute(murasaki::kccMicInput);
     Mute(murasaki::kccAuxInput);
     Mute(murasaki::kccLineOutput);
     Mute(murasaki::kccHeadphoneOutput);
 
-    // set line input gain as 0.0dB
-    // set all other input/output as muted.
-    SetLineInputGain(0, 0);  // unmute
-    SetAuxInputGain(0, 0, true);  // mute
-    SetMicInputGain(0, 0, true);  // mute
-    SetLineOutputGain(0, 0, true);  // mute
-    SetHpOutputGain(0, 0, true);  // mute
 
     CODEC_SYSLOG("Leave.")
 }
@@ -782,11 +772,6 @@ void Adau1361::SetGain(murasaki::CodecChannel channel, float left_gain, float ri
             line_input_left_gain_ = left_gain;
             line_input_right_gain_ = right_gain;
             SetLineInputGain(line_input_left_gain_, line_input_right_gain_, line_input_mute_);
-            break;
-        case murasaki::kccMicInput:
-            mic_input_left_gain_ = left_gain;
-            mic_input_right_gain_ = right_gain;
-            SetMicInputGain(mic_input_left_gain_, mic_input_right_gain_, mic_input_mute_);
             break;
         case murasaki::kccAuxInput:
             aux_input_left_gain_ = left_gain;
@@ -825,10 +810,6 @@ void Adau1361::Mute(murasaki::CodecChannel channel, bool mute) {
         case murasaki::kccLineInput:
             line_input_mute_ = mute;
             SetLineInputGain(line_input_left_gain_, line_input_right_gain_, line_input_mute_);
-            break;
-        case murasaki::kccMicInput:
-            mic_input_mute_ = mute;
-            SetMicInputGain(mic_input_left_gain_, mic_input_right_gain_, mic_input_mute_);
             break;
         case murasaki::kccAuxInput:
             aux_input_mute_ = mute;
