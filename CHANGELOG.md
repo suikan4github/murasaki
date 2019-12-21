@@ -47,6 +47,7 @@ Note that issue #46, #56 and #77 made incompatibility from the past code.
 - [Issue 81 : DuplexAudio::DMACallback() should use match()](https://github.com/suikan4github/murasaki/issues/81)
 - [Issue 83 : Refactoring request of template. ](https://github.com/suikan4github/murasaki/issues/83)
 - [Issue 84 : Change CODEC interface. ](https://github.com/suikan4github/murasaki/issues/84)
+- [Issue 85 : Build failure for STM32F091 ](https://github.com/suikan4github/murasaki/issues/85)
 
 ### Security
 ### Known Issue
