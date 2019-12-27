@@ -772,6 +772,7 @@ WARN_LOGFILE           =
 # Note: If this tag is empty the current directory is searched.
 
 INPUT                  = ../Inc \
+                         ../Inc/Thirdparty \
                          ../../Inc \
                          ../../Core/Inc \
                          ../Src \
