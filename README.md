@@ -51,6 +51,8 @@ In addition to the above peripheral, a set of classes serve the following functi
 
 You can find a set of the sample in the [murasaki_samples](https://github.com/suikan4github/murasaki_samples) project.
 
+The API documentation can be found in murasaki/doc directory. Also, related coumentation can be found in the [project wiki](wiki).
+
 ## Sample
 With the Murasaki library, the STM32Cube HAL IO becomes easy to write.
 
