@@ -1,10 +1,22 @@
 # Change log
 Record of the modification in project development.
 
-Note that issue #46, #56 and #77 made incompatibility from the past code. 
-
 ## [Unreleased]
+### Added
+### Changed
+### Deprecated
+### Removed
+### Fixed
+### Security
+### Known Issue
+- The SPI slave transfer is not tested.
 
+## [1.0.0] - 2019-12-31
+Large release. 
+- Added DuplexAudio to support audio in-out.
+- Performance is drastically incresed by fixing bug of the Syncronizer class.
+
+Note that issue #46, #56 and #77 made incompatibility from the past code. 
 ### Added
 - [Issue 22 : Add Stereo Audio Class](https://github.com/suikan4github/murasaki/issues/22)
 - [Issue 42 : Print the context information on the hard fault.](https://github.com/suikan4github/murasaki/issues/42)
@@ -154,7 +166,8 @@ Major change at the MURASAKI_ASSERTION to enforce the hard fault. This makes deb
 ### Fixed
 ### Security
 
-[Unreleased]: https://github.com/suikan4github/murasaki/compare/v0.4.0...develop
+[Unreleased]: https://github.com/suikan4github/murasaki/compare/v1.0.0...develop
+[1.0.0]: https://github.com/suikan4github/murasaki/compare/v0.4.0...v1.0.0
 [0.4.0]: https://github.com/suikan4github/murasaki/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/suikan4github/murasaki/compare/v0.2.1...v0.3.0
 [0.2.1]: https://github.com/suikan4github/murasaki/compare/v0.2.0...v0.2.1
