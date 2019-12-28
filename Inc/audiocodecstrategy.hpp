@@ -63,6 +63,7 @@ class AudioCodecStrategy
      *
      * \brief send one command to CODEC
      * \param command command data array.
+     * \param size command length by [byte].
      * \details
      */
     virtual void SendCommand(const uint8_t command[], int size) = 0;

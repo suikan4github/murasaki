@@ -15,7 +15,7 @@
  * \details
  *
  * \li <a href="http://www.st.com/en/evaluation-tools/nucleo-f722ze.html">Nucleo F722ZE ( STM32F722ZE : Cortex-M7 )</a>
- * \li <a href="https://www.st.com/ja/development-tools/stm32cubeide.html">STM32CubeIDE 1.1.0</a>
+ * \li <a href="https://www.st.com/en/development-tools/stm32cubeide.html">STM32CubeIDE 1.1.0</a>
  * \li <a href="http://releases.ubuntu.com/16.04/">Ubuntu 16.04 (64bit)</a>
  *
  * And then, confirmed portability with following boards :
