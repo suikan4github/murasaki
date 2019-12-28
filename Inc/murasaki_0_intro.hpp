@@ -115,7 +115,7 @@
  * As a result, the wrong context, wrong parameter, etc will be reported to the debugger output.
  *
  * \page intro_sec7 System Logging
- * \brief \ref MURASAKI_S3YSLOG provides the message output based on the level and filtering.
+ * \brief \ref MURASAKI_SYSLOG provides the message output based on the level and filtering.
  * This mechanism is intended to help the Murasaki library development. But also application
  * can use this mechanism.
  *

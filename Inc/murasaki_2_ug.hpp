@@ -696,7 +696,6 @@
  * The Debug build made unexpected stack frame in the entry code
  * of the HardFaultHandler.
  *
- * @endcode
  */
 
 /**

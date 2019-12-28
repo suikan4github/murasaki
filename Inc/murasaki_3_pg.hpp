@@ -369,7 +369,7 @@
  * @endcode
  *
  *
- * In this sample, we initialize the uart_console member variable which is @ref UartStrategy class.
+ * In this sample, we initialize the uart_console member variable which is @ref murasaki::UartStrategy class.
  * The application programmer control the UART2 over this uart_console member variable.
  *
  * In the second step, we pass this uart_cosole to the logger member variable.
