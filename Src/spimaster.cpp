@@ -12,7 +12,7 @@
 // Macro for easy-to-read
 #define SPIM_SYSLOG(fmt, ...)    MURASAKI_SYSLOG(kfaSpiMaster, kseDebug, fmt, ##__VA_ARGS__)
 
-// Check if CubeMX generated SPI Module
+// Check if CubeIDE generated SPI Module
 #ifdef HAL_SPI_MODULE_ENABLED
 
 namespace murasaki {
@@ -46,7 +46,7 @@ SpiStatus SpiMaster::TransmitAndReceive(murasaki::SpiSlaveAdapterStrategy* spi_s
                          const uint8_t* tx_data,
                          uint8_t* rx_data,
                          unsigned int size,
-                         murasaki::WaitMilliSeconds timeout_ms)
+                         unsigned int timeout_ms)
 {
 
     SPIM_SYSLOG("Enter");
@@ -186,7 +186,7 @@ bool SpiMaster::HandleError(void* ptr)
 
     MURASAKI_ASSERT(nullptr != ptr)
 
-    if (peripheral_ == ptr) {
+    if (this->Match(ptr)) {
 
         // Check error and halde it.
         if (peripheral_->ErrorCode & HAL_SPI_ERROR_CRC) {

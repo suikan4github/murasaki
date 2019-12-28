@@ -41,7 +41,7 @@ class SpiSlaveAdapter : public SpiSlaveAdapterStrategy
      * @param pin GPIO pin of the chip select
      * @details
      * The port and pin parameters are passed to the HAL_GPIO_WritePin().
-     * The port and pin have to be configured by CubeMX correctly.
+     * The port and pin have to be configured by CubeIDE correctly.
      *
      */
     SpiSlaveAdapter(murasaki::SpiClockPolarity pol, murasaki::SpiClockPhase pha, ::GPIO_TypeDef * port, uint16_t pin);
@@ -53,7 +53,7 @@ class SpiSlaveAdapter : public SpiSlaveAdapterStrategy
      * @param pin GPIO pin of the chip select
      * @details
      * The port and pin parameters are passed to the HAL_GPIO_WritePin().
-     * The port and pin have to be configured by CubeMX correctly.
+     * The port and pin have to be configured by CubeIDE correctly.
      */
     SpiSlaveAdapter(unsigned int pol, unsigned int pha, ::GPIO_TypeDef * const port, uint16_t pin);
     /**

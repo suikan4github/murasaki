@@ -16,7 +16,7 @@ namespace murasaki {
 /**
  * \brief Root class of the SPI slave
  * \details
- * This class provides a thread safe, blocking SPI transfer.
+ * This class provides a thread safe, synchronous SPI transfer.
  *
  * \ingroup MURASAKI_ABSTRACT_GROUP
  */
@@ -24,7 +24,7 @@ class SpiSlaveStrategy : public murasaki::PeripheralStrategy
 {
  public:
     /**
-     * @brief Thread safe, blocking SPI transfer
+     * @brief Thread safe, synchronous SPI transfer
      * @param tx_data Data to be transmitted
      * @param rx_data Data buffer to receive data
      * @param size Transfer data size [byte] for each way. Must be smaller than 65536
@@ -37,7 +37,7 @@ class SpiSlaveStrategy : public murasaki::PeripheralStrategy
                                          uint8_t * rx_data,
                                          unsigned int size,
                                          unsigned int * transfered_count = nullptr,
-                                         murasaki::WaitMilliSeconds timeout_ms = murasaki::kwmsIndefinitely)=0;
+                                         unsigned int timeout_ms = murasaki::kwmsIndefinitely)=0;
     /**
      * @brief Callback to notifiy the end of transfer
      * @param ptr Pointer to the control object.

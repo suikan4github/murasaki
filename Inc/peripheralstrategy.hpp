@@ -23,18 +23,29 @@ namespace murasaki {
  * raw peripheral handler to loggers, while keep it hidden from the application.
  */
 class PeripheralStrategy {
-public:
-	/**
-	 * @brief destructor
-	 */
-	virtual ~PeripheralStrategy(){};
-private:
-	/**
-	 * @brief pass the raw peripheral handler
-	 * @return pointer to the raw peripheral handler hidden in a class.
-	 */
-	virtual void * GetPeripheralHandle()=0;
-friend class LoggerStrategy;
+ public:
+    /**
+     * @brief destructor
+     */
+    virtual ~PeripheralStrategy() {
+    }
+
+    /**
+     * @details Check if peripheral handle matched with given handle.
+     * @param peripheral_handle
+     * @return true if match, false if not match.
+     */
+    virtual bool Match(void * peripheral_handle) {
+        return GetPeripheralHandle() == peripheral_handle;
+    }
+
+ protected:
+    /**
+     * @brief pass the raw peripheral handler
+     * @return pointer to the raw peripheral handler hidden in a class.
+     */
+    virtual void * GetPeripheralHandle()=0;
+    friend class LoggerStrategy;
 };
 
 } /* namespace murasaki */

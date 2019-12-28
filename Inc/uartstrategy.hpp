@@ -25,7 +25,7 @@ namespace murasaki {
  * UART peripheral.
  *
  * This prototype assumes the derived class will transmit / receive data in the
- * task context on RTOS. And both method should be blocking. That men, until the transmit / receve
+ * task context on RTOS. And both method should be synchronous. That men, until the transmit / receve
  * terminates, both method doesn't return.
  *
  * Two call back methods are prepared to sync with the interrutp which tells the end of
@@ -33,14 +33,14 @@ namespace murasaki {
  */
 
 class UartStrategy : public murasaki::PeripheralStrategy {
-public:
+ public:
 
     /**
      * \brief Set the behavior of the hardware flow control
      * \param control The control mode.
      */
     virtual void SetHardwareFlowControl(UartHardwareFlowControl control)
-    {
+                                        {
     }
     ;
     /**
@@ -48,11 +48,11 @@ public:
      * @param speed BAUD rate ( 110, 300, ... 9600,... )
      */
     virtual void SetSpeed(unsigned int speed)
-    {
+                          {
     }
     ;
     /**
-     * \brief buffer transmission over the UART. Blocking
+     * \brief buffer transmission over the UART. synchronous
      * \param data Pointer to the buffer to be sent.
      * \param size Number of the data to be sent.
      * \param timeout_ms Time out by mili Second.
@@ -61,9 +61,9 @@ public:
     virtual murasaki::UartStatus Transmit(
                                           const uint8_t * data,
                                           unsigned int size,
-                                          WaitMilliSeconds timeout_ms = murasaki::kwmsIndefinitely) = 0;
+                                          unsigned int timeout_ms = murasaki::kwmsIndefinitely) = 0;
     /**
-     * \brief buffer receive over the UART. Blocking
+     * \brief buffer receive over the UART. synchronous
      * \param data Pointer to the buffer to save the received data.
      * \param size Number of the data to be received.
      * \param transfered_count Number of bytes transfered. The nullPtr means no need to return value.
@@ -76,7 +76,7 @@ public:
                                          unsigned int size,
                                          unsigned int * transfered_count = nullptr,
                                          UartTimeout uart_timeout = murasaki::kutNoIdleTimeout,
-                                         WaitMilliSeconds timeout_ms = murasaki::kwmsIndefinitely) = 0;
+                                         unsigned int timeout_ms = murasaki::kwmsIndefinitely) = 0;
     /**
      * \brief Call back to be called notify the transfer is complete.
      * \param ptr Pointer for generic use. Usually, points a struct of a UART device control

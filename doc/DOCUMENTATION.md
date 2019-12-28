@@ -2,17 +2,17 @@
 
 To generate the doxygen documents, there are two way.
 
-- Generate the document from SW4STM32
+- Generate the document from CubeIDE
 - Generate the document from Ubuntu terminal window
 
 ## Generate the document from SW4STM32
 
-Be sure the SW4STM32 is installed, and the murasaki project ( this
+Be sure the CubeIDE is installed, and the murasaki project ( above this
 directory ) is imported to the workspace.
 
  1. From the menu bar, choose Help->Eclipse Market place...
  1. From the Find input control, type "eclox", then type return.
- 1. Install the eclox, including doxygen binary.
+ 1. Install the eclox, including doxygen binary. Follow the procedure. 
  1. Choose the murasaki project and right click.
  1. From the context menu, do the Build Documentation.
 

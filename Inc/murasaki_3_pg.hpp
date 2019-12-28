@@ -11,11 +11,13 @@
 
 /**
  * \page murasaki_pg Porting guide
- * \brief This porting guide introduces murasaki class library porting step by step.
+ * \brief This porting guide introduces murasaki class library porting.
  * \details
  *
  * In this guide, user will study the library porting to the STM32 microcomputer
  * system working with STM32Cube HAL.
+ *
+ * A step by step procedure with screen capture is explained in  <a href="https://github.com/suikan4github/murasaki/wiki/Step-by-Step-Porting-Guide-for-Murasaki">a separated document</a>.
  *
  * Followings are the contents of this porting guide :
  *
@@ -37,7 +39,6 @@
  *
  */
 
-
 /**
  * \page murasaki_pg_directory Directory Structure
  * \brief Murasaki has four main directory and several user-modifiable files.
@@ -55,11 +56,9 @@
  * This directory contains the include files, the project setting must
  * refer this directory as an include directory.
  *
- * \section sec_ds_1_5 Src-tp and Inc-tp directory
+ * \section sec_ds_1_5 Src/Thirdparty and Inc/Thirdparty directory
  * The class collection of the third party peripherals. The "third party" means, the
  * outside of the microprocessor.
- *
- * Currently these directories are not utilized.
  *
  * \section sec_ds_2 murasaki.hpp
  * Usually, the \ref murasaki.hpp include file is the only one to include from an application program.
@@ -134,11 +133,9 @@
  * Last one is little tricky to do it manually. Refer @ref murasaki_include_stub.h for details.
  */
 
-
-
 /**
- * \page murasaki_pg_cubemx CubeMX setting
- * \brief There is several required CubeMX setting.
+ * \page murasaki_pg_cubemx CubeIDE setting
+ * \brief There is several required CubeIDE setting.
  * \details
  *
  * \li @subpage sec_cm_1
@@ -173,8 +170,8 @@
  * So, in murasaki, the new and the delete operators are overloaded and redirected to the FreeRTOS heap.
  * See @ref murasaki_pg_heap for detail.
  *
- * To avoid the heap allocation problem, it is better to have more than 8kB FreeRTOS heap.
- * The FreeRTOS heap size can be changed by CubeMX :
+ * To avoid the heap allocation problem, it is better to have more than 16kB FreeRTOS heap.
+ * The FreeRTOS heap size can be changed by CubeIDE :
  * @code
  * Tab => Pinout & Configuration => Middleware => FreeRTOS => Config Parameters Tab => TOTAL_HEAP_SIZE
  * @endcode
@@ -202,7 +199,7 @@
  *
  * The debugging in the ISR is not easy without assertion and printf().
  * To make them always possible, it is better to set the interrupt stack size bigger than 256 Bytes.
- * The interrupt stack size can be changed by CubeMX :
+ * The interrupt stack size can be changed by CubeIDE :
  * @code
  * Tab => Project Manager => Code Generator => Linker Settings
  * @endcode
@@ -214,7 +211,7 @@
  * This is not enough to use murasaki and its debugger output functionality.
  * It should be increased at smallest 256 Bytes.
  *
- * It can be changed by CubeMX:
+ * It can be changed by CubeIDE:
  * @code
  * Tab => Pinout & Configuration => Middleware => FreeRTOS => Config Parameters Tab => MINIMAL_STACK_SIZE
  *
@@ -226,21 +223,21 @@
  *
  * The DMA have to be enabled for both TX and RX. Both DMA must be normal mode.
  *
- * All i3 of the NVIC interrupt have to be enabled.
+ * All the NVIC interrupts have to be enabled.
  *
  * @page sec_cm_5 SPI Master peripheral
  * @brief SPI Master peripheral have to be configured as Full-Duplex Master mode.  The NSS must be disabled.
  *
  * The DMA have to be enabled for both TX and RX. Both DMA must be normal mode.
  *
- * All 3 of the NVIC interrupt have to be enabled.
+ * All the NVIC interrupt have to be enabled.
  *
  * @page sec_cm_6 SPI Slave peripheral
  * @brief SPI Slave peripheral have to be configured as Full-Duplex Slave mode.  The NSS must be input signal.
  *
  * The DMA have to be enabled for both TX and RX. Both DMA must be normal mode.
  *
- * All 3 of the NVIC interrupt have to be enabled.
+ * All the NVIC interrupt have to be enabled.
  *
  * @page sec_cm_7 I2C peripheral
  * @brief I2C have to be configured as "I2" mode.
@@ -274,15 +271,13 @@
 
 /**
  * @page murasaki_pg_task_priority_and_stack Task Priority and Stack Size
- * @brief The FreeRTOS task priority is allowed from 1 to configMAX_PRIORITIES.
+ * @brief The Murasaki task priority is from @ref murasaki::ktpIdle to @ref murasaki::ktpRealtime
  * @details
  *
- * Where configMAX_PRIORITIES is porting dependent. The task with priority == configMAX_PRIORITIES will run with
- * the highest priority among all tasks.
  *
  * At the initial state, the Murasaki has two hidden tasks inside.
  * Both are running for the murasaki::Debugger class, and both task's priority are defined as @ref PLATFORM_CONFIG_DEBUG_TASK_PRIORITY.
- * By default, the value of PLATFORM_CONFIG_DEBUG_TASK_PRIORITY is configMAX_PRIORITIES - 1.
+ * By default, the value of PLATFORM_CONFIG_DEBUG_TASK_PRIORITY is @ref murasaki::ktpHigh.
  * That means, debug tasks priority is very high.
  *
  * The debug tasks should have priority as high as possible.
@@ -292,7 +287,7 @@
  * Usually, it is not so sensitive because the ISR is very short in the good designed RTOS application design.
  * In this case, all ISR can be a same priority.
  *
- * In the bad designed RTOS application, there are very few things we can do.
+ * In the bad designed RTOS application, there are very few things we can do. Such the things are project dependent.
  */
 
 /**
@@ -302,10 +297,10 @@
  * This re-definition let the pvPortMalloc() allocate
  * a fragment of memory for the @ref operator new.
  *
- * This changes converges all allocation to the FreeRTOS's heap.
+ * These changes converge all allocation to the FreeRTOS's heap.
  * There is some merit of the convergence:
- * @li The FreeRTOS heap is thread safe while the system heap in SW4STM32 is not thread-safe
- * @li The FreeRTOS heap is checking the heap size limitation and return an error, while the system heap behavior in SW4STM32  is not clear.
+ * @li The FreeRTOS heap is thread safe while the system heap in CubeIDE is not thread-safe
+ * @li The FreeRTOS heap is checking the heap size limitation and return an error, while the system heap behavior in CubeIDE  is not clear.
  * @li The heap size calculation is easier if we integrate the memory allocation activity into one heap.
  *
  * On the other hand, FreeRTOS heap is not able to allocate/deallocate in the
@@ -341,31 +336,41 @@
  *
  * After these preparations, the porting programmer can program the InitPlatform() :
  * @code
- * void InitPlatform()
+  * void InitPlatform()
  * {
  *     // UART device setting for console interface.
  *     // On Nucleo, the port connected to the USB port of ST-Link is
  *     // referred here.
- *     murasaki::platform.uart_console = new murasaki::Uart(&huart2);
+ *     murasaki::platform.uart_console = new murasaki::DebuggerUart(&huart2);
+ *     while (nullptr == murasaki::platform.uart_console)
+ *         ;  // stop here on the memory allocation failure.
+ *
  *     // UART is used for logging port.
  *     // At least one logger is needed to run the debugger class.
  *     murasaki::platform.logger = new murasaki::UartLogger(murasaki::platform.uart_console);
+ *     while (nullptr == murasaki::platform.logger)
+ *         ;  // stop here on the memory allocation failure.
+ *
  *     // Setting the debugger
  *     murasaki::debugger = new murasaki::Debugger(murasaki::platform.logger);
+ *     while (nullptr == murasaki::debugger)
+ *         ;  // stop here on the memory allocation failure.
+ *
  *     // Set the debugger as AutoRePrint mode, for the easy operation.
  *     murasaki::debugger->AutoRePrint();  // type any key to show history.
  *
- *     // For demonstration, one GPIO LED port is reserved.
- *     // The port and pin names are fined by CubeMX.
- *     murasaki::platform.led = new murasaki::BitOut(LD2_GPIO_Port, LD2_Pin);
  *
+ *     // For demonstration, one GPIO LED port is reserved.
+ *     // The port and pin names are fined by CubeIDE.
+ *     murasaki::platform.led = new murasaki::BitOut(LD2_GPIO_Port, LD2_Pin);
+ *     MURASAKI_ASSERT(nullptr != murasaki::platform.led)
  *
  * }
  * @endcode
  *
  *
- * In this sample, we initialize the uart_console member variable which is AbstractUart class.
- * The applicaiton programmer control the UART2 over this uart_console member variable.
+ * In this sample, we initialize the uart_console member variable which is @ref murasaki::UartStrategy class.
+ * The application programmer control the UART2 over this uart_console member variable.
  *
  * In the second step, we pass this uart_cosole to the logger member variable.
  * This member variable is an essential stub for the murasaki::debugger.
@@ -394,7 +399,7 @@
  * void ExecPlatform()
  * {
  *     // counter for the demonstration.
- *     static int count = 0;
+ *     int count = 0;
  *
  *     // Loop forever
  *     while (true) {
@@ -408,7 +413,7 @@
  *         count++;
  *
  *         // wait for a while
- *         murasaki::Sleep(static_cast<murasaki::WaitMilliSeconds>(500));
+ *         murasaki::Sleep(500);
  *     }
  * }
  * @endcode
@@ -417,7 +422,7 @@
  * Also, main.c must include the murasaki_platform.hpp to read the prototype of these functions.
  *
  * Following is the sample of the StartDefaultTask(). The actual code have a comment to work
- * together the code generator of the CubeMX. But this sample remove them because of the
+ * together the code generator of the CubeIDE. But this sample remove them because of the
  * documenattion tool ( doxygen ) limitation.
  * @code
  * void StartDefaultTask(void const * argument)
@@ -433,8 +438,6 @@
  * }
  * @endcode
  */
-
-
 
 /**
  * \page murasaki_pg_interrupt Routing interrupts
@@ -473,6 +476,9 @@
  * \li void HAL_I2C_SlaveTxCpltCallback(I2C_HandleTypeDef * hi2c);
  * \li void HAL_I2C_SlaveRxCpltCallback(I2C_HandleTypeDef * hi2c);
  * \li void HAL_I2C_ErrorCallback(I2C_HandleTypeDef * hi2c);
+ * \li void HAL_SAI_RxHalfCpltCallback(SAI_HandleTypeDef * hsai);
+ * \li void HAL_SAI_RxCpltCallback(SAI_HandleTypeDef * hsai);
+ * \li void HAL_SAI_ErrorCallback(SAI_HandleTypeDef * hsai) ;
  * \li void HAL_GPIO_EXTI_Callback(uint16_t GPIO_P);
  *
  */
@@ -499,15 +505,20 @@
  * }
  * @endcode
  *
- * To enable the assert_failed(), the porting programmer have to uncomment the @ref USE_FULL_ASSERT macro
+ * To enable the assert_failed(), the porting programmer have to uncomment the USE_FULL_ASSERT macro
  * inside stm32xxxx_hal_conf.h. The file name is depend on the target microprocessor.
  * Thus, the porting programmer have to search the all files inside project.
  *
- * At the time of 2019/May, this definition is in the one for the following files :
+ * At the time of 2019/Dec, this definition is in the one for the following files :
  * @li stm32f0xx_hal_conf.h
  * @li stm32f3xx_hal_conf.h
+ * @li stm32f4xx_hal_conf.h
  * @li stm32f7xx_hal_conf.h
+ * @li stm32g0xx_hal_conf.h
+ * @li stm32g4xx_hal_conf.h
+ * @li stm32h7xx_hal_conf.h
  * @li stm32l1xx_hal_conf.h
+ * @li stm32l4xx_hal_conf.h
  *
  *
  * The @ref CustomDefaultHandler() function should be called from the default exception routine.
@@ -529,12 +540,17 @@
  *
  * The porting programmer can modify it as below, to call the CustomDefaultHandler();
  * @code
+ *     .section  .text.Default_Handler,"ax",%progbits
+ *     .global CustomDefaultHandler
  * Default_Handler:
+ * #if (__ARM_ARCH == 6 )
+ *   ldr r0, = CustomDefaultHandler
+ *   bx r0
+ * #else
+ *   b.w CustomDefaultHandler
+ * #endif
  * Infinite_Loop:
- *   bl CustomDefaultHandler
- *
  *   b  Infinite_Loop
- *   .size  Default_Handler, .-Default_Handler
  * @endcode
  *
  */
@@ -543,15 +559,15 @@
  * \page murasaki_pg_summary Summary of the porting
  * Following is the porting steps :
  * @li Adjust heap size and stack size as described in the @ref murasaki_pg_cubemx
- * @li Generate an application skeleton from CubeMX.
+ * @li Generate an application skeleton from CubeIDE.
  * @li Checkout Murasaki repository into your project.
  * @li Copy the template files as described in the @ref murasaki_pg_directory .
  * @li Configure Muraaski as described in the @ref murasaki_pg_configuration and the @ref murasaki_pg_task_priority_and_stack
  * @li Call InitPlatform() and ExecPlatform() as described @ref murasaki_pg_platform_varialbe.
  * @li Route the interrupts as described @ref murasaki_pg_interrupt.
  * @li Route the error handling as described @ref murasaki_pg_error
+ *
  */
-
 
 #endif /* MURASAKI_3_PG_HPP_ */
 

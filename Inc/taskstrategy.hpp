@@ -6,12 +6,12 @@
  * @brief Mother of All Tasks.
  */
 
-
 #ifndef TASKSTRATEGY_HPP_
 #define TASKSTRATEGY_HPP_
 
 #include <FreeRTOS.h>
 #include <task.h>
+#include <murasaki_defs.hpp>
 
 namespace murasaki {
 
@@ -35,13 +35,14 @@ class TaskStrategy
  public:
     TaskStrategy() = delete;
     /**
-     * @brief Constractor. Task entity is not created here.
+     * @brief Contractor. Task entity is not created here.
      * @param task_name Name of task. Will be passed to task when started.
      * @param stack_depth [Byte]
      * @param task_priority Priority of the task. from 1 to up to configMAX_PRIORITIES -1. The high number is the high priority.
      * @param task_parameter Optional parameter to the task.
      */
-    TaskStrategy(const char * task_name, unsigned short stack_depth, UBaseType_t task_priority, const void * task_parameter);
+    TaskStrategy(const char * task_name, unsigned short stack_depth, murasaki::TaskPriority task_priority,
+                 const void * task_parameter);
     /**
      * @brief Destructor
      */
@@ -88,12 +89,13 @@ class TaskStrategy
      * If above conditions are not met, this function returns -1.
      */
     int getStackMinHeadroom();
+
  protected:
     TaskHandle_t task_;                 // Task handle of FreeRTOS
     const char * const name_;           // Name of task in FreeRTOS
     const unsigned short stack_depth_;  // Stack depth specification.
     const void * const parameter_;            // Optional parameter to pass the @ref TaskBody().
-    const UBaseType_t priority_;        //
+    const murasaki::TaskPriority priority_;        //
 
     /**
      * @brief Internal use only. Create a task from TaskBody()

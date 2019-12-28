@@ -9,9 +9,6 @@
  * included from this file.
  */
 
-
-
-
 #ifndef MURASAKI_HPP_
 #define MURASAKI_HPP_
 
@@ -27,6 +24,9 @@
 // Task and Stack
 #include "simpletask.hpp"
 
+// Algorithm
+#include "duplexaudio.hpp"
+
 // Peripherals
 #include "uart.hpp"
 #include "debuggeruart.hpp"
@@ -37,9 +37,10 @@
 #include "i2cslave.hpp"
 #include "bitin.hpp"
 #include "bitout.hpp"
+#include "saiportadaptor.hpp"
 
 // Third party
-//#include "umbadau1361.hpp"
+#include "Thirdparty/adau1361.hpp"
 
 // Debuggers
 #include "uartlogger.hpp"
@@ -48,7 +49,5 @@
 
 // platforms
 #include "platform_defs.hpp"
-
-
 
 #endif /* MURASAKI_HPP_ */

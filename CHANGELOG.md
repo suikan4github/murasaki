@@ -1,12 +1,66 @@
 # Change log
 Record of the modification in project development.
-## [Unreleased]
 
+## [Unreleased]
 ### Added
 ### Changed
 ### Deprecated
 ### Removed
 ### Fixed
+### Security
+### Known Issue
+- The SPI slave transfer is not tested.
+
+## [1.0.0] - 2019-12-31
+Large release. 
+- Added DuplexAudio to support audio in-out.
+- Performance is drastically incresed by fixing bug of the Syncronizer class.
+
+Note that issue #46, #56 and #77 made incompatibility from the past code. 
+### Added
+- [Issue 22 : Add Stereo Audio Class](https://github.com/suikan4github/murasaki/issues/22)
+- [Issue 42 : Print the context information on the hard fault.](https://github.com/suikan4github/murasaki/issues/42)
+- [Issue 44 : Support STM32CubeIDE startup code](https://github.com/suikan4github/murasaki/issues/44)
+- [Issue 47 : Add Match() method to peripheral class](https://github.com/suikan4github/murasaki/issues/47)
+- [Issue 49 : Add SAI interrupt handler template](https://github.com/suikan4github/murasaki/issues/49)
+- [Issue 62 : Add the I2C Search function to the template](https://github.com/suikan4github/murasaki/issues/62)
+- [Issue 66 : Add audio description to the user's guide](https://github.com/suikan4github/murasaki/issues/66)
+
+### Changed
+- [Issue 46 : Task priority is passed incorrectly](https://github.com/suikan4github/murasaki/issues/46)
+- [Issue 56 : The Inc-tp and Src-tp should be moved to under Inc and Src, respectively](https://github.com/suikan4github/murasaki/issues/56)
+- [Issue 61 : Change timeout parameter as integer](https://github.com/suikan4github/murasaki/issues/61)
+- [Issue 69 : Step-by-Step installation guide should be removed](https://github.com/suikan4github/murasaki/issues/69)
+- [Issue 77 : Add objectpointer parameter to MURASKI_SYSLOG](https://github.com/suikan4github/murasaki/issues/77)
+- [Issue 82 : Rename the AudioAdapterStrategy and SaiAudioAdaptor](https://github.com/suikan4github/murasaki/issues/82)
+
+### Deprecated
+### Removed
+### Fixed
+- [Issue 41 : Confirm context check between ARMv6M and ARMv7M](https://github.com/suikan4github/murasaki/issues/41)
+- [Issue 45 : Synchronizer::Wait() is incorrectly handling the timeout parameter](https://github.com/suikan4github/murasaki/issues/45)
+- [Issue 48 : README.md has old Task based sample. Need to update](https://github.com/suikan4github/murasaki/issues/48)
+- [Issue 55 : Adau1361::SetAuxInputGain seems to by buggy](https://github.com/suikan4github/murasaki/issues/55)
+- [Issue 57 : DuplexAudio::TransmitAndReceive is incorrectly private member function](https://github.com/suikan4github/murasaki/issues/57)
+- [Issue 58 : Adau1361::SendCommand and SendCommandTable are incorrectly private member funcitons](https://github.com/suikan4github/murasaki/issues/58)
+- [Issue 59 : DuplexAudio visibility must be back](https://github.com/suikan4github/murasaki/issues/59)
+- [Issue 63 : The sleep function doesn't handle the indefinite wait correctly](https://github.com/suikan4github/murasaki/issues/63)
+- [Issue 64 : The scale constant of DuplexAudio is incorrectly calculated](https://github.com/suikan4github/murasaki/issues/64)
+- [Issue 65 : murasaki_platform.hpp have to be updated](https://github.com/suikan4github/murasaki/issues/65)
+- [Issue 67 : Adau1361::Set*Gain() functions overwrite the non-related field](https://github.com/suikan4github/murasaki/issues/67)
+- [Issue 68 : README has wrong link to the LICENSE](https://github.com/suikan4github/murasaki/issues/68)
+- [Issue 70 : "Blocking" should be changed to "Synchronous"](https://github.com/suikan4github/murasaki/issues/70)
+- [Issue 72 : The word "CubeMX" should be substituted "CubeIDE"](https://github.com/suikan4github/murasaki/issues/72)
+- [Issue 73 : Build failure for the CORTEX-M0](https://github.com/suikan4github/murasaki/issues/73)
+- [Issue 74 : Build failure for STM32L152](https://github.com/suikan4github/murasaki/issues/74)
+- [Issue 78 : Update install script](https://github.com/suikan4github/murasaki/issues/78)
+- [Issue 79 : The core clock counter initialization have to be moved.](https://github.com/suikan4github/murasaki/issues/79)
+- [Issue 80 : The sample peripheral name of the template has camel format](https://github.com/suikan4github/murasaki/issues/80)
+- [Issue 81 : DuplexAudio::DMACallback() should use match()](https://github.com/suikan4github/murasaki/issues/81)
+- [Issue 83 : Refactoring request of template. ](https://github.com/suikan4github/murasaki/issues/83)
+- [Issue 84 : Change CODEC interface. ](https://github.com/suikan4github/murasaki/issues/84)
+- [Issue 85 : Build failure for STM32F091 ](https://github.com/suikan4github/murasaki/issues/85)
+
 ### Security
 ### Known Issue
 - The SPI slave transfer is not tested.
@@ -112,7 +166,8 @@ Major change at the MURASAKI_ASSERTION to enforce the hard fault. This makes deb
 ### Fixed
 ### Security
 
-[Unreleased]: https://github.com/suikan4github/murasaki/compare/v0.4.0...develop
+[Unreleased]: https://github.com/suikan4github/murasaki/compare/v1.0.0...develop
+[1.0.0]: https://github.com/suikan4github/murasaki/compare/v0.4.0...v1.0.0
 [0.4.0]: https://github.com/suikan4github/murasaki/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/suikan4github/murasaki/compare/v0.2.1...v0.3.0
 [0.2.1]: https://github.com/suikan4github/murasaki/compare/v0.2.0...v0.2.1

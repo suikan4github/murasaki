@@ -45,14 +45,14 @@ class Synchronizer
      * This member function have to be called from the task context. Otherwise, the behavior is
      * not predictable.
      */
-    bool Wait(WaitMilliSeconds timeout_ms = kwmsIndefinitely);
+    bool Wait(unsigned int timeout_ms = kwmsIndefinitely);
     /**
      * \brief Release the task.
      * \details
-     * Release the task waiting. This member function must be called from both task and the interrupt context.
+     * Release the task waiting. This member function can be called from both task and the interrupt context.
      */
     void Release();
- protected:
+     protected:
     SemaphoreHandle_t const semaphore_;
 };
 

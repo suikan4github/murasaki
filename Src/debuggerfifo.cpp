@@ -16,7 +16,6 @@
 
 namespace murasaki {
 
-
 DebuggerFifo::DebuggerFifo(unsigned int buffer_size)
         : FifoStrategy(buffer_size),
           sync_(new Synchronizer())
@@ -45,24 +44,25 @@ void DebuggerFifo::NotifyData()
 }
 
 unsigned int DebuggerFifo::Get(uint8_t data[], unsigned int size)
-{
-	unsigned int ret_val;
+                               {
+    unsigned int ret_val;
 
-	if (! post_mortem_){	// if normal condition
-		MURASAKI_ASSERT(murasaki::IsTaskContext())
+    if (!post_mortem_) {  // if normal condition
+        MURASAKI_ASSERT(murasaki::IsTaskContext())
 
-		taskENTER_CRITICAL();
-		{
-			ret_val = inherited::Get(data, size);
-		}
-		taskEXIT_CRITICAL();
+        taskENTER_CRITICAL();
+        {
+            ret_val = inherited::Get(data, size);
+        }
+        taskEXIT_CRITICAL();
 
-		// wait for the arriaval of the data.
-		if ( ret_val == 0)
-			sync_->Wait(static_cast<murasaki::WaitMilliSeconds>(1000 / portTICK_PERIOD_MS));
-	}
-	else	// if undefined exception happend, no sync processing
-		ret_val = inherited::Get(data, size);
+        // wait for the arriaval of the data.
+        if (ret_val == 0)
+            sync_->Wait(1000);
+    }
+    else
+        // if undefined exception happend, no sync processing
+        ret_val = inherited::Get(data, size);
 
     return ret_val;
 
@@ -78,7 +78,7 @@ void DebuggerFifo::ReWind()
 }
 
 void DebuggerFifo::SetPostMortem() {
-	post_mortem_ = true;
+    post_mortem_ = true;
 }
 
 } /* namespace murasaki */

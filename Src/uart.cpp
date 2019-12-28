@@ -10,20 +10,18 @@
 #include "murasaki_syslog.hpp"
 
 // Macro for easy-to-read
-#define UART_SYSLOG(fmt, ...)    MURASAKI_SYSLOG(kfaSerial, kseDebug, fmt, ##__VA_ARGS__)
+#define UART_SYSLOG(fmt, ...)    MURASAKI_SYSLOG( this, kfaSerial, kseDebug, fmt, ##__VA_ARGS__)
 
-
-// Check if CubeMX generates UART module
+// Check if CubeIDE generates UART module
 #ifdef HAL_UART_MODULE_ENABLED
-
 
 namespace murasaki {
 
 Uart::Uart(UART_HandleTypeDef * const uart)
         : peripheral_(uart),
-		  tx_sync_(new murasaki::Synchronizer),
-		  rx_sync_(new murasaki::Synchronizer),
-		  tx_critical_section_( new murasaki::CriticalSection),
+          tx_sync_(new murasaki::Synchronizer),
+          rx_sync_(new murasaki::Synchronizer),
+          tx_critical_section_(new murasaki::CriticalSection),
           rx_critical_section_(new murasaki::CriticalSection),
           tx_interrupt_status_(kursUnknown),
           rx_interrupt_status_(kursUnknown)
@@ -58,26 +56,25 @@ Uart::~Uart()
 }
 
 void Uart::SetHardwareFlowControl(UartHardwareFlowControl control)
-{
+                                  {
     UART_SYSLOG("Enter");
 
     // stop UART activity. This is required by UART HAL specification.
     int result = HAL_UART_DeInit(peripheral_);
     MURASAKI_ASSERT(result == HAL_OK);
 
-
     // Change the Hardware flow control
     switch (control) {
-        case kuhfcCts :  // Control CTS only ( Flow control on TX )
+        case kuhfcCts:  // Control CTS only ( Flow control on TX )
             peripheral_->Init.HwFlowCtl = UART_HWCONTROL_CTS;
             break;
-        case kuhfcRts :  // Control RTS only ( Flow control on RX )
+        case kuhfcRts:  // Control RTS only ( Flow control on RX )
             peripheral_->Init.HwFlowCtl = UART_HWCONTROL_RTS;
             break;
-        case kuhfcCtsRts :  // Control CTS and RTS ( Flow control on TX and RX )
+        case kuhfcCtsRts:  // Control CTS and RTS ( Flow control on TX and RX )
             peripheral_->Init.HwFlowCtl = UART_HWCONTROL_RTS_CTS;
             break;
-        default:            // Nor hardware flow control.
+        default:  // Nor hardware flow control.
             peripheral_->Init.HwFlowCtl = UART_HWCONTROL_NONE;
             break;
 
@@ -92,8 +89,8 @@ void Uart::SetHardwareFlowControl(UartHardwareFlowControl control)
 murasaki::UartStatus Uart::Transmit(
                                     const uint8_t * data,
                                     unsigned int size,
-                                    WaitMilliSeconds timeout_ms)
-{
+                                    unsigned int timeout_ms)
+                                    {
     UART_SYSLOG("Enter");
 
     MURASAKI_ASSERT(nullptr != data)
@@ -124,11 +121,11 @@ murasaki::UartStatus Uart::Transmit(
                 UART_SYSLOG("Transmission complete successfully")
                 break;
             case murasaki::kursTimeOut:
-                MURASAKI_SYSLOG(kfaSerial, kseWarning, "Transmission timeout")
+                MURASAKI_SYSLOG( this, kfaSerial, kseWarning, "Transmission timeout")
                 // TODO: probably, we should think how to know the number of transmission.
                 break;
             default:
-                MURASAKI_SYSLOG(kfaSerial, kseEmergency, "Error is not handled")
+                MURASAKI_SYSLOG( this, kfaSerial, kseEmergency, "Error is not handled")
                 // Re-initializing device
                 HAL_UART_DeInit(peripheral_);
                 HAL_UART_Init(peripheral_);
@@ -140,10 +137,9 @@ murasaki::UartStatus Uart::Transmit(
     return tx_interrupt_status_;
 }
 
-
 bool Uart::TransmitCompleteCallback(void* const ptr)
-{
-UART_SYSLOG("Enter");
+                                    {
+    UART_SYSLOG("Enter");
 
     MURASAKI_ASSERT(nullptr != ptr)
 
@@ -169,8 +165,8 @@ murasaki::UartStatus Uart::Receive(
                                    unsigned int size,
                                    unsigned int * transfered_count,
                                    UartTimeout uart_timeout,
-                                   WaitMilliSeconds timeout_ms)
-{
+                                   unsigned int timeout_ms)
+                                   {
     UART_SYSLOG("Enter");
 
     MURASAKI_ASSERT(nullptr != data);
@@ -199,26 +195,26 @@ murasaki::UartStatus Uart::Receive(
                 UART_SYSLOG("Receiving complete successfully")
                 break;
             case murasaki::kursTimeOut:
-                MURASAKI_SYSLOG(kfaSerial, kseWarning, "Receiving timeout")
+                MURASAKI_SYSLOG( this, kfaSerial, kseWarning, "Receiving timeout")
                 // return without resetting device.
                 break;
             case murasaki::kursFrame:
                 case murasaki::kursParity:
                 case murasaki::kursNoise:
-                MURASAKI_SYSLOG(kfaSerial, kseWarning, "Receiving error by frame, parity or noise error")
+                MURASAKI_SYSLOG( this, kfaSerial, kseWarning, "Receiving error by frame, parity or noise error")
                 // return without resetting device.
                 break;
             case murasaki::kursOverrun:
-                MURASAKI_SYSLOG(kfaSerial, kseError, "Overrun error on transmission. ")
+                MURASAKI_SYSLOG( this, kfaSerial, kseError, "Overrun error on transmission. ")
                 break;
             case murasaki::kursDMA:
-                MURASAKI_SYSLOG(kfaSerial, kseError, "Un-recoverable DMA error. Peripheral re-initialized")
+                MURASAKI_SYSLOG( this, kfaSerial, kseError, "Un-recoverable DMA error. Peripheral re-initialized")
                 // Re-initializing device
                 HAL_UART_DeInit(peripheral_);
                 HAL_UART_Init(peripheral_);
                 break;
             default:
-                MURASAKI_SYSLOG(kfaSerial, kseEmergency, "Error is not handled. Peripheral re-initialized.")
+                MURASAKI_SYSLOG( this, kfaSerial, kseEmergency, "Error is not handled. Peripheral re-initialized.")
                 // Re-initializing device
                 HAL_UART_DeInit(peripheral_);
                 HAL_UART_Init(peripheral_);
@@ -232,7 +228,7 @@ murasaki::UartStatus Uart::Receive(
 }
 
 void Uart::SetSpeed(unsigned int baud_rate)
-{
+                    {
     UART_SYSLOG("Enter");
     // stop UART activity. This is required by UART HAL specification.
     int result = HAL_UART_DeInit(peripheral_);
@@ -249,7 +245,7 @@ void Uart::SetSpeed(unsigned int baud_rate)
 }
 
 bool Uart::ReceiveCompleteCallback(void* const ptr)
-{
+                                   {
     UART_SYSLOG("Enter");
 
     MURASAKI_ASSERT(nullptr != ptr)
@@ -272,50 +268,50 @@ bool Uart::ReceiveCompleteCallback(void* const ptr)
 }
 
 bool Uart::HandleError(void* const ptr)
-{
+                       {
     UART_SYSLOG("Enter");
 
     MURASAKI_ASSERT(nullptr != ptr)
 
-    if (peripheral_ == ptr) {
+    if (this->Match(ptr)) {
         // Check error and halde it.
         if (peripheral_->ErrorCode & HAL_UART_ERROR_PE) {
-            MURASAKI_SYSLOG(kfaSerial, kseWarning, "HAL_UART_ERROR_PE");
+            MURASAKI_SYSLOG( this, kfaSerial, kseWarning, "HAL_UART_ERROR_PE");
             // This interrupt happen when RX cause parity error.
             rx_interrupt_status_ = murasaki::kursParity;
             // abort the processing
             rx_sync_->Release();
         }
         else if (peripheral_->ErrorCode & HAL_UART_ERROR_FE) {
-            MURASAKI_SYSLOG(kfaSerial, kseWarning, "HAL_UART_ERROR_FE");
+            MURASAKI_SYSLOG( this, kfaSerial, kseWarning, "HAL_UART_ERROR_FE");
             // This interrupt happen when rx detect the character frame is wrong.
             rx_interrupt_status_ = murasaki::kursFrame;
             // abort the processing
             rx_sync_->Release();
         }
         else if (peripheral_->ErrorCode & HAL_UART_ERROR_NE) {
-            MURASAKI_SYSLOG(kfaSerial, kseWarning, "HAL_UART_ERROR_NE");
+            MURASAKI_SYSLOG( this, kfaSerial, kseWarning, "HAL_UART_ERROR_NE");
             // This interrupt happen when rx detect the problem by noise.
             rx_interrupt_status_ = murasaki::kursNoise;
             // abort the processing
             rx_sync_->Release();
         }
         else if (peripheral_->ErrorCode & HAL_UART_ERROR_ORE) {
-            MURASAKI_SYSLOG(kfaSerial, kseWarning, "HAL_UART_ERROR_ORE");
+            MURASAKI_SYSLOG( this, kfaSerial, kseWarning, "HAL_UART_ERROR_ORE");
             // This interrupt happen when rx register is full and next data comes.
             rx_interrupt_status_ = murasaki::kursOverrun;
             // abort the processing
             rx_sync_->Release();
         }
         else if (peripheral_->ErrorCode & HAL_UART_ERROR_DMA) {
-            MURASAKI_SYSLOG(kfaSerial, kseWarning, "HAL_UART_ERROR_DMA");
+            MURASAKI_SYSLOG( this, kfaSerial, kseWarning, "HAL_UART_ERROR_DMA");
             // This interrupt happen when something problem happen in DMA. This is fatal.
             rx_interrupt_status_ = murasaki::kursDMA;
             // abort the processing
             rx_sync_->Release();
         }
         else {
-            MURASAKI_SYSLOG(kfaSerial, kseEmergency, "Unknown error");
+            MURASAKI_SYSLOG( this, kfaSerial, kseEmergency, "Unknown error");
             // Unknown interrupt. Must be updated this program by the newest HAL spec.
             rx_interrupt_status_ = murasaki::kursUnknown;
             // abort the processing
@@ -323,11 +319,11 @@ bool Uart::HandleError(void* const ptr)
         }
 
         UART_SYSLOG("Leave");
-        return true;    // report the ptr matched
+        return true;  // report the ptr matched
     }
     else {
         UART_SYSLOG("Return with match");
-        return false;   // report the ptr doesn't match
+        return false;  // report the ptr doesn't match
     }
 }
 
@@ -335,7 +331,7 @@ void* Uart::GetPeripheralHandle() {
     UART_SYSLOG("Enter");
     UART_SYSLOG("Leave");
 
-	return peripheral_;
+    return peripheral_;
 }
 
 } /* namespace platform */

@@ -8,7 +8,7 @@
 #include <spislaveadapter.hpp>
 #include "murasaki_assert.hpp"
 
-// Check if CubeMX generated SPI modules.
+// Check if CubeIDE generated SPI modules.
 #ifdef HAL_SPI_MODULE_ENABLED
 
 namespace murasaki {

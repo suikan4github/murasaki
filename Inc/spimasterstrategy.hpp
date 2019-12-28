@@ -17,15 +17,15 @@ namespace murasaki {
 /**
  * \brief Root class of the SPI master
  * \details
- * This class provides a thread safe, blocking SPI transfer.
+ * This class provides a thread safe, synchronous SPI transfer.
  *
  * \ingroup MURASAKI_ABSTRACT_GROUP
  */
-class SpiMasterStrategy:public murasaki::PeripheralStrategy
+class SpiMasterStrategy : public murasaki::PeripheralStrategy
 {
  public:
     /**
-     * @brief Thread safe, blocking SPI transfer
+     * @brief Thread safe, synchronous SPI transfer
      * @param spi_spec Pointer to the SPI slave adapter which has clock configuraiton and chip select handling.
      * @param tx_data Data to be transmitted
      * @param rx_data Data buffer to receive data
@@ -38,7 +38,7 @@ class SpiMasterStrategy:public murasaki::PeripheralStrategy
                                          const uint8_t * tx_data,
                                          uint8_t * rx_data,
                                          unsigned int size,
-                                         murasaki::WaitMilliSeconds timeout_ms = murasaki::kwmsIndefinitely)=0;
+                                         unsigned int timeout_ms = murasaki::kwmsIndefinitely)=0;
     /**
      * @brief Callback to notifiy the end of transfer
      * @param ptr Pointer to the control object.

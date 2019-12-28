@@ -20,8 +20,6 @@
 #include "debuggerfifo.hpp"
 #include "simpletask.hpp"
 
-
-
 namespace murasaki {
 
 /**
@@ -66,11 +64,9 @@ class Debugger
      * The formatted string is stored in the internal circular buffer. And data inside buffer is
      * transmitted through the uart which is passed by constructor. If the buffer is overflowed,
      * this method streos as possible, and discard the rest of string. That mean, this method  is
-     * not blocking.
+     * neither synchronous nor blocking.
      *
-     * This member function is non-blocking, thread safe and re-entrant.
-     *
-     * Be careful, this is non-blocking while the Debug::getchFromTask() is blocking.
+     * This member function is non-blocking, non-asynchronous, thread safe and re-entrant.
      *
      * At 2018/Jan/14 measurement, task stack was consumed 49bytes.
      */
@@ -85,7 +81,7 @@ class Debugger
      *
      * This is thread safe and task context dedicated function. Never call from ISR.
      *
-     * Becareful, this is blocking while the Debug::Printf() non-blocking.
+     * Becareful, this is synchronous and blocking while the Debug::Printf() is asynchronous and non-blocking.
      */
     char GetchFromTask();
     /**
@@ -117,7 +113,6 @@ class Debugger
      * \brief Start the post mortem mprocessing. Never return
      */
     void DoPostMortem();
-
 
  protected:
     const murasaki::LoggingHelpers helpers_;
@@ -169,9 +164,6 @@ class Debugger
 
 extern Debugger * debugger;
 
-
 } /* namespace murasaki */
-
-
 
 #endif /* DEBUGGER_HPP_ */
