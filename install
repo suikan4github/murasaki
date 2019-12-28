@@ -192,7 +192,7 @@ cat > ${INCDIR}/murasaki_include_stub.h <<EOF
 * @file murasaki_include_stub.h
 * @brief Stub to include the HAL headers. 
 * @details
-* The CubeMX add the STM32 microprocessor product name as pre-defined macro when a file is compiled. 
+* The CubeIDE add the STM32 microprocessor product name as pre-defined macro when a file is compiled. 
 * For example, following is the macro definition for STM32F446 processor at the compiler command line. 
 * @code
 * -DSTM32F446xx

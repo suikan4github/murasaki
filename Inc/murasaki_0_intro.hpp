@@ -27,6 +27,12 @@
  * \li \subpage intro_sec7
  * \li \subpage intro_sec8
  *
+ * There are some other manuals of murasaki class library :
+ *
+ * \li \ref murasaki_ug_usage
+ * \li \ref murasaki_pg
+ * \li \ref MURASAKI_GROUP
+ *
  * \page intro_sec1 Simplified IO
  * \brief The IO function is packaged by class types. For example, The murasaki::Uart class can
  * receive a UART handle
