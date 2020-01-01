@@ -10,7 +10,7 @@
 #include "murasaki_syslog.hpp"
 
 // Macro for easy-to-read
-#define SPIM_SYSLOG(fmt, ...)    MURASAKI_SYSLOG(kfaSpiSlave, kseDebug, fmt, ##__VA_ARGS__)
+#define SPIM_SYSLOG(fmt, ...)    MURASAKI_SYSLOG(this, kfaSpiSlave, kseDebug, fmt, ##__VA_ARGS__)
 
 // Check if CubeIDE generated SPI Module
 #ifdef HAL_SPI_MODULE_ENABLED
@@ -98,33 +98,33 @@ SpiStatus SpiSlave::TransmitAndReceive(
                 SPIM_SYSLOG("Receive complete successfully")
                 break;
             case murasaki::kspisModeCRC:
-                MURASAKI_SYSLOG(kfaSpiSlave, kseWarning, "CRC error")
+                MURASAKI_SYSLOG(this, kfaSpiSlave, kseWarning, "CRC error")
                 break;
             case murasaki::kspisOverflow:
-                MURASAKI_SYSLOG(kfaSpiSlave, kseWarning, "DMA overflow / underflow")
+                MURASAKI_SYSLOG(this, kfaSpiSlave, kseWarning, "DMA overflow / underflow")
                 break;
             case murasaki::kspisFrameError:
-                MURASAKI_SYSLOG(kfaSpiSlave, kseWarning, "Frame error")
+                MURASAKI_SYSLOG(this, kfaSpiSlave, kseWarning, "Frame error")
                 break;
             case murasaki::kspisDMA:
-                MURASAKI_SYSLOG(kfaSpiSlave, kseError, "DMA error")
+                MURASAKI_SYSLOG(this, kfaSpiSlave, kseError, "DMA error")
                 // Desable SPI to try to clear the current error status. Then, re-enable.
                 HAL_SPI_DeInit(peripheral_);
                 HAL_SPI_Init(peripheral_);
                 break;
             case murasaki::kspisErrorFlag:
-                MURASAKI_SYSLOG(kfaSpiSlave, kseError, "Unknown error flag,  Peripheral re-initialized")
+                MURASAKI_SYSLOG(this, kfaSpiSlave, kseError, "Unknown error flag,  Peripheral re-initialized")
                 // Desable SPI to try to clear the current error status. Then, re-enable.
                 HAL_SPI_DeInit(peripheral_);
                 HAL_SPI_Init(peripheral_);
                 break;
             case murasaki::ki2csTimeOut:
-                MURASAKI_SYSLOG(kfaSpiSlave, kseWarning, "Receive timeout. DMA stopped")
+                MURASAKI_SYSLOG(this, kfaSpiSlave, kseWarning, "Receive timeout. DMA stopped")
                 // Abort on-going and not terminated transfer.
                 HAL_SPI_DMAStop(peripheral_);
                 break;
             default:
-                MURASAKI_SYSLOG(kfaI2cSlave, kseEmergency, "Error is not handled.  Peripheral re-initialized")
+                MURASAKI_SYSLOG(this, kfaI2cSlave, kseEmergency, "Error is not handled.  Peripheral re-initialized")
                 // Desable SPI to try to clear the current error status. Then, re-enable.
                 HAL_SPI_DeInit(peripheral_);
                 HAL_SPI_Init(peripheral_);
@@ -175,35 +175,35 @@ bool SpiSlave::HandleError(void* ptr)
 
         // Check error and halde it.
         if (peripheral_->ErrorCode & HAL_SPI_ERROR_CRC) {
-            MURASAKI_SYSLOG(kfaSpiSlave, kseWarning, "HAL_SPI_ERROR_CRC");
+            MURASAKI_SYSLOG(this, kfaSpiSlave, kseWarning, "HAL_SPI_ERROR_CRC");
             // This happens only in the CRC mode
             interrupt_status_ = murasaki::kspisModeCRC;
             // abort the processing
             sync_->Release();
         }
         else if (peripheral_->ErrorCode & HAL_SPI_ERROR_OVR) {
-            MURASAKI_SYSLOG(kfaSpiSlave, kseWarning, "HAL_SPI_ERROR_OVR");
+            MURASAKI_SYSLOG(this, kfaSpiSlave, kseWarning, "HAL_SPI_ERROR_OVR");
             // This interrupt happen when the DMA is too slow to handle the received data.
             interrupt_status_ = murasaki::kspisOverflow;
             // abort the processing
             sync_->Release();
         }
         else if (peripheral_->ErrorCode & HAL_SPI_ERROR_FRE) {
-            MURASAKI_SYSLOG(kfaSpiSlave, kseWarning, "HAL_SPI_ERROR_FRE");
+            MURASAKI_SYSLOG(this, kfaSpiSlave, kseWarning, "HAL_SPI_ERROR_FRE");
             // This interrupt is the frame error of the the TI frame mode
             interrupt_status_ = murasaki::kspisFrameError;
             // abort the processing
             sync_->Release();
         }
         else if (peripheral_->ErrorCode & HAL_SPI_ERROR_DMA) {
-            MURASAKI_SYSLOG(kfaSpiSlave, kseWarning, "HAL_SPI_ERROR_DMA");
+            MURASAKI_SYSLOG(this, kfaSpiSlave, kseWarning, "HAL_SPI_ERROR_DMA");
             // This interrupt emans something happen in DMA unit
             interrupt_status_ = murasaki::kspisDMA;
             // abort the processing
             sync_->Release();
         }
         else if (peripheral_->ErrorCode & HAL_SPI_ERROR_FLAG) {
-            MURASAKI_SYSLOG(kfaSpiSlave, kseWarning, "HAL_SPI_ERROR_FLAG");
+            MURASAKI_SYSLOG(this, kfaSpiSlave, kseWarning, "HAL_SPI_ERROR_FLAG");
             // This interrupt emans something is recorded as error flag.
             interrupt_status_ = murasaki::kspisErrorFlag;
             // abort the processing
@@ -211,7 +211,7 @@ bool SpiSlave::HandleError(void* ptr)
         }
 #ifdef HAL_SPI_ERROR_ABORT
         else if (peripheral_->ErrorCode & HAL_SPI_ERROR_ABORT) {
-            MURASAKI_SYSLOG(kfaSpiSlave, kseWarning, "HAL_SPI_ERROR_ABORT");
+            MURASAKI_SYSLOG(this, kfaSpiSlave, kseWarning, "HAL_SPI_ERROR_ABORT");
             // This interrupt happen when program causes problem during abort process
             // No way to recover.
             interrupt_status_ = murasaki::kspisAbort;
@@ -221,7 +221,7 @@ bool SpiSlave::HandleError(void* ptr)
 #endif
         else
         {
-            MURASAKI_SYSLOG(kfaSpiSlave, kseWarning, "Unknown error interrupt")
+            MURASAKI_SYSLOG(this, kfaSpiSlave, kseWarning, "Unknown error interrupt")
             // Unknown error. This program must be updated by the newest specificaiton.
             interrupt_status_ = murasaki::kspisUnknown;
             // abort the processing

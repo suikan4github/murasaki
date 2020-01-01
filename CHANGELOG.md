@@ -7,6 +7,8 @@ Record of the modification in project development.
 ### Deprecated
 ### Removed
 ### Fixed
+- [Issue 88 : MURASAKI_SYSLOG usage is wrong ](https://github.com/suikan4github/murasaki/issues/88)
+
 ### Security
 ### Known Issue
 - The SPI slave transfer is not tested.
