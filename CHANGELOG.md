@@ -7,6 +7,16 @@ Record of the modification in project development.
 ### Deprecated
 ### Removed
 ### Fixed
+### Security
+### Known Issue
+- The SPI slave transfer is not tested.
+
+## [1.0.1] - 2020-01-07
+### Added
+### Changed
+### Deprecated
+### Removed
+### Fixed
 - [Issue 88 : MURASAKI_SYSLOG usage is wrong ](https://github.com/suikan4github/murasaki/issues/88)
 
 ### Security
@@ -168,7 +178,8 @@ Major change at the MURASAKI_ASSERTION to enforce the hard fault. This makes deb
 ### Fixed
 ### Security
 
-[Unreleased]: https://github.com/suikan4github/murasaki/compare/v1.0.0...develop
+[Unreleased]: https://github.com/suikan4github/murasaki/compare/v1.0.1...develop
+[1.0.1]: https://github.com/suikan4github/murasaki/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/suikan4github/murasaki/compare/v0.4.0...v1.0.0
 [0.4.0]: https://github.com/suikan4github/murasaki/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/suikan4github/murasaki/compare/v0.2.1...v0.3.0
