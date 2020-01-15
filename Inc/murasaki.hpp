@@ -38,6 +38,7 @@
 #include "bitin.hpp"
 #include "bitout.hpp"
 #include "saiportadaptor.hpp"
+#include "i2sportadapter.hpp"
 
 // Third party
 #include "Thirdparty/adau1361.hpp"

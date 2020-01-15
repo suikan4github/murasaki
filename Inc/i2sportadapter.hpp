@@ -1,0 +1,136 @@
+/**
+ * @file i2sportadapter.hpp
+ *
+ *  @date 2020/01/15
+ *  @author takemasa
+ */
+
+#ifndef I2SPORTADAPTER_HPP_
+#define I2SPORTADAPTER_HPP_
+
+#include <audioportadapterstrategy.hpp>
+
+namespace murasaki {
+
+#ifdef   HAL_I2S_MODULE_ENABLED
+/**
+ * @brief Adapter as I2S audio port.
+ * @details
+ * Dedicated adapter for the @ref murasaki::DuplexAudio.
+ * By passing this adapter, the DuplexAudio class can handle audio through the I2S port.
+ *
+ * Caution : The size of the data in I2S and the width of the data in DMA must be aligned.
+ * This is responsibility of the programmer. The misaligned configuration gives broken audio.
+ *
+ * \ingroup MURASAKI_GROUP
+ *
+ */
+class I2sPortAdapter : public AudioPortAdapterStrategy {
+ public:
+    /**
+     * @brief Constructor.
+     * @param tx_peripheral I2S_HandleTypeDef type peripheral for TX. This is defined in main.c.
+     * @param rx_peripheral I2S_HandleTypeDef type peripheral for RX. This is defined in main.c.
+     * @details
+     * Receives handle of the I2S block peripherals.
+     *
+     * This class assumes one is the TX and the other is RX.
+     * In case of a programmer use I2S as simplex audio, the unused block must be passed as nullptr.
+     */
+    I2sPortAdapter(
+                   I2S_HandleTypeDef *tx_peripheral,
+                   I2S_HandleTypeDef *rx_peripheral
+                   );
+
+    virtual ~I2sPortAdapter();
+
+    /**
+     * @brief Kick start routine to start the TX DMA transfer.
+     * @details This routine must be implemented by the derived class.
+     * The task of this routine is to kick the first DMA transfer.
+     * In this class, we assume DMA continuously transfer on the circular buffer
+     * once after it starts.
+     */
+    virtual void StartTransferTx(
+                                 uint8_t *tx_buffer,
+                                 unsigned int channel_len
+                                 );
+
+    /**
+     * @brief Kick start routine to start the RX DMA transfer.
+     * @details This routine must be implemented by the derived class.
+     * The task of this routine is to kick the first DMA transfer.
+     * In this class, we assume DMA continuously transfer on the circular buffer
+     * once after it starts.
+     */
+    virtual void StartTransferRx(
+                                 uint8_t *rx_buffer,
+                                 unsigned int channel_len
+                                 );
+    /**
+     * @brief Return how many DMA phase is implemented
+     * @return Always return 2 for STM32 I2S, becuase the cyclic DMA has halfway and complete interrupt.
+     */
+    virtual unsigned int GetNumberOfDMAPhase() {
+        return 2;
+    }
+    ;
+    /**
+     * @brief Return how many channels are in the transfer.
+     * @return 1 for Mono, 2 for stereo, 3... for multi-channel.
+     */
+    virtual unsigned int GetNumberOfChannelsTx();
+
+    /**
+     * @brief Return the size of the one sample.
+     * @return 2 or 4. The unit is [Byte]
+     */
+    virtual unsigned int GetSampleWordSizeTx();
+    /**
+     * @brief Return how many channels are in the transfer.
+     * @return 1 for Mono, 2 for stereo, 3... for multi-channel.
+     */
+    virtual unsigned int GetNumberOfChannelsRx();
+
+    /**
+     * @brief Return the size of the one sample.
+     * @return 2 or 4. The unit is [Byte]
+     */
+    virtual unsigned int GetSampleWordSizeRx();
+    /**
+     * @brief Handling error report of device.
+     * @param ptr Pointer for generic use. Usually, points a struct of a device control
+     * @return true if ptr matches with device and handle the error. false if ptr doesn't match
+     * A member function to detect error.
+     *
+     * The error handling is depend on the implementation.
+     */
+    virtual bool HandleError(void *ptr);
+    /**
+     * @details Check if peripheral handle matched with given handle.
+     * @param peripheral_handle
+     * @return true if match, false if not match.
+     * @details
+     * The SaiAudioAdapter type has two peripheral. TX and RX. This function checks RX paripheral
+     * and return with this value. That means, if RX is not nullptr, TX is not checked.
+     *
+     * TX is checked only when, RX is nullptr.
+     */
+    virtual bool Match(void *peripheral_handle);
+
+    /**
+     * @brief pass the raw peripheral handler
+     * @return pointer to the raw peripheral handler hidden in a class.
+     */
+    virtual void* GetPeripheralHandle();
+
+ private:
+    I2S_HandleTypeDef *const tx_peripheral_;
+    I2S_HandleTypeDef *const rx_peripheral_;
+};
+#endif // HAL_I2S_MODULE_ENABLED
+
+}
+/* namespace murasaki */
+
+#endif /* I2SPORTADAPTER_HPP_ */
