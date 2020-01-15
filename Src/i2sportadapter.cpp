@@ -42,19 +42,19 @@ bool I2sPortAdapter::HandleError(void *ptr) {
         uint32_t error_code = rx_peripheral_->ErrorCode;
         // Check error and display it.
         if (HAL_I2S_ERROR_OVR | error_code) {
-            MURASAKI_SYSLOG(this, kfaSai, kseError, "HAL_I2S_ERROR_OVR")
+            MURASAKI_SYSLOG(this, kfaI2s, kseError, "HAL_I2S_ERROR_OVR")
         }
         if (HAL_I2S_ERROR_UDR | error_code) {
-            MURASAKI_SYSLOG(this, kfaSai, kseError, "HAL_I2S_ERROR_UDR")
+            MURASAKI_SYSLOG(this, kfaI2s, kseError, "HAL_I2S_ERROR_UDR")
         }
         if (HAL_I2S_ERROR_PRESCALER | error_code) {
-            MURASAKI_SYSLOG(this, kfaSai, kseError, "HAL_I2S_ERROR_PRESCALER")
+            MURASAKI_SYSLOG(this, kfaI2s, kseError, "HAL_I2S_ERROR_PRESCALER")
         }
         if (HAL_I2S_ERROR_TIMEOUT | error_code) {
-            MURASAKI_SYSLOG(this, kfaSai, kseError, "HAL_I2S_ERROR_TIMEOUT")
+            MURASAKI_SYSLOG(this, kfaI2s, kseError, "HAL_I2S_ERROR_TIMEOUT")
         }
         if (HAL_I2S_ERROR_DMA | error_code) {
-            MURASAKI_SYSLOG(this, kfaSai, kseError, "HAL_I2S_ERROR_DMA")
+            MURASAKI_SYSLOG(this, kfaI2s, kseError, "HAL_I2S_ERROR_DMA")
         }
         // This is fatal condition.
         I2SAUDIO_SYSLOG("Device matched.")
