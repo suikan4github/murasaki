@@ -21,10 +21,10 @@ DuplexAudio::DuplexAudio(
         :
           peripheral_adapter_(peripheral_adapter),
           channel_len_(channel_length),
-          // Calcurate a DMA buffer size per interrupt [Byte]
+        // Calculate a DMA buffer size per interrupt [Byte]
           block_size_tx_(channel_len_ * peripheral_adapter_->GetNumberOfChannelsTx() * peripheral_adapter_->GetSampleWordSizeTx()),
           block_size_rx_(channel_len_ * peripheral_adapter_->GetNumberOfChannelsRx() * peripheral_adapter_->GetSampleWordSizeRx()),
-          // Calcurate a entire DMA buffer size. 
+        // Calculate a entire DMA buffer size.
           buffer_size_tx_(peripheral_adapter_->GetNumberOfDMAPhase() * block_size_tx_),
           buffer_size_rx_(peripheral_adapter_->GetNumberOfDMAPhase() * block_size_rx_),
           // Allocate DMA buffer
