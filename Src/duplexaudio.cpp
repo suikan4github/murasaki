@@ -296,6 +296,7 @@ bool DuplexAudio::DmaCallback(
 
         // Notice the waiting task the buffer is ready.
         AUDIO_SYSLOG("Releasing Sync");
+
         sync_->Release();
 
         AUDIO_SYSLOG("Return with match");

@@ -77,7 +77,7 @@ class I2sPortAdapter : public AudioPortAdapterStrategy {
     ;
     /**
      * @brief Return how many channels are in the transfer.
-     * @return 1 for Mono, 2 for stereo, 3... for multi-channel.
+     * @return always 2
      */
     virtual unsigned int GetNumberOfChannelsTx();
 
@@ -88,7 +88,7 @@ class I2sPortAdapter : public AudioPortAdapterStrategy {
     virtual unsigned int GetSampleWordSizeTx();
     /**
      * @brief Return how many channels are in the transfer.
-     * @return 1 for Mono, 2 for stereo, 3... for multi-channel.
+     * @return always 2
      */
     virtual unsigned int GetNumberOfChannelsRx();
 
