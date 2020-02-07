@@ -125,6 +125,17 @@ class SaiPortAdaptor : public AudioPortAdapterStrategy {
      */
     virtual void* GetPeripheralHandle();
 
+    /**
+     * @brief Display half word swap is required. .
+     * @return Always false.
+     * @details
+     * Display whether the half word (int16_t) swap is required or not.
+     *
+     * SAI doens't require the half word swap inside word.
+     * Thus, always returns false
+     */
+    virtual bool IsInt16SwapRequired();
+
  private:
     SAI_HandleTypeDef *const tx_peripheral_;
     SAI_HandleTypeDef *const rx_peripheral_;

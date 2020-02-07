@@ -176,10 +176,10 @@ unsigned int I2sPortAdapter::GetSampleWordSizeRx()
     // Check data format and return appropriate size[byte]
     switch (rx_peripheral_->Init.DataFormat) {
         case I2S_DATAFORMAT_16B:
+            case I2S_DATAFORMAT_16B_EXTENDED:
             return_val = 2;
             break;
-        case I2S_DATAFORMAT_16B_EXTENDED:
-            case I2S_DATAFORMAT_24B:
+        case I2S_DATAFORMAT_24B:
             case I2S_DATAFORMAT_32B:
             return_val = 4;
             break;
@@ -216,10 +216,10 @@ unsigned int I2sPortAdapter::GetSampleWordSizeTx()
     // Check data format and return appropriate size[byte]
     switch (tx_peripheral_->Init.DataFormat) {
         case I2S_DATAFORMAT_16B:
+            case I2S_DATAFORMAT_16B_EXTENDED:
             return_val = 2;
             break;
-        case I2S_DATAFORMAT_16B_EXTENDED:
-            case I2S_DATAFORMAT_24B:
+        case I2S_DATAFORMAT_24B:
             case I2S_DATAFORMAT_32B:
             return_val = 4;
             break;
@@ -259,6 +259,20 @@ void* I2sPortAdapter::GetPeripheralHandle()
     return return_val;
 
 }
+
+bool I2sPortAdapter::IsInt16SwapRequired()
+{
+    I2SAUDIO_SYSLOG("Enter.")
+
+    bool return_val = true;
+
+    I2SAUDIO_SYSLOG("Exit with %s.", return_val ? "true" : "false")
+
+    return return_val;
+
+}
+
+
 #endif //   HAL_I2S_MODULE_ENABLED
 
 } /* namespace murasaki */
