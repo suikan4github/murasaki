@@ -143,7 +143,6 @@ void I2sPortAdapter::StartTransferRx(
     // Start the Transfer and Receive DMA.
     // Assumes CubeIDE configures these setting as circular mode. That mean, for each halfway,
     // Interrupt is raised, in addition to the end of buffer interrupt.
-
     status = HAL_I2S_Receive_DMA(
                         rx_peripheral_,
                         reinterpret_cast<uint16_t*>(rx_buffer),
@@ -263,7 +262,7 @@ void* I2sPortAdapter::GetPeripheralHandle()
 bool I2sPortAdapter::IsInt16SwapRequired()
 {
     I2SAUDIO_SYSLOG("Enter.")
-
+    // return always true because I2S DMA requires half word swap inside 32bit word.
     bool return_val = true;
 
     I2SAUDIO_SYSLOG("Exit with %s.", return_val ? "true" : "false")
