@@ -37,7 +37,7 @@
 #include "i2cslave.hpp"
 #include "bitin.hpp"
 #include "bitout.hpp"
-#include "saiportadaptor.hpp"
+#include "saiportadapter.hpp"
 #include "i2sportadapter.hpp"
 
 // Third party

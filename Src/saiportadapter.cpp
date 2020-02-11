@@ -1,11 +1,11 @@
 /*
- * saiportadaptor.cpp
+ * saiportadapter.cpp
  *
  *  Created on: 2019/07/28
  *      Author: Seiichi Horie
  */
 
-#include "saiportadaptor.hpp"
+#include "saiportadapter.hpp"
 #include "murasaki_syslog.hpp"
 #include "murasaki_assert.hpp"
 
@@ -15,7 +15,7 @@
 namespace murasaki {
 #ifdef   HAL_SAI_MODULE_ENABLED
 
-SaiPortAdaptor::SaiPortAdaptor(
+SaiPortAdapter::SaiPortAdapter(
                                  SAI_HandleTypeDef * tx_peripheral,
                                  SAI_HandleTypeDef * rx_peripheral
                                  )
@@ -27,11 +27,11 @@ SaiPortAdaptor::SaiPortAdaptor(
     MURASAKI_ASSERT(tx_peripheral_ != nullptr || rx_peripheral_ != nullptr)
 }
 
-SaiPortAdaptor::~SaiPortAdaptor()
+SaiPortAdapter::~SaiPortAdapter()
 {
 }
 
-bool SaiPortAdaptor::HandleError(void * ptr) {
+bool SaiPortAdapter::HandleError(void *ptr) {
     SAIAUDIO_SYSLOG("Enter %p", ptr);
 
     MURASAKI_ASSERT(nullptr != ptr);
@@ -77,7 +77,7 @@ bool SaiPortAdaptor::HandleError(void * ptr) {
 
 }
 
-void SaiPortAdaptor::StartTransferTx(
+void SaiPortAdapter::StartTransferTx(
                                       uint8_t * tx_buffer,
                                       unsigned int channel_len
                                       ) {
@@ -99,7 +99,7 @@ void SaiPortAdaptor::StartTransferTx(
     SAIAUDIO_SYSLOG("Return")
 }
 
-void SaiPortAdaptor::StartTransferRx(
+void SaiPortAdapter::StartTransferRx(
                                       uint8_t * rx_buffer,
                                       unsigned int channel_len
                                       ) {
@@ -121,7 +121,7 @@ void SaiPortAdaptor::StartTransferRx(
     SAIAUDIO_SYSLOG("Return")
 }
 
-unsigned int SaiPortAdaptor::GetNumberOfChannelsRx()
+unsigned int SaiPortAdapter::GetNumberOfChannelsRx()
 {
     SAIAUDIO_SYSLOG("Enter.")
     MURASAKI_ASSERT(rx_peripheral_ != nullptr)
@@ -133,7 +133,7 @@ unsigned int SaiPortAdaptor::GetNumberOfChannelsRx()
     return return_val;
 }
 
-unsigned int SaiPortAdaptor::GetSampleWordSizeRx()
+unsigned int SaiPortAdapter::GetSampleWordSizeRx()
 {
     SAIAUDIO_SYSLOG("Enter.")
     MURASAKI_ASSERT(rx_peripheral_ != nullptr)
@@ -144,7 +144,7 @@ unsigned int SaiPortAdaptor::GetSampleWordSizeRx()
     return return_val;
 }
 
-unsigned int SaiPortAdaptor::GetNumberOfChannelsTx()
+unsigned int SaiPortAdapter::GetNumberOfChannelsTx()
 {
     SAIAUDIO_SYSLOG("Enter.")
     MURASAKI_ASSERT(tx_peripheral_ != nullptr)
@@ -155,7 +155,7 @@ unsigned int SaiPortAdaptor::GetNumberOfChannelsTx()
     return return_val;
 }
 
-unsigned int SaiPortAdaptor::GetSampleWordSizeTx()
+unsigned int SaiPortAdapter::GetSampleWordSizeTx()
 {
     SAIAUDIO_SYSLOG("Enter.")
     MURASAKI_ASSERT(tx_peripheral_ != nullptr)
@@ -167,7 +167,7 @@ unsigned int SaiPortAdaptor::GetSampleWordSizeTx()
     return return_val;
 }
 
-bool SaiPortAdaptor::Match(void* peripheral_handle) {
+bool SaiPortAdapter::Match(void *peripheral_handle) {
     SAIAUDIO_SYSLOG("Enter.")
     MURASAKI_ASSERT(peripheral_handle != nullptr)
 
@@ -183,7 +183,7 @@ bool SaiPortAdaptor::Match(void* peripheral_handle) {
 
 }
 
-void* SaiPortAdaptor::GetPeripheralHandle()
+void* SaiPortAdapter::GetPeripheralHandle()
 {
     SAIAUDIO_SYSLOG("Enter.")
 
@@ -194,7 +194,7 @@ void* SaiPortAdaptor::GetPeripheralHandle()
 
 }
 
-bool SaiPortAdaptor::IsInt16SwapRequired()
+bool SaiPortAdapter::IsInt16SwapRequired()
 {
     SAIAUDIO_SYSLOG("Enter.")
 
