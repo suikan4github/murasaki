@@ -20,7 +20,16 @@ namespace murasaki {
  * By passing this adapter, the DuplexAudio class can handle audio through the SAI port.
  *
  * Caution : The size of the data in SAI and the width of the data in DMA must be aligned.
- * This is responsibility of the programmer. The misaligned configuration gives broken audio.
+ * This is responsibility of the programmer. The mis-aligned configuration gives broken audio.
+ *
+ * Following table summarizes the data size in I2S signal frame vs Configurator settings.
+ *
+ * | I2S Data Size |SAI Data Size     | SAI DMA Data Size |
+ * |:-------------:|:----------------:|:-----------------:|
+ * |     16 bits   |     16 bits      |  Half Word        |
+ * |     16 bits   | 16 bits Extended |  Half Word        |
+ * |     24 bits   |     24 bits      |       Word        |
+ * |     32 bits   |     32 bits      |       Word        |
  *
  * \ingroup MURASAKI_GROUP
  *

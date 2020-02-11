@@ -24,7 +24,21 @@ SaiPortAdapter::SaiPortAdapter(
           rx_peripheral_(rx_peripheral)
 
 {
+    // At least one of two peripheral have to be not null.
     MURASAKI_ASSERT(tx_peripheral_ != nullptr || rx_peripheral_ != nullptr)
+
+    // Is TX peripheral is correctly configureed as TX?
+    if (tx_peripheral_ != nullptr) {
+        MURASAKI_ASSERT(tx_peripheral_->Init.AudioMode == SAI_MODEMASTER_TX ||
+                        tx_peripheral_->Init.AudioMode == SAI_MODESLAVE_TX)
+    }
+
+    // Is RX peripheral is correctly configureed as RX?
+    if (rx_peripheral_ != nullptr) {
+        MURASAKI_ASSERT(rx_peripheral_->Init.AudioMode == SAI_MODEMASTER_RX ||
+                        rx_peripheral_->Init.AudioMode == SAI_MODESLAVE_RX)
+    }
+
 }
 
 SaiPortAdapter::~SaiPortAdapter()
@@ -137,8 +151,22 @@ unsigned int SaiPortAdapter::GetSampleWordSizeRx()
 {
     SAIAUDIO_SYSLOG("Enter.")
     MURASAKI_ASSERT(rx_peripheral_ != nullptr)
-    unsigned int return_val =
-            (rx_peripheral_->SlotInit.SlotSize == SAI_SLOTSIZE_32B) ? 4 : 2;
+
+    unsigned int return_val;
+
+    switch (rx_peripheral_->Init.DataSize) {
+        case SAI_DATASIZE_16:
+            return_val = 2;
+            break;
+        case SAI_DATASIZE_24:
+            case SAI_DATASIZE_32:
+            return_val = 4;
+            break;
+        default:
+            MURASAKI_SYSLOG(this, kfaSai, kseError, "Unexpected data size")
+            MURASAKI_ASSERT(false)
+            // force assertion.
+    }
 
     SAIAUDIO_SYSLOG("Exit with %d.", return_val)
     return return_val;
@@ -160,8 +188,21 @@ unsigned int SaiPortAdapter::GetSampleWordSizeTx()
     SAIAUDIO_SYSLOG("Enter.")
     MURASAKI_ASSERT(tx_peripheral_ != nullptr)
 
-    unsigned int return_val =
-            (tx_peripheral_->SlotInit.SlotSize == SAI_SLOTSIZE_32B) ? 4 : 2;
+    unsigned int return_val;
+
+    switch (rx_peripheral_->Init.DataSize) {
+        case SAI_DATASIZE_16:
+            return_val = 2;
+            break;
+        case SAI_DATASIZE_24:
+            case SAI_DATASIZE_32:
+            return_val = 4;
+            break;
+        default:
+            MURASAKI_SYSLOG(this, kfaSai, kseError, "Unexpected data size")
+            MURASAKI_ASSERT(false)
+            // force assertion.
+    }
 
     SAIAUDIO_SYSLOG("Exit with %d.", return_val)
     return return_val;
