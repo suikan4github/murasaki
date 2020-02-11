@@ -9,6 +9,8 @@ Record of the modification in project development.
 ### Deprecated
 ### Removed
 ### Fixed
+- [Issue 91 : Class SaiPortAdaptor must be renamed ](https://github.com/suikan4github/murasaki/issues/91)
+
 ### Security
 ### Known Issue
 - The SPI slave transfer is not tested.
