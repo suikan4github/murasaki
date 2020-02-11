@@ -24,7 +24,20 @@ I2sPortAdapter::I2sPortAdapter(
           rx_peripheral_(rx_peripheral)
 
 {
-    MURASAKI_ASSERT(tx_peripheral_ != nullptr || rx_peripheral_ != nullptr)
+    MURASAKI_ASSERT(tx_peripheral_ != nullptr || rx_peripheral_ != nullptr);
+
+    if (tx_peripheral_ != nullptr)
+        MURASAKI_ASSERT(
+                        tx_peripheral_->Init.Mode == I2S_MODE_MASTER_TX ||
+                        tx_peripheral_->Init.Mode == I2S_MODE_SLAVE_TX)
+    if (rx_peripheral_ != nullptr)
+        MURASAKI_ASSERT(
+                        rx_peripheral_->Init.Mode == I2S_MODE_MASTER_RX ||
+                        rx_peripheral_->Init.Mode == I2S_MODE_SLAVE_RX)
+
+
+
+
 }
 
 I2sPortAdapter::~I2sPortAdapter()
