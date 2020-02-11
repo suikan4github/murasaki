@@ -10,6 +10,7 @@ Record of the modification in project development.
 ### Removed
 ### Fixed
 - [Issue 91 : Class SaiPortAdaptor must be renamed ](https://github.com/suikan4github/murasaki/issues/91)
+- [Issue 92 : SaiPortAdaptor::GetSampleWordSizeTx() check coverage is not complete ](https://github.com/suikan4github/murasaki/issues/92)
 
 ### Security
 ### Known Issue

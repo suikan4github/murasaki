@@ -19,8 +19,16 @@ namespace murasaki {
  * Dedicated adapter for the @ref murasaki::DuplexAudio.
  * By passing this adapter, the DuplexAudio class can handle audio through the I2S port.
  *
- * Caution : The size of the data in I2S and the width of the data in DMA must be aligned.
- * This is responsibility of the programmer. The misaligned configuration gives broken audio.
+ * Caution : Regardless of the size of the data in I2S frame, set DMA data size as 16bit.
+ *
+ * Following table summarizes the data size in I2S signal frame vs Configurator settings.
+ *
+ * | I2S Data Size | I2S Data and Frame Format    | I2S DMA Data Size |
+ * |:-------------:|:----------------------------:|:-----------------:|
+ * |     16 bits   | 16bits data and 16bits frame |  Half Word        |
+ * |     16 bits   | 16bits data and 32bits frame |  Half Word        |
+ * |     24 bits   | 24bits data and 32bits frame |       Word        |
+ * |     32 bits   | 32bits data and 32bits frame |       Word        |
  *
  * \ingroup MURASAKI_GROUP
  *
