@@ -3,6 +3,8 @@ Record of the modification in project development.
 
 ## [Unreleased]
 ### Added
+- [Issue 51 : Add I2S audio adapter ](https://github.com/suikan4github/murasaki/issues/51)
+
 ### Changed
 ### Deprecated
 ### Removed
