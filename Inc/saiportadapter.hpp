@@ -1,12 +1,12 @@
 /**
- * @file saiportadaptor.hpp
+ * @file saiportadapter.hpp
  *
  *  @date 2019/07/28
  *  @author takemasa
  */
 
-#ifndef SAIPORTADAPTOR_HPP_
-#define SAIPORTADAPTOR_HPP_
+#ifndef SAIPORTADAPTER_HPP_
+#define SAIPORTADAPTER_HPP_
 
 #include <audioportadapterstrategy.hpp>
 
@@ -25,7 +25,7 @@ namespace murasaki {
  * \ingroup MURASAKI_GROUP
  *
  */
-class SaiPortAdaptor : public AudioPortAdapterStrategy {
+class SaiPortAdapter : public AudioPortAdapterStrategy {
  public:
     /**
      * @brief Constructor.
@@ -38,12 +38,12 @@ class SaiPortAdaptor : public AudioPortAdapterStrategy {
      * This class assumes one is the TX and the other is RX.
      * In case of a programmer use SAI as simplex audio, the unused block must be passed as nullptr.
      */
-    SaiPortAdaptor(
+    SaiPortAdapter(
                    SAI_HandleTypeDef *tx_peripheral,
                    SAI_HandleTypeDef *rx_peripheral
                    );
 
-    virtual ~SaiPortAdaptor();
+    virtual ~SaiPortAdapter();
 
     /**
      * @brief Kick start routine to start the TX DMA transfer.
@@ -145,4 +145,4 @@ class SaiPortAdaptor : public AudioPortAdapterStrategy {
 }
 /* namespace murasaki */
 
-#endif /* SAIPORTADAPTOR_HPP_ */
+#endif /* SAIPORTADAPTER_HPP_ */
