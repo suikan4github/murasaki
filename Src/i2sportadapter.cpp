@@ -90,7 +90,7 @@ void I2sPortAdapter::StartTransferTx(
 
     MURASAKI_ASSERT(nullptr != tx_peripheral_)
     MURASAKI_ASSERT(channel_len > 0)
-
+#if 0
     /*
      * Compensate the channel_len.
      * The channel_len parameter is lenght of the channel by sample word.
@@ -109,7 +109,7 @@ void I2sPortAdapter::StartTransferTx(
             MURASAKI_ASSERT(false)
             ;
     }
-
+#endif
     // Start the Transfer and Transmit DMA.
     // Assumes CubeIDE configures these setting as circular mode. That mean, for each halfway,
     // interrupt is raised, in addition to the end of buffer interrupt.
@@ -133,7 +133,7 @@ void I2sPortAdapter::StartTransferRx(
 
     MURASAKI_ASSERT(nullptr != rx_peripheral_)
     MURASAKI_ASSERT(channel_len > 0)
-
+#if 0
     /*
      * Compensate the channel_len.
      * The channel_len parameter is lenght of the channel by sample word.
@@ -152,7 +152,7 @@ void I2sPortAdapter::StartTransferRx(
             MURASAKI_ASSERT(false)
             ;
     }
-
+#endif
     // Start the Transfer and Receive DMA.
     // Assumes CubeIDE configures these setting as circular mode. That mean, for each halfway,
     // Interrupt is raised, in addition to the end of buffer interrupt.
