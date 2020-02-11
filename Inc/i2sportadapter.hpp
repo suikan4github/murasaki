@@ -1,49 +1,48 @@
 /**
- * @file saiportadaptor.hpp
+ * @file i2sportadapter.hpp
  *
- *  @date 2019/07/28
+ *  @date 2020/01/15
  *  @author takemasa
  */
 
-#ifndef SAIPORTADAPTOR_HPP_
-#define SAIPORTADAPTOR_HPP_
+#ifndef I2SPORTADAPTER_HPP_
+#define I2SPORTADAPTER_HPP_
 
 #include <audioportadapterstrategy.hpp>
 
 namespace murasaki {
 
-#ifdef   HAL_SAI_MODULE_ENABLED
+#ifdef   HAL_I2S_MODULE_ENABLED
 /**
- * @brief Adapter as SAI audio port.
+ * @brief Adapter as I2S audio port.
  * @details
  * Dedicated adapter for the @ref murasaki::DuplexAudio.
- * By passing this adapter, the DuplexAudio class can handle audio through the SAI port.
+ * By passing this adapter, the DuplexAudio class can handle audio through the I2S port.
  *
- * Caution : The size of the data in SAI and the width of the data in DMA must be aligned.
+ * Caution : The size of the data in I2S and the width of the data in DMA must be aligned.
  * This is responsibility of the programmer. The misaligned configuration gives broken audio.
  *
  * \ingroup MURASAKI_GROUP
  *
  */
-class SaiPortAdaptor : public AudioPortAdapterStrategy {
+class I2sPortAdapter : public AudioPortAdapterStrategy {
  public:
     /**
      * @brief Constructor.
-     * @param tx_peripheral SAI_HandleTypeDef type peripheral for TX. This is defined in main.c.
-     * @param rx_peripheral SAI_HandleTypeDef type peripheral for RX. This is defined in main.c.
+     * @param tx_peripheral I2S_HandleTypeDef type peripheral for TX. This is defined in main.c.
+     * @param rx_peripheral I2S_HandleTypeDef type peripheral for RX. This is defined in main.c.
      * @details
-     * Receives handle of the SAI block peripherals.
+     * Receives handle of the I2S block peripherals.
      *
-     * SAI has two block internally.
      * This class assumes one is the TX and the other is RX.
-     * In case of a programmer use SAI as simplex audio, the unused block must be passed as nullptr.
+     * In case of a programmer use I2S as simplex audio, the unused block must be passed as nullptr.
      */
-    SaiPortAdaptor(
-                   SAI_HandleTypeDef *tx_peripheral,
-                   SAI_HandleTypeDef *rx_peripheral
+    I2sPortAdapter(
+                   I2S_HandleTypeDef *tx_peripheral,
+                   I2S_HandleTypeDef *rx_peripheral
                    );
 
-    virtual ~SaiPortAdaptor();
+    virtual ~I2sPortAdapter();
 
     /**
      * @brief Kick start routine to start the TX DMA transfer.
@@ -70,7 +69,7 @@ class SaiPortAdaptor : public AudioPortAdapterStrategy {
                                  );
     /**
      * @brief Return how many DMA phase is implemented
-     * @return Always return 2 for STM32 SAI, becuase the cyclic DMA has halfway and complete interrupt.
+     * @return Always return 2 for STM32 I2S, becuase the cyclic DMA has halfway and complete interrupt.
      */
     virtual unsigned int GetNumberOfDMAPhase() {
         return 2;
@@ -78,7 +77,7 @@ class SaiPortAdaptor : public AudioPortAdapterStrategy {
     ;
     /**
      * @brief Return how many channels are in the transfer.
-     * @return 1 for Mono, 2 for stereo, 3... for multi-channel.
+     * @return always 2
      */
     virtual unsigned int GetNumberOfChannelsTx();
 
@@ -89,7 +88,7 @@ class SaiPortAdaptor : public AudioPortAdapterStrategy {
     virtual unsigned int GetSampleWordSizeTx();
     /**
      * @brief Return how many channels are in the transfer.
-     * @return 1 for Mono, 2 for stereo, 3... for multi-channel.
+     * @return always 2
      */
     virtual unsigned int GetNumberOfChannelsRx();
 
@@ -127,22 +126,22 @@ class SaiPortAdaptor : public AudioPortAdapterStrategy {
 
     /**
      * @brief Display half word swap is required. .
-     * @return Always false.
+     * @return Always ture.
      * @details
      * Display whether the half word (int16_t) swap is required or not.
      *
-     * SAI doens't require the half word swap inside word.
-     * Thus, always returns false
+     * I2S DMA requires the half word swap inside word.
+     * Thus, always returns true.
      */
     virtual bool IsInt16SwapRequired();
 
  private:
-    SAI_HandleTypeDef *const tx_peripheral_;
-    SAI_HandleTypeDef *const rx_peripheral_;
+    I2S_HandleTypeDef *const tx_peripheral_;
+    I2S_HandleTypeDef *const rx_peripheral_;
 };
-#endif // HAL_SAI_MODULE_ENABLED
+#endif // HAL_I2S_MODULE_ENABLED
 
 }
 /* namespace murasaki */
 
-#endif /* SAIPORTADAPTOR_HPP_ */
+#endif /* I2SPORTADAPTER_HPP_ */

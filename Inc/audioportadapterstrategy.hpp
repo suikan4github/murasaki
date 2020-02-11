@@ -122,6 +122,23 @@ class AudioPortAdapterStrategy : public murasaki::PeripheralStrategy {
      * @return pointer to the raw peripheral handler hidden in a class.
      */
     virtual void * GetPeripheralHandle()=0;
+
+    /**
+     * @brief Display half word swap is required. .
+     * @return true : half word swap required. false :harlf word swap is not required.
+     * @details
+     * Display whether the half word (int16_t) swap is required or not.
+     *
+     * Certain architecture requires to swaqp the upper half word and lower half woprd inside a word (int32_t ).
+     * In case this is required before copying to TX DMA buffer or after copying from RX DMA buffer,
+     * return true. Otherwise, return false.
+     *
+     * The return value does't affect to the endian inside half word.
+     *
+     * This display will be ignored if the audio sample size is half word (int16_t) or byte (int8_t).
+     */
+    virtual bool IsInt16SwapRequired() = 0;
+
 };
 
 } /* namespace murasaki */

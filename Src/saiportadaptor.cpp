@@ -193,6 +193,20 @@ void* SaiPortAdaptor::GetPeripheralHandle()
     return return_val;
 
 }
+
+bool SaiPortAdaptor::IsInt16SwapRequired()
+{
+    SAIAUDIO_SYSLOG("Enter.")
+
+    bool return_val = false;
+
+    SAIAUDIO_SYSLOG("Exit with %s.", return_val ? "true" : "false")
+
+    return return_val;
+
+}
+
+
 #endif //   HAL_SAI_MODULE_ENABLED
 
 } /* namespace murasaki */

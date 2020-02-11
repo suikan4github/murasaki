@@ -21,10 +21,10 @@ DuplexAudio::DuplexAudio(
         :
           peripheral_adapter_(peripheral_adapter),
           channel_len_(channel_length),
-          // Calcurate a DMA buffer size per interrupt [Byte]
+        // Calculate a DMA buffer size per interrupt [Byte]
           block_size_tx_(channel_len_ * peripheral_adapter_->GetNumberOfChannelsTx() * peripheral_adapter_->GetSampleWordSizeTx()),
           block_size_rx_(channel_len_ * peripheral_adapter_->GetNumberOfChannelsRx() * peripheral_adapter_->GetSampleWordSizeRx()),
-          // Calcurate a entire DMA buffer size. 
+        // Calculate a entire DMA buffer size.
           buffer_size_tx_(peripheral_adapter_->GetNumberOfDMAPhase() * block_size_tx_),
           buffer_size_rx_(peripheral_adapter_->GetNumberOfDMAPhase() * block_size_rx_),
           // Allocate DMA buffer
@@ -223,6 +223,14 @@ void DuplexAudio::TransmitAndReceive(
             break;
         }
         case 4: {
+            union {
+                int32_t i32;
+                struct {
+                    int16_t upper;
+                    int16_t lower;
+                };
+            } swapper;
+
             AUDIO_SYSLOG("Case:Word size is 4");
 
             // Obtain the start address of the DMA buffer to transfer
@@ -242,8 +250,27 @@ void DuplexAudio::TransmitAndReceive(
             // Data conversion and transpose the buffer
             // By scaling factor, [-1.0, 1.0] is scaled to [-INT32_MAX, INT32_MAX]
             // DMA  data order is : word0 of ch0, word 0 of ch1,... word 0 of chN-1.
+
             // Invalidate the DMA RX data buffer on cache. Then, ready to read.
             murasaki::CleanAndInvalidateDataCacheByAddress(rx_current_dma_data, block_size_rx_);
+
+            // Is half word swap required by the port hardware?
+            // If yes, swap the all data in RX DMA buffer
+            if (peripheral_adapter_->IsInt16SwapRequired())
+                for (unsigned int index = 0; index < (tx_num_of_channels * channel_len_); index++) {
+                    int16_t temp;
+
+                    // Get one data from RX DMA buffer
+                    swapper.i32 = rx_current_dma_data[index];
+
+                    // swap the high and low part
+                    temp = swapper.lower;
+                    swapper.lower = swapper.upper;
+                    swapper.upper = temp;
+
+                    // Write back to RX DMA buffer
+                    rx_current_dma_data[index] = swapper.i32;
+                }
 
             // copy to TX DMA buffer.
             // The tx_current dma_data is the raw buffer to the audio device.
@@ -259,6 +286,25 @@ void DuplexAudio::TransmitAndReceive(
             for (unsigned int ch_idx = 0; ch_idx < rx_num_of_channels; ch_idx++)
                 for (unsigned int wo_idx = 0; wo_idx < channel_len_; wo_idx++)
                     rx_channels[ch_idx][wo_idx] = rx_current_dma_data[wo_idx * rx_num_of_channels + ch_idx] / scale;
+
+            // Is half word swap required by the port hardware?
+            // If yes, swap the all data in TX DMA buffer
+            if (peripheral_adapter_->IsInt16SwapRequired())
+                for (unsigned int index = 0; index < (tx_num_of_channels * channel_len_); index++) {
+                    int16_t temp;
+
+                    // Get one data from TX DMA buffer
+                    swapper.i32 = tx_current_dma_data[index];
+
+                    // swap the high and low part
+                    temp = swapper.lower;
+                    swapper.lower = swapper.upper;
+                    swapper.upper = temp;
+
+                    // Write back to TX DMA buffer
+                    tx_current_dma_data[index] = swapper.i32;
+                }
+
 
             // Flush the DMA TX data buffer on cache to main memory.
             murasaki::CleanDataCacheByAddress(tx_current_dma_data, block_size_tx_);
@@ -296,6 +342,7 @@ bool DuplexAudio::DmaCallback(
 
         // Notice the waiting task the buffer is ready.
         AUDIO_SYSLOG("Releasing Sync");
+
         sync_->Release();
 
         AUDIO_SYSLOG("Return with match");
