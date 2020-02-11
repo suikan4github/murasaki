@@ -2051,6 +2051,7 @@ PREDEFINED             = HAL_UART_MODULE_ENABLED \
                          HAL_SPI_MODULE_ENABLED \
                          HAL_GPIO_MODULE_ENABLED \
                          HAL_SAI_MODULE_ENABLED \
+                         HAL_I2S_MODULE_ENABLED \
                          USE_FULL_ASSERT \
                          MURASAKI_CONFIG_NOSYSLOG
 
