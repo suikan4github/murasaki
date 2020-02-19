@@ -48,6 +48,7 @@ enum SyslogFacility {
     kfaSai = 1 << 8,  //!< kfaSai is specified when the message is from the SAI module.
     kfaLog = 1 << 9,  //!< kfaLog is specified when the message is from the logger and debugger module.
     kfaAudioCodec = 1 << 10,  //!< kfaAudioCodec is specified when the message is from the Audio Codec module
+    kfaEncoder = 1 << 11,  //!< kfaEncoder is specifed when the message is from the Encoder module.
     kfaNone = 1 << 22,  //!< Disable all facility
     kfaAll = 1 << 23,  //!< Enable all facility
     kfaUser0 = 1 << 24,  //!< User defined facility
@@ -260,10 +261,7 @@ enum TaskPriority {
     ktpHigh =           osPriorityHigh          - osPriorityIdle,//!< ktpHigh is considered for the debug task.
     ktpRealtime =       osPriorityRealtime      - osPriorityIdle //!< ktpRealtime is dedicated for the realtime signal processing.
 };
-// @formatter:on
-/**
- * \}
- */
+// @formatter:on/*** \}
 /*
  *  @ingroup MURASAKI_DEFINITION_GROUP
  */
@@ -281,17 +279,17 @@ enum TaskPriority {
  */
 static inline bool IsTaskContext()
 {
-    // To check the task/interrupt context is done by ISPR.
-    // The ISPR has ISR number which is on going.
-    // If this field is zero, CPU is in the thread mode which is task context.
-    // If this field is non-zero, CPU is in the handler mode which is interrupt context.
-    // The field length is depend on the CORE type.
-    // For the detail of the ISPR, see the "Cortex-Mx Devices Generic User Guide", where Mx is one of M0, M0+, M1, M3, M4, M7
+// To check the task/interrupt context is done by ISPR.
+// The ISPR has ISR number which is on going.
+// If this field is zero, CPU is in the thread mode which is task context.
+// If this field is non-zero, CPU is in the handler mode which is interrupt context.
+// The field length is depend on the CORE type.
+// For the detail of the ISPR, see the "Cortex-Mx Devices Generic User Guide", where Mx is one of M0, M0+, M1, M3, M4, M7
 
 #if defined( __CORE_CM7_H_GENERIC ) ||defined ( __CORE_CM3_H_GENERIC ) ||defined ( __CORE_CM4_H_GENERIC )
     const unsigned int active_interrupt_mask = 0x1FF; /* bit 8:0 */
 #elif defined ( __CORE_CM0_H_GENERIC ) ||defined ( __CORE_CM0PLUS_H_GENERIC ) || defined ( __CORE_CM1_H_GENERIC )
-    const unsigned int active_interrupt_mask = 0x03F; /* bit 5:0 */
+const unsigned int active_interrupt_mask = 0x03F; /* bit 5:0 */
 #else
 #error "Unknown core"
 #endif
@@ -312,7 +310,7 @@ static inline bool IsTaskContext()
  *
  * Once this function is returned, the specific region is coherent.
  */
-static inline void CleanAndInvalidateDataCacheByAddress(void * address, size_t size)
+static inline void CleanAndInvalidateDataCacheByAddress(void *address, size_t size)
                                                         {
 #ifdef __CORE_CM7_H_GENERIC
     unsigned int aligned_address = reinterpret_cast<unsigned int>(address);
@@ -325,7 +323,7 @@ static inline void CleanAndInvalidateDataCacheByAddress(void * address, size_t s
 
     ::SCB_CleanInvalidateDCache_by_Addr(reinterpret_cast<long unsigned int *>(aligned_address), size);
 #elif defined ( __CORE_CM0_H_GENERIC ) ||defined ( __CORE_CM0PLUS_H_GENERIC ) ||defined ( __CORE_CM3_H_GENERIC ) ||defined ( __CORE_CM4_H_GENERIC ) ||defined ( __CORE_CM1_H_GENERIC )
-    // Do nothing. These core doesn't have d-cache.
+// Do nothing. These core doesn't have d-cache.
 #else
 #error "Unknown core"
 #endif
@@ -343,7 +341,7 @@ static inline void CleanAndInvalidateDataCacheByAddress(void * address, size_t s
  *
  * Once this function is returned, the specific region is coherent.
  */
-static inline void CleanDataCacheByAddress(void * address, size_t size)
+static inline void CleanDataCacheByAddress(void *address, size_t size)
                                            {
 #ifdef __CORE_CM7_H_GENERIC
     unsigned int aligned_address = reinterpret_cast<unsigned int>(address);
@@ -356,7 +354,7 @@ static inline void CleanDataCacheByAddress(void * address, size_t size)
 
     ::SCB_CleanDCache_by_Addr(reinterpret_cast<long unsigned int *>(aligned_address), size);
 #elif defined ( __CORE_CM0_H_GENERIC ) ||defined ( __CORE_CM0PLUS_H_GENERIC ) ||defined ( __CORE_CM3_H_GENERIC ) ||defined ( __CORE_CM4_H_GENERIC ) ||defined ( __CORE_CM1_H_GENERIC )
-    // Do nothing. These core doesn't have d-cache.
+// Do nothing. These core doesn't have d-cache.
 #else
 #error "Unknown core"
 #endif
@@ -400,7 +398,7 @@ extern unsigned int GetCycleCounter();
  * For example, if the tick period is 10mS, the worst error is 10mS.
  */
 static inline void Sleep(unsigned int duration_ms) {
-    // if the parameter is Indefinitely, pass it through. If not, convert to milisecond.
+// if the parameter is Indefinitely, pass it through. If not, convert to milisecond.
     if (duration_ms == murasaki::kwmsIndefinitely)
         ::vTaskDelay(duration_ms);
     else
