@@ -39,6 +39,7 @@
 #include "bitout.hpp"
 #include "saiportadapter.hpp"
 #include "i2sportadapter.hpp"
+#include "quadratureencoder.hpp"
 
 // Third party
 #include "Thirdparty/adau1361.hpp"
