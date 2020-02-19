@@ -37,6 +37,7 @@ namespace murasaki {
  * Internally, these value will be used as bit position in mask.
  */
 enum SyslogFacility {
+    kfaNone = 0,  //!< Disable all facility
     kfaKernel = 1 << 0,  //!< kfaKernel is specified when the message is bound with the kernel issue.
     kfaSerial = 1 << 1,  //!< kfaSerial is specified when the message is from the serial module.
     kfaSpiMaster = 1 << 2,  //!< kfaSpi is specified when the message is from the SPI master module
@@ -49,8 +50,6 @@ enum SyslogFacility {
     kfaLog = 1 << 9,  //!< kfaLog is specified when the message is from the logger and debugger module.
     kfaAudioCodec = 1 << 10,  //!< kfaAudioCodec is specified when the message is from the Audio Codec module
     kfaEncoder = 1 << 11,  //!< kfaEncoder is specifed when the message is from the Encoder module.
-    kfaNone = 1 << 22,  //!< Disable all facility
-    kfaAll = 1 << 23,  //!< Enable all facility
     kfaUser0 = 1 << 24,  //!< User defined facility
     kfaUser1 = 1 << 25,  //!< User defined facility
     kfaUser2 = 1 << 26,  //!< User defined facility
@@ -58,7 +57,8 @@ enum SyslogFacility {
     kfaUser4 = 1 << 28,  //!< User defined facility
     kfaUser5 = 1 << 29,  //!< User defined facility
     kfaUser6 = 1 << 30,  //!< User defined facility
-    kfaUser7 = 1 << 31  //!< User defined facility
+    kfaUser7 = 1 << 31,  //!< User defined facility
+    kfaAll = 0xFFFFFFFF  //!< Enable all facility
 };
 
 /**
@@ -251,7 +251,9 @@ enum CodecChannel {
  * This is essential to avoid the imcompatibility with cmsis-os which uses negative
  * priority while FreeRTOS uses positive.
  */
-// @formatter:off
+/*
+ *@formatter:off
+ */
 enum TaskPriority {
     ktpIdle = 0,                                                 //!< ktpIdle
     ktpLow =            osPriorityLow           - osPriorityIdle,//!< ktpLow
@@ -261,8 +263,11 @@ enum TaskPriority {
     ktpHigh =           osPriorityHigh          - osPriorityIdle,//!< ktpHigh is considered for the debug task.
     ktpRealtime =       osPriorityRealtime      - osPriorityIdle //!< ktpRealtime is dedicated for the realtime signal processing.
 };
-// @formatter:on/*** \}
 /*
+ *  @formatter:on
+ */
+
+/**
  *  @ingroup MURASAKI_DEFINITION_GROUP
  */
 

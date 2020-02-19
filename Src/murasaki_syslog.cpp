@@ -51,4 +51,3 @@ bool AllowedSyslogOut(murasaki::SyslogFacility facility,
 
 }
 
-
