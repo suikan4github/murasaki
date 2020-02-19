@@ -1,8 +1,8 @@
-/*
- * quadratureencoder.cpp
+/**
+ * @file quadratureencoder.cpp
  *
- *  Created on: 2020/02/19
- *      Author: takemasa
+ * @date 2020/02/19
+ * @author takemasa
  */
 
 #include "quadratureencoder.hpp"

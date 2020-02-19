@@ -434,7 +434,7 @@ EXTRACT_PACKAGE        = NO
 # included in the documentation.
 # The default value is: NO.
 
-EXTRACT_STATIC         = YES
+EXTRACT_STATIC         = NO
 
 # If the EXTRACT_LOCAL_CLASSES tag is set to YES, classes (and structs) defined
 # locally in source files will be included in the documentation. If set to NO,
@@ -2053,7 +2053,8 @@ PREDEFINED             = HAL_UART_MODULE_ENABLED \
                          HAL_SAI_MODULE_ENABLED \
                          HAL_I2S_MODULE_ENABLED \
                          USE_FULL_ASSERT \
-                         MURASAKI_CONFIG_NOSYSLOG
+                         MURASAKI_CONFIG_NOSYSLOG \
+                         HAL_TIM_MODULE_ENABLED
 
 # If the MACRO_EXPANSION and EXPAND_ONLY_PREDEF tags are set to YES then this
 # tag can be used to specify a list of macro names that should be expanded. The
