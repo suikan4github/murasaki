@@ -2,7 +2,7 @@
 Record of the modification in project development.
 
 ## [Unreleased]
-The Issue 91 fix brings incompatibility to the past. 
+The Issue 91 fix brings incompatibility to the past. Class name changed.
 
 ### Added
 - [Issue 51 : Add I2S audio adapter ](https://github.com/suikan4github/murasaki/issues/51)
