@@ -2,8 +2,11 @@
 Record of the modification in project development.
 
 ## [Unreleased]
+The Issue 91 fix brings incompatibility to the past. 
+
 ### Added
 - [Issue 51 : Add I2S audio adapter ](https://github.com/suikan4github/murasaki/issues/51)
+- [Issue 54 : Add a rotary encoder class](https://github.com/suikan4github/murasaki/issues/54)
 
 ### Changed
 ### Deprecated
@@ -14,7 +17,6 @@ Record of the modification in project development.
 
 ### Security
 ### Known Issue
-- The SPI slave transfer is not tested.
 
 ## [1.0.1] - 2020-01-07
 ### Added
