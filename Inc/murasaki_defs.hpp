@@ -49,7 +49,8 @@ enum SyslogFacility {
     kfaSai = 1 << 8,  //!< kfaSai is specified when the message is from the SAI module.
     kfaLog = 1 << 9,  //!< kfaLog is specified when the message is from the logger and debugger module.
     kfaAudioCodec = 1 << 10,  //!< kfaAudioCodec is specified when the message is from the Audio Codec module
-    kfaEncoder = 1 << 11,  //!< kfaEncoder is specifed when the message is from the Encoder module.
+    kfaEncoder = 1 << 11,  //!< kfaEncoder is specified when the message is from the Encoder module.
+    kfaAdc = 1 << 12,   //!< kfaAdc is specified when the message is from the Adc module.
     kfaUser0 = 1 << 24,  //!< User defined facility
     kfaUser1 = 1 << 25,  //!< User defined facility
     kfaUser2 = 1 << 26,  //!< User defined facility
@@ -227,6 +228,21 @@ enum UartTimeout
 {
     kutNoIdleTimeout = 0,  //!< kutNoIdleTimeout is specified when API should has normal timeout.
     kutIdleTimeout  //!< kutIdleTimeout is specified when API should time out by Idle line
+};
+
+/**
+ * @brief Return status of the UART classes.
+ * @details
+ *
+ */
+enum AdcStatus
+{
+    kasOK = 0,  //!< No error
+    kasInternal,
+    kasOverrun,
+    kasDMA,
+    kasUnknown
+
 };
 
 /**

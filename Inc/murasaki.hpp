@@ -40,6 +40,7 @@
 #include "saiportadapter.hpp"
 #include "i2sportadapter.hpp"
 #include "quadratureencoder.hpp"
+#include "adc.hpp"
 
 // Third party
 #include "Thirdparty/adau1361.hpp"

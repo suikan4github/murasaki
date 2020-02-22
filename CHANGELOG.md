@@ -7,6 +7,7 @@ The Issue 91 fix brings incompatibility to the past. Class name changed.
 ### Added
 - [Issue 51 : Add I2S audio adapter ](https://github.com/suikan4github/murasaki/issues/51)
 - [Issue 54 : Add a rotary encoder class](https://github.com/suikan4github/murasaki/issues/54)
+- [Issue 94 : Add ADC class](https://github.com/suikan4github/murasaki/issues/94)
 
 ### Changed
 ### Deprecated
