@@ -16,6 +16,15 @@ namespace murasaki {
 
 #ifdef HAL_ADC_MODULE_ENABLED
 
+/**
+ * @brief STM32 dedicated ADC class.
+ * @details
+ * This class is single converstion class. That mean, Only one specified channel will be converted only once. Then, return.
+ *
+ * Optionally, The sampling clock duration can be sent for the each channels.
+ *
+ * \ingroup MURASAKI_GROUP
+ */
 class Adc : public AdcStrategy {
  public:
     /**
@@ -40,6 +49,8 @@ class Adc : public AdcStrategy {
      *
      * The clocks parameter is restricted as ADC_SAMPLETIME_*CYCLES. Otherwise, HAL may
      * fail the assertion.
+     *
+     * Up to 32 channels data can be stored. The overflown data will be ignored.
      */
     virtual void SetSampleClock(unsigned int channel, unsigned int clocks);
     /**

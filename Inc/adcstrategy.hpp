@@ -14,6 +14,7 @@ namespace murasaki {
 
 /**
  * @brief Synchronozied, blocking ADC converter Strategy.
+ * \ingroup MURASAKI_ABSTRACT_GROUP
  *
  */
 class AdcStrategy : public PeripheralStrategy {
@@ -33,7 +34,7 @@ class AdcStrategy : public PeripheralStrategy {
      * @details
      * Optional implementation dependent setting.
      */
-    virtual void SetSampleClock(unsigned int charnnel, unsigned int clocks) = 0;
+    virtual void SetSampleClock(unsigned int channel, unsigned int clocks) = 0;
 
     /**
      * @brief Convert the analog input through the given channel.
