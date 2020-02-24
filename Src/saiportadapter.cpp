@@ -16,12 +16,12 @@ namespace murasaki {
 #ifdef   HAL_SAI_MODULE_ENABLED
 
 SaiPortAdapter::SaiPortAdapter(
-                                 SAI_HandleTypeDef * tx_peripheral,
-                                 SAI_HandleTypeDef * rx_peripheral
-                                 )
+                               SAI_HandleTypeDef *tx_peripheral,
+                               SAI_HandleTypeDef *rx_peripheral
+                               )
         :
-          tx_peripheral_(tx_peripheral),
-          rx_peripheral_(rx_peripheral)
+        tx_peripheral_(tx_peripheral),
+        rx_peripheral_(rx_peripheral)
 
 {
     // At least one of two peripheral have to be not null.
@@ -56,28 +56,28 @@ bool SaiPortAdapter::HandleError(void *ptr) {
         uint32_t error_code = rx_peripheral_->ErrorCode;
         // Check error and display it.
         if (HAL_SAI_ERROR_OVR | error_code) {
-            MURASAKI_SYSLOG( this, kfaSai, kseError, "HAL_SAI_ERROR_OVR")
+            MURASAKI_SYSLOG(this, kfaSai, kseError, "HAL_SAI_ERROR_OVR")
         }
         if (HAL_SAI_ERROR_UDR | error_code) {
-            MURASAKI_SYSLOG( this, kfaSai, kseError, "HAL_SAI_ERROR_UDR")
+            MURASAKI_SYSLOG(this, kfaSai, kseError, "HAL_SAI_ERROR_UDR")
         }
         if (HAL_SAI_ERROR_AFSDET | error_code) {
-            MURASAKI_SYSLOG( this, kfaSai, kseError, "HAL_SAI_ERROR_AFSDET")
+            MURASAKI_SYSLOG(this, kfaSai, kseError, "HAL_SAI_ERROR_AFSDET")
         }
         if (HAL_SAI_ERROR_LFSDET | error_code) {
-            MURASAKI_SYSLOG( this, kfaSai, kseError, "HAL_SAI_ERROR_LFSDET")
+            MURASAKI_SYSLOG(this, kfaSai, kseError, "HAL_SAI_ERROR_LFSDET")
         }
         if (HAL_SAI_ERROR_CNREADY | error_code) {
-            MURASAKI_SYSLOG( this, kfaSai, kseError, "HAL_SAI_ERROR_CNREADY")
+            MURASAKI_SYSLOG(this, kfaSai, kseError, "HAL_SAI_ERROR_CNREADY")
         }
         if (HAL_SAI_ERROR_WCKCFG | error_code) {
-            MURASAKI_SYSLOG( this, kfaSai, kseError, "HAL_SAI_ERROR_WCKCFG")
+            MURASAKI_SYSLOG(this, kfaSai, kseError, "HAL_SAI_ERROR_WCKCFG")
         }
         if (HAL_SAI_ERROR_TIMEOUT | error_code) {
-            MURASAKI_SYSLOG( this, kfaSai, kseError, "HAL_SAI_ERROR_TIMEOUT")
+            MURASAKI_SYSLOG(this, kfaSai, kseError, "HAL_SAI_ERROR_TIMEOUT")
         }
         if (HAL_SAI_ERROR_DMA | error_code) {
-            MURASAKI_SYSLOG( this, kfaSai, kseError, "HAL_SAI_ERROR_DMA")
+            MURASAKI_SYSLOG(this, kfaSai, kseError, "HAL_SAI_ERROR_DMA")
         }
         // This is fatal condition.
         SAIAUDIO_SYSLOG("Device matched.")
@@ -92,9 +92,9 @@ bool SaiPortAdapter::HandleError(void *ptr) {
 }
 
 void SaiPortAdapter::StartTransferTx(
-                                      uint8_t * tx_buffer,
-                                      unsigned int channel_len
-                                      ) {
+                                     uint8_t *tx_buffer,
+                                     unsigned int channel_len
+                                     ) {
     SAIAUDIO_SYSLOG("Enter. Starting SAI peripheral tx_buffer : %p, channel_len : %d", tx_buffer, channel_len)
 
     MURASAKI_ASSERT(nullptr != tx_peripheral_)
@@ -114,9 +114,9 @@ void SaiPortAdapter::StartTransferTx(
 }
 
 void SaiPortAdapter::StartTransferRx(
-                                      uint8_t * rx_buffer,
-                                      unsigned int channel_len
-                                      ) {
+                                     uint8_t *rx_buffer,
+                                     unsigned int channel_len
+                                     ) {
     SAIAUDIO_SYSLOG("Enter. Starting SAI peripheral rx_buffer : %p, channel_len : %d", rx_buffer, channel_len)
 
     MURASAKI_ASSERT(nullptr != rx_peripheral_)
@@ -147,7 +147,7 @@ unsigned int SaiPortAdapter::GetNumberOfChannelsRx()
     return return_val;
 }
 
-unsigned int SaiPortAdapter::GetSampleWordSizeRx()
+unsigned int SaiPortAdapter::GetSampleDataSizeRx()
 {
     SAIAUDIO_SYSLOG("Enter.")
     MURASAKI_ASSERT(rx_peripheral_ != nullptr)
@@ -159,7 +159,9 @@ unsigned int SaiPortAdapter::GetSampleWordSizeRx()
             return_val = 2;
             break;
         case SAI_DATASIZE_24:
-            case SAI_DATASIZE_32:
+            return_val = 3;
+            break;
+        case SAI_DATASIZE_32:
             return_val = 4;
             break;
         default:
@@ -183,7 +185,7 @@ unsigned int SaiPortAdapter::GetNumberOfChannelsTx()
     return return_val;
 }
 
-unsigned int SaiPortAdapter::GetSampleWordSizeTx()
+unsigned int SaiPortAdapter::GetSampleDataSizeTx()
 {
     SAIAUDIO_SYSLOG("Enter.")
     MURASAKI_ASSERT(tx_peripheral_ != nullptr)
@@ -195,7 +197,9 @@ unsigned int SaiPortAdapter::GetSampleWordSizeTx()
             return_val = 2;
             break;
         case SAI_DATASIZE_24:
-            case SAI_DATASIZE_32:
+            return_val = 3;
+            break;
+        case SAI_DATASIZE_32:
             return_val = 4;
             break;
         default:
@@ -228,7 +232,7 @@ void* SaiPortAdapter::GetPeripheralHandle()
 {
     SAIAUDIO_SYSLOG("Enter.")
 
-    void * return_val = rx_peripheral_;
+    void *return_val = rx_peripheral_;
 
     SAIAUDIO_SYSLOG("Exit with %p.", return_val)
     return return_val;
@@ -246,7 +250,6 @@ bool SaiPortAdapter::IsInt16SwapRequired()
     return return_val;
 
 }
-
 
 #endif //   HAL_SAI_MODULE_ENABLED
 

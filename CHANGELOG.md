@@ -16,6 +16,7 @@ The Issue 91 fix brings incompatibility to the past. Class name changed.
 - [Issue 91 : Class SaiPortAdaptor must be renamed ](https://github.com/suikan4github/murasaki/issues/91)
 - [Issue 92 : SaiPortAdaptor::GetSampleWordSizeTx() check coverage is not complete ](https://github.com/suikan4github/murasaki/issues/92)
 - [Issue 93 : kfaAll and kfaNone is not handled at all.](https://github.com/suikan4github/murasaki/issues/93)
+- [Issue 97 : 24bit I2S data is not correctly scaled. ](https://github.com/suikan4github/murasaki/issues/97)
 
 ### Security
 ### Known Issue

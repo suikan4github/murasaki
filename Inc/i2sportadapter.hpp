@@ -90,10 +90,10 @@ class I2sPortAdapter : public AudioPortAdapterStrategy {
     virtual unsigned int GetNumberOfChannelsTx();
 
     /**
-     * @brief Return the size of the one sample.
-     * @return 2 or 4. The unit is [Byte]
+     * @brief Return the size of the one sample in I2S frame.
+     * @return 2, 3 or 4. The unit is [Byte]
      */
-    virtual unsigned int GetSampleWordSizeTx();
+    virtual unsigned int GetSampleDataSizeTx();
     /**
      * @brief Return how many channels are in the transfer.
      * @return always 2
@@ -101,10 +101,10 @@ class I2sPortAdapter : public AudioPortAdapterStrategy {
     virtual unsigned int GetNumberOfChannelsRx();
 
     /**
-     * @brief Return the size of the one sample.
-     * @return 2 or 4. The unit is [Byte]
+     * @brief Return the size of the one sample in I2S frame.
+     * @return 2, 3 or 4. The unit is [Byte]
      */
-    virtual unsigned int GetSampleWordSizeRx();
+    virtual unsigned int GetSampleDataSizeRx();
     /**
      * @brief Handling error report of device.
      * @param ptr Pointer for generic use. Usually, points a struct of a device control

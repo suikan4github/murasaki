@@ -23,12 +23,6 @@ namespace murasaki {
  */
 class AudioPortAdapterStrategy : public murasaki::PeripheralStrategy {
  public:
-    /**
-     * @brief Destructor to enforce the virtual type function.
-     */
-    virtual ~AudioPortAdapterStrategy() {
-    }
-    ;
 
     /**
      * @brief Kick start routine to start the TX DMA transfer.
@@ -38,7 +32,7 @@ class AudioPortAdapterStrategy : public murasaki::PeripheralStrategy {
      * once after it starts.
      */
     virtual void StartTransferTx(
-                                 uint8_t * tx_buffer,
+                                 uint8_t *tx_buffer,
                                  unsigned int channel_len
                                  ) = 0;
 
@@ -50,7 +44,7 @@ class AudioPortAdapterStrategy : public murasaki::PeripheralStrategy {
      * once after it starts.
      */
     virtual void StartTransferRx(
-                                 uint8_t * rx_buffer,
+                                 uint8_t *rx_buffer,
                                  unsigned int channel_len
                                  ) = 0;
 
@@ -67,10 +61,20 @@ class AudioPortAdapterStrategy : public murasaki::PeripheralStrategy {
     virtual unsigned int GetNumberOfChannelsTx() = 0;
 
     /**
-     * @brief Return the size of the one sample.
-     * @return 2 or 4. The unit is [Byte]
+     * @brief Return the size of the one sample in TX I2S frame.
+     * @return 2, 3 or 4. The unit is [Byte]
+     * @
      */
-    virtual unsigned int GetSampleWordSizeTx() = 0;
+    virtual unsigned int GetSampleDataSizeTx() = 0;
+
+    /**
+     * @brief Return the size of the one sample on memory for Tx channel
+     * @return 2 or 4. The unit is [Byte]
+     * @details
+     * This function returns the size of the word which should be
+     * allocated on the memory.
+     */
+    virtual unsigned int GetSampleWordSizeTx();
 
     /**
      * @brief Return how many channels are in the transfer.
@@ -79,10 +83,20 @@ class AudioPortAdapterStrategy : public murasaki::PeripheralStrategy {
     virtual unsigned int GetNumberOfChannelsRx() = 0;
 
     /**
-     * @brief Return the size of the one sample.
-     * @return 2 or 4. The unit is [Byte]
+     * @brief Return the size of the one sample in RX I2S frame.
+     * @return 2, 3 or 4. The unit is [Byte]
+     * @
      */
-    virtual unsigned int GetSampleWordSizeRx() = 0;
+    virtual unsigned int GetSampleDataSizeRx() = 0;
+
+    /**
+     * @brief Return the size of the one sample on memory for Rx channel
+     * @return 2 or 4. The unit is [Byte]
+     * @details
+     * This function returns the size of the word which should be
+     * allocated on the memory.
+     */
+    virtual unsigned int GetSampleWordSizeRx();
 
     /**
      * @brief DMA phase detector.
@@ -108,20 +122,20 @@ class AudioPortAdapterStrategy : public murasaki::PeripheralStrategy {
      *
      * Note, we assume once this error call back is called, we can't recover.
      */
-    virtual bool HandleError(void * ptr)= 0;
+    virtual bool HandleError(void *ptr)= 0;
 
     /**
      * @details Check if peripheral handle matched with given handle.
      * @param peripheral_handle
      * @return true if match, false if not match.
      */
-    virtual bool Match(void * peripheral_handle) = 0;
+    virtual bool Match(void *peripheral_handle) = 0;
 
     /**
      * @brief pass the raw peripheral handler
      * @return pointer to the raw peripheral handler hidden in a class.
      */
-    virtual void * GetPeripheralHandle()=0;
+    virtual void* GetPeripheralHandle()=0;
 
     /**
      * @brief Display half word swap is required. .

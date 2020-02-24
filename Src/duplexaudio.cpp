@@ -15,27 +15,27 @@
 namespace murasaki {
 
 DuplexAudio::DuplexAudio(
-                         murasaki::AudioPortAdapterStrategy * peripheral_adapter,
+                         murasaki::AudioPortAdapterStrategy *peripheral_adapter,
                          unsigned int channel_length
                          )
         :
-          peripheral_adapter_(peripheral_adapter),
-          channel_len_(channel_length),
+        peripheral_adapter_(peripheral_adapter),
+        channel_len_(channel_length),
         // Calculate a DMA buffer size per interrupt [Byte]
-          block_size_tx_(channel_len_ * peripheral_adapter_->GetNumberOfChannelsTx() * peripheral_adapter_->GetSampleWordSizeTx()),
-          block_size_rx_(channel_len_ * peripheral_adapter_->GetNumberOfChannelsRx() * peripheral_adapter_->GetSampleWordSizeRx()),
+        block_size_tx_(channel_len_ * peripheral_adapter_->GetNumberOfChannelsTx() * peripheral_adapter_->GetSampleWordSizeTx()),
+        block_size_rx_(channel_len_ * peripheral_adapter_->GetNumberOfChannelsRx() * peripheral_adapter_->GetSampleWordSizeRx()),
         // Calculate a entire DMA buffer size.
-          buffer_size_tx_(peripheral_adapter_->GetNumberOfDMAPhase() * block_size_tx_),
-          buffer_size_rx_(peripheral_adapter_->GetNumberOfDMAPhase() * block_size_rx_),
-          // Allocate DMA buffer
-          tx_dma_buffer_(new uint8_t[buffer_size_tx_]),
-          rx_dma_buffer_(new uint8_t[buffer_size_rx_]),
-          // Initialize for the first execusion
-          current_dma_phase_(0),
-          // Set it true to trigger the first DMA transfer. 
-          first_transfer_(true),
-          // Create an sync object between interrupt and TransmitAndReceive member function. 
-          sync_(new murasaki::Synchronizer())
+        buffer_size_tx_(peripheral_adapter_->GetNumberOfDMAPhase() * block_size_tx_),
+        buffer_size_rx_(peripheral_adapter_->GetNumberOfDMAPhase() * block_size_rx_),
+        // Allocate DMA buffer
+        tx_dma_buffer_(new uint8_t[buffer_size_tx_]),
+        rx_dma_buffer_(new uint8_t[buffer_size_rx_]),
+        // Initialize for the first execusion
+        current_dma_phase_(0),
+        // Set it true to trigger the first DMA transfer.
+        first_transfer_(true),
+        // Create an sync object between interrupt and TransmitAndReceive member function.
+        sync_(new murasaki::Synchronizer())
 {
 
     AUDIO_SYSLOG("Enter.  channel_length : %d ",
@@ -72,10 +72,10 @@ DuplexAudio::~DuplexAudio() {
 
 // Stereo dedicated transfer.
 void DuplexAudio::TransmitAndReceive(
-                                     float* tx_left,
-                                     float* tx_right,
-                                     float* rx_left,
-                                     float* rx_right) {
+                                     float *tx_left,
+                                     float *tx_right,
+                                     float *rx_left,
+                                     float *rx_right) {
     AUDIO_SYSLOG("Enter. tx_left : %08p, tx_right : %08p, rx_left : %08p, rx_right : %08p",
                  tx_left,
                  tx_right,
@@ -99,8 +99,8 @@ void DuplexAudio::TransmitAndReceive(
 }
 
 void DuplexAudio::TransmitAndReceive(
-                                     float** tx_channels,
-                                     float** rx_channels,
+                                     float **tx_channels,
+                                     float **rx_channels,
                                      unsigned int tx_num_of_channels,
                                      unsigned int rx_num_of_channels) {
 
@@ -118,7 +118,7 @@ void DuplexAudio::TransmitAndReceive(
         peripheral_adapter_->StartTransferTx(tx_dma_buffer_, channel_len_);
         peripheral_adapter_->StartTransferRx(rx_dma_buffer_, channel_len_);
 
-        // Mark it to avoid the second kick. 
+        // Mark it to avoid the second kick.
         first_transfer_ = false;
     }
 
@@ -139,11 +139,11 @@ void DuplexAudio::TransmitAndReceive(
             AUDIO_SYSLOG("Case:Word size is 1");
 
             // Obtain the start address of the DMA buffer to transfer
-            int8_t * const tx_current_dma_data = reinterpret_cast<int8_t *>(&tx_dma_buffer_[current_dma_phase_ * block_size_tx_]);
-            int8_t * const rx_current_dma_data = reinterpret_cast<int8_t *>(&rx_dma_buffer_[current_dma_phase_ * block_size_rx_]);
+            int8_t *const tx_current_dma_data = reinterpret_cast<int8_t*>(&tx_dma_buffer_[current_dma_phase_ * block_size_tx_]);
+            int8_t *const rx_current_dma_data = reinterpret_cast<int8_t*>(&rx_dma_buffer_[current_dma_phase_ * block_size_rx_]);
 
             // Scale factor to convert between integer type on the DMA and normalized floating point data
-            // Too keep the absolute maximum number as 1.0, using the _MIN value. 
+            // Too keep the absolute maximum number as 1.0, using the _MIN value.
             //  | INT8_MAX | +1 = | INT8_MIN |
             const float scale = -1.0 * INT8_MIN;
 
@@ -183,10 +183,10 @@ void DuplexAudio::TransmitAndReceive(
             AUDIO_SYSLOG("Case:Word size is 2");
 
             // Obtain the start address of the DMA buffer to transfer
-            int16_t * const tx_current_dma_data = reinterpret_cast<int16_t*>(&tx_dma_buffer_[current_dma_phase_ * block_size_tx_]);
-            int16_t * const rx_current_dma_data = reinterpret_cast<int16_t*>(&rx_dma_buffer_[current_dma_phase_ * block_size_rx_]);
+            int16_t *const tx_current_dma_data = reinterpret_cast<int16_t*>(&tx_dma_buffer_[current_dma_phase_ * block_size_tx_]);
+            int16_t *const rx_current_dma_data = reinterpret_cast<int16_t*>(&rx_dma_buffer_[current_dma_phase_ * block_size_rx_]);
             // Scale factor to convert between integer type on the DMA and normalized floating point data
-            // Too keep the absolute maximum number as 1.0, using the _MIN value. 
+            // Too keep the absolute maximum number as 1.0, using the _MIN value.
             //  | INT16_MAX | +1 = | INT16_MIN |
             const float scale = -1.0 * INT16_MIN;
 
@@ -234,12 +234,19 @@ void DuplexAudio::TransmitAndReceive(
             AUDIO_SYSLOG("Case:Word size is 4");
 
             // Obtain the start address of the DMA buffer to transfer
-            int32_t * const tx_current_dma_data = reinterpret_cast<int32_t*>(&tx_dma_buffer_[current_dma_phase_ * block_size_tx_]);
-            int32_t * const rx_current_dma_data = reinterpret_cast<int32_t*>(&rx_dma_buffer_[current_dma_phase_ * block_size_rx_]);
+            int32_t *const tx_current_dma_data = reinterpret_cast<int32_t*>(&tx_dma_buffer_[current_dma_phase_ * block_size_tx_]);
+            int32_t *const rx_current_dma_data = reinterpret_cast<int32_t*>(&rx_dma_buffer_[current_dma_phase_ * block_size_rx_]);
+
             // Scale factor to convert between integer type on the DMA and normalized floating point data
-            // Too keep the absolute maximum number as 1.0, using the _MIN value. 
+            // Too keep the absolute maximum number as 1.0, using the _MIN value.
             //  | INT32_MAX | +1 = | INT32_MIN |
             const float scale = -1.0 * INT32_MIN;
+
+            unsigned int shift;
+
+            // If the data size is 24bit ( 3byte ), the RX data have to be shifted 8 bit left
+            // The TX have to be shifted 8 bit right.
+            shift = (peripheral_adapter_->GetSampleDataSizeRx() == 3) ? 8 : 0;
 
             AUDIO_SYSLOG("block_size_tx_ : %d", block_size_tx_);
             AUDIO_SYSLOG("block_size_rx_ : %d", block_size_rx_);
@@ -279,13 +286,14 @@ void DuplexAudio::TransmitAndReceive(
             // This is array of pointers. Each pointers in array point the word buffers.
             for (unsigned int ch_idx = 0; ch_idx < tx_num_of_channels; ch_idx++)
                 for (unsigned int wo_idx = 0; wo_idx < channel_len_; wo_idx++)
-                    tx_current_dma_data[wo_idx * tx_num_of_channels + ch_idx] = tx_channels[ch_idx][wo_idx] * scale;
+                    tx_current_dma_data[wo_idx * tx_num_of_channels + ch_idx] = static_cast<int32_t>(tx_channels[ch_idx][wo_idx]
+                            * scale) >> shift;
 
             // copy from RX DMA buffer.
             // The data order in the rx_channels and rx_current_dma_data follows tx.
             for (unsigned int ch_idx = 0; ch_idx < rx_num_of_channels; ch_idx++)
                 for (unsigned int wo_idx = 0; wo_idx < channel_len_; wo_idx++)
-                    rx_channels[ch_idx][wo_idx] = rx_current_dma_data[wo_idx * rx_num_of_channels + ch_idx] / scale;
+                    rx_channels[ch_idx][wo_idx] = (rx_current_dma_data[wo_idx * rx_num_of_channels + ch_idx] << shift) / scale;
 
             // Is half word swap required by the port hardware?
             // If yes, swap the all data in TX DMA buffer
@@ -305,7 +313,6 @@ void DuplexAudio::TransmitAndReceive(
                     tx_current_dma_data[index] = swapper.i32;
                 }
 
-
             // Flush the DMA TX data buffer on cache to main memory.
             murasaki::CleanDataCacheByAddress(tx_current_dma_data, block_size_tx_);
 
@@ -320,7 +327,7 @@ void DuplexAudio::TransmitAndReceive(
 }
 
 bool DuplexAudio::DmaCallback(
-                              void* peripheral,
+                              void *peripheral,
                               unsigned int phase) {
     AUDIO_SYSLOG("Enter with peripheral : %p, phase : %d", peripheral, phase);
     if (peripheral_adapter_->Match(peripheral)) {
@@ -356,7 +363,7 @@ bool DuplexAudio::DmaCallback(
 
 }
 
-bool DuplexAudio::HandleError(void* peripheral)
+bool DuplexAudio::HandleError(void *peripheral)
                               {
     AUDIO_SYSLOG("Enter, peripheral : %p", peripheral);
 

@@ -192,7 +192,9 @@ unsigned int I2sPortAdapter::GetSampleWordSizeRx()
             return_val = 2;
             break;
         case I2S_DATAFORMAT_24B:
-            case I2S_DATAFORMAT_32B:
+            return_val = 3;
+            break;
+        case I2S_DATAFORMAT_32B:
             return_val = 4;
             break;
         default:
@@ -232,7 +234,9 @@ unsigned int I2sPortAdapter::GetSampleWordSizeTx()
             return_val = 2;
             break;
         case I2S_DATAFORMAT_24B:
-            case I2S_DATAFORMAT_32B:
+            return_val = 3;
+            break;
+        case I2S_DATAFORMAT_32B:
             return_val = 4;
             break;
         default:
