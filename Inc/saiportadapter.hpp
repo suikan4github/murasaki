@@ -93,7 +93,7 @@ class SaiPortAdapter : public AudioPortAdapterStrategy {
 
     /**
      * @brief Return the size of the one sample in I2S frame.
-     * @return 2, 3 or 4. The unit is [Byte]
+     * @return 1..32. The unit is [bits]
      */
     virtual unsigned int GetSampleDataSizeTx();
     /**
@@ -104,7 +104,7 @@ class SaiPortAdapter : public AudioPortAdapterStrategy {
 
     /**
      * @brief Return the size of the one sample in I2S flame.
-     * @return 2, 3 or 4. The unit is [Byte]
+     * @return 1..32. The unit is [bits]
      */
     virtual unsigned int GetSampleDataSizeRx();
     /**

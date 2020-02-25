@@ -178,7 +178,7 @@ unsigned int I2sPortAdapter::GetNumberOfChannelsRx()
     return return_val;
 }
 
-unsigned int I2sPortAdapter::GetSampleWordSizeRx()
+unsigned int I2sPortAdapter::GetSampleDataSizeRx()
 {
     I2SAUDIO_SYSLOG("Enter.")
     MURASAKI_ASSERT(rx_peripheral_ != nullptr)
@@ -189,13 +189,13 @@ unsigned int I2sPortAdapter::GetSampleWordSizeRx()
     switch (rx_peripheral_->Init.DataFormat) {
         case I2S_DATAFORMAT_16B:
             case I2S_DATAFORMAT_16B_EXTENDED:
-            return_val = 2;
+            return_val = 16;
             break;
         case I2S_DATAFORMAT_24B:
-            return_val = 3;
+            return_val = 24;
             break;
         case I2S_DATAFORMAT_32B:
-            return_val = 4;
+            return_val = 32;
             break;
         default:
             MURASAKI_SYSLOG(this, kfaI2s, kseError, "Unexpected data format")
@@ -220,7 +220,7 @@ unsigned int I2sPortAdapter::GetNumberOfChannelsTx()
     return return_val;
 }
 
-unsigned int I2sPortAdapter::GetSampleWordSizeTx()
+unsigned int I2sPortAdapter::GetSampleDataSizeTx()
 {
     I2SAUDIO_SYSLOG("Enter.")
     MURASAKI_ASSERT(tx_peripheral_ != nullptr)
@@ -231,13 +231,13 @@ unsigned int I2sPortAdapter::GetSampleWordSizeTx()
     switch (tx_peripheral_->Init.DataFormat) {
         case I2S_DATAFORMAT_16B:
             case I2S_DATAFORMAT_16B_EXTENDED:
-            return_val = 2;
+            return_val = 16;
             break;
         case I2S_DATAFORMAT_24B:
-            return_val = 3;
+            return_val = 24;
             break;
         case I2S_DATAFORMAT_32B:
-            return_val = 4;
+            return_val = 32;
             break;
         default:
             MURASAKI_SYSLOG(this, kfaI2s, kseError, "Unexpected data format")

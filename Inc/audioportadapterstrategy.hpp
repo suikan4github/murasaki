@@ -62,7 +62,7 @@ class AudioPortAdapterStrategy : public murasaki::PeripheralStrategy {
 
     /**
      * @brief Return the size of the one sample in TX I2S frame.
-     * @return 2, 3 or 4. The unit is [Byte]
+     * @return 1..32. The unit is [bit]
      * @
      */
     virtual unsigned int GetSampleDataSizeTx() = 0;
@@ -84,7 +84,7 @@ class AudioPortAdapterStrategy : public murasaki::PeripheralStrategy {
 
     /**
      * @brief Return the size of the one sample in RX I2S frame.
-     * @return 2, 3 or 4. The unit is [Byte]
+     * @return 1..32. The unit is [bit]
      * @
      */
     virtual unsigned int GetSampleDataSizeRx() = 0;

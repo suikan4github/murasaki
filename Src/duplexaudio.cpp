@@ -190,6 +190,10 @@ void DuplexAudio::TransmitAndReceive(
             //  | INT16_MAX | +1 = | INT16_MIN |
             const float scale = -1.0 * INT16_MIN;
 
+            // If the data size is 10bit ( 2 bytes ), the RX data have to be shifted 6 bit left
+            // The TX have to be shifted 8 bit right.
+            unsigned int shift = 16 - peripheral_adapter_->GetSampleDataSizeRx();
+
             AUDIO_SYSLOG("block_size_tx_ : %d", block_size_tx_);
             AUDIO_SYSLOG("block_size_rx_ : %d", block_size_rx_);
 
@@ -209,13 +213,15 @@ void DuplexAudio::TransmitAndReceive(
             // This is array of pointers. Each pointers in array point the word buffers.
             for (unsigned int ch_idx = 0; ch_idx < tx_num_of_channels; ch_idx++)
                 for (unsigned int wo_idx = 0; wo_idx < channel_len_; wo_idx++)
-                    tx_current_dma_data[wo_idx * tx_num_of_channels + ch_idx] = tx_channels[ch_idx][wo_idx] * scale;
+                    tx_current_dma_data[wo_idx * tx_num_of_channels + ch_idx] =
+                            static_cast<int16_t>(tx_channels[ch_idx][wo_idx] * scale) >> shift;
 
             // copy from RX DMA buffer.
             // The data order in the rx_channels and rx_current_dma_data follows tx.
             for (unsigned int ch_idx = 0; ch_idx < rx_num_of_channels; ch_idx++)
                 for (unsigned int wo_idx = 0; wo_idx < channel_len_; wo_idx++)
-                    rx_channels[ch_idx][wo_idx] = rx_current_dma_data[wo_idx * rx_num_of_channels + ch_idx] / scale;
+                    rx_channels[ch_idx][wo_idx] =
+                            (rx_current_dma_data[wo_idx * rx_num_of_channels + ch_idx] << shift) / scale;
 
             // Flush the DMA TX data buffer on cache to main memory.
             murasaki::CleanDataCacheByAddress(tx_current_dma_data, block_size_tx_);
@@ -242,11 +248,9 @@ void DuplexAudio::TransmitAndReceive(
             //  | INT32_MAX | +1 = | INT32_MIN |
             const float scale = -1.0 * INT32_MIN;
 
-            unsigned int shift;
-
             // If the data size is 24bit ( 3byte ), the RX data have to be shifted 8 bit left
             // The TX have to be shifted 8 bit right.
-            shift = (peripheral_adapter_->GetSampleDataSizeRx() == 3) ? 8 : 0;
+            unsigned int shift = 32 - peripheral_adapter_->GetSampleDataSizeRx();
 
             AUDIO_SYSLOG("block_size_tx_ : %d", block_size_tx_);
             AUDIO_SYSLOG("block_size_rx_ : %d", block_size_rx_);
@@ -286,14 +290,15 @@ void DuplexAudio::TransmitAndReceive(
             // This is array of pointers. Each pointers in array point the word buffers.
             for (unsigned int ch_idx = 0; ch_idx < tx_num_of_channels; ch_idx++)
                 for (unsigned int wo_idx = 0; wo_idx < channel_len_; wo_idx++)
-                    tx_current_dma_data[wo_idx * tx_num_of_channels + ch_idx] = static_cast<int32_t>(tx_channels[ch_idx][wo_idx]
-                            * scale) >> shift;
+                    tx_current_dma_data[wo_idx * tx_num_of_channels + ch_idx] =
+                            static_cast<int32_t>(tx_channels[ch_idx][wo_idx] * scale) >> shift;
 
             // copy from RX DMA buffer.
             // The data order in the rx_channels and rx_current_dma_data follows tx.
             for (unsigned int ch_idx = 0; ch_idx < rx_num_of_channels; ch_idx++)
                 for (unsigned int wo_idx = 0; wo_idx < channel_len_; wo_idx++)
-                    rx_channels[ch_idx][wo_idx] = (rx_current_dma_data[wo_idx * rx_num_of_channels + ch_idx] << shift) / scale;
+                    rx_channels[ch_idx][wo_idx] =
+                            (rx_current_dma_data[wo_idx * rx_num_of_channels + ch_idx] << shift) / scale;
 
             // Is half word swap required by the port hardware?
             // If yes, swap the all data in TX DMA buffer

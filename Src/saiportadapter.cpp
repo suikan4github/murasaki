@@ -155,14 +155,23 @@ unsigned int SaiPortAdapter::GetSampleDataSizeRx()
     unsigned int return_val;
 
     switch (rx_peripheral_->Init.DataSize) {
+        case SAI_DATASIZE_8:
+            return_val = 8;
+            break;
+        case SAI_DATASIZE_10:
+            return_val = 10;
+            break;
         case SAI_DATASIZE_16:
-            return_val = 2;
+            return_val = 16;
+            break;
+        case SAI_DATASIZE_20:
+            return_val = 20;
             break;
         case SAI_DATASIZE_24:
-            return_val = 3;
+            return_val = 24;
             break;
         case SAI_DATASIZE_32:
-            return_val = 4;
+            return_val = 32;
             break;
         default:
             MURASAKI_SYSLOG(this, kfaSai, kseError, "Unexpected data size")
@@ -193,14 +202,23 @@ unsigned int SaiPortAdapter::GetSampleDataSizeTx()
     unsigned int return_val;
 
     switch (rx_peripheral_->Init.DataSize) {
+        case SAI_DATASIZE_8:
+            return_val = 8;
+            break;
+        case SAI_DATASIZE_10:
+            return_val = 10;
+            break;
         case SAI_DATASIZE_16:
-            return_val = 2;
+            return_val = 16;
+            break;
+        case SAI_DATASIZE_20:
+            return_val = 20;
             break;
         case SAI_DATASIZE_24:
-            return_val = 3;
+            return_val = 24;
             break;
         case SAI_DATASIZE_32:
-            return_val = 4;
+            return_val = 32;
             break;
         default:
             MURASAKI_SYSLOG(this, kfaSai, kseError, "Unexpected data size")

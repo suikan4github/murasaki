@@ -20,20 +20,14 @@ unsigned int AudioPortAdapterStrategy::GetSampleWordSizeTx()
 {
     unsigned int ret_val;
 
-    ret_val = this->GetSampleDataSizeTx();
+    unsigned int bits = this->GetSampleDataSizeTx();
 
-    switch (ret_val)
-    {
-        case 2:
-            break;
-        case 3:
-            ret_val = 4;
-            break;
-        case 4:
-            break;
-        default:
-            MURASAKI_ASSERT(false)
-    }
+    if (bits <= 16)
+        ret_val = 2;
+    else if (bits <= 24)
+        ret_val = 3;
+    else
+        ret_val = 4;
 
     return ret_val;
 }
@@ -46,20 +40,14 @@ unsigned int AudioPortAdapterStrategy::GetSampleWordSizeRx()
 {
     unsigned int ret_val;
 
-    ret_val = this->GetSampleDataSizeRx();
+    unsigned int bits = this->GetSampleDataSizeRx();
 
-    switch (ret_val)
-    {
-        case 2:
-            break;
-        case 3:
-            ret_val = 4;
-            break;
-        case 4:
-            break;
-        default:
-            MURASAKI_ASSERT(false)
-    }
+    if (bits <= 16)
+        ret_val = 2;
+    else if (bits <= 24)
+        ret_val = 3;
+    else
+        ret_val = 4;
 
     return ret_val;
 }
