@@ -18,6 +18,8 @@ The Issue 91 fix brings incompatibility to the past. Class name changed.
 - [Issue 93 : kfaAll and kfaNone is not handled at all.](https://github.com/suikan4github/murasaki/issues/93)
 - [Issue 97 : 24bit I2S data is not correctly scaled. ](https://github.com/suikan4github/murasaki/issues/97)
 - [Issue 98 : AudioPortAdapterStrategy::GetSampleDataSizeTx() / GetSampleDataSizeRx() should return the size by bits ](https://github.com/suikan4github/murasaki/issues/98)
+- [Issue 99 : AudioPortAdapterStrategy::GetSampleWordsSizeTX() / GetSampleWordsSizeRX() returns 3 for 24bit word ](https://github.com/suikan4github/murasaki/issues/99)
+
 
 ### Security
 ### Known Issue

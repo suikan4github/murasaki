@@ -24,8 +24,6 @@ unsigned int AudioPortAdapterStrategy::GetSampleWordSizeTx()
 
     if (bits <= 16)
         ret_val = 2;
-    else if (bits <= 24)
-        ret_val = 3;
     else
         ret_val = 4;
 
@@ -44,8 +42,6 @@ unsigned int AudioPortAdapterStrategy::GetSampleWordSizeRx()
 
     if (bits <= 16)
         ret_val = 2;
-    else if (bits <= 24)
-        ret_val = 3;
     else
         ret_val = 4;
 
