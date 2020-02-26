@@ -61,11 +61,21 @@ class AudioPortAdapterStrategy : public murasaki::PeripheralStrategy {
     virtual unsigned int GetNumberOfChannelsTx() = 0;
 
     /**
-     * @brief Return the size of the one sample in TX I2S frame.
+     * @brief Return the bit count to shift to make the DMA data to right align in TX I2S frame.
      * @return 1..32. The unit is [bit]
-     * @
+     * @details
+     * This is needed because of the mismatch in the DMA buffer data formant and I2S format.
+     *
+     * Let's assume the 24bit data I2S format. Some peripheral place the data as
+     * right aligned in 32bit DMA data ( as integer ), some peripheral places the data
+     * as left aligned in 32bit DMA data ( as fixed point ).
+     *
+     * This kind of the mismatch will be aligned by audio frame work. This member function returns
+     * how many bits have to be shifted to right in TX.
+     *
+     * If peripheral requires left align format, this function shuld return 0.
      */
-    virtual unsigned int GetSampleDataSizeTx() = 0;
+    virtual unsigned int GetSampleShiftSizeTx() = 0;
 
     /**
      * @brief Return the size of the one sample on memory for Tx channel
@@ -74,7 +84,7 @@ class AudioPortAdapterStrategy : public murasaki::PeripheralStrategy {
      * This function returns the size of the word which should be
      * allocated on the memory.
      */
-    virtual unsigned int GetSampleWordSizeTx();
+    virtual unsigned int GetSampleWordSizeTx() = 0;
 
     /**
      * @brief Return how many channels are in the transfer.
@@ -83,11 +93,21 @@ class AudioPortAdapterStrategy : public murasaki::PeripheralStrategy {
     virtual unsigned int GetNumberOfChannelsRx() = 0;
 
     /**
-     * @brief Return the size of the one sample in RX I2S frame.
+     * @brief Return the bit count to shift to make the DMA data to right align in RX I2S frame.
      * @return 1..32. The unit is [bit]
-     * @
+     * @details
+     * This is needed because of the mismatch in the DMA buffer data formant and I2S format.
+     *
+     * Let's assume the 24bit data I2S format. Some peripheral place the data as
+     * right aligned in 32bit DMA data ( as integer ), some peripheral places the data
+     * as left aligned in 32bit DMA data ( as fixed point ).
+     *
+     * This kind of the mismatch will be aligned by audio frame work. This member function returns
+     * how many bits have to be shifted to left in RX.
+     *
+     * If peripheral requires left align format, this function shuld return 0.
      */
-    virtual unsigned int GetSampleDataSizeRx() = 0;
+    virtual unsigned int GetSampleShiftSizeRx() = 0;
 
     /**
      * @brief Return the size of the one sample on memory for Rx channel
@@ -96,7 +116,7 @@ class AudioPortAdapterStrategy : public murasaki::PeripheralStrategy {
      * This function returns the size of the word which should be
      * allocated on the memory.
      */
-    virtual unsigned int GetSampleWordSizeRx();
+    virtual unsigned int GetSampleWordSizeRx() = 0;
 
     /**
      * @brief DMA phase detector.

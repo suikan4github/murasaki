@@ -89,13 +89,13 @@ void I2sPortAdapter::StartTransferTx(
     MURASAKI_ASSERT(channel_len > 0)
     /*
      * Note on the the channel length compensation.
-     * 
-     * According to the HAL manual( for examplek UM1905 Rev 3 ), HAL_I2S_Transmit_DMA()'s size parameter 
-     * have to be the count by the halfword. This is applied not only the sample size is 16bit but also 24, 32 bit. 
-     * 
-     * But, actual API implementation is against this specification. Thus, following block is 
-     * disabled to follow the actuall implementation.    
-     *  
+     *
+     * According to the HAL manual( for examplek UM1905 Rev 3 ), HAL_I2S_Transmit_DMA()'s size parameter
+     * have to be the count by the halfword. This is applied not only the sample size is 16bit but also 24, 32 bit.
+     *
+     * But, actual API implementation is against this specification. Thus, following block is
+     * disabled to follow the actuall implementation.
+     *
      */
 #if 0
     /*
@@ -143,13 +143,13 @@ void I2sPortAdapter::StartTransferRx(
 
     /*
      * Note on the the channel length compensation.
-     * 
-     * According to the HAL manual( for examplek UM1905 Rev 3 ), HAL_I2S_Receive_DMA()'s size parameter 
-     * have to be the count by the halfword. This is applied not only the sample size is 16bit but also 24, 32 bit. 
-     * 
-     * But, actual API implementation is against this specification. Thus, following block is 
-     * disabled to follow the actuall implementation.    
-     *  
+     *
+     * According to the HAL manual( for examplek UM1905 Rev 3 ), HAL_I2S_Receive_DMA()'s size parameter
+     * have to be the count by the halfword. This is applied not only the sample size is 16bit but also 24, 32 bit.
+     *
+     * But, actual API implementation is against this specification. Thus, following block is
+     * disabled to follow the actuall implementation.
+     *
      */
 #if 0
     /*
@@ -184,19 +184,7 @@ void I2sPortAdapter::StartTransferRx(
     I2SAUDIO_SYSLOG("Return")
 }
 
-unsigned int I2sPortAdapter::GetNumberOfChannelsRx()
-{
-    I2SAUDIO_SYSLOG("Enter.")
-    MURASAKI_ASSERT(rx_peripheral_ != nullptr)
-
-    // Channel number of I2S peripheral is always 2.
-    unsigned int return_val = 2;
-
-    I2SAUDIO_SYSLOG("Exit with %d.", return_val)
-    return return_val;
-}
-
-unsigned int I2sPortAdapter::GetSampleDataSizeRx()
+unsigned int I2sPortAdapter::GetSampleWordSizeRx()
 {
     I2SAUDIO_SYSLOG("Enter.")
     MURASAKI_ASSERT(rx_peripheral_ != nullptr)
@@ -206,14 +194,16 @@ unsigned int I2sPortAdapter::GetSampleDataSizeRx()
     // Check data format and return appropriate size[byte]
     switch (rx_peripheral_->Init.DataFormat) {
         case I2S_DATAFORMAT_16B:
-            case I2S_DATAFORMAT_16B_EXTENDED:
-            return_val = 16;
+            return_val = 2;
+            break;
+        case I2S_DATAFORMAT_16B_EXTENDED:
+            return_val = 2;
             break;
         case I2S_DATAFORMAT_24B:
-            return_val = 24;
+            return_val = 4;
             break;
         case I2S_DATAFORMAT_32B:
-            return_val = 32;
+            return_val = 4;
             break;
         default:
             MURASAKI_SYSLOG(this, kfaI2s, kseError, "Unexpected data format")
@@ -225,19 +215,7 @@ unsigned int I2sPortAdapter::GetSampleDataSizeRx()
     return return_val;
 }
 
-unsigned int I2sPortAdapter::GetNumberOfChannelsTx()
-{
-    I2SAUDIO_SYSLOG("Enter.")
-    MURASAKI_ASSERT(tx_peripheral_ != nullptr)
-
-    // Channel number of I2S peripheral is always 2.
-    unsigned int return_val = 2;
-
-    I2SAUDIO_SYSLOG("Exit with %d.", return_val)
-    return return_val;
-}
-
-unsigned int I2sPortAdapter::GetSampleDataSizeTx()
+unsigned int I2sPortAdapter::GetSampleWordSizeTx()
 {
     I2SAUDIO_SYSLOG("Enter.")
     MURASAKI_ASSERT(tx_peripheral_ != nullptr)
@@ -247,14 +225,16 @@ unsigned int I2sPortAdapter::GetSampleDataSizeTx()
     // Check data format and return appropriate size[byte]
     switch (tx_peripheral_->Init.DataFormat) {
         case I2S_DATAFORMAT_16B:
-            case I2S_DATAFORMAT_16B_EXTENDED:
-            return_val = 16;
+            return_val = 2;
+            break;
+        case I2S_DATAFORMAT_16B_EXTENDED:
+            return_val = 2;
             break;
         case I2S_DATAFORMAT_24B:
-            return_val = 24;
+            return_val = 4;
             break;
         case I2S_DATAFORMAT_32B:
-            return_val = 32;
+            return_val = 4;
             break;
         default:
             MURASAKI_SYSLOG(this, kfaI2s, kseError, "Unexpected data format")
@@ -289,18 +269,6 @@ void* I2sPortAdapter::GetPeripheralHandle()
     void *return_val = rx_peripheral_;
 
     I2SAUDIO_SYSLOG("Exit with %p.", return_val)
-    return return_val;
-
-}
-
-bool I2sPortAdapter::IsInt16SwapRequired()
-{
-    I2SAUDIO_SYSLOG("Enter.")
-    // return always true because I2S DMA requires half word swap inside 32bit word.
-    bool return_val = true;
-
-    I2SAUDIO_SYSLOG("Exit with %s.", return_val ? "true" : "false")
-
     return return_val;
 
 }
