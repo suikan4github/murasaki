@@ -10,6 +10,8 @@ The Issue 91 fix brings incompatibility to the past. Class name changed.
 - [Issue 94 : Add ADC class](https://github.com/suikan4github/murasaki/issues/94)
 
 ### Changed
+- [Issue 100 : Refactor the word size and shift of the DuplexAudio. ](https://github.com/suikan4github/murasaki/issues/100)
+
 ### Deprecated
 ### Removed
 ### Fixed

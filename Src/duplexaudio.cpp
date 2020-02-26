@@ -192,7 +192,7 @@ void DuplexAudio::TransmitAndReceive(
 
             // If the data size is 10bit ( 2 bytes ), the RX data have to be shifted 6 bit left
             // The TX have to be shifted 8 bit right.
-            unsigned int shift = 16 - peripheral_adapter_->GetSampleDataSizeRx();
+            unsigned int shift = peripheral_adapter_->GetSampleShiftSizeRx();
 
             AUDIO_SYSLOG("block_size_tx_ : %d", block_size_tx_);
             AUDIO_SYSLOG("block_size_rx_ : %d", block_size_rx_);
@@ -250,7 +250,7 @@ void DuplexAudio::TransmitAndReceive(
 
             // If the data size is 24bit ( 3byte ), the RX data have to be shifted 8 bit left
             // The TX have to be shifted 8 bit right.
-            unsigned int shift = 32 - peripheral_adapter_->GetSampleDataSizeRx();
+            unsigned int shift = peripheral_adapter_->GetSampleShiftSizeRx();
 
             AUDIO_SYSLOG("block_size_tx_ : %d", block_size_tx_);
             AUDIO_SYSLOG("block_size_rx_ : %d", block_size_rx_);

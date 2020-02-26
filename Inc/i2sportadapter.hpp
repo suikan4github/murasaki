@@ -87,24 +87,81 @@ class I2sPortAdapter : public AudioPortAdapterStrategy {
      * @brief Return how many channels are in the transfer.
      * @return always 2
      */
-    virtual unsigned int GetNumberOfChannelsTx();
+    virtual unsigned int GetNumberOfChannelsTx() {
+        return 2;
+    }
+    ;
 
     /**
-     * @brief Return the size of the one sample in I2S frame.
-     * @return 1..32. The unit is [bit]
+     * @brief Return the bit count to shift to make the DMA data to right align in TX I2S frame.
+     * @return Always 0.
+     * @details
+     * This is needed because of the mismatch in the DMA buffer data formant and I2S format.
+     *
+     * Let's assume the 24bit data I2S format. Some peripheral place the data as
+     * right aligned in 32bit DMA data ( as integer ), some peripheral places the data
+     * as left aligned in 32bit DMA data ( as fixed point ).
+     *
+     * This kind of the mismatch will be aligned by audio frame work. This member function returns
+     * how many bits have to be shifted to right in TX.
+     *
+     * If peripheral requires left align format, this function shuld return 0.
+     *
+     * The STM32 I2S DMA format is left aligned. So, always return 0.
      */
-    virtual unsigned int GetSampleDataSizeTx();
+    virtual unsigned int GetSampleShiftSizeTx() {
+        return 0;
+    }
+    ;
+
+    /**
+     * @brief Return the size of the one sample on memory for Tx channel
+     * @return 2 or 4. The unit is [Byte]
+     * @details
+     * This function returns the size of the word which should be
+     * allocated on the memory.
+     */
+    virtual unsigned int GetSampleWordSizeTx();
+
     /**
      * @brief Return how many channels are in the transfer.
      * @return always 2
      */
-    virtual unsigned int GetNumberOfChannelsRx();
+    virtual unsigned int GetNumberOfChannelsRx() {
+        return 2;
+    }
+    ;
 
     /**
-     * @brief Return the size of the one sample in I2S frame.
-     * @return 1..32. The unit is [bit]
+     * @brief Return the bit count to shift to make the DMA data to right align in RX I2S frame.
+     * @return 0 The unit is [bit]
+     * @details
+     * This is needed because of the mismatch in the DMA buffer data formant and I2S format.
+     *
+     * Let's assume the 24bit data I2S format. Some peripheral place the data as
+     * right aligned in 32bit DMA data ( as integer ), some peripheral places the data
+     * as left aligned in 32bit DMA data ( as fixed point ).
+     *
+     * This kind of the mismatch will be aligned by audio frame work. This member function returns
+     * how many bits have to be shifted to left in RX.
+     *
+     * If peripheral requires left align format, this function shuld return 0.
+     *
+     * The STM32 I2S DMA format is left aligned. So, always return 0.
      */
-    virtual unsigned int GetSampleDataSizeRx();
+    virtual unsigned int GetSampleShiftSizeRx() {
+        return 0;
+    }
+    ;
+
+    /**
+     * @brief Return the size of the one sample on memory for Rx channel
+     * @return 2 or 4. The unit is [Byte]
+     * @details
+     * This function returns the size of the word which should be
+     * allocated on the memory.
+     */
+    virtual unsigned int GetSampleWordSizeRx();
     /**
      * @brief Handling error report of device.
      * @param ptr Pointer for generic use. Usually, points a struct of a device control
@@ -141,7 +198,11 @@ class I2sPortAdapter : public AudioPortAdapterStrategy {
      * I2S DMA requires the half word swap inside word.
      * Thus, always returns true.
      */
-    virtual bool IsInt16SwapRequired();
+    virtual bool IsInt16SwapRequired()
+    {
+        return true;
+    }
+    ;
 
  private:
     I2S_HandleTypeDef *const tx_peripheral_;
