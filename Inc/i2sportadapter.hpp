@@ -27,8 +27,8 @@ namespace murasaki {
  * |:-------------:|:----------------------------:|:-----------------:|
  * |     16 bits   | 16bits data and 16bits frame |  Half Word        |
  * |     16 bits   | 16bits data and 32bits frame |  Half Word        |
- * |     24 bits   | 24bits data and 32bits frame |       Word        |
- * |     32 bits   | 32bits data and 32bits frame |       Word        |
+ * |     24 bits   | 24bits data and 24bits frame |  Half Word        |
+ * |     32 bits   | 32bits data and 32bits frame |  Half Word        |
  *
  * \ingroup MURASAKI_GROUP
  *
