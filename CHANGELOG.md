@@ -6,9 +6,9 @@ The Issue 91 fix brings incompatibility to the past. Class name changed.
 
 ### Added
 - [Issue 51 : Add I2S audio adapter ](https://github.com/suikan4github/murasaki/issues/51)
-- [Issue 53 : Add ADC class](https://github.com/suikan4github/murasaki/issues/53)
+- [Issue 53 : Add EXTI control class](https://github.com/suikan4github/murasaki/issues/53)
 - [Issue 54 : Add a rotary encoder class](https://github.com/suikan4github/murasaki/issues/54)
-- [Issue 94 : Add EXTI control class](https://github.com/suikan4github/murasaki/issues/94)
+- [Issue 94 : Add ADC class](https://github.com/suikan4github/murasaki/issues/94)
 
 ### Changed
 - [Issue 100 : Refactor the word size and shift of the DuplexAudio. ](https://github.com/suikan4github/murasaki/issues/100)
