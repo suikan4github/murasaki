@@ -2055,7 +2055,8 @@ PREDEFINED             = HAL_UART_MODULE_ENABLED \
                          USE_FULL_ASSERT \
                          MURASAKI_CONFIG_NOSYSLOG \
                          HAL_TIM_MODULE_ENABLED \
-                         HAL_ADC_MODULE_ENABLED
+                         HAL_ADC_MODULE_ENABLED \
+                         HAL_EXTI_MODULE_ENABLED
 
 # If the MACRO_EXPANSION and EXPAND_ONLY_PREDEF tags are set to YES then this
 # tag can be used to specify a list of macro names that should be expanded. The

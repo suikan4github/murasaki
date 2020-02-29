@@ -41,6 +41,7 @@
 #include "i2sportadapter.hpp"
 #include "quadratureencoder.hpp"
 #include "adc.hpp"
+#include "exti.hpp"
 
 // Third party
 #include "Thirdparty/adau1361.hpp"

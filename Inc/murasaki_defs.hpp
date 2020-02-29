@@ -51,6 +51,7 @@ enum SyslogFacility {
     kfaAudioCodec = 1 << 10,  //!< kfaAudioCodec is specified when the message is from the Audio Codec module
     kfaEncoder = 1 << 11,  //!< kfaEncoder is specified when the message is from the Encoder module.
     kfaAdc = 1 << 12,   //!< kfaAdc is specified when the message is from the Adc module.
+    kfaExti = 1 << 13,  //!< kfaExti is specified when the message is from the Exti module.
     kfaUser0 = 1 << 24,  //!< User defined facility
     kfaUser1 = 1 << 25,  //!< User defined facility
     kfaUser2 = 1 << 26,  //!< User defined facility
@@ -259,6 +260,13 @@ enum CodecChannel {
     kccHeadphoneOutput   //!< kccHpOutput Headphone Output
 
 };
+/**
+ * @brief Status return by InterruptStartegy type
+ */
+enum InterruptStatus {
+    kisOK = 0,   //!< kisOK Released correctly.
+    kisTimeOut   //!< kisTimeOut Time out happen
+};
 
 /**
  * @brief Task class dedicated priority
@@ -284,7 +292,7 @@ enum TaskPriority {
  */
 
 /**
- *  @ingroup MURASAKI_DEFINITION_GROUP
+ * \}
  */
 
 /*------------------------------- function ---------------------------------*/
