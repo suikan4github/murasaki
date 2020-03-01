@@ -63,7 +63,7 @@ class DuplexAudio {
      * For example, a stereo data has 2 channel named left and right.
      */
     DuplexAudio(
-                murasaki::AudioPortAdapterStrategy * peripheral_adapter,
+                murasaki::AudioPortAdapterStrategy *peripheral_adapter,
                 unsigned int channel_length
                 );
     /**
@@ -115,10 +115,10 @@ class DuplexAudio {
      *
      */
     void TransmitAndReceive(
-                            float * tx_left,
-                            float * tx_right,
-                            float * rx_left,
-                            float * rx_right
+                            float *tx_left,
+                            float *tx_right,
+                            float *rx_left,
+                            float *rx_right
                             );
 
     /**
@@ -176,8 +176,8 @@ class DuplexAudio {
      * @endcode     */
 
     void TransmitAndReceive(
-                            float ** tx_channels,
-                            float ** rx_channels,
+                            float **tx_channels,
+                            float **rx_channels,
                             unsigned int tx_num_of_channels,
                             unsigned int rx_num_of_channels
                             );
@@ -205,8 +205,42 @@ class DuplexAudio {
      * the meaningful phase.
      *
      * This function returns if peripheral parameter is match with the one passed by the constructor.
+     *
+     * This member function have to be call from the call backs of the
+     * SAI/I2S. In case of the SAI :
+     *
+     * @code
+     * // Halfway
+     * void HAL_SAI_RxHalfCpltCallback(SAI_HandleTypeDef * hsai) {
+     *     if (murasaki::platform.audio->DmaCallback(hsai, 0))  // second parameter is 0 for the halfway
+     *         return;
+     * }
+     *
+     * // Complete
+     * void HAL_SAI_RxCpltCallback(SAI_HandleTypeDef * hsai) {
+     *     if (murasaki::platform.audio->DmaCallback(hsai, 1))  // second parameter is 1 for the complete
+     *         return;
+     * }
+     * @endcode
+     *
+     * And in case of I2S :
+     *
+     * @code
+     * // Half way
+     * void HAL_I2S_RxHalfCpltCallback(I2S_HandleTypeDef *hi2s) {
+     *     if (murasaki::platform.audio->DmaCallback(hi2s, 0))  // second parameter is 0 for the halfway
+     *         return;
+     * }
+     *
+     * // Complete
+     * void HAL_I2S_RxCpltCallback(I2S_HandleTypeDef *hi2s) {
+     *     if (murasaki::platform.audio->DmaCallback(hi2s, 1))  // second parameter is 1 for the complete
+     *         return;
+     * }
+     *
+     * @endcode
      */
-    bool DmaCallback(void * peripheral, unsigned int phase);
+    bool DmaCallback(void *peripheral, unsigned int phase);
 
     /**
      * @brief Call this function from the interrupt handler.
@@ -215,12 +249,27 @@ class DuplexAudio {
      * @details
      * This function calls the @ref AudioPortAdapterStrategy::HandleError() which knows how to handle.
      * Usually, this error call back is unable to recover. So, assertion may be triggered.
+     *
+     * This member function have to be the error call back of SAI/HAL.
+     *
+     * @code
+     * void HAL_SAI_ErrorCallback(SAI_HandleTypeDef * hsai) {
+     *     if (murasaki::platform.audio->HandleError(hsai))
+     *         return;
+     * }
+     * @endcode
+     * @code
+     * void HAL_I2S_ErrorCallback(I2S_HandleTypeDef *hi2s) {
+     *     if (murasaki::platform.audio->HandleError(hi2s))
+     *         return;
+     * }
+     * @endcode
      */
-    virtual bool HandleError(void * peripheral);
+    virtual bool HandleError(void *peripheral);
 
  private:
 
-    murasaki::AudioPortAdapterStrategy * const peripheral_adapter_;
+    murasaki::AudioPortAdapterStrategy *const peripheral_adapter_;
     /**
      * @brief Length of a audio channel by one DMA transfer. The unit is [audio word].
      */
@@ -249,11 +298,11 @@ class DuplexAudio {
     /**
      * @brief pointer to dma buffer [num_dma_phases * num_channels_ * channlel_len_* word_size_].
      */
-    uint8_t * const tx_dma_buffer_;
+    uint8_t *const tx_dma_buffer_;
     /**
      * @brief pointer to dma buffer [num_dma_phases  * num_channels_ * channlel_len_* word_size_]
      */
-    uint8_t * const rx_dma_buffer_;
+    uint8_t *const rx_dma_buffer_;
 
     /**
      * @brief
@@ -270,16 +319,16 @@ class DuplexAudio {
     /**
      * @brief Synchronization between DMA interrupt and audio transfer.
      */
-    murasaki::Synchronizer * const sync_;
+    murasaki::Synchronizer *const sync_;
 
     /**
      * @brief Scratch pad for the Stereo usage.
      */
-    float * tx_stereo_[2];
+    float *tx_stereo_[2];
     /**
      * @brief Scratch pad for the Stereo usage.
      */
-    float * rx_stereo_[2];
+    float *rx_stereo_[2];
 
 };
 

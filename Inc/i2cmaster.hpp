@@ -189,6 +189,14 @@ class I2cMaster : public I2CMasterStrategy
      *
      * Typically, an implementation may check whether the given ptr parameter matches its own device, and if matched, handle it
      * and return true. If it doesn't match, just return false.
+     * This function have to be called from HAL_I2C_MasterTxCpltCallback()
+     * @code
+     * void HAL_I2C_MasterTxCpltCallback(I2C_HandleTypeDef * hi2c)
+     * {
+     *     if (murasaki::platform.i2c_master->TransmitCompleteCallback(hi2c))
+     *         return;
+     * }
+     * @endcode
      */
     virtual bool TransmitCompleteCallback(void* ptr);
     /**
@@ -201,6 +209,16 @@ class I2cMaster : public I2CMasterStrategy
      *
      * Typically, an implementation may check whether the given ptr parameter matches its own device, and if matched, handle it
      * and return true. If it doesn't match, just return false.
+     *
+     * This member function have to be called from HAL_I2C_MasterRxCpltCallback()
+     *
+     * @code
+     * void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef * hi2c) {
+     *     if (murasaki::platform.i2c_master->ReceiveCompleteCallback(hi2c))
+     *         return;
+     * }
+     * @endcode
+     *
      */
     virtual bool ReceiveCompleteCallback(void* ptr);
     /**
@@ -211,6 +229,17 @@ class I2cMaster : public I2CMasterStrategy
      * A handle to print out the error message.
      *
      * Checks whether handle has error and if there is, print appropriate error. Then return.
+     *
+     * This member function have to be called from　HAL_I2C_ErrorCallback()
+     *
+     * @code
+     * void HAL_I2C_ErrorCallback(I2C_HandleTypeDef * hi2c) {
+     *     if (murasaki::platform.i2c_master->HandleError(hi2c))
+     *          return;
+     *     if (murasaki::platform.i2c_slave->HandleError(hi2c))
+     *          return;
+     * }
+     * @endcode
      */
     virtual bool HandleError(void * ptr);
      private:

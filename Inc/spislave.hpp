@@ -108,6 +108,16 @@ class SpiSlave : public SpiSlaveStrategy
      * @brief Callback to notify the end of transfer
      * @param ptr Pointer to the control object.
      * @return true if no error.
+     *
+     * This member function have to be called from HAL_SPI_TxRxCpltCallback()
+     *
+     * \code
+     * void HAL_SPI_TxRxCpltCallback (SPI_HandleTypeDef * hspi)
+     * {
+     *      if ( murasaki::platform.spi1->TransmitAndReceiveCompleteCallback(hspi))
+     *          return;
+     * }
+     * \endcode
      */
     virtual bool TransmitAndReceiveCompleteCallback(void * ptr);
     /**
@@ -118,6 +128,15 @@ class SpiSlave : public SpiSlaveStrategy
      * A handle to print out the error message.
      *
      * Checks whether handle has error and if there is, print appropriate error. Then return.
+     *
+     * This member function have to be called from HAL_SPI_ErrorCallback()
+     *
+     * @code
+     * void HAL_SPI_ErrorCallback(SPI_HandleTypeDef * hspi) {
+     *      if ( murasaki::platform.spi1->HandleError(hspi) )
+     *          return;
+     * }
+     * @endcode
      */
     virtual bool HandleError(void * ptr);
  private:

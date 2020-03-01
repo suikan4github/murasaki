@@ -74,7 +74,13 @@ class Adc : public AdcStrategy {
      * \details
      * A call back to notify the end of conversion. The definition of calling timing is
      * depend on the implementation. This function must be called from HAL_ADC_ConvCpltCallback().
-     *
+     * @code
+     * void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
+     * {
+     *     if (murasaki::platform.adc->ConversionCompleteCallback(hadc))
+     *         return;
+     * }
+     * @endcode
      */
     virtual bool ConversionCompleteCallback(void *ptr);
     /**
@@ -84,6 +90,16 @@ class Adc : public AdcStrategy {
      * A member function to detect error.
      *
      * This must be called from HAL_ADC_ErrorCallback()
+     *
+     * @code
+     * void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
+     * {
+     *     if (murasaki::platform.adc->ConversionCompleteCallback(hadc))
+     *         return;
+     * }
+     * @endcode
+     *
+     *
      */
     virtual bool HandleError(void *ptr);
 

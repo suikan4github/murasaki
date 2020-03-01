@@ -75,7 +75,7 @@ class Uart : public UartStrategy
      * Store the given uart pointer into the internal variable. This pointer is passed to the STM32Cube HAL UART functions when needed.
      *
      */
-    Uart(UART_HandleTypeDef * uart);
+    Uart(UART_HandleTypeDef *uart);
     /**
      * \brief Destructor. Delete internal variables.
      */
@@ -120,7 +120,7 @@ class Uart : public UartStrategy
      * This function is forbiddedn to call from ISR.
      */
     virtual murasaki::UartStatus Transmit(
-                                          const uint8_t * data,
+                                          const uint8_t *data,
                                           unsigned int size,
                                           unsigned int timeout_ms);
     /**
@@ -150,9 +150,9 @@ class Uart : public UartStrategy
      * @li other : This is fatal problem in HAL. Peripheral is re-initialized internally.
      */
     virtual murasaki::UartStatus Receive(
-                                         uint8_t * data,
+                                         uint8_t *data,
                                          unsigned int count,
-                                         unsigned int * transfered_count,
+                                         unsigned int *transfered_count,
                                          UartTimeout uart_timeout,
                                          unsigned int timeout_ms);
     /**
@@ -167,8 +167,6 @@ class Uart : public UartStrategy
      * This member function checks whether the given ptr parameter matches its own device, and if matched,
      * Release the waiting task and return true. If it doesn't match, just return false.
      *
-     * This method have to be called from HAL_UART_TxCpltCallback(). See STM32F7 HAL manual for detail
-     *
      * The retun values are:
      * @li @ref murasaki::kursOK : Received complete.
      * @li @ref murasaki::kursTimeOut : Time out occur.
@@ -177,9 +175,19 @@ class Uart : public UartStrategy
      * @li @ref murasaki::kursNoise : Error by noise.
      * @li @ref murasaki::kursDMA : This is fatal problem in HAL. Peripheral is re-initialized internally.
      * @li other : This is fatal problem in HAL. Peripheral is re-initialized internally.
+     *
+     * This method have to be called from HAL_UART_TxCpltCallback(). See STM32F7 HAL manual for detail
+     *
+     * @code
+     * void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
+     * {
+     *     if (murasaki::platform.uart_console->TransmitCompleteCallback(huart))
+     *         return;
+     * }
+     * @endcode
      */
 
-    virtual bool TransmitCompleteCallback(void * const ptr);
+    virtual bool TransmitCompleteCallback(void *const ptr);
     /**
      * \brief Call back for entire block transfer completion.
      * \param ptr Pointer to UART_HandleTypeDef struct.
@@ -192,9 +200,18 @@ class Uart : public UartStrategy
      * This member function checks whether the given ptr parameter matches its own device, and if matched,
      * Release the waiting task and return true. If it doesn't match, just return false.
      *
-     * This method have to be called from HAL_UART_RxCpltCallback(). See STM32F7 HAL manual for detail      */
+     * This method have to be called from HAL_UART_RxCpltCallback(). See STM32F7 HAL manual for detail
+     * @code
+     * void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+     *  {
+     *     if (murasaki::platform.uart_console->ReceiveCompleteCallback(huart))
+     *         return;
+     * }
+     * @endcode
+     *
+     * */
 
-    virtual bool ReceiveCompleteCallback(void* const ptr);
+    virtual bool ReceiveCompleteCallback(void *const ptr);
     /**
      * @brief Error handling
      * @param ptr Pointer to UART_HandleTypeDef struct.
@@ -203,17 +220,28 @@ class Uart : public UartStrategy
      * A handle to print out the error message.
      *
      * Checks whether handle has error and if there is, print appropriate error. Then return.
+     *
+     * This function have to be coalled from().
+     * @code
+     * void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart) {
+     *     if (murasaki::platform.uart_console->HandleError(huart))
+     *         return;
+     * }
+     * @endcode
+     *
      */
-    virtual bool HandleError(void * const ptr);
-     protected:
-    UART_HandleTypeDef* const peripheral_;
+    virtual bool HandleError(void *const ptr);
 
-    Synchronizer * const tx_sync_;
-    Synchronizer * const rx_sync_;
+ protected:
+    UART_HandleTypeDef *const peripheral_;
 
-    CriticalSection * const tx_critical_section_;
-    CriticalSection * const rx_critical_section_;
-     private:
+    Synchronizer *const tx_sync_;
+    Synchronizer *const rx_sync_;
+
+    CriticalSection *const tx_critical_section_;
+    CriticalSection *const rx_critical_section_;
+
+ private:
     murasaki::UartStatus tx_interrupt_status_, rx_interrupt_status_;
     /**
      * @brief Return the Platform dependent device control handle.
@@ -222,7 +250,7 @@ class Uart : public UartStrategy
      * The handle is the pointer ( or some ID ) which specify the control data of
      * specific device.
      */
-    virtual void * GetPeripheralHandle();
+    virtual void* GetPeripheralHandle();
 
 };
 

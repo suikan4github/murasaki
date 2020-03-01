@@ -69,7 +69,7 @@ class Exti : public InterruptStrategy {
 
     /**
      * @details Release the waiting task
-     * @param timeout time out [mS]
+     * @param line Interrupt line bit map given from the HAL_GPIO_EXTI_Callback()
      * @return true if line is matched with this EXTI. false if not matched.
      * @details
      * Should be called from the interrupt call back.

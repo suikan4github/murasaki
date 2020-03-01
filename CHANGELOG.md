@@ -9,6 +9,7 @@ The Issue 91 fix brings incompatibility to the past. Class name changed.
 - [Issue 53 : Add EXTI control class](https://github.com/suikan4github/murasaki/issues/53)
 - [Issue 54 : Add a rotary encoder class](https://github.com/suikan4github/murasaki/issues/54)
 - [Issue 94 : Add ADC class](https://github.com/suikan4github/murasaki/issues/94)
+- [Issue 104 : Add sample code to the interrupt handler.](https://github.com/suikan4github/murasaki/issues/104)
 
 ### Changed
 - [Issue 95 : Update the readme.rd ](https://github.com/suikan4github/murasaki/issues/95)

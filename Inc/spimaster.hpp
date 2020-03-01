@@ -109,7 +109,16 @@ class SpiMaster : public SpiMasterStrategy
     /**
      * @brief Callback to notify the end of transfer
      * @param ptr Pointer to the control object.
-     * @return true if no error.
+     * \return true: ptr matches with device and handle the error. false : doesn't match.
+     *
+     * This function have to be called from HAL_SPI_TxRxCpltCallback
+     *
+     * @code
+     * void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi) {
+     *      if ( murasaki::platform.spi1->TransmitAndReceiveCompleteCallback(hspi) )
+     *          return;
+     * }
+     * @endcode
      */
     virtual bool TransmitAndReceiveCompleteCallback(void * ptr);
     /**
@@ -120,6 +129,15 @@ class SpiMaster : public SpiMasterStrategy
      * A handle to print out the error message.
      *
      * Checks whether handle has error and if there is, print appropriate error. Then return.
+     *
+     * This function have to be called from HAL_SPI_ErrorCallback.
+     *
+     * @code
+     * void HAL_SPI_ErrorCallback(SPI_HandleTypeDef *hspi) {
+     *      if ( murasaki::platform.spi1->HandleError(hspi) )
+     *          return;
+     * }
+     * @endcode
      */
     virtual bool HandleError(void * ptr);
  private:
