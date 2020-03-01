@@ -10,7 +10,14 @@
 #define MURASAKI_4_MOD_HPP_
 
 /**
+ * \defgroup MURASAKI_PLACEHOLDER Murasaki API reference
+ * \brief Murasaki API reference place holder.
+ * \details
+ */
+
+/**
  * \defgroup MURASAKI_GROUP Murasaki Class Collection
+ * \ingroup MURASAKI_PLACEHOLDER
  * \brief STM32 Class library.
  * \details
  * This is a reference guide of murasaki class library.
@@ -21,28 +28,20 @@
  */
 
 /**
- * \ingroup MURASAKI_GROUP
- * \defgroup MURASAKI_SYNC_GROUP Synchronization and Exclusive access
- * \brief Sync between the task and interrupt. Make the resources thread safe.
- * \details
- * These classes are used as parts of the other classes.
- */
-
-/**
- * \ingroup MURASAKI_GROUP
  * \defgroup MURASAKI_THIRDPARTY_GROUP Third party classes
+ * \ingroup MURASAKI_PLACEHOLDER
  * @brief Classes for the thirdparty devices.
  */
 
 /**
- * \ingroup MURASAKI_GROUP
  * \defgroup MURASAKI_DEFINITION_GROUP Definitions and Configuration
+ * \ingroup MURASAKI_PLACEHOLDER
  * \brief Definitions and configuration collection of murasaki platform.
  */
 
 /**
- * \ingroup MURASAKI_GROUP
  * \defgroup MURASAKI_PLATFORM_GROUP Application Specific Platform
+ * \ingroup MURASAKI_PLACEHOLDER
  * \brief Variables to control the hardware.
  *
  * Typical usage of these variables can be seen below. First of all, an .cpp file have to include murasaki.hpp.
@@ -89,8 +88,8 @@
  */
 
 /**
- * \ingroup MURASAKI_GROUP
  * \defgroup MURASAKI_ABSTRACT_GROUP Abstract Classes
+ * \ingroup MURASAKI_PLACEHOLDER
  * \brief Generic classes as template of the concrete class.
  * \details
  * Usually, application dodesn't instantiate these classes. But pointer may be declared
@@ -98,15 +97,23 @@
  */
 
 /**
- * @ingroup MURASAKI_GROUP
+ * \defgroup MURASAKI_SYNC_GROUP Synchronization and Exclusive access
+ * \ingroup MURASAKI_PLACEHOLDER
+ * \brief Sync between the task and interrupt. Make the resources thread safe.
+ * \details
+ * These classes are used as parts of the other classes.
+ */
+
+/**
  * @defgroup MURASAKI_HELPER_GROUP Helper classes
+ * @ingroup MURASAKI_PLACEHOLDER
  * @brief Classes to support the murasaki-class.
  * @details
  * These classes are not used by customer.
  */
 
 /**
- * @ingroup MURASAKI_GROUP
+ * @ingroup MURASAKI_PLACEHOLDER
  * @defgroup MURASAKI_FUNCTION_GROUP Utility functions
  * @brief Collection of the useful functions.
  */

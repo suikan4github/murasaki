@@ -11,9 +11,10 @@ The Issue 91 fix brings incompatibility to the past. Class name changed.
 - [Issue 94 : Add ADC class](https://github.com/suikan4github/murasaki/issues/94)
 
 ### Changed
+- [Issue 95 : Update the readme.rd ](https://github.com/suikan4github/murasaki/issues/95)
 - [Issue 100 : Refactor the word size and shift of the DuplexAudio. ](https://github.com/suikan4github/murasaki/issues/100)
 - [Issue 101 : Add I2S and ADC callback handler to the template. ](https://github.com/suikan4github/murasaki/issues/101)
-- [Issue 95 : Update the readme.rd ](https://github.com/suikan4github/murasaki/issues/95)
+- [Issue 103 : Restructure the document module hierarchy ](https://github.com/suikan4github/murasaki/issues/103)
 
 ### Deprecated
 ### Removed

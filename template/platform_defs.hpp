@@ -16,11 +16,8 @@
 
 namespace murasaki {
 /**
- * @ingroup MURASAKI_PLATFORM_GROUP
- * \{
- */
-/**
  * \brief Custom aggregation struct for user platform.
+ * @ingroup MURASAKI_PLATFORM_GROUP
  * \details
  * A collection of the peripheral / MPU control variable.
  *
@@ -34,11 +31,11 @@ namespace murasaki {
 struct Platform
 {
     // Platform dependent Custom variables.
-    UartStrategy * uart_console;    ///< UART wrapping class object for debugging
-    LoggerStrategy * logger;        ///< logging class object for debugger
+    UartStrategy *uart_console;    ///< UART wrapping class object for debugging
+    LoggerStrategy *logger;        ///< logging class object for debugger
 
-    BitOutStrategy * led;           ///< GP out under test
-    TaskStrategy * task1;           ///< Task under test
+    BitOutStrategy *led;           ///< GP out under test
+    TaskStrategy *task1;           ///< Task under test
 
     // Following block is just sample
 
@@ -53,7 +50,9 @@ struct Platform
 };
 
 /**
+ * \var murasaki::platform
  * \brief Grobal variable to provide the access to the platform component.
+ * @ingroup MURASAKI_PLATFORM_GROUP
  * \details
  * This variable is declared by murasaki platform. But not instantiated. To make it happen,
  * programmer have to make an variable and initilize it explicitly.
@@ -64,17 +63,6 @@ struct Platform
  */
 extern Platform platform;
 
-
-
-
-/**
- * \}
- * end of defgroup PLATFORM_GROUP
- */
-
-
-
 } /* namespace murasaki */
-
 
 #endif /* PLATFORM_DEFS_HPP_ */
