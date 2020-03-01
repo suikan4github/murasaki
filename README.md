@@ -23,6 +23,7 @@ A set of classes provides the abstraction of the following peripherals.
  * SAI
  * I2S
  * ADC
+ * GPIO
  * EXTI
 
 Note that above peripheral abstraction provides the thread-safe, interrupt/DMA based, and blocking IO.
