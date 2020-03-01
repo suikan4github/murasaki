@@ -43,6 +43,9 @@
 #include "adc.hpp"
 #include "exti.hpp"
 
+// Utilities
+#include "murasaki_utility.hpp"
+
 // Third party
 #include "Thirdparty/adau1361.hpp"
 
