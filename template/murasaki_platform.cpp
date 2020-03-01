@@ -495,7 +495,116 @@ void HAL_SAI_ErrorCallback(SAI_HandleTypeDef * hsai) {
 
 #endif
 
-/* -------------------------- GPIO ---------------------------------- */
+/* ------------------ I2S  -------------------------- */
+#ifdef HAL_I2S_MODULE_ENABLED
+/**
+ * @brief Optional I2S interrupt handler at buffer transfer halfway.
+ * @ingroup MURASAKI_PLATFORM_GROUP
+ * @param hsai Handler of the I2S device.
+ * @details
+ * Invoked after I2S RX DMA complete interrupt is at halfway.
+ * This interrupt have to be forwarded to the  murasaki::DuplexAudio::ReceiveCallback().
+ * The second parameter of the ReceiveCallback() have to be 0 which mean the halfway interrupt.
+ */
+void HAL_I2S_RxHalfCpltCallback(I2S_HandleTypeDef *hi2s) {
+    if (murasaki::platform.audio->DmaCallback(hi2s, 0)) {
+        murasaki::platform.led_st0->Clear();
+        murasaki::platform.led_st1->Set();
+        return;
+    }
+}
+
+/**
+ * @brief Optional I2S interrupt handler at buffer transfer complete.
+ * @ingroup MURASAKI_PLATFORM_GROUP
+ * @param hsai Handler of the I2S device.
+ * @details
+ * Invoked after I2S RX DMA complete interrupt is at halfway.
+ * This interrupt have to be forwarded to the  murasaki::DuplexAudio::ReceiveCallback().
+ * The second parameter of the ReceiveCallback() have to be 1 which mean the complete interrupt.
+ */
+void HAL_I2S_RxCpltCallback(I2S_HandleTypeDef *hi2s) {
+    if (murasaki::platform.audio->DmaCallback(hi2s, 1)) {
+        murasaki::platform.led_st0->Set();
+        murasaki::platform.led_st1->Clear();
+        return;
+    }
+}
+
+/**
+ * @brief Optional I2S error interrupt handler.
+ * @ingroup MURASAKI_PLATFORM_GROUP
+ * @param hsai Handler of the I2S device.
+ * @details
+ * The error have to be forwarded to murasaki::DuplexAudio::HandleError().
+ * Note that DuplexAudio::HandleError() trigger a hard fault.
+ * So, never return.
+ */
+
+void HAL_I2S_ErrorCallback(I2S_HandleTypeDef *hi2s) {
+    if (murasaki::platform.audio->HandleError(hi2s))
+        return;
+}
+
+#endif
+
+/* ------------------ TIMER -------------------------- */
+
+void USR_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+                                   {
+    if (htim == &htim2) {
+        murasaki::debugger->Printf("HAL_TIM_PeriodElapsedCallback\n");
+    }
+
+}
+
+void HAL_TIM_TriggerCallback(TIM_HandleTypeDef *htim)
+                             {
+    if (htim == &htim2) {
+        murasaki::debugger->Printf("HAL_TIM_TriggerCallback\n");
+    }
+
+}
+
+/* ------------------ ADC -------------------------- */
+
+#ifdef HAL_ADC_MODULE_ENABLED
+
+/**
+ * @brief Optional interrupt handler for ADC.
+ * @param hadc Pointer to the Adc control structure. 
+ * @details
+ * This is called from inside of HAL when an ADC conversion is done.
+ *
+ * STM32Cube HAL has same name function internally.
+ * That function is invoked whenever an relevant interrupt happens.
+ * In the other hand, that function is declared as weak bound.
+ * As a result, this function overrides the default error interrupt call back.
+ *
+ */
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
+                              {
+    if (murasaki::platform.adc->ConversionCompleteCallback(hadc))
+        return;
+}
+
+/**
+ * @brief Optional interrupt handler for ADC.
+ * @param hadc Pointer to the Adc control structure. 
+ * @details
+ * This is called from inside of HAL when an ADC conversion failed by Error.
+ *
+ *
+ */
+void HAL_ADC_ErrorCallback(ADC_HandleTypeDef *hadc)
+                           {
+    if (murasaki::platform.adc->HandleError(hadc))
+        return;
+}
+
+#endif
+
+/* -------------------------- EXTI ---------------------------------- */
 
 /**
  * @brief Optional interrupt handling of EXTI
@@ -520,14 +629,14 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
     // This switch can be configured as EXTI interrupt srouce.
     // In this sample, releasing the waiting task if interrupt comes.
 
-    // Check whether appropriate interrupt or not
-    if ( USER_Btn_Pin == GPIO_Pin) {
-        // Check whether sync object is ready or not.
-        // This check is essential from the interrupt before the platform variable is ready
-        if (murasaki::platform.sync_with_button != nullptr)
-        // release the waiting task
-            murasaki::platform.sync_with_button->Release();
-    }
+    // Check whether sync object is ready or not.
+    // This check is essential from the interrupt before the platform variable is ready
+    if (murasaki::platform.exti_b1 != nullptr)
+        // The Release member function return true, if the given parameter matched with 
+        // its interrupt line. 
+        if (murasaki::platform.exti_b1->Release(GPIO_Pin)) 
+            return;
+            
 #endif
 }
 
