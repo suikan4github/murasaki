@@ -9,7 +9,7 @@ The Issue 91 fix brings incompatibility to the past. Class name changed.
 - [Issue 53 : Add EXTI control class](https://github.com/suikan4github/murasaki/issues/53)
 - [Issue 54 : Add a rotary encoder class](https://github.com/suikan4github/murasaki/issues/54)
 - [Issue 94 : Add ADC class](https://github.com/suikan4github/murasaki/issues/94)
-- [Issue 104 : Build fail if EXTI_LINE_## is equal to the ##th power of 2](https://github.com/suikan4github/murasaki/issues/104)
+- [Issue 104 : Add sample code to the interrupt handler.](https://github.com/suikan4github/murasaki/issues/104)
 
 ### Changed
 - [Issue 95 : Update the readme.rd ](https://github.com/suikan4github/murasaki/issues/95)
@@ -28,7 +28,7 @@ The Issue 91 fix brings incompatibility to the past. Class name changed.
 - [Issue 98 : AudioPortAdapterStrategy::GetSampleDataSizeTx() / GetSampleDataSizeRx() should return the size by bits ](https://github.com/suikan4github/murasaki/issues/98)
 - [Issue 99 : AudioPortAdapterStrategy::GetSampleWordsSizeTX() / GetSampleWordsSizeRX() returns 3 for 24bit word ](https://github.com/suikan4github/murasaki/issues/99)
 - [Issue 96 : Test code is left in I2sPortAdapter::StartTransferTx and StartTransferRx](https://github.com/suikan4github/murasaki/issues/96)
-- [Issue 105 : Add sample code to the interrupt handler.](https://github.com/suikan4github/murasaki/issues/105)
+- [Issue 105 : Build fail if EXTI_LINE_## is equal to the ##th power of 2](https://github.com/suikan4github/murasaki/issues/105)
 
 ### Security
 ### Known Issue
