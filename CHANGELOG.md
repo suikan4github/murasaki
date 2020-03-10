@@ -29,7 +29,8 @@ The Issue 91 fix brings incompatibility to the past. Class name changed.
 - [Issue 99 : AudioPortAdapterStrategy::GetSampleWordsSizeTX() / GetSampleWordsSizeRX() returns 3 for 24bit word ](https://github.com/suikan4github/murasaki/issues/99)
 - [Issue 96 : Test code is left in I2sPortAdapter::StartTransferTx and StartTransferRx](https://github.com/suikan4github/murasaki/issues/96)
 - [Issue 105 : Build fail if EXTI_LINE_## is equal to the ##th power of 2](https://github.com/suikan4github/murasaki/issues/105)
-
+- [Issue 106 : Assertion fail at DebugUart when a terminal emulator is connected. ](https://github.com/suikan4github/murasaki/issues/106)
+  
 ### Security
 ### Known Issue
 
