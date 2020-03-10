@@ -30,6 +30,8 @@ namespace murasaki {
  * |     24 bits   | 24bits data and 24bits frame |  Half Word        |
  * |     32 bits   | 32bits data and 32bits frame |  Half Word        |
  *
+ * This class doesn't support the STM32H7 series duplex I2S.
+ *
  * \ingroup MURASAKI_GROUP
  *
  */
