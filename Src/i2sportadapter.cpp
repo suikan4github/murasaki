@@ -24,6 +24,11 @@ I2sPortAdapter::I2sPortAdapter(
         rx_peripheral_(rx_peripheral)
 
 {
+#ifdef STM32H7
+    // STM32H7 duplex I2S is not supported.
+    MURASAKI_ASSERT(false)
+#endif
+
     MURASAKI_ASSERT(tx_peripheral_ != nullptr || rx_peripheral_ != nullptr);
 
     if (tx_peripheral_ != nullptr)
