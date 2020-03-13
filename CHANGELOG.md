@@ -20,7 +20,8 @@ The Issue 91 fix brings incompatibility to the past. Class name changed.
 - [Issue 107 : Reject STM32H7 from I2sPortAdapter class by assertion ](https://github.com/suikan4github/murasaki/issues/107)
 - [Issue 109 : Add more parameter check to the I2S](https://github.com/suikan4github/murasaki/issues/109)
 - [Issue 111 : Add more parameter check to the SAI](https://github.com/suikan4github/murasaki/issues/111)
-  
+- [Issue 110 : Drop 8bit support from DuplexAudio](https://github.com/suikan4github/murasaki/issues/110)
+
 ### Deprecated
 ### Removed
 ### Fixed

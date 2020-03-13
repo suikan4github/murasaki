@@ -21,7 +21,8 @@ namespace murasaki {
  *
  * Caution : Regardless of the size of the data in I2S frame, set DMA data size as 16bit.
  *
- * Following table summarizes the data size in I2S signal frame vs Configurator settings.
+ * Following table summarizes the data size in I2S signal frame vs the configurater settings.
+ * DMA must be configured as circular mode.
  *
  * | I2S Data Size | I2S Data and Frame Format    | I2S DMA Data Size |
  * |:-------------:|:----------------------------:|:-----------------:|

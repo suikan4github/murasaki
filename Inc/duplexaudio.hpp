@@ -26,7 +26,9 @@ namespace murasaki {
  * @li blocking and synchronous API
  * @li Internal DMA operation.
  *
- * Note : this class assumes the Fs of the TX and RX are same and both Tx and RX are fully synchronized.
+ * Note : this class assumes the Fs and the data size on I2S of the TX and RX are same and both Tx and RX are fully synchronized.
+ *
+ * Note : this class assumes the data size on I2S is bigger the 8bit.
  *
  * Internally, this class provides a multi-buffers DMA operation between the audio peripheral and caller algorithm.
  * The key API is the @ref TransmitAndReceive() member function.

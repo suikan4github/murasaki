@@ -22,7 +22,8 @@ namespace murasaki {
  * Caution : The size of the data in SAI and the width of the data in DMA must be aligned.
  * This is responsibility of the programmer. The mis-aligned configuration gives broken audio.
  *
- * Following table summarizes the data size in I2S signal frame vs Configurator settings.
+ * Following table summarizes the data size in I2S signal frame vs the configurator settings.
+ * DMA must be configured as circular mode.
  *
  * | I2S Data Size |SAI Data Size     | SAI DMA Data Size |
  * |:-------------:|:----------------:|:-----------------:|
@@ -106,7 +107,7 @@ class SaiPortAdapter : public AudioPortAdapterStrategy {
      *
      * If peripheral requires left align format, this function shuld return 0.
      *
-     * The STM32 SAI DMA format is right aligned. 
+     * The STM32 SAI DMA format is right aligned.
      */
     virtual unsigned int GetSampleShiftSizeTx();
 
