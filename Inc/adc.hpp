@@ -21,7 +21,7 @@ namespace murasaki {
  * @details
  * This class is single converstion class. That mean, Only one specified channel will be converted only once. Then, return.
  *
- * Optionally, The sampling clock duration can be sent for the each channels.
+ * Optionally, The sampling clock duration can be set for the each channels.
  *
  * \ingroup MURASAKI_GROUP
  */
@@ -45,12 +45,13 @@ class Adc : public AdcStrategy {
      * may need longer clocks.
      *
      * The channel parameter is restricted as ADC_CHANNEL_* value. Otherwise, HAL may
-     * fail the assertion.
+     * fail the assertion inside Convert() member function.
      *
      * The clocks parameter is restricted as ADC_SAMPLETIME_*CYCLES. Otherwise, HAL may
-     * fail the assertion.
+     * fail the assertion inside Convert() member function.
      *
-     * Up to 32 channels data can be stored. The overflown data will be ignored.
+     * Up to 32 channels data can be stored.
+     * If more than 32 channels are stored, assertion failed.
      */
     virtual void SetSampleClock(unsigned int channel, unsigned int clocks);
     /**
@@ -62,7 +63,7 @@ class Adc : public AdcStrategy {
      * @details
      * Convert the analog singal through the given channel to digital.
      *
-     * The processing ia synchronous and blocking. During certain channel is converted, other channels are kept waited.
+     * The processing is synchronous and blocking. During certain channel is converted, other channels are kept waited.
      *
      */
     virtual murasaki::AdcStatus Convert(const unsigned int channel, float *value, unsigned int size = 1);

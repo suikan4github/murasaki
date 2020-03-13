@@ -65,7 +65,7 @@ murasaki::AdcStatus murasaki::Adc::Convert(
         ADC_ChannelConfTypeDef ch_config = { 0 };
         ch_config.Channel = channel;
         ch_config.Rank = 1;     // this is not important in the single conversion.
-        ch_config.SamplingTime = GetSampleClocks(channel);
+        ch_config.SamplingTime = GetSampleClocks(channel);  // this value is stored in this object. See GetSampleClocks()
 
         api_status = HAL_ADC_ConfigChannel(peripheral_, &ch_config);
         MURASAKI_ASSERT(api_status == HAL_OK)
@@ -188,6 +188,7 @@ void Adc::SetSampleClock(unsigned int channel, unsigned int clocks)
                          {
     ADC_SYSLOG("Enter %d, %d.", channel, clocks);
 
+    // Sample conversion clocks configurations are stored in side member variables.
     InstallSampleClocks(channel, clocks);
 
     ADC_SYSLOG("Exit.")
@@ -231,8 +232,10 @@ void Adc::InstallSampleClocks(unsigned int channel, unsigned int clocks)
         data_count_++;
         ADC_SYSLOG("Stored")
     }
-    else
-    MURASAKI_SYSLOG(this, kfaAdc, kseError, "Channel history over flow")
+    else {
+        MURASAKI_SYSLOG(this, kfaAdc, kseError, "Channel history over flow")
+        MURASAKI_ASSERT(false)
+    }
 
     ADC_SYSLOG("Exit.")
 }
