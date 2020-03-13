@@ -31,14 +31,41 @@ I2sPortAdapter::I2sPortAdapter(
 
     MURASAKI_ASSERT(tx_peripheral_ != nullptr || rx_peripheral_ != nullptr);
 
-    if (tx_peripheral_ != nullptr)
+    // Check TX
+    if (tx_peripheral_ != nullptr) {
         MURASAKI_ASSERT(
                         tx_peripheral_->Init.Mode == I2S_MODE_MASTER_TX ||
                         tx_peripheral_->Init.Mode == I2S_MODE_SLAVE_TX)
-    if (rx_peripheral_ != nullptr)
+        // We need DMA
+        MURASAKI_ASSERT(tx_peripheral->hdmatx != nullptr)
+        // For all I2S transfer, the data size have to be half word. Read ref man "Supported audio protocols" of the I2S.
+        // The source and destination size have to be matched. Read ref manunal "DMA data width, alignment and endianness"
+        MURASAKI_ASSERT(tx_peripheral->hdmatx->Init.PeriphDataAlignment == DMA_PDATAALIGN_HALFWORD)
+        MURASAKI_ASSERT(tx_peripheral->hdmatx->Init.MemDataAlignment == DMA_MDATAALIGN_HALFWORD)
+        // The DMA mode have to be circular.
+        MURASAKI_ASSERT(tx_peripheral->hdmatx->Init.Mode == DMA_CIRCULAR)
+    }
+
+    // Check RX
+    if (rx_peripheral_ != nullptr) {
         MURASAKI_ASSERT(
                         rx_peripheral_->Init.Mode == I2S_MODE_MASTER_RX ||
                         rx_peripheral_->Init.Mode == I2S_MODE_SLAVE_RX)
+        // We need DMA
+        MURASAKI_ASSERT(rx_peripheral->hdmarx != nullptr)
+        // For all I2S transfer, the data size have to be half word. Read ref man "Supported audio protocols" of the I2S.
+        // The source and destination size have to be matched. Read ref manunal "DMA data width, alignment and endianness"
+        MURASAKI_ASSERT(rx_peripheral->hdmarx->Init.PeriphDataAlignment == DMA_PDATAALIGN_HALFWORD)
+        MURASAKI_ASSERT(rx_peripheral->hdmarx->Init.MemDataAlignment == DMA_MDATAALIGN_HALFWORD)
+        // The DMA mode have to be circular.
+        MURASAKI_ASSERT(rx_peripheral->hdmarx->Init.Mode == DMA_CIRCULAR)
+    }
+
+    // If both TX and RX works.
+    if (tx_peripheral_ != nullptr && rx_peripheral_ != nullptr) {
+        // Check both TX and RX have to be same data format ( 32, 24, 16EX, 16 )
+        MURASAKI_ASSERT(rx_peripheral->Init.DataFormat == tx_peripheral->Init.DataFormat)
+    }
 
 }
 
