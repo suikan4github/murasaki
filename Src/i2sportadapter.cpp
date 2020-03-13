@@ -40,10 +40,10 @@ I2sPortAdapter::I2sPortAdapter(
         MURASAKI_ASSERT(tx_peripheral->hdmatx != nullptr)
         // For all I2S transfer, the data size have to be half word. Read ref man "Supported audio protocols" of the I2S.
         // The source and destination size have to be matched. Read ref manunal "DMA data width, alignment and endianness"
-        MURASAKI_ASSERT(tx_peripheral->hdmatx->Init.PeriphDataAlignment == DMA_PDATAALIGN_HALFWORD)
-        MURASAKI_ASSERT(tx_peripheral->hdmatx->Init.MemDataAlignment == DMA_MDATAALIGN_HALFWORD)
+        MURASAKI_ASSERT(tx_peripheral_->hdmatx->Init.PeriphDataAlignment == DMA_PDATAALIGN_HALFWORD)
+        MURASAKI_ASSERT(tx_peripheral_->hdmatx->Init.MemDataAlignment == DMA_MDATAALIGN_HALFWORD)
         // The DMA mode have to be circular.
-        MURASAKI_ASSERT(tx_peripheral->hdmatx->Init.Mode == DMA_CIRCULAR)
+        MURASAKI_ASSERT(tx_peripheral_->hdmatx->Init.Mode == DMA_CIRCULAR)
     }
 
     // Check RX
@@ -52,19 +52,19 @@ I2sPortAdapter::I2sPortAdapter(
                         rx_peripheral_->Init.Mode == I2S_MODE_MASTER_RX ||
                         rx_peripheral_->Init.Mode == I2S_MODE_SLAVE_RX)
         // We need DMA
-        MURASAKI_ASSERT(rx_peripheral->hdmarx != nullptr)
+        MURASAKI_ASSERT(rx_peripheral_->hdmarx != nullptr)
         // For all I2S transfer, the data size have to be half word. Read ref man "Supported audio protocols" of the I2S.
         // The source and destination size have to be matched. Read ref manunal "DMA data width, alignment and endianness"
-        MURASAKI_ASSERT(rx_peripheral->hdmarx->Init.PeriphDataAlignment == DMA_PDATAALIGN_HALFWORD)
-        MURASAKI_ASSERT(rx_peripheral->hdmarx->Init.MemDataAlignment == DMA_MDATAALIGN_HALFWORD)
+        MURASAKI_ASSERT(rx_peripheral_->hdmarx->Init.PeriphDataAlignment == DMA_PDATAALIGN_HALFWORD)
+        MURASAKI_ASSERT(rx_peripheral_->hdmarx->Init.MemDataAlignment == DMA_MDATAALIGN_HALFWORD)
         // The DMA mode have to be circular.
-        MURASAKI_ASSERT(rx_peripheral->hdmarx->Init.Mode == DMA_CIRCULAR)
+        MURASAKI_ASSERT(rx_peripheral_->hdmarx->Init.Mode == DMA_CIRCULAR)
     }
 
     // If both TX and RX works.
     if (tx_peripheral_ != nullptr && rx_peripheral_ != nullptr) {
         // Check both TX and RX have to be same data format ( 32, 24, 16EX, 16 )
-        MURASAKI_ASSERT(rx_peripheral->Init.DataFormat == tx_peripheral->Init.DataFormat)
+        MURASAKI_ASSERT(rx_peripheral_->Init.DataFormat == tx_peripheral_->Init.DataFormat)
     }
 
 }
@@ -288,6 +288,8 @@ bool I2sPortAdapter::Match(void *peripheral_handle) {
         return_val = rx_peripheral_ == peripheral_handle;
     else if (tx_peripheral_ != nullptr)
         return_val = tx_peripheral_ == peripheral_handle;
+    else
+        return_val = false;
 
     I2SAUDIO_SYSLOG("Exit with %d.", return_val)
     return return_val;
