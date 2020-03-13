@@ -29,14 +29,81 @@ SaiPortAdapter::SaiPortAdapter(
 
     // Is TX peripheral is correctly configureed as TX?
     if (tx_peripheral_ != nullptr) {
+        // Is mode correctly set?
         MURASAKI_ASSERT(tx_peripheral_->Init.AudioMode == SAI_MODEMASTER_TX ||
                         tx_peripheral_->Init.AudioMode == SAI_MODESLAVE_TX)
+        // Check whether DMA is set.
+        MURASAKI_ASSERT(tx_peripheral->hdmatx != nullptr)
+        // Check whether DMA is circular mode.
+        MURASAKI_ASSERT(tx_peripheral->hdmatx->Init.Mode == DMA_CIRCULAR)
+        // Check whether DMA word size is correct
+        switch (tx_peripheral->Init.DataSize)
+        {
+            case SAI_DATASIZE_8:
+                // Check whether the DMA word size is byte.
+                MURASAKI_ASSERT(tx_peripheral->hdmatx->Init.PeriphDataAlignment == DMA_PDATAALIGN_BYTE)
+                MURASAKI_ASSERT(tx_peripheral->hdmatx->Init.MemDataAlignment == DMA_MDATAALIGN_BYTE)
+                break;
+            case SAI_DATASIZE_10:   // fall through
+            case SAI_DATASIZE_16:
+                // Check whether the DMA word size is 2 byte.
+                MURASAKI_ASSERT(tx_peripheral->hdmatx->Init.PeriphDataAlignment == DMA_PDATAALIGN_HALFWORD)
+                MURASAKI_ASSERT(tx_peripheral->hdmatx->Init.MemDataAlignment == DMA_MDATAALIGN_HALFWORD)
+                break;
+            case SAI_DATASIZE_20:   // fall through
+            case SAI_DATASIZE_24:   // fall through
+            case SAI_DATASIZE_32:
+                // Check whether the DMA word size is 4byte.
+                MURASAKI_ASSERT(tx_peripheral->hdmatx->Init.PeriphDataAlignment == DMA_PDATAALIGN_WORD)
+                MURASAKI_ASSERT(tx_peripheral->hdmatx->Init.MemDataAlignment == DMA_MDATAALIGN_WORD)
+                break;
+            default:
+                MURASAKI_SYSLOG(this, kfaSai, kseError, "Unexpected data size")
+                MURASAKI_ASSERT(false)
+                // force assertion.
+        }
     }
 
     // Is RX peripheral is correctly configureed as RX?
     if (rx_peripheral_ != nullptr) {
         MURASAKI_ASSERT(rx_peripheral_->Init.AudioMode == SAI_MODEMASTER_RX ||
                         rx_peripheral_->Init.AudioMode == SAI_MODESLAVE_RX)
+        // Check whether DMA is set.
+        MURASAKI_ASSERT(rx_peripheral->hdmarx != nullptr)
+        // Check whether DMA is circular mode.
+        MURASAKI_ASSERT(rx_peripheral->hdmarx->Init.Mode == DMA_CIRCULAR)
+        // Check whether DMA word size is correct
+        switch (rx_peripheral->Init.DataSize)
+        {
+            case SAI_DATASIZE_8:
+                // Check whether the DMA word size is byte.
+                MURASAKI_ASSERT(rx_peripheral->hdmarx->Init.PeriphDataAlignment == DMA_PDATAALIGN_BYTE)
+                MURASAKI_ASSERT(rx_peripheral->hdmarx->Init.MemDataAlignment == DMA_MDATAALIGN_BYTE)
+                break;
+            case SAI_DATASIZE_10:   // fall through
+            case SAI_DATASIZE_16:
+                // Check whether the DMA word size is 2 byte.
+                MURASAKI_ASSERT(rx_peripheral->hdmarx->Init.PeriphDataAlignment == DMA_PDATAALIGN_HALFWORD)
+                MURASAKI_ASSERT(rx_peripheral->hdmarx->Init.MemDataAlignment == DMA_MDATAALIGN_HALFWORD)
+                break;
+            case SAI_DATASIZE_20:   // fall through
+            case SAI_DATASIZE_24:   // fall through
+            case SAI_DATASIZE_32:
+                // Check whether the DMA word size is 4byte.
+                MURASAKI_ASSERT(rx_peripheral->hdmarx->Init.PeriphDataAlignment == DMA_PDATAALIGN_WORD)
+                MURASAKI_ASSERT(rx_peripheral->hdmarx->Init.MemDataAlignment == DMA_MDATAALIGN_WORD)
+                break;
+            default:
+                MURASAKI_SYSLOG(this, kfaSai, kseError, "Unexpected data size")
+                MURASAKI_ASSERT(false)
+                // force assertion.
+        }
+    }
+
+    // If port has two active channel.
+    if (rx_peripheral_ != nullptr || tx_peripheral_ != nullptr) {
+        // Both channel have to have same data size.
+        MURASAKI_ASSERT(rx_peripheral->Init.DataSize == tx_peripheral->Init.DataSize)
     }
 
 }
@@ -50,7 +117,7 @@ bool SaiPortAdapter::HandleError(void *ptr) {
 
     MURASAKI_ASSERT(nullptr != ptr);
 
-    // Is this interrupt for this peripheral?
+// Is this interrupt for this peripheral?
     if (this->Match(ptr)) {
         SAIAUDIO_SYSLOG("Pointer matched")
         uint32_t error_code = rx_peripheral_->ErrorCode;
@@ -99,11 +166,11 @@ void SaiPortAdapter::StartTransferTx(
 
     MURASAKI_ASSERT(nullptr != tx_peripheral_)
 
-    // Start the Transfer and Transmit DMA.
-    // Assumes CubeIDE configures these setting as circular mode. That mean, for each halfway,
-    // interrupt is raised, in addition to the end of buffer interrupt.
-    // Note, STM32 HAL requirement of the size parameter is ambiguous. There is no description whether
-    // It should be in Byte or Word.
+// Start the Transfer and Transmit DMA.
+// Assumes CubeIDE configures these setting as circular mode. That mean, for each halfway,
+// interrupt is raised, in addition to the end of buffer interrupt.
+// Note, STM32 HAL requirement of the size parameter is ambiguous. There is no description whether
+// It should be in Byte or Word.
     HAL_SAI_Transmit_DMA(
                          tx_peripheral_,
                          tx_buffer,
@@ -121,11 +188,11 @@ void SaiPortAdapter::StartTransferRx(
 
     MURASAKI_ASSERT(nullptr != rx_peripheral_)
 
-    // Start the Transfer and Receive DMA.
-    // Assumes CubeIDE configures these setting as circular mode. That mean, for each halfway,
-    // Interrupt is raised, in addition to the end of buffer interrupt.
-    // Note, HAL requirement of the size parameter is ambiguous. There is no description whether
-    // It should be in Byte or Word.
+// Start the Transfer and Receive DMA.
+// Assumes CubeIDE configures these setting as circular mode. That mean, for each halfway,
+// Interrupt is raised, in addition to the end of buffer interrupt.
+// Note, HAL requirement of the size parameter is ambiguous. There is no description whether
+// It should be in Byte or Word.
 
     HAL_SAI_Receive_DMA(
                         rx_peripheral_,
