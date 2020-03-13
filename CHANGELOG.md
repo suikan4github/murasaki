@@ -18,6 +18,7 @@ The Issue 91 fix brings incompatibility to the past. Class name changed.
 - [Issue 102 : I2sSearch() should be in separate file ](https://github.com/suikan4github/murasaki/issues/102)
 - [Issue 103 : Restructure the document module hierarchy ](https://github.com/suikan4github/murasaki/issues/103)
 - [Issue 107 : Reject STM32H7 from I2sPortAdapter class by assertion ](https://github.com/suikan4github/murasaki/issues/107)
+  
 ### Deprecated
 ### Removed
 ### Fixed
@@ -30,6 +31,7 @@ The Issue 91 fix brings incompatibility to the past. Class name changed.
 - [Issue 96 : Test code is left in I2sPortAdapter::StartTransferTx and StartTransferRx](https://github.com/suikan4github/murasaki/issues/96)
 - [Issue 105 : Build fail if EXTI_LINE_## is equal to the ##th power of 2](https://github.com/suikan4github/murasaki/issues/105)
 - [Issue 106 : Assertion fail at DebugUart when a terminal emulator is connected. ](https://github.com/suikan4github/murasaki/issues/106)
+- [Issue 108 : template/murasaki_platform.cpp has unnecessary LED control ](https://github.com/suikan4github/murasaki/issues/108)
   
 ### Security
 ### Known Issue

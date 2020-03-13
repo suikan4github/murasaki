@@ -273,7 +273,7 @@ void HAL_SPI_ErrorCallback(SPI_HandleTypeDef * hspi) {
  * In this call back, the uart device handle have to be passed to the
  * murasaki::I2c::TransmitCompleteCallback() function.
  */
-void HAL_I2C_MasterTxCpltCallback(I2C_HandleTypeDef * hi2c)
+void HAL_I2C_MasterTxCpltCallback(I2C_HandleTypeDef *hi2c)
                                   {
     // Poll all I2C master tx related interrupt receivers.
     // If hit, return. If not hit,check next.
@@ -295,11 +295,11 @@ void HAL_I2C_MasterTxCpltCallback(I2C_HandleTypeDef * hi2c)
  * In this call back, the uart device handle have to be passed to the
  * murasaki::Uart::ReceiveCompleteCallback() function.
  */
-void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef * hi2c) {
+void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef *hi2c) {
     // Poll all I2C master rx related interrupt receivers.
     // If hit, return. If not hit,check next.
     if (murasaki::platform.i2c_master->ReceiveCompleteCallback(hi2c))
-    return;
+        return;
 }
 /**
  * @brief Essential to sync up with I2C.
@@ -316,12 +316,13 @@ void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef * hi2c) {
  * In this call back, the I2C slave device handle have to be passed to the
  * murasaki::I2cSlave::TransmitCompleteCallback() function.
  */
-void HAL_I2C_SlaveTxCpltCallback(I2C_HandleTypeDef * hi2c)
-                                 {
+void HAL_I2C_SlaveTxCpltCallback(I2C_HandleTypeDef *hi2c) {
     // Poll all I2C master tx related interrupt receivers.
     // If hit, return. If not hit,check next.
+#if 0
     if (murasaki::platform.i2c_slave->TransmitCompleteCallback(hi2c))
         return;
+#endif
 }
 
 /**
@@ -338,11 +339,13 @@ void HAL_I2C_SlaveTxCpltCallback(I2C_HandleTypeDef * hi2c)
  * In this call back, the I2C slave device handle have to be passed to the
  * murasaki::I2cSlave::ReceiveCompleteCallback() function.
  */
-void HAL_I2C_SlaveRxCpltCallback(I2C_HandleTypeDef * hi2c) {
+void HAL_I2C_SlaveRxCpltCallback(I2C_HandleTypeDef *hi2c) {
     // Poll all I2C master rx related interrupt receivers.
     // If hit, return. If not hit,check next.
+#if 0
     if (murasaki::platform.i2c_slave->ReceiveCompleteCallback(hi2c))
         return;
+#endif
 }
 
 /**
@@ -360,7 +363,7 @@ void HAL_I2C_SlaveRxCpltCallback(I2C_HandleTypeDef * hi2c) {
  * In this call back, the uart device handle have to be passed to the
  * murasaki::I2c::HandleError() function.
  */
-void HAL_I2C_ErrorCallback(I2C_HandleTypeDef * hi2c) {
+void HAL_I2C_ErrorCallback(I2C_HandleTypeDef *hi2c) {
     // Poll all I2C master error related interrupt receivers.
     // If hit, return. If not hit,check next.
     if (murasaki::platform.i2c_master->HandleError(hi2c))
@@ -430,11 +433,8 @@ void HAL_SAI_ErrorCallback(SAI_HandleTypeDef * hsai) {
  * The second parameter of the ReceiveCallback() have to be 0 which mean the halfway interrupt.
  */
 void HAL_I2S_RxHalfCpltCallback(I2S_HandleTypeDef *hi2s) {
-    if (murasaki::platform.audio->DmaCallback(hi2s, 0)) {
-        murasaki::platform.led_st0->Clear();
-        murasaki::platform.led_st1->Set();
+    if (murasaki::platform.audio->DmaCallback(hi2s, 0))
         return;
-    }
 }
 
 /**
@@ -447,11 +447,8 @@ void HAL_I2S_RxHalfCpltCallback(I2S_HandleTypeDef *hi2s) {
  * The second parameter of the ReceiveCallback() have to be 1 which mean the complete interrupt.
  */
 void HAL_I2S_RxCpltCallback(I2S_HandleTypeDef *hi2s) {
-    if (murasaki::platform.audio->DmaCallback(hi2s, 1)) {
-        murasaki::platform.led_st0->Set();
-        murasaki::platform.led_st1->Clear();
+    if (murasaki::platform.audio->DmaCallback(hi2s, 1))
         return;
-    }
 }
 
 /**
@@ -477,7 +474,7 @@ void HAL_I2S_ErrorCallback(I2S_HandleTypeDef *hi2s) {
 
 /**
  * @brief Optional interrupt handler for ADC.
- * @param hadc Pointer to the Adc control structure. 
+ * @param hadc Pointer to the Adc control structure.
  * @details
  * This is called from inside of HAL when an ADC conversion is done.
  *
@@ -495,7 +492,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
 
 /**
  * @brief Optional interrupt handler for ADC.
- * @param hadc Pointer to the Adc control structure. 
+ * @param hadc Pointer to the Adc control structure.
  * @details
  * This is called from inside of HAL when an ADC conversion failed by Error.
  *
@@ -537,11 +534,11 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
     // Check whether sync object is ready or not.
     // This check is essential from the interrupt before the platform variable is ready
     if (murasaki::platform.exti_b1 != nullptr)
-        // The Release member function return true, if the given parameter matched with 
-        // its interrupt line. 
-        if (murasaki::platform.exti_b1->Release(GPIO_Pin)) 
+        // The Release member function return true, if the given parameter matched with
+        // its interrupt line.
+        if (murasaki::platform.exti_b1->Release(GPIO_Pin))
             return;
-            
+
 #endif
 }
 
