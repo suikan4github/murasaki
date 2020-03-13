@@ -33,29 +33,29 @@ SaiPortAdapter::SaiPortAdapter(
         MURASAKI_ASSERT(tx_peripheral_->Init.AudioMode == SAI_MODEMASTER_TX ||
                         tx_peripheral_->Init.AudioMode == SAI_MODESLAVE_TX)
         // Check whether DMA is set.
-        MURASAKI_ASSERT(tx_peripheral->hdmatx != nullptr)
+        MURASAKI_ASSERT(tx_peripheral_->hdmatx != nullptr)
         // Check whether DMA is circular mode.
-        MURASAKI_ASSERT(tx_peripheral->hdmatx->Init.Mode == DMA_CIRCULAR)
+        MURASAKI_ASSERT(tx_peripheral_->hdmatx->Init.Mode == DMA_CIRCULAR)
         // Check whether DMA word size is correct
-        switch (tx_peripheral->Init.DataSize)
+        switch (tx_peripheral_->Init.DataSize)
         {
             case SAI_DATASIZE_8:
                 // Check whether the DMA word size is byte.
-                MURASAKI_ASSERT(tx_peripheral->hdmatx->Init.PeriphDataAlignment == DMA_PDATAALIGN_BYTE)
-                MURASAKI_ASSERT(tx_peripheral->hdmatx->Init.MemDataAlignment == DMA_MDATAALIGN_BYTE)
+                MURASAKI_ASSERT(tx_peripheral_->hdmatx->Init.PeriphDataAlignment == DMA_PDATAALIGN_BYTE)
+                MURASAKI_ASSERT(tx_peripheral_->hdmatx->Init.MemDataAlignment == DMA_MDATAALIGN_BYTE)
                 break;
             case SAI_DATASIZE_10:   // fall through
             case SAI_DATASIZE_16:
                 // Check whether the DMA word size is 2 byte.
-                MURASAKI_ASSERT(tx_peripheral->hdmatx->Init.PeriphDataAlignment == DMA_PDATAALIGN_HALFWORD)
-                MURASAKI_ASSERT(tx_peripheral->hdmatx->Init.MemDataAlignment == DMA_MDATAALIGN_HALFWORD)
+                MURASAKI_ASSERT(tx_peripheral_->hdmatx->Init.PeriphDataAlignment == DMA_PDATAALIGN_HALFWORD)
+                MURASAKI_ASSERT(tx_peripheral_->hdmatx->Init.MemDataAlignment == DMA_MDATAALIGN_HALFWORD)
                 break;
             case SAI_DATASIZE_20:   // fall through
             case SAI_DATASIZE_24:   // fall through
             case SAI_DATASIZE_32:
                 // Check whether the DMA word size is 4byte.
-                MURASAKI_ASSERT(tx_peripheral->hdmatx->Init.PeriphDataAlignment == DMA_PDATAALIGN_WORD)
-                MURASAKI_ASSERT(tx_peripheral->hdmatx->Init.MemDataAlignment == DMA_MDATAALIGN_WORD)
+                MURASAKI_ASSERT(tx_peripheral_->hdmatx->Init.PeriphDataAlignment == DMA_PDATAALIGN_WORD)
+                MURASAKI_ASSERT(tx_peripheral_->hdmatx->Init.MemDataAlignment == DMA_MDATAALIGN_WORD)
                 break;
             default:
                 MURASAKI_SYSLOG(this, kfaSai, kseError, "Unexpected data size")
@@ -69,29 +69,29 @@ SaiPortAdapter::SaiPortAdapter(
         MURASAKI_ASSERT(rx_peripheral_->Init.AudioMode == SAI_MODEMASTER_RX ||
                         rx_peripheral_->Init.AudioMode == SAI_MODESLAVE_RX)
         // Check whether DMA is set.
-        MURASAKI_ASSERT(rx_peripheral->hdmarx != nullptr)
+        MURASAKI_ASSERT(rx_peripheral_->hdmarx != nullptr)
         // Check whether DMA is circular mode.
-        MURASAKI_ASSERT(rx_peripheral->hdmarx->Init.Mode == DMA_CIRCULAR)
+        MURASAKI_ASSERT(rx_peripheral_->hdmarx->Init.Mode == DMA_CIRCULAR)
         // Check whether DMA word size is correct
-        switch (rx_peripheral->Init.DataSize)
+        switch (rx_peripheral_->Init.DataSize)
         {
             case SAI_DATASIZE_8:
                 // Check whether the DMA word size is byte.
-                MURASAKI_ASSERT(rx_peripheral->hdmarx->Init.PeriphDataAlignment == DMA_PDATAALIGN_BYTE)
-                MURASAKI_ASSERT(rx_peripheral->hdmarx->Init.MemDataAlignment == DMA_MDATAALIGN_BYTE)
+                MURASAKI_ASSERT(rx_peripheral_->hdmarx->Init.PeriphDataAlignment == DMA_PDATAALIGN_BYTE)
+                MURASAKI_ASSERT(rx_peripheral_->hdmarx->Init.MemDataAlignment == DMA_MDATAALIGN_BYTE)
                 break;
             case SAI_DATASIZE_10:   // fall through
             case SAI_DATASIZE_16:
                 // Check whether the DMA word size is 2 byte.
-                MURASAKI_ASSERT(rx_peripheral->hdmarx->Init.PeriphDataAlignment == DMA_PDATAALIGN_HALFWORD)
-                MURASAKI_ASSERT(rx_peripheral->hdmarx->Init.MemDataAlignment == DMA_MDATAALIGN_HALFWORD)
+                MURASAKI_ASSERT(rx_peripheral_->hdmarx->Init.PeriphDataAlignment == DMA_PDATAALIGN_HALFWORD)
+                MURASAKI_ASSERT(rx_peripheral_->hdmarx->Init.MemDataAlignment == DMA_MDATAALIGN_HALFWORD)
                 break;
             case SAI_DATASIZE_20:   // fall through
             case SAI_DATASIZE_24:   // fall through
             case SAI_DATASIZE_32:
                 // Check whether the DMA word size is 4byte.
-                MURASAKI_ASSERT(rx_peripheral->hdmarx->Init.PeriphDataAlignment == DMA_PDATAALIGN_WORD)
-                MURASAKI_ASSERT(rx_peripheral->hdmarx->Init.MemDataAlignment == DMA_MDATAALIGN_WORD)
+                MURASAKI_ASSERT(rx_peripheral_->hdmarx->Init.PeriphDataAlignment == DMA_PDATAALIGN_WORD)
+                MURASAKI_ASSERT(rx_peripheral_->hdmarx->Init.MemDataAlignment == DMA_MDATAALIGN_WORD)
                 break;
             default:
                 MURASAKI_SYSLOG(this, kfaSai, kseError, "Unexpected data size")
@@ -103,7 +103,7 @@ SaiPortAdapter::SaiPortAdapter(
     // If port has two active channel.
     if (rx_peripheral_ != nullptr || tx_peripheral_ != nullptr) {
         // Both channel have to have same data size.
-        MURASAKI_ASSERT(rx_peripheral->Init.DataSize == tx_peripheral->Init.DataSize)
+        MURASAKI_ASSERT(rx_peripheral_->Init.DataSize == tx_peripheral_->Init.DataSize)
     }
 
 }
@@ -241,6 +241,7 @@ unsigned int SaiPortAdapter::GetSampleShiftSizeRx()
             return_val = 0;
             break;
         default:
+            return_val = 0;
             MURASAKI_SYSLOG(this, kfaSai, kseError, "Unexpected data size")
             MURASAKI_ASSERT(false)
             // force assertion.
@@ -277,6 +278,7 @@ unsigned int SaiPortAdapter::GetSampleWordSizeRx()
             return_val = 4;
             break;
         default:
+            return_val = 0;
             MURASAKI_SYSLOG(this, kfaSai, kseError, "Unexpected data size")
             MURASAKI_ASSERT(false)
             // force assertion.
@@ -324,6 +326,7 @@ unsigned int SaiPortAdapter::GetSampleShiftSizeTx()
             return_val = 0;
             break;
         default:
+            return_val = 0;
             MURASAKI_SYSLOG(this, kfaSai, kseError, "Unexpected data size")
             MURASAKI_ASSERT(false)
             // force assertion.
@@ -360,6 +363,7 @@ unsigned int SaiPortAdapter::GetSampleWordSizeTx()
             return_val = 4;
             break;
         default:
+            return_val = 0;
             MURASAKI_SYSLOG(this, kfaSai, kseError, "Unexpected data size")
             MURASAKI_ASSERT(false)
             // force assertion.
@@ -379,6 +383,8 @@ bool SaiPortAdapter::Match(void *peripheral_handle) {
         return_val = rx_peripheral_ == peripheral_handle;
     else if (tx_peripheral_ != nullptr)
         return_val = tx_peripheral_ == peripheral_handle;
+    else
+        return_val = false;
 
     SAIAUDIO_SYSLOG("Exit with %d.", return_val)
     return return_val;

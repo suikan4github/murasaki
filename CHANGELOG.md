@@ -19,8 +19,9 @@ The Issue 91 fix brings incompatibility to the past. Class name changed.
 - [Issue 103 : Restructure the document module hierarchy ](https://github.com/suikan4github/murasaki/issues/103)
 - [Issue 107 : Reject STM32H7 from I2sPortAdapter class by assertion ](https://github.com/suikan4github/murasaki/issues/107)
 - [Issue 109 : Add more parameter check to the I2S](https://github.com/suikan4github/murasaki/issues/109)
-- [Issue 111 : Add more parameter check to the SAI](https://github.com/suikan4github/murasaki/issues/111)
 - [Issue 110 : Drop 8bit support from DuplexAudio](https://github.com/suikan4github/murasaki/issues/110)
+- [Issue 111 : Add more parameter check to the SAI](https://github.com/suikan4github/murasaki/issues/111)
+- [Issue 112 : Add more parameter check to the SPI master and slave](https://github.com/suikan4github/murasaki/issues/112)
 
 ### Deprecated
 ### Removed
@@ -28,10 +29,10 @@ The Issue 91 fix brings incompatibility to the past. Class name changed.
 - [Issue 91 : Class SaiPortAdaptor must be renamed ](https://github.com/suikan4github/murasaki/issues/91)
 - [Issue 92 : SaiPortAdaptor::GetSampleWordSizeTx() check coverage is not complete ](https://github.com/suikan4github/murasaki/issues/92)
 - [Issue 93 : kfaAll and kfaNone is not handled at all.](https://github.com/suikan4github/murasaki/issues/93)
+- [Issue 96 : Test code is left in I2sPortAdapter::StartTransferTx and StartTransferRx](https://github.com/suikan4github/murasaki/issues/96)
 - [Issue 97 : 24bit I2S data is not correctly scaled. ](https://github.com/suikan4github/murasaki/issues/97)
 - [Issue 98 : AudioPortAdapterStrategy::GetSampleDataSizeTx() / GetSampleDataSizeRx() should return the size by bits ](https://github.com/suikan4github/murasaki/issues/98)
 - [Issue 99 : AudioPortAdapterStrategy::GetSampleWordsSizeTX() / GetSampleWordsSizeRX() returns 3 for 24bit word ](https://github.com/suikan4github/murasaki/issues/99)
-- [Issue 96 : Test code is left in I2sPortAdapter::StartTransferTx and StartTransferRx](https://github.com/suikan4github/murasaki/issues/96)
 - [Issue 105 : Build fail if EXTI_LINE_## is equal to the ##th power of 2](https://github.com/suikan4github/murasaki/issues/105)
 - [Issue 106 : Assertion fail at DebugUart when a terminal emulator is connected. ](https://github.com/suikan4github/murasaki/issues/106)
 - [Issue 108 : template/murasaki_platform.cpp has unnecessary LED control ](https://github.com/suikan4github/murasaki/issues/108)
