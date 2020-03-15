@@ -24,7 +24,8 @@ namespace murasaki {
  * Optionally, The sampling clock duration can be set for the each channels.
  *
  * ### Configuration
- * First of all, select the ADC to use, and check the ADC input line. Note that even checking multiple lines, you can convert onely one line at once.
+ * To configure an analg input, select the ADC to use, and check the ADC input line.
+ * Note that even checking multiple lines, you can convert onely one line at once.
  *
  * @image html "adc-config-1.png"
  * @image latex "adc-config-1.png"
@@ -35,7 +36,7 @@ namespace murasaki {
  * @image latex "adc-config-2.png"
  *
  *
- * ### Creation
+ * ### Creating a peripheral object
  *
  * To create an ADC object, use new operator to the murasaki::Adc class.
  * The parameter is the handle of that ADC.
@@ -55,7 +56,7 @@ namespace murasaki {
  * Inside HAL_ADC_ConvCpltCallback(), you must call the Adc::ConversionCompleteCallback() member function.
  * The parameter should be the hadc parameter of the Interrupt callback.
  * The Adc::ConversionCompleteCallback() will return with if the given hadc is the handle of that object.
- * If the Adc::ConversionCompleteCallback() return ture, you can return from the handler.
+ * If the Adc::ConversionCompleteCallback() return true, you can return from the handler.
  *
  * The HAL_ADC_ErrorCallback() is similar but you must call Adc::HandleError().
  * @code
