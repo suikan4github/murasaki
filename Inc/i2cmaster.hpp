@@ -258,7 +258,7 @@ class I2cMaster : public I2CMasterStrategy
      *
      * Checks whether handle has error and if there is, print appropriate error. Then return.
      *
-     * This member function have to be called from　HAL_I2C_ErrorCallback()
+     * This member function have to be called from HAL_I2C_ErrorCallback()
      *
      * @code
      * void HAL_I2C_ErrorCallback(I2C_HandleTypeDef * hi2c) {
