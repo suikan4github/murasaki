@@ -23,8 +23,30 @@ namespace murasaki {
  * \brief Thread safe, synchronous and blocking IO. Concrete implementation of UART controller. Based on the STM32Cube HAL DMA Transfer.
  * \details
  *
- * The Uart class is the wrapper of the UART controller. To use the Uart class,
- * make an instance with UART_HandleTypeDef * type pointer. For example, to create
+ * The Uart class is the wrapper of the UART controller.
+ *
+ * ### Configuration
+ * To configure the UART peripheral, chose UART/USART peripheral in the Device Configuration Tool
+ * of the CubeIDE. Set it as Asynchronous mode.
+ *
+ * @image html "uart-config-1.png"
+ * @image latex "uart-config-1.png"
+ *
+ * Make sure to use Receive and Transmit mode. Other parameters are up to the application.
+ *
+ * The DMA have to be enabled for both TX and RX. The data size is 8bit for both Peripheral and memory.
+ *
+ * @image html "uart-config-2.png"
+ * @image latex "uart-config-2.png"
+ *
+ * And then, enable the interrupt.
+ * @image html "uart-config-3.png"
+ * @image latex "uart-config-3.png"
+ *
+ *
+ * ### Creating a peripheral object
+ * To use the Uart class,
+ * create an instance with UART_HandleTypeDef * type pointer. For example, to create
  * an instance for the UART3 peripheral :
  * \code
  *     my_uart3 = new murasaki::Uart(&huart3);
@@ -33,6 +55,7 @@ namespace murasaki {
  * the UART peripheral have to be configured to use the DMA functionality. The baud rate,
  * length and flow control should be configured by the CubeIDE.
  *
+ * ### Handling an interrupt
  * In addition to the instantiation, we need to prepare an interrupt callback.
  * \code
  * void HAL_UART_TxCpltCallback(UART_HandleTypeDef * huart)
@@ -52,6 +75,7 @@ namespace murasaki {
  *
  * As same as Tx, RX needs HAL_UART_TxCpltCallback().
  *
+ * ### Transmitting and Receiving
  * Once the instance and callbacks are correctly prepared, we can use the Tx/Rx member function.
  *
  * The @ref Uart::Transmit() member function is a synchronous function. A programmer can specify the
