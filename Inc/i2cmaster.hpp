@@ -83,18 +83,18 @@ namespace murasaki {
  *
  * The @ref I2cMaster::Transmit() member function is a synchronous function. A programmer can specify the
  * timeout by timeout_ms parameter. By default, this parameter is set by kwmsIndefinitely
- * which specifes never time out.
+ * which specifies never time out.
  *
  * The @ref  I2cMaster::Receive() member function is a synchronous function.  A programmer can specify the
  * timeout by timeout_ms parameter. By default, this parameter is set by kwmsIndefinitely
- * which species never time out.
+ * which specifies never time out.
  *
  * The @ref I2cMaster::TransmitThenReceive() member function is synchronous function.
  * A programmer can specify the timeout by timeout_ms parameter.
  * By default, this parameter is set by kwmsIndefinitely
  * which species never time out.
  *
- * All of 3 methods can be called from only the task context. If these are called in the ISR
+ * All of 3 member functions can be called from only the task context. If these are called in the ISR
  * context, the result is unknown.
  *
  * Note : In case an time out occurs during transmit / receive, this implementation
