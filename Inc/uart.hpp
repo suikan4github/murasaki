@@ -32,7 +32,7 @@ namespace murasaki {
  * @image html "uart-config-1.png"
  * @image latex "uart-config-1.png"
  *
- * Make sure to use Receive and Transmit mode. Other parameters are up to the application.
+ * Make sure setting direction to Receive and Transmit. Other parameters are up to the application.
  *
  * The DMA have to be enabled for both TX and RX. The data size is 8bit for both Peripheral and memory.
  *
@@ -60,7 +60,8 @@ namespace murasaki {
  * \code
  * void HAL_UART_TxCpltCallback(UART_HandleTypeDef * huart)
  * {
- *     my_uart3->TransmitCompleteCallback(huart);
+ *     if (my_uart3->TransmitCompleteCallback(huart))
+ *         return;
  * }
  * \endcode
  * Where HAL_UART_TxCpltCallback is a predefined name of the UART interrupt handler.
@@ -79,11 +80,11 @@ namespace murasaki {
  * Once the instance and callbacks are correctly prepared, we can use the Tx/Rx member function.
  *
  * The @ref Uart::Transmit() member function is a synchronous function. A programmer can specify the
- * timeout by timeout_ms parameter. By default, this parameter is set by kwmsIndefinitely
+ * timeout by timeout_ms parameter. By default, this parameter is set by murasaki::kwmsIndefinitely
  * which specifes never time out.
  *
  * The @ref Uart::Receive() member function is a synchronous function.  A programmer can specify the
- * timeout by timeout_ms parameter. By default, this parameter is set by kwmsIndefinitely
+ * timeout by timeout_ms parameter. By default, this parameter is set by murasaki::kwmsIndefinitely
  * which specifes never time out.
  *
  * Both methods can be called from only the task context. If these are called in the ISR
