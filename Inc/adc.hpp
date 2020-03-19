@@ -23,7 +23,7 @@ namespace murasaki {
  *
  * Optionally, The sampling clock duration can be set for the each channels.
  *
- * ## Configuration
+ * ### Configuration
  * To configure an analg input, select the ADC to use, and check the ADC input line.
  * Note that even checking multiple lines, you can convert onely one line at once.
  *
@@ -36,7 +36,7 @@ namespace murasaki {
  * @image latex "adc-config-2.png" width=4.09in
  *
  *
- * ## Creating a peripheral object
+ * ### Creating a peripheral object
  *
  * To create an ADC object, use new operator to the murasaki::Adc class.
  * The parameter is the handle of that ADC.
@@ -47,7 +47,7 @@ namespace murasaki {
  *   MURASAKI_ASSERT(nullptr != murasaki::platform.adc)
  * @endcode
  *
- * ## Interrupt Handling
+ * ### Interrupt Handling
  *
  * The interrupt handler is the HAL_ADC_ConvCpltCallback() and the HAL_ADC_ErrorCallback().
  * These are regulated by HAL manual. If you define these functions, HAL will call that
@@ -72,7 +72,7 @@ namespace murasaki {
  *
  * @endcode
  *
- * ## ADC data reading
+ * ### ADC data reading
  * To read the data, use Adc::Convert() member function.
  * @code
  * murasaki::platform.adc->Convert(ADC_CHANNEL_TEMPSENSOR, &value);

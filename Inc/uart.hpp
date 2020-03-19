@@ -25,7 +25,7 @@ namespace murasaki {
  *
  * The Uart class is the wrapper of the UART controller.
  *
- * ## Configuration
+ * ### Configuration
  * To configure the UART peripheral, chose UART/USART peripheral in the Device Configuration Tool
  * of the CubeIDE. Set it as Asynchronous mode.
  *
@@ -44,7 +44,7 @@ namespace murasaki {
  * @image latex "uart-config-3.png" width=3.69in
  *
  *
- * ## Creating a peripheral object
+ * ### Creating a peripheral object
  * To use the Uart class,
  * create an instance with UART_HandleTypeDef * type pointer. For example, to create
  * an instance for the UART3 peripheral :
@@ -55,7 +55,7 @@ namespace murasaki {
  * the UART peripheral have to be configured to use the DMA functionality. The baud rate,
  * length and flow control should be configured by the CubeIDE.
  *
- * ## Handling an interrupt
+ * ### Handling an interrupt
  * In addition to the instantiation, we need to prepare an interrupt callback.
  * \code
  * void HAL_UART_TxCpltCallback(UART_HandleTypeDef * huart)
@@ -76,7 +76,7 @@ namespace murasaki {
  *
  * As same as Tx, RX needs HAL_UART_TxCpltCallback().
  *
- * ## Transmitting and Receiving
+ * ### Transmitting and Receiving
  * Once the instance and callbacks are correctly prepared, we can use the Tx/Rx member function.
  *
  * The @ref Uart::Transmit() member function is a synchronous function. A programmer can specify the
