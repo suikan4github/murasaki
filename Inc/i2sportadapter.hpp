@@ -28,17 +28,17 @@ namespace murasaki {
  *  @li Select the Data and Frame Format. Any one of four formats are allowed.
  *  @li Select appropriate audio frequency (Fs), if the peripheral is master.
  * @image html "i2s-config-1.png"
- * @image latex "i2s-config-1.png"
+ * @image latex "i2s-config-1.png" width=5.28in
  *
  * The configuration of DMA is tricky. The mode must be always "Circular" and DMA size must be
  * always "half word" for both memory and peripheral.
  * @image html "i2s-config-2.png"
- * @image latex "i2s-config-2.png"
+ * @image latex "i2s-config-2.png" width=6.05in
  *
  * And then, enable the interrupt if the peripheral is receiver.
  * Enabling the interrupt for transmitter has no effect.
  * @image html "i2s-config-3.png"
- * @image latex "i2s-config-3.png"
+ * @image latex "i2s-config-3.png" width=4.83in
  *
  *
  * Following table summarizes the data size in I2S signal frame vs the configurater settings.

@@ -44,7 +44,7 @@ struct GPIO_type {
  * The string in the User label filed can be used in the application program.
  * In this example, that is "LD2"
  * @image html "bitout-config-1.png"
- * @image latex "bitout-config-1.png"
+ * @image latex "bitout-config-1.png" width=4.78in
  *
  * ## Creating a peripheral object
  *

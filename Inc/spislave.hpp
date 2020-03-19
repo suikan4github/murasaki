@@ -27,7 +27,7 @@ namespace murasaki {
  * of the CubeIDE. Set it as SPI Duplex Slave
  *
  * @image html "spislave-config-1.png"
- * @image latex "spislave-config-1.png"
+ * @image latex "spislave-config-1.png" width=4.61in
  *
  * SpiMaster class supports the Duplex slave, 8bit mode only. 
  * Also the clock phase and Clock polarity have to be configured by the configuration tool.
@@ -36,11 +36,11 @@ namespace murasaki {
  * The DMA have to be enabled for both TX and RX. The data size is 8bit for both Peripheral and memory. 
  *
  * @image html "spislave-config-2.png"
- * @image latex "spislave-config-2.png"
+ * @image latex "spislave-config-2.png" width=3.08in
  *
  * And then, enable the interrupt. 
  * @image html "spislave-config-3.png"
- * @image latex "spislave-config-3.png"
+ * @image latex "spislave-config-3.png" width=3.09in
  * 
  * 
  * 

@@ -29,7 +29,7 @@ namespace murasaki {
  * The string in the User label filed can be used in the application program.
  * In this example, that is "SIG1"
  * @image html "bitin-config-1.png"
- * @image latex "bitin-config-1.png"
+ * @image latex "bitin-config-1.png" width=5.77in
  *
  * ## Creating a peripheral object
  *

@@ -30,18 +30,18 @@ namespace murasaki {
  * of the CubeIDE. Set it as Asynchronous mode.
  *
  * @image html "uart-config-1.png"
- * @image latex "uart-config-1.png"
+ * @image latex "uart-config-1.png" width=5.19in
  *
  * Make sure setting direction to Receive and Transmit. Other parameters are up to the application.
  *
  * The DMA have to be enabled for both TX and RX. The data size is 8bit for both Peripheral and memory.
  *
  * @image html "uart-config-2.png"
- * @image latex "uart-config-2.png"
+ * @image latex "uart-config-2.png" width=3.66in
  *
  * And then, enable the interrupt.
  * @image html "uart-config-3.png"
- * @image latex "uart-config-3.png"
+ * @image latex "uart-config-3.png" width=3.69in
  *
  *
  * ## Creating a peripheral object

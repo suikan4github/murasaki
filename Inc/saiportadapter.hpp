@@ -31,15 +31,15 @@ namespace murasaki {
  *  @li Select the Data size. Any one of four formats are allowed.
  *  @li Select appropriate audio frequency (Fs), if the peripheral is master.
  * @image html "sai-config-1.png"
- * @image latex "sai-config-1.png"
+ * @image latex "sai-config-1.png" width=5.03in
  *
  * The configuration of DMA is tricky. Set the DMA based on the table below.
  * @image html "sai-config-2.png"
- * @image latex "sai-config-2.png"
+ * @image latex "sai-config-2.png" width=5.83in
  *
  * And then, enable the interrupt .
  * @image html "sai-config-3.png"
- * @image latex "sai-config-3.png"
+ * @image latex "sai-config-3.png" width=5.73in
  *
  * Following table summarizes the data size in I2S signal frame vs the configurator settings.
  * DMA must be configured as circular mode.

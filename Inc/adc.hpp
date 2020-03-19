@@ -28,12 +28,12 @@ namespace murasaki {
  * Note that even checking multiple lines, you can convert onely one line at once.
  *
  * @image html "adc-config-1.png"
- * @image latex "adc-config-1.png"
+ * @image latex "adc-config-1.png" width=3.42in
  *
  * Then, enable the NVIC interrupt line for the ADC.
  *
  * @image html "adc-config-2.png"
- * @image latex "adc-config-2.png"
+ * @image latex "adc-config-2.png" width=4.09in
  *
  *
  * ## Creating a peripheral object

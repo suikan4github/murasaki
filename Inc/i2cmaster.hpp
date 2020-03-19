@@ -29,13 +29,13 @@ namespace murasaki {
  * of the CubeIDE. Set it as I2C mode, and enable NVIC interrupt.
  *
  * @image html "i2cmaster-config-1.png"
- * @image latex "i2cmaster-config-1.png"
+ * @image latex "i2cmaster-config-1.png" width=6.14in
  *
  * Also, pay attention to the I2C Maximum Output Speed.
  * The defaul setting by CubeIDE may not be appropriate to your circuit.
  * It should be checked with oscilloscope.
  * @image html "i2cmaster-config-2.png"
- * @image latex "i2cmaster-config-2.png"
+ * @image latex "i2cmaster-config-2.png" width=3.90in
  *
  *
  * ## Creating a peripheral object
