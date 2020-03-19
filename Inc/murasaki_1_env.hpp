@@ -1,7 +1,7 @@
 /**
  * \file murasaki_1_env.hpp
  *
- * \date 2018/02/01
+ * \date 2020/03/19
  * \author Seiichi "Suikan" Horie
  * \brief Doxygen document file. No need to include.
  */
@@ -11,11 +11,11 @@
 
 /**
  * \page murasaki_ug_environment Target and Environment
- * \brief Murasaki library was originally developed with following environment:
+ * \brief Murasaki library is developed with following environment:
  * \details
  *
  * \li <a href="http://www.st.com/en/evaluation-tools/nucleo-f722ze.html">Nucleo F722ZE ( STM32F722ZE : Cortex-M7 )</a>
- * \li <a href="https://www.st.com/en/development-tools/stm32cubeide.html">STM32CubeIDE 1.1.0</a>
+ * \li <a href="https://www.st.com/en/development-tools/stm32cubeide.html">STM32CubeIDE 1.3.0</a>
  * \li <a href="http://releases.ubuntu.com/16.04/">Ubuntu 16.04 (64bit)</a>
  *
  * And then, confirmed portability with following boards :
