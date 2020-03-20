@@ -39,9 +39,8 @@
 
 /**
  * \page murasaki_pg_directory Directory Structure
- * \brief Murasaki has four main directory and several user-modifiable files.
  * \details
- *
+ * Murasaki has four main directory and several user-modifiable files.
  * This page describes these directories and files.
  *
  * \section sec_ds_1 Src directory
@@ -68,7 +67,6 @@
  * \subsection sec_ds_3_1 platform_config.hpp
  * The \ref platform_config.hpp file is a collection of the build configuration.
  * By defining a macro, a programmer can change the behavior of the Murasaki.
- *
  * There are mainly two types of the configuration in this file.
  *
  * One type of configuration is to override the \ref murasaki_config.hpp file.
@@ -135,9 +133,8 @@
 
 /**
  * \page murasaki_pg_cubemx CubeIDE setting
- * \brief There is several required CubeIDE setting.
  * \details
- *
+ * There is several required CubeIDE setting.
  * \li @subpage sec_cm_1
  * \li @subpage sec_cm_2
  * \li @subpage sec_cm_3
@@ -149,7 +146,8 @@
  *
  *
  * @page sec_cm_1 Heap Size
- * @brief Heap is very important in the application with murasaki.
+ * @details
+ * Heap is very important in the application with murasaki.
  *
  * First, class instances are created inside heap region by new operator often.
  * And second, murasaki::Debugger allocates a huge size of FIFO buffer.
@@ -186,7 +184,8 @@
  *
  *
  * \page sec_cm_2 Stack Size
- * @brief In this section, the stack means the interrupt stack.
+ * @details
+ * In this section, the stack means the interrupt stack.
  *
  * The interrupt stack is used only when the interrupt is accepted. Then, it is basically small.
  *
@@ -202,7 +201,8 @@
  * @image latex "heap-config-2.png" width=6.11in
  *
  * @page sec_cm_3 Task stack size of the default task
- * @brief The default task stack size is very small( 128 Bytes )
+ * @details
+ * The default task stack size is very small( 128 Bytes )
  *
  * This is not enough to use murasaki and its debugger output functionality.
  * It should be increased at smallest 256 Bytes.
@@ -432,9 +432,8 @@
 
 /**
  * \page murasaki_pg_interrupt Routing interrupts
- * \brief The murasaki_platform.cpp has skeletons of HAL callback.
  * @details
- *
+ * The murasaki_platform.cpp has skeletons of HAL callback.
  * These callbacks are pre-defined inside HAL as receptors of interrupt.
  * These definitions inside HAL are "weak" binding. Thus, these skeletons in murasaki_platform.cpp overrides the definition.
  * The porting programmer have to program these skeltons correctly.
@@ -481,9 +480,8 @@
 
 /**
  * \page murasaki_pg_error Error handling
- * \brief The murasaki_platform.cpp has two error handling functions.
  * @details
- *
+ * The murasaki_platform.cpp has two error handling functions.
  * These functions are pre-programmed from the first.
  * And usually its enough to use the pre-programmed version.
  * On the other hand the porting programmer have to modify the application program to call these

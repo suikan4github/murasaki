@@ -11,8 +11,8 @@
 
 /**
  * \page murasaki_ug_usage Usage Introduction
- * \brief In this introduction, we see how to use  Murasaki class library in the STM32 program.
  * \details
+ * In this introduction, we see how to use  Murasaki class library in the STM32 program.
  *
  * \li \subpage ug_sec_1
  * \li \subpage ug_sec_2
@@ -37,8 +37,8 @@
  * These are requirement from the Murasaki library.
  *
  * \page ug_sec_1 Message output
- * \brief The Murasaki library has a Printf() like message output mechanism.
- *
+ * \details
+ * The Murasaki library has a Printf() like message output mechanism.
  * This mechanism is easy way to display a message from an embedded microcomputer to the
  * terminal simulator like kermit on a host computer. Murasaki's Printf() is based on the
  * standard C language formating library. So, programmer can output a message as like standard printf().
@@ -77,8 +77,8 @@
 
 /**
  * \page ug_sec_2 Serial communication
- * \brief murasaki::Uart is the asynchronous serial communication.
- *
+ * @details
+ * murasaki::Uart is the asynchronous serial communication.
  * The initial baud rate, parity and data size are defined by CubeIDE.
  * So, there is no need to initialize the communication parameter in application program.
  * User can transmit data by passing its buffer address and data length.
@@ -100,8 +100,8 @@
 
 /**
  * \page ug_sec_3 Debugging with Murasaki.
- * \brief As we saw again and again, Murasaki has a simple messaging output for real-time debugging.
- *
+ * \details
+ * As we saw again and again, Murasaki has a simple messaging output for real-time debugging.
  * This feature is
  * typically used as UART serial output, but configurable by the programmer.
  *
@@ -202,8 +202,8 @@
 
 /**
  * \page ug_sec_4 Tasking
- * @brief murasaki::SimpleTask is a wrapper class of the FreeRTOS task.
- *
+ * @details
+ * murasaki::SimpleTask is a wrapper class of the FreeRTOS task.
  * By using murasaki::SimpleTask, a programmer can easily create a task object.
  * This object encapsulate the task of the FreeRTOS.
  *
@@ -256,7 +256,8 @@
 
 /**
  * @page ug_sec_5 Other peripherals
- * @brief This section shows samples of the other peripherals.
+ * @details
+ * This section shows samples of the other peripherals.
  * @li @subpage ug_sect_5_1
  * @li @subpage ug_sect_5_2
  * @li @subpage ug_sect_5_3
@@ -267,8 +268,8 @@
 
 /**
  * @page ug_sect_5_1 I2C Master
- * @brief \ref murasaki::I2cMaster class provides the serial communication
- *
+ * @details
+ * \ref murasaki::I2cMaster class provides the serial communication.
  * The I2C master is easy to use. To send a message to the slave device, you need to specify the slave address in 7bits, pointer to data and data size in byte.
  * @code
  *        uint8_t data[5] = { 1, 2, 3, 4, 5 };
@@ -288,8 +289,8 @@
 
 /**
  * @page ug_sect_5_2 I2C Slave
- * @brief \ref murasaki::I2cSlave class provides the I2C slave function.
- *
+ * @details
+ * \ref murasaki::I2cSlave class provides the I2C slave function.
  * The I2C slave is much easier than master, because it doesn't need to specify the slave address.
  * The I2C slave device address is given by CubeIDE port configuration.
  * @code
@@ -311,8 +312,8 @@
 
 /**
  * @page ug_sect_5_3 SPI Master
- * @brief @ref murasaki::SpiMaster is the SPI master class of Murasaki.
- *
+ * @details
+ * @ref murasaki::SpiMaster is the SPI master class of Murasaki.
  * This class is more complicated than other peripherals, because of flexibility.
  * The SPI master controller must adapt to the several variation of the SPI communication.
  * \li CPOL configuration
@@ -354,8 +355,8 @@
 
 /**
  * @page ug_sect_5_4 SPI Slave
- * @brief @ref murasaki::SpiSlave class provides the SPI slave functionality.
- *
+ * @details
+ * @ref murasaki::SpiSlave class provides the SPI slave functionality.
  * This class encapsulate the SPI slave function.
  * @code
  *         // Transmit and receive data through SPI
@@ -374,8 +375,8 @@
 
 /**
  * @page ug_sect_5_5 GPIO
- * @brief @ref murasaki::BitOut and murasaki::BitIn provides the GPIO functionality
-
+ * @details
+ * @ref murasaki::BitOut and murasaki::BitIn provides the GPIO functionality.
  * Following is an example of the murasaki::BitOut class.
  * @code
  *         // Toggle LED.
@@ -391,9 +392,9 @@
 
 /**
  * @page ug_sect_5_6 Duplex Audio
- * @brief  @ref murasaki::DuplexAudio class provides a realtime audio IO for both
- * TX and RX together.
  * @details
+ * @ref murasaki::DuplexAudio class provides a realtime audio IO for both
+ * TX and RX together.
  * This class needs a @ref murasaki::AudioPortAdapterStrategy object as interface with hardware.
  *
  * This class doesn't care the CODEC IC control.
@@ -455,8 +456,7 @@
 
 /**
  * @page ug_sec_6 Program flow
- * @brief In this section, we see the program flow of a Murasaki application.
- *
+ * @details In this section, we see the program flow of a Murasaki application.
  * Murasaki has 6 program flows. The start point of these flows are always inside
  * CubeIDE generated code. 3 out of 6 flows are for debugging. Only 1 flow have to be
  * understood well by an application programmer.
@@ -471,9 +471,8 @@
 
 /**
  * @page ug_sect_6_1 Application flow
- * @brief  The application program flow is the main flow of a Murasaki application.
- *
  * @details
+ * The application program flow is the main flow of a Murasaki application.
  * This program flow starts from the StartDefaultTask() in the Src/main.c.
  * The StartDefaultTas() is a default and first task created by CubeIDE.
  * In the other words, this task is automatically created without configuration.
@@ -616,7 +615,8 @@
 
 /**
  * @page ug_sect_6_2 HAL Assertion flow
- * @brief HAL Assertion is a STM32Cube HAL's programming help mechanism.
+ * @details
+ * HAL Assertion is a STM32Cube HAL's programming help mechanism.
  *
  * STM32Cube HAL provies a run-time parameter check. This parameter check is
  * enabled by un-comment the USE_FULL_ASSERT macro inside stm32xxxx_hal_conf.h file.
@@ -653,8 +653,8 @@
 
 /**
  * @page ug_sect_6_3 Spurious Interrupt flow
- * @brief Murasaki provides a mechanism to catch a spurious interrupt.
- *
+ * @details
+ * Murasaki provides a mechanism to catch a spurious interrupt.
  * Default_handler is the entry point of the spurious interrupt handler.
  * This is defined in  startup/startup_stm32******.s.
  *
@@ -697,8 +697,8 @@
 
 /**
  * @page ug_sect_6_31 Assertion flow
- * @brief The assertion flow is similar to the Spurious Interrupt flow.
- *
+ * @details
+ * The assertion flow is similar to the Spurious Interrupt flow.
  * Once assertion is raised, assertion macro raised Hard Fault execption.
  * The Hard Fault exception handler in the  Src/st32****_it.c calles
  * CustomDefaultHandler.
@@ -716,10 +716,9 @@
 
 /**
  * @page ug_sect_6_4 General Interrupt flow
- * @brief As described in the HAL manual, STM32Cube HAL handles all peripheral related interrupt
- * , and then, call corresponding callback function.
- *
  * @details
+ * As described in the HAL manual, STM32Cube HAL handles all peripheral related interrupt
+ * , and then, call corresponding callback function.
  * These call backs are optional from the view point of the peripheral hardware, but
  * essential hook to sync with software.
  *
@@ -761,9 +760,8 @@
 
 /**
  * @page ug_sect_6_5 EXTI flow
- * @brief EXTI flow is very similar to the @ref ug_sect_6_4 except its timing.
- *
  * @details
+ * EXTI flow is very similar to the @ref ug_sect_6_4 except its timing.
  * While other peripheral raises interrupt after the peripheral instance are created,
  * EXTI peripheral may raise the interrupt before the platform peripherals are ready.
  *
