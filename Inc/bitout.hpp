@@ -37,11 +37,11 @@ struct GPIO_type {
  * Programmer can change the output pin state by using the BitOut class.
  *
  * ### Configuration
- * To configure a bit oputput, open the Device Configuration Tool of the CubeIDE.
+ * To configure a bit output, open the Device Configuration Tool of the CubeIDE.
  * Make appropriate pins as GPIO Output pin. Then, chose GPIO section
  * from the left pane, select the output pin and configure.
  *
- * The string in the User label filed can be used in the application program.
+ * The string in the User Label filed can be used in the application program.
  * In this example, that is "LD2"
  * @image html "bitout-config-1.png"
  * @image latex "bitout-config-1.png" width=4.78in

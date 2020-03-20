@@ -26,7 +26,7 @@ namespace murasaki {
  * Make appropriate pins as GPIO Input pin. Then, chose GPIO section
  * from the left pane, select the input pin and configure.
  *
- * The string in the User label filed can be used in the application program.
+ * The string in the User Label filed can be used in the application program.
  * In this example, that is "SIG1"
  * @image html "bitin-config-1.png"
  * @image latex "bitin-config-1.png" width=5.77in
@@ -60,7 +60,7 @@ class BitIn : public BitInStrategy {
      */
     BitIn(GPIO_TypeDef *port, uint16_t pin);
     /**
-     * @brief Get a status of the output pin
+     * @brief Get a status of the input pin
      * @return 1 or 0 as output state.
      * @details
      * Mean of "1" or "0" is system dependent.

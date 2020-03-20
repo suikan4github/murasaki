@@ -26,7 +26,7 @@ namespace murasaki {
  * \ingroup MURASAKI_GROUP
  * \brief Debug class. Provides printf() style output for both task and ISR context.
  * \details
- * Wrapper class to help the printf debug. The printf() method can be called from both
+ * Wrapper class to help the printf debug. The printf() member function can be called from both
  * task context and ISR context.
  *
  * There are several configurable parameters of this class:
@@ -46,7 +46,7 @@ class Debugger
      * \brief Constructor. Create internal variable.
      * \param logger The pointer to the \ref LoggerStrategy wrapper class variable.
      */
-    Debugger(LoggerStrategy* logger);
+    Debugger(LoggerStrategy *logger);
     /**
      * \brief Deconstructor. Delete internal variable.
      */
@@ -57,31 +57,31 @@ class Debugger
      * \param fmt Format string
      * \param ... optional parameters
      * \details
-     * The printf() compatible method. This method can be called from both task context and ISR context.
-     * This method internally calls sprintf() variant. So, the parameter processing is fully compatible with
+     * The printf() compatible member function. This function can be called from both task context and ISR context.
+     * This member function internally calls sprintf() variant. So, the parameter processing is fully compatible with
      * with printf().
      *
      * The formatted string is stored in the internal circular buffer. And data inside buffer is
-     * transmitted through the uart which is passed by constructor. If the buffer is overflowed,
-     * this method streos as possible, and discard the rest of string. That mean, this method  is
+     * transmitted through the UART which is passed by constructor. If the buffer is overflowed,
+     * this member function stores as possible, and discard the rest of string. That mean, this member function  is
      * neither synchronous nor blocking.
      *
      * This member function is non-blocking, non-asynchronous, thread safe and re-entrant.
      *
-     * At 2018/Jan/14 measurement, task stack was consumed 49bytes.
+     * At 2018/Jan/14 measurement, 49bytes was used.
      */
-    void Printf(const char * fmt, ...);
+    void Printf(const char *fmt, ...);
 
     /**
      * \brief Receive one character from serial port.
      * \return Received character.
      * \details
-     * A blcoking function which returns received character. The receive is done on the
+     * A blocking function which returns received character. The receive is done on the
      * UART which is passed to the constructor.
      *
      * This is thread safe and task context dedicated function. Never call from ISR.
      *
-     * Becareful, this is synchronous and blocking while the Debug::Printf() is asynchronous and non-blocking.
+     * Be careful, this is synchronous and blocking while the Debug::Printf() is asynchronous and non-blocking.
      */
     char GetchFromTask();
     /**
@@ -90,7 +90,7 @@ class Debugger
      * Must call from task context.
      * For each time this member function is called, old data in the buffer is re-sent again.
      *
-     * The data to be re-setn is the one in the data in side circular buffer.
+     * The data to be re-sent is the one in the data in side circular buffer.
      * Then, the resent size is same as  \ref PLATFORM_CONFIG_DEBUG_BUFFER_SIZE .
      *
      */
@@ -100,9 +100,9 @@ class Debugger
      * @details
      * Once this member function is called, internally new task is created.
      * This new task watches input by @ref GetchFromTask() and for each input char is
-     * recevied, trigger the @ref RePrint().
+     * received, trigger the @ref RePrint().
      *
-     * This auto reprint funciton is exclusive and irreversible.
+     * This auto reprint function is irreversible.
      * Once auto reprint is triggered, there is no way to stop the auto reprint.
      * The second call for the AutoHistory  may be ignored
      *
@@ -119,12 +119,12 @@ class Debugger
     /**
      * \brief Handle to the transmission control task.
      */
-    murasaki::SimpleTask * const tx_task_;
+    murasaki::SimpleTask *const tx_task_;
 
     /**
      * @brief Handle to the auto reprint task.
      */
-    murasaki::SimpleTask * auto_reprint_task;
+    murasaki::SimpleTask *auto_reprint_task;
 
     /**
      * @brief For protecting from double enabled.
@@ -132,10 +132,10 @@ class Debugger
     bool auto_reprint_enable_;
 
     /**
-     * @brief as receiver for the snprintf()
+     * @brief FIFO for the snprintf()
      * @details
      * This variable can be local variable of the printf() member function.
-     * In thiss case, the implementation of the printf() is much easier.
+     * In this case, the implementation of the printf() is much easier.
      * In the other hand, each task must has enough depth on its task stack.
      *
      * Probably, having bigger task for each task doesn't pay, and it may cuase stack overflow bug
@@ -146,8 +146,8 @@ class Debugger
     /**
      * @brief Syslog severity threshold
      * @details
-     * All seveirity level lower than this value will be ignored by Syslog() function. Note that
-     * murasaki::kseEmergency is the highest and murasaki::kseDebug is the lowerest seveirty.
+     * All severity level lower than this value will be ignored by Syslog() function. Note that
+     * murasaki::kseEmergency is the highest and murasaki::kseDebug is the lowest severity.
      *
      * By default, the severity level threshold is murasaki::kseError. That mean, the weaker severity
      * than kseError is ignored.
@@ -157,12 +157,12 @@ class Debugger
      * @brief Syslog facility filter mask
      * @details
      * If certain bit is "1", the corresponding Syslog facility is allowed to output. By default
-     * the value is 0xFFFF ( equivalent to SyslogAllowAllFacilities(0xFFFFFFFF) )
+     * the value is 0xFFFFFFFF ( equivalent to SyslogAllowAllFacilities(0xFFFFFFFF) )
      */
     uint32_t facility_mask_;
 };
 
-extern Debugger * debugger;
+extern Debugger *debugger;
 
 } /* namespace murasaki */
 

@@ -19,17 +19,17 @@ namespace murasaki {
  * A prototype of the general purpose bit input class
  *
  */
-class BitInStrategy: public PeripheralStrategy {
+class BitInStrategy : public PeripheralStrategy {
  public:
-	/**
-	 * @brief Get a status of the input pin
-	 * @return 1 or 0 as output state.
-	 * @details
-	 * The mean of "1" or "0" is system dependent.
-	 *
-	 * Usually, these represent "H" or "L" input state, respectively.
-	 */
-	virtual unsigned int Get(void) = 0;
+    /**
+     * @brief Get a status of the input pin
+     * @return 1 or 0 as input state.
+     * @details
+     * The mean of "1" or "0" is system dependent.
+     *
+     * Usually, these represent "H" or "L" input state, respectively.
+     */
+    virtual unsigned int Get(void) = 0;
 };
 
 } /* namespace murasaki */

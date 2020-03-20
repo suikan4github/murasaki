@@ -14,21 +14,22 @@ namespace murasaki {
 
 /**
  * \ingroup MURASAKI_ABSTRACT_GROUP
- * \brief abstract audio codec controller.
+ * \brief abstract audio CODEC controller.
  * \details
- *   This class is template for all codec classes
+ *   This class is template for all CODEC classes
  */
 class AudioCodecStrategy
 {
  public:
     /**
      * \brief constructor.
-     * \param fs Sampling frequency.
+     * \param fs Sampling frequency[Hz].
      * \details
      *   initialize the internal variables.
      */
     AudioCodecStrategy(unsigned int fs)
-            : fs_(fs) {
+            :
+            fs_(fs) {
     }
     ;
     virtual ~AudioCodecStrategy() {
@@ -38,18 +39,15 @@ class AudioCodecStrategy
     /**
      * \brief Actual initializer.
      * \details
-     *   Initialize the codec itself and start the conversion process.
-     *   and configure for given parameter.
-     *
-     *   Finally, set the input gain to 0dB.
+     *   Initialize the CODEC and start the conversion process.
      */
     virtual void Start(void)=0;
 
     /**
      * @brief Set channel gain
      * @param channel
-     * @param left_gain
-     * @param right_gain
+     * @param left_gain [dB]
+     * @param right_gain [dB]
      */
     virtual void SetGain(murasaki::CodecChannel channel, float left_gain, float right_gain) = 0;
 

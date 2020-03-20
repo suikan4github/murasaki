@@ -61,19 +61,19 @@ class AudioPortAdapterStrategy : public murasaki::PeripheralStrategy {
     virtual unsigned int GetNumberOfChannelsTx() = 0;
 
     /**
-     * @brief Return the bit count to shift to make the DMA data to right align in TX I2S frame.
-     * @return 1..32. The unit is [bit]
+     * @brief Return the bit count to shift the 1.31 fixed point data to the DMA required format.
+     * @return 0..32. The unit is [bit]
      * @details
-     * This is needed because of the mismatch in the DMA buffer data formant and I2S format.
+     * This is needed because of the variation of the DMA format.
      *
-     * Let's assume the 24bit data I2S format. Some peripheral place the data as
+     * Let's assume the 24bit data I2S format. Some peripheral places the data as
      * right aligned in 32bit DMA data ( as integer ), some peripheral places the data
      * as left aligned in 32bit DMA data ( as fixed point ).
      *
      * This kind of the mismatch will be aligned by audio frame work. This member function returns
-     * how many bits have to be shifted to right in TX.
+     * how many bits have to be shifted from left aligned data to the DMA required format..
      *
-     * If peripheral requires left align format, this function shuld return 0.
+     * If peripheral requires the left aligned format, this function should return 0.
      */
     virtual unsigned int GetSampleShiftSizeTx() = 0;
 
@@ -93,19 +93,19 @@ class AudioPortAdapterStrategy : public murasaki::PeripheralStrategy {
     virtual unsigned int GetNumberOfChannelsRx() = 0;
 
     /**
-     * @brief Return the bit count to shift to make the DMA data to right align in RX I2S frame.
-     * @return 1..32. The unit is [bit]
+     * @brief Return the bit count to shift the DMA format to the left aligned 1.31 format. .
+     * @return 0..32. The unit is [bit]
      * @details
-     * This is needed because of the mismatch in the DMA buffer data formant and I2S format.
+     * This is needed because of the variation of the DMA format.
      *
-     * Let's assume the 24bit data I2S format. Some peripheral place the data as
+     * Let's assume the 24bit data I2S format. Some peripheral places the data as
      * right aligned in 32bit DMA data ( as integer ), some peripheral places the data
      * as left aligned in 32bit DMA data ( as fixed point ).
      *
      * This kind of the mismatch will be aligned by audio frame work. This member function returns
-     * how many bits have to be shifted to left in RX.
+     * how many bits have to be shifted from the DMA format to the left aligned data.
      *
-     * If peripheral requires left align format, this function shuld return 0.
+     * If peripheral DMA uses the left aligned format, this function should return 0.
      */
     virtual unsigned int GetSampleShiftSizeRx() = 0;
 
@@ -138,6 +138,7 @@ class AudioPortAdapterStrategy : public murasaki::PeripheralStrategy {
      * @brief Handling error report of device.
      * @param ptr Pointer for generic use. Usually, points a struct of a device control
      * @return true if ptr matches with device and handle the error. false if ptr doesn't match
+     * @details
      * A member function to detect error.
      *
      * Note, we assume once this error call back is called, we can't recover.
@@ -163,12 +164,11 @@ class AudioPortAdapterStrategy : public murasaki::PeripheralStrategy {
      * @details
      * Display whether the half word (int16_t) swap is required or not.
      *
-     * Certain architecture requires to swaqp the upper half word and lower half woprd inside a word (int32_t ).
+     * Certain architecture requires to swap the upper half word and lower half woprd inside a word (int32_t ).
      * In case this is required before copying to TX DMA buffer or after copying from RX DMA buffer,
      * return true. Otherwise, return false.
      *
      * The return value does't affect to the endian inside half word.
-     *
      * This display will be ignored if the audio sample size is half word (int16_t) or byte (int8_t).
      */
     virtual bool IsInt16SwapRequired() = 0;

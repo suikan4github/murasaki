@@ -22,13 +22,12 @@ namespace murasaki {
  * This class provides an interface to the audio data flow. Also the internal buffer allocation, multi-phase buffering, and synchronization are provided. The features are :
  * @li Support from mono to multi-ch audio
  * @li 32bit floating point data buffer as interface with application.
- * @li data range is [-1.0, 1.0) as interface with application.
- * @li blocking and synchronous API
+ * @li Data range is [-1.0, 1.0) as interface with application.
+ * @li Blocking and synchronous API
  * @li Internal DMA operation.
  *
- * Note : this class assumes the Fs and the data size on I2S of the TX and RX are same and both Tx and RX are fully synchronized.
- *
- * Note : this class assumes the data size on I2S is bigger the 8bit.
+ * Note : This class assumes the Fs and the data size on I2S of the TX and RX are same and both Tx and RX are fully synchronized.
+ * Also, this class assumes the data size on I2S is bigger the 8bit.
  *
  * Internally, this class provides a multi-buffers DMA operation between the audio peripheral and caller algorithm.
  * The key API is the @ref TransmitAndReceive() member function.
@@ -62,7 +61,7 @@ class DuplexAudio {
      *
      * The channel_length parameter specifies the number of the data in one channel.
      * Where channel is the independent audio data stream.
-     * For example, a stereo data has 2 channel named left and right.
+     * For example, a stereo data has 2 channels named left and right.
      */
     DuplexAudio(
                 murasaki::AudioPortAdapterStrategy *peripheral_adapter,
@@ -81,15 +80,15 @@ class DuplexAudio {
      * @param rx_right Pointer to the right channel RX buffer
      *
      * @details
-     * Blocking and synchronous API.
+     * Synchronous API.
      * Inside this member function,
-     *  -# wait for the complete of the RX data transfer by waiting for the DmaCallback().
+     *  -# Wait for a complete of the RX data transfer by waiting for the DmaCallback().
      *  -# Given tx_channels buffers are scaled and copied to the DMA buffer.
      *  -# Scale the data in DMA buffer and copy to rx_channels buffers.
      *
      * And then returns.
      *
-     * Following is the typoical usage of this function.
+     * Following is the typical usage of this function.
      *
      * @code
      * #define CH_LEN 48
@@ -115,6 +114,7 @@ class DuplexAudio {
      * }
      * @endcode
      *
+     *
      */
     void TransmitAndReceive(
                             float *tx_left,
@@ -130,9 +130,8 @@ class DuplexAudio {
      * @param tx_num_of_channels Any number which is smaller than or equal to num_of_channels given audio peripheral adapter.
      * @param rx_num_of_channels Any number which is smaller than or equal to num_of_channels given audio peripheral adapter.
      *
-     * Infrastructure function for the public functions.
      *
-     * Blocking and synchronous API.
+     * Synchronous API.
      * Inside this member function,
      *  -# wait for the complete of the RX data transfer by waiting for the DmaCallback().
      *  -# Given tx_channels buffers are scaled and copied to the DMA buffer.
@@ -140,8 +139,7 @@ class DuplexAudio {
      *
      * And then returns.
      *
-     * This function is the common base for the other 2 public TransmitAndRecieve().
-     * To serve both of them, this function receives the number of channels explictly.
+     * This function is a base for the another public TransmitAndRecieve().
      *
      * @code
      * #define NUM_CH 8
@@ -204,11 +202,11 @@ class DuplexAudio {
      * In certain system, the interrupts don't have explicit phase information.
      * For example, only one interrupt happens on both half way and end of buffer. In this case,
      * @ref AudioPortAdapterStrategy::DetectPhase of the derived class must detect the phase. So, interrupt doesn't need to give
-     * the meaningful phase.
+     * the meaningful phase through this member function..
      *
      * This function returns if peripheral parameter is match with the one passed by the constructor.
      *
-     * This member function have to be call from the call backs of the
+     * This member function have to be call from the HAL call backs of the
      * SAI/I2S. In case of the SAI :
      *
      * @code
@@ -252,7 +250,7 @@ class DuplexAudio {
      * This function calls the @ref AudioPortAdapterStrategy::HandleError() which knows how to handle.
      * Usually, this error call back is unable to recover. So, assertion may be triggered.
      *
-     * This member function have to be the error call back of SAI/HAL.
+     * This member function have to be called from the error call back of SAI/I2S HAL
      *
      * @code
      * void HAL_SAI_ErrorCallback(SAI_HandleTypeDef * hsai) {

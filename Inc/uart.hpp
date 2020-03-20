@@ -23,7 +23,7 @@ namespace murasaki {
  * \brief Thread safe, synchronous and blocking IO. Concrete implementation of UART controller. Based on the STM32Cube HAL DMA Transfer.
  * \details
  *
- * The Uart class is the wrapper of the UART controller.
+ * The Uart class is a wrapper of the UART controller.
  *
  * ### Configuration
  * To configure the UART peripheral, chose UART/USART peripheral in the Device Configuration Tool
