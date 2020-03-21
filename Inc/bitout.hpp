@@ -21,7 +21,7 @@ namespace murasaki {
  * @details
  * This struct is used in the @ref BitIn class and @ref BitOut class.
  * These classes returns a pointer to the variable of this type,
- * as return value of the GetPeripheralHandle() member funciton.
+ * as return value of the GetPeripheralHandle() member function.
  */
 
 struct GPIO_type {

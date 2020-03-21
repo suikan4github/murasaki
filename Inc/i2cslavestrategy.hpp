@@ -31,7 +31,7 @@ class I2cSlaveStrategy : public murasaki::PeripheralStrategy {
      * @brief Thread safe, synchronous transmission over I2C.
      * @param tx_data Data array to transmit.
      * @param tx_size Data counts[bytes] to transmit.
-     * @param transfered_count the count of the bytes transfered during the API execution.
+     * @param transfered_count the count of the bytes transferred during the API execution.
      * @param timeout_ms Time ou [mS]. By default, there is not timeout.
      * @return Result of the processing
      * @details
@@ -47,7 +47,7 @@ class I2cSlaveStrategy : public murasaki::PeripheralStrategy {
      * @brief Thread safe, synchronous receiving over I2C.
      * @param rx_data Data array to transmit.
      * @param rx_size Data counts[bytes] to transmit.
-     * @param transfered_count the count of the bytes transfered during the API execution.
+     * @param transfered_count the count of the bytes transferred during the API execution.
      * @param timeout_ms Time ou [mS]. By default, there is not timeout.
      * @return Result of the processing
      * @details

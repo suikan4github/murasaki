@@ -109,7 +109,7 @@ class I2sPortAdapter : public AudioPortAdapterStrategy {
                                  );
     /**
      * @brief Return how many DMA phase is implemented
-     * @return Always return 2 for STM32 I2S, becuase the cyclic DMA has halfway and complete interrupt.
+     * @return Always return 2 for STM32 I2S, because the cyclic DMA has halfway and complete interrupt.
      */
     virtual unsigned int GetNumberOfDMAPhase() {
         return 2;
@@ -137,7 +137,7 @@ class I2sPortAdapter : public AudioPortAdapterStrategy {
      * This kind of the mismatch will be aligned by audio frame work. This member function returns
      * how many bits have to be shifted to right in TX.
      *
-     * If peripheral requires left align format, this function shuld return 0.
+     * If peripheral requires left align format, this function should return 0.
      *
      * The STM32 I2S DMA format is left aligned. So, always return 0.
      */

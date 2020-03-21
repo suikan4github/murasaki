@@ -61,7 +61,7 @@ namespace murasaki {
  * In case of the successful match, it returns true.
  *
  * As same as Tx, RX needs HAL_I2C_SlaveRxCpltCallback() and Error needs HAL_I2C_ErrorCallback().
- * The HAL_I2C_ErrorCallback() is essetial to implement. Otherwise, NAK response will not be
+ * The HAL_I2C_ErrorCallback() is essential to implement. Otherwise, NAK response will not be
  *  handled correctly.
  * @code
  * void HAL_I2C_ErrorCallback(I2C_HandleTypeDef * hi2c)
@@ -77,11 +77,11 @@ namespace murasaki {
  *
  * The @ref I2cSlave::Transmit() member function is a synchronous function. A programmer can specify the
  * timeout by timeout_ms parameter. By default, this parameter is set by kwmsIndefinitely
- * which specifes never time out.
+ * which specifies never time out.
  *
  * The @ref  I2cSlave::Receive() member function is a synchronous function.  A programmer can specify the
  * timeout by timeout_ms parameter. By default, this parameter is set by kwmsIndefinitely
- * which specifes never time out.
+ * which specifies never time out.
  *
  * Both methods can be called from only the task context. If these are called in the ISR
  * context, the result is unknown.
@@ -101,7 +101,7 @@ class I2cSlave : public I2cSlaveStrategy {
      * @brief Thread safe, synchronous transmission over I2C.
      * @param tx_data Data array to transmit.
      * @param tx_size Data counts[bytes] to transmit. Must be smaller than 65536
-     * @param transfered_count ( Currently, Just ignored) the count of the bytes transfered during the API execution.
+     * @param transfered_count ( Currently, Just ignored) the count of the bytes transferred during the API execution.
      * @param timeout_ms Time ou [mS]. By default, there is not timeout.
      * @return Result of the processing
      * @details
@@ -125,7 +125,7 @@ class I2cSlave : public I2cSlaveStrategy {
      * @brief Thread safe, synchronous receiving over I2C.
      * @param rx_data Data array to transmit.
      * @param rx_size Data counts[bytes] to transmit. Must be smaller than 65536
-     * @param transfered_count ( Currently, Just ignored) the count of the bytes transfered during the API execution.
+     * @param transfered_count ( Currently, Just ignored) the count of the bytes transferred during the API execution.
      * @param timeout_ms Time ou [mS]. By default, there is not timeout.
      * @return Result of the processing
      * @details

@@ -21,7 +21,7 @@ namespace murasaki {
  * This prototype assumes the derived class will transmit / receive data in the
  * task context on RTOS. And these member functions should be synchronous.
  * That mean, until the transmit / receive
- * terminates, both method doesn't return.
+ * terminates, both method don't return.
  *
  * Two call back member functions are prepared to sync with the interrupt which tells the end of
  * Transmit/Receive.
@@ -45,9 +45,9 @@ class I2CMasterStrategy : public murasaki::PeripheralStrategy
      */
     virtual murasaki::I2cStatus Transmit(
                                          unsigned int addrs,
-                                         const uint8_t * tx_data,
+                                         const uint8_t *tx_data,
                                          unsigned int tx_size,
-                                         unsigned int * transfered_count = nullptr,
+                                         unsigned int *transfered_count = nullptr,
                                          unsigned int timeout_ms = murasaki::kwmsIndefinitely) = 0;
     /**
      * @brief Thread safe, synchronous receiving over I2C.
@@ -63,9 +63,9 @@ class I2CMasterStrategy : public murasaki::PeripheralStrategy
      */
     virtual murasaki::I2cStatus Receive(
                                         unsigned int addrs,
-                                        uint8_t * rx_data,
+                                        uint8_t *rx_data,
                                         unsigned int rx_size,
-                                        unsigned int * transfered_count = nullptr,
+                                        unsigned int *transfered_count = nullptr,
                                         unsigned int timeout_ms = murasaki::kwmsIndefinitely) = 0;
     /**
      * @brief Thread safe, synchronous transmission and then receiving over I2C.
@@ -88,12 +88,12 @@ class I2CMasterStrategy : public murasaki::PeripheralStrategy
      */
     virtual murasaki::I2cStatus TransmitThenReceive(
                                                     unsigned int addrs,
-                                                    const uint8_t * tx_data,
+                                                    const uint8_t *tx_data,
                                                     unsigned int tx_size,
-                                                    uint8_t * rx_data,
+                                                    uint8_t *rx_data,
                                                     unsigned int rx_size,
-                                                    unsigned int * tx_transfered_count = nullptr,
-                                                    unsigned int * rx_transfered_count = nullptr,
+                                                    unsigned int *tx_transfered_count = nullptr,
+                                                    unsigned int *rx_transfered_count = nullptr,
                                                     unsigned int timeout_ms = murasaki::kwmsIndefinitely) =0;
     /**
      * \brief Call back to be called notify the transfer is complete.
@@ -107,7 +107,7 @@ class I2CMasterStrategy : public murasaki::PeripheralStrategy
      * Typically, an implementation may check whether the given ptr parameter matches its own device, and if matched, handle it
      * and return true. If it doesn't match, just return false.
      */
-    virtual bool TransmitCompleteCallback(void* ptr)=0;
+    virtual bool TransmitCompleteCallback(void *ptr)=0;
     /**
      * \brief Call back to be called for entire block transfer is complete.
      * \param ptr Pointer for generic use. Usually, points a struct of a peripheral control
@@ -119,7 +119,7 @@ class I2CMasterStrategy : public murasaki::PeripheralStrategy
      * Typically, an implementation may check whether the given ptr parameter matches its own device, and if matched, handle it
      * and return true. If it doesn't match, just return false.
      */
-    virtual bool ReceiveCompleteCallback(void* ptr) = 0;
+    virtual bool ReceiveCompleteCallback(void *ptr) = 0;
     /**
      * @brief Handling error report of device.
      * @param ptr Pointer for generic use. Usually, points a struct of a device control
@@ -128,7 +128,7 @@ class I2CMasterStrategy : public murasaki::PeripheralStrategy
      *
      * The error handling is depend on the implementation.
      */
-    virtual bool HandleError(void * ptr)= 0;
+    virtual bool HandleError(void *ptr)= 0;
 
 };
 

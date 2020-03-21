@@ -30,7 +30,7 @@ class BitOutStrategy : public PeripheralStrategy {
     /**
      * @brief Clear the status of the output pin as "L"
      * @details
-     * Usually sucessor class doesn't overload this member function.
+     * Usually successor class doesn't overload this member function.
      */
     virtual void Clear(void) {
         Set(0);

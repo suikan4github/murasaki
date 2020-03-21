@@ -13,7 +13,7 @@
 namespace murasaki {
 
 /**
- * @brief Synchronozied, blocking ADC converter Strategy.
+ * @brief Synchronized, blocking ADC converter Strategy.
  * \ingroup MURASAKI_ABSTRACT_GROUP
  *
  */
@@ -46,7 +46,7 @@ class AdcStrategy : public PeripheralStrategy {
     virtual murasaki::AdcStatus Convert(unsigned int channel, float *value, unsigned int size = 1) = 0;
     /**
      * \brief Call this function when the ADC conversion is done.
-     * \param ptr Pointer for generic use. Usually, points a struct of a peripheral control
+     * \param ptr Pointer for generic use. Usually, points a struct of a peripheral control 
      * \return true: ptr matches with peripheral and handle the call back. false : doesn't match.
      * \details
      * A call back to notify the end of conversion. The definition of calling timing is

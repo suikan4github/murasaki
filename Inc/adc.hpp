@@ -19,12 +19,12 @@ namespace murasaki {
 /**
  * @brief STM32 dedicated ADC class.
  * @details
- * This is a single conversion ADC class. That mean, Only one specified channel will be converted at oncen and then, return.
+ * This is a single conversion ADC class. That mean, Only one specified channel will be converted at onces and then, return.
  * Optionally, The sampling clock duration can be set for each channels.
  *
  * ### Configuration
  * To configure an analog input, select an ADC to use, and check the ADC input line.
- * Note that even checking multiple lines, you can convert onely one line at once.
+ * Note that even checking multiple lines, you can convert only one line at once.
  *
  * @image html "adc-config-1.png"
  * @image latex "adc-config-1.png" width=3.42in
@@ -82,7 +82,7 @@ namespace murasaki {
 class Adc : public AdcStrategy {
  public:
     /**
-     * @brief Sonstructor
+     * @brief Constructor
      * @param peripheral handle of the ADC device in STM32.
      */
     Adc(ADC_HandleTypeDef *peripheral);
