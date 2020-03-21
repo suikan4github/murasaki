@@ -20,13 +20,13 @@ namespace murasaki {
  * @brief A structure to en-group the GPIO port and GPIO pin.
  * @details
  * This struct is used in the @ref BitIn class and @ref BitOut class.
- * THese classes returns a pointer to the variable of this type,
+ * These classes returns a pointer to the variable of this type,
  * as return value of the GetPeripheralHandle() member funciton.
  */
 
 struct GPIO_type {
-    GPIO_TypeDef *port_;  //!< The port.
-    uint16_t pin_;  //!< The number of pin.
+    GPIO_TypeDef *port_;  ///< The port.
+    uint16_t pin_;  ///< The number of pin.
 };
 
 /**
