@@ -111,7 +111,7 @@ bool AllowedSyslogOut(murasaki::SyslogFacility facility,
 #define MURASAKI_SYSLOG( OBJPTR, FACILITY, SEVERITY, FORMAT, ... )\
     if ( murasaki::AllowedSyslogOut(FACILITY, SEVERITY) )\
     {\
-        murasaki::debugger->Printf("%10u, %p, %s, %s: %s, line %4d, %s(): " FORMAT "\n", murasaki::GetCycleCounter(), OBJPTR, #FACILITY, #SEVERITY, __MURASAKI__FILE__, __LINE__, __func__, ###__VA_ARGS__);\
+        murasaki::debugger->Printf("%10u, %p, %s, %s: %s, line %4d, %s(): " FORMAT "\n", murasaki::GetCycleCounter(), OBJPTR, #FACILITY, #SEVERITY, __MURASAKI__FILE__, __LINE__, __func__, ##__VA_ARGS__);\
     }
 #endif
 

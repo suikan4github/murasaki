@@ -25,9 +25,9 @@ namespace murasaki {
  * The I2cSlave class is the wrapper of the I2C controller.
  *
  * ### Configuration
- * Configuration is same with the master. See @ref murasaki::I2cMaster class.
+ * The configuration is the same as the master. See @ref murasaki::I2cMaster class.
  *
- * ### Creating peripheral object
+ * ### Creating a peripheral object
  *
  * To use the I2cSlave class,
  * create an instance with I2C_HandleTypeDef * type pointer. For example, to create
@@ -50,19 +50,15 @@ namespace murasaki {
  *
  * \endcode
  * Where HAL_I2C_SlaveTxCpltCallback() is a predefined name of the I2C interrupt handler.
- * This is invoked by system whenever a interrupt baed I2C transmission is complete.
- * Because the default function is weakly bound, above definition will override the
- * default one.
+ * This function is invoked by the system whenever an interrupt based I2C transmission is complete.
+ * Because the default function is weakly bound, the above definition overrides the default one.
  *
- * Note that above callback are invoked for any I2Cn where n is 1, 2, 3... To avoid the
- * confusion, I2cMaster::TransmitCompleteCallback() method checks whether given parameter
- * matches with its I2C_HandleTypeDef * pointer ( which was passed to constructor ).
+ * Note that Any I2Cn where n is 1, 2, 3, ... call the above callback function. To avoid the confusion, I2cMaster::TransmitCompleteCallback() method checks whether given parameter matches with its I2C_HandleTypeDef * pointer ( which was passed to the constructor ).
  * And only when both matches, the member function execute the interrupt termination process.
- * In case of the successful match, it returns true.
+ * In the case of the successful match, it returns true.
  *
  * As same as Tx, RX needs HAL_I2C_SlaveRxCpltCallback() and Error needs HAL_I2C_ErrorCallback().
- * The HAL_I2C_ErrorCallback() is essential to implement. Otherwise, NAK response will not be
- *  handled correctly.
+ * The HAL_I2C_ErrorCallback() is essential to implement. Otherwise, NAK response will not be  handled correctly.
  * @code
  * void HAL_I2C_ErrorCallback(I2C_HandleTypeDef * hi2c)
  * {
@@ -75,23 +71,22 @@ namespace murasaki {
  * ### Transmission and Receiving
  * Once the instance and callbacks are correctly prepared, we can use the Tx/Rx member function.
  *
- * The @ref I2cSlave::Transmit() member function is a synchronous function. A programmer can specify the
- * timeout by timeout_ms parameter. By default, this parameter is set by kwmsIndefinitely
- * which specifies never time out.
+ * The @ref I2cSlave::Transmit() member function is a synchronous function. A programmer can specify the timeout by timeout_ms parameter. By default, this parameter is set by kwmsIndefinitely which specifies eternal wait.
  *
- * The @ref  I2cSlave::Receive() member function is a synchronous function.  A programmer can specify the
- * timeout by timeout_ms parameter. By default, this parameter is set by kwmsIndefinitely
- * which specifies never time out.
+ * The @ref  I2cSlave::Receive() member function is a synchronous function.  A programmer can specify the timeout by timeout_ms parameter. By default, this parameter is set by kwmsIndefinitely which specifies eternal wait.
+ * Both methods can be called from only the task context. If these are called in the ISR context, the result is unknown.
  *
- * Both methods can be called from only the task context. If these are called in the ISR
- * context, the result is unknown.
+ * Note : In case an time out occurs during transmit / receive, this implementation
+ * calls HAL_I2C_DeInit()/HAL_I2C_Init(). But it is unknown whether this is the right thing to do.
+ * The HAL reference of the STM32F7 is not clear for this case. For example, it doesn't tell what programmer do to stop the transfer at the middle.
  *
- *  * Note : In case an time out occurs during transmit / receive, this implementation
- * calls HAL_I2C_DeInit()/HAL_I2C_Init(). But it is unknown whether this is right thing to do.
- * The HAL reference of the STM32F7 is not clear for this case. For example, it doesn't tell
- * what programmer do to stop the transfer at the middle.
  *
-
+ *
+ *
+ *
+ *
+ *
+ *
  */
 class I2cSlave : public I2cSlaveStrategy {
  public:

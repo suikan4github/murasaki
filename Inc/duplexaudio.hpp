@@ -19,34 +19,34 @@ namespace murasaki {
  * @brief Stereo Audio is served by the descendants of this class.
  * @details
  *
- * This class provides an interface to the audio data flow. Also the internal buffer allocation, multi-phase buffering, and synchronization are provided. The features are :
+ * This class provides an interface to the audio data flow. Also, the internal buffer allocation, multi-phase buffering, and synchronization are provided. The features are :
  * @li Support from mono to multi-ch audio
- * @li 32bit floating point data buffer as interface with application.
- * @li Data range is [-1.0, 1.0) as interface with application.
+ * @li 32bit floating-point data buffer as an interface with the application.
+ * @li Data range is [-1.0, 1.0) as an interface with the application.
  * @li Blocking and synchronous API
  * @li Internal DMA operation.
  *
- * Note : This class assumes the Fs and the data size on I2S of the TX and RX are same and both Tx and RX are fully synchronized.
- * Also, this class assumes the data size on I2S is bigger the 8bit.
+ * Note: This class assumes the Fs and the data size on I2S of the TX and RX are the same, and both Tx and RX are fully synchronized.
+ * Also, this class assumes that the data size on I2S is more significant than the 8bit.
  *
  * Internally, this class provides a multi-buffers DMA operation between the audio peripheral and caller algorithm.
- * The key API is the @ref TransmitAndReceive() member function.
- * This function provides the several key operations
+ * The critical key API is the @ref TransmitAndReceive() member function.
+ * This function provides several key operations
  * @li Multiple-buffer operation to allow a background DMA transfer during caller task is processing data.
- * @li Data conversion and scaling between caller's floating point data and DMA's integer data.
+ * @li Data conversion and scaling between caller's floating-point data and DMA's integer data.
  * @li Synchronization between TransmitAndReceive() and DMA by DmaCallback().
  *
- * Thus, user doesn't need to care about above things.
+ * Thus, the user doesn't need to care about the above things.
  *
- * Because of the complicated audio data structure, there are several terminologies which programmer must know.
+ * Because of the complicated audio data structure, there are several terminologies that a programmer must know.
  * @li Word : An atomic data of audio sample. For example, stereo sample has two word.
- * Note that in murasaki::DuplexAudio, the size of word is given from murasaki::AudioPortAdapterStrategy.
- * @li Channel : Input / Output port of audio. For example, the stereo audio has two channels named left and right. The 5.1 surround audio has 6 channels.
- * @li Phase : State of DMA. Usually audio DMA is configured as double or triple buffered to avoid the gap of the sound.
- * The index of the DMA buffere is called as phase. For example, the double buffere DMA can be phase 0 or 1 and
+ * Note that in murasaki::DuplexAudio, the size of a word is given from murasaki::AudioPortAdapterStrategy.
+ * @li Channel: Input / Output port of audio. For example, the stereo audio has two channels named left and right. The 5.1 surround audio has 6 channels.
+ * @li Phase: State of DMA. Usually, audio DMA is configured as double or triple buffered to avoid the gap of the sound.
+ * The index of the DMA buffer is called a phase. For example, the double buffer DMA can be phase 0 or 1 and
  * incremented as modulo 2.
  *
- * The number of phase is specified to the constructor, by programmer. This phase have to be aligned with hardware.
+ * The number of phases is specified to the constructor, by the programmer. This phase has to be aligned with hardware.
  *
  */
 class DuplexAudio {

@@ -17,13 +17,13 @@ namespace murasaki {
 /**
  * @brief Basic FIFO without thread safe.
  * @details
- * Foundemental FIFO. No blocking , not thread safe.
- *
- * The Put member function returns with "copied" data count.
- * If the internal buffer is full, it returns without copy data.
- *
- * The Get member funciton returns with "copied" data count and data.
- * If the internal buffer is empty, it returns without copy data.
+  Fundamental FIFO. No blocking, not thread-safe.
+ 
+  The Put() member function returns with "copied" data count.
+  If the internal buffer is full, it returns without copy data.
+ 
+  The Get() member function returns with "copied" data count and data.
+  If the internal buffer is empty, it returns without copy data.
  * @ingroup MURASAKI_ABSTRACT_GROUP
  */
 class FifoStrategy

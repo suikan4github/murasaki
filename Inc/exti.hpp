@@ -16,10 +16,10 @@
 namespace murasaki {
 
 /**
- * @brief EXTI wrapper class.
+* @brief EXTI wrapper class.
  * @details
- * This class allows to enable / disable EXTI interrupt from GPIO.
- * Only EXTI_0 to EXTI_16 are supported.
+ * This class allows enabling/disabling EXTI interrupt from GPIO.
+ * Only EXTI_0 to EXTI_16 is supported.
  *
  * In addition to the disabling /enabling interrupt, this class provide a simple
  * synchronization between ISR and task, by Release and Wait function.
@@ -31,7 +31,7 @@ namespace murasaki {
  * To configure an EXTI, select the GPIO  and line to use.
  * And then, set it as external interrupt.
  * In this example, we configure the EXTI13.
- * You can give your own name to this line by the User Label field.
+ * You can give your name to this line by the User Label field.
  * In this example, we name this EXTI13 as B1.
  *
  * @image html "exti-config-1.png"
@@ -49,7 +49,7 @@ namespace murasaki {
  * \endcode
  *
  * ### Waiting interrupt
- * To wait an interrupt, use Exti::Wait() member function in a task.
+ * To wait for an interrupt, use Exti::Wait() member function in a task.
  *
  * \code
  *     my_exti.Wait();
@@ -58,9 +58,9 @@ namespace murasaki {
  * ### Interrupt handling
  * In the interrupt callback, you can release the waiting task by calling Exti::Release().
  * The parameter of the HAL_GPIO_EXTI_Callback()  must be passed to the Release() member function.
- * If the given parameter is same with its EXTI line, the Exti.Release() function release the
- * waiting task and return with truth.
- * \code
+ * If the given parameter is the same with its EXTI line, the Exti.Release() function releases the
+ * waiting task and returns with true.
+ *  \code
  * void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
  * {
  *     // Check whether appropriate interrupt or not

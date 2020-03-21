@@ -20,20 +20,19 @@ namespace murasaki {
 
 /**
  * \ingroup MURASAKI_GROUP
- * @brief Thread safe, synchronous and blocking IO. Encapsulating I2C master. Based on STM32Cube HAL driver and FreeRTOS
+ * @brief Thread safe, synchronous, and blocking IO. Encapsulating I2C master. Based on STM32Cube HAL driver and FreeRTOS
  * \details
  * The I2cMaster class is the wrapper of the I2C controller.
  *
  * ### Configuration
- * To configure the I2C peripheral as master, chose I2C peripheral in the Device Configuration Tool
- * of the CubeIDE. Set it as I2C mode, and enable NVIC interrupt.
+ * To configure the I2C peripheral as master, chose I2C peripheral in the Device Configuration Tool of the CubeIDE. Set it as I2C mode, and enable NVIC interrupt.
  *
  * @image html "i2cmaster-config-1.png"
  * @image latex "i2cmaster-config-1.png" width=6.14in
  *
  * Also, pay attention to the I2C Maximum Output Speed.
- * The defaul setting by CubeIDE may not be appropriate to your circuit.
- * It should be checked with oscilloscope.
+ * The default setting by CubeIDE may not be appropriate to your circuit.
+ * You should check with an oscilloscope.
  * @image html "i2cmaster-config-2.png"
  * @image latex "i2cmaster-config-2.png" width=3.90in
  *
@@ -59,14 +58,14 @@ namespace murasaki {
  * }
  * \endcode
  * Where HAL_I2C_SlaveTxCpltCallback() is a predefined name of the I2C interrupt handler.
- * This is invoked by system whenever an interrupt baed I2C transmission is complete.
-
+ * This function() is invoked by the system whenever an interrupt based I2C transmission is complete.
  *
- * Note that above callback is invoked for any I2Cn where n is 1, 2, 3... To avoid the
+ *
+ * Note that the above callback is invoked by the system for any I2Cn where n is 1, 2, 3... To avoid the
  * confusion, I2cMaster::TransmitCompleteCallback() method checks whether given parameter
- * matches with its I2C_HandleTypeDef * pointer ( which was passed to constructor ).
+ * matches with its I2C_HandleTypeDef * pointer ( which was passed to the constructor ).
  * And only when both matches, the member function execute the interrupt termination process
- * and return with true..
+ * and return with true.
  *
  * As same as Tx, RX needs HAL_I2C_MasterRxCpltCallback() and Error needs HAL_I2C_ErrorCallback().
  * The HAL_I2C_ErrorCallback() is essential to implement. Otherwise, I2C NAK response will not be
@@ -81,30 +80,25 @@ namespace murasaki {
  * ### Transmitting and Receiving
  * Once the instance and callback are correctly prepared, we can use the Tx/Rx member function.
  *
- * The @ref I2cMaster::Transmit() member function is a synchronous function. A programmer can specify the
- * timeout by timeout_ms parameter. By default, this parameter is set by murasaki::kwmsIndefinitely
- * which specifies never time out.
+ * The @ref I2cMaster::Transmit() member function is a synchronous function. A programmer can specify the timeout by the timeout_ms parameter. By default, this parameter is set by murasaki::kwmsIndefinitely
+ * which specifies eternal wait.
  *
- * The @ref  I2cMaster::Receive() member function is a synchronous function.  A programmer can specify the
- * timeout by timeout_ms parameter. By default, this parameter is set by murasaki::kwmsIndefinitely
- * which specifies never time out.
+ * The @ref  I2cMaster::Receive() member function is a synchronous function.  A programmer can specify the timeout by timeout_ms parameter. By default, this parameter is set by murasaki::kwmsIndefinitely
+ * which specifies eternal wait.
  *
  * The @ref I2cMaster::TransmitThenReceive() member function is synchronous function.
- * A programmer can specify the timeout by timeout_ms parameter.
+ * A programmer can specify the timeout by the timeout_ms parameter.
  * By default, this parameter is set by kwmsIndefinitely
  * which species never time out.
  *
- * All of 3 member functions can be called from only the task context. If these are called in the ISR
- * context, the result is unknown.
+ * You can call these 3 member functions from only the task context. If you l them in the ISR context, the result is unknown.
  *
- * Note : In case an time out occurs during transmit / receive, this implementation
- * calls HAL_I2C_MASTER_ABORT_IT(). But it is unknown whether this is right thing to do.
- * The HAL reference of the STM32F7 is not clear for this case. For example, it doesn't tell
- * what programmer have to do to stop the transfer at the middle. And also, it doesn't tell what's happen
- * if the HAL_I2C_MASTER_ABORT_IT() is called.
+ * Note: In case a time out occurs during transmit / receive, this implementation
+ * calls HAL_I2C_MASTER_ABORT_IT(). But it is unknown whether this is the right thing to do.
+ * The HAL reference of the STM32F7 is not clear for this case. For example, it doesn't tell what a programmer has to do to stop the transfer in the middle. And also, it doesn't tell what's happen
+ * if a programmer call HAL_I2C_MASTER_ABORT_IT().
  *
- * According to the source code of the HAL_I2C_MASTER_ABORT_IT(), no interrupt will be
- * raised by this API call.
+ * According to the source code of the HAL_I2C_MASTER_ABORT_IT(), no interrupt will be raised by this API call.
  */
 class I2cMaster : public I2CMasterStrategy
 {
@@ -127,8 +121,9 @@ class I2cMaster : public I2CMasterStrategy
      * @param timeout_ms Time ou [mS]. By default, there is not timeout.
      * @return Result of the processing
      * @details
-     * This member function is programmed to run in the task context of RTOS. And also exclusive between the
-     * racing tasks. In other word, this function is thread safe.
+     * This member function is programmed to run in the task context of RTOS.
+     * And also exclusive between the racing tasks.
+     * In other words, this function is thread-safe.
      *
      * Followings are the return codes :
      * @li @ref murasaki::ki2csOK : All transmission completed.
@@ -154,8 +149,9 @@ class I2cMaster : public I2CMasterStrategy
      * @param timeout_ms Time ou [mS]. By default, there is not timeout.
      * @return Result of the processing
      * @details
-     * This member function is programmed to run in the task context of RTOS. And also exclusive between the
-     * racing tasks. In other word, this function is thread safe.
+     * This member function is programmed to run in the task context of RTOS.
+     * And also exclusive between the racing tasks.
+     * In other words, this function is thread-safe.
      *
      * Followings are the return codes :
      * @li @ref murasaki::ki2csOK : All Receive completed.
@@ -183,13 +179,13 @@ class I2cMaster : public I2CMasterStrategy
      * @param timeout_ms Time ou [mS]. By default, there is not timeout.
      * @return Result of the processing
      * @details
-     * First, this member function transmit the data, and the, by repeated start function,
-     * it receives data. The transmission device address and receiving device address is same.
+     * First, this member function to transmit the data, and then, by repeated start function,
+     * it receives data. The transmission device address and receiving device address is the same.
      *
-     * This member function is programmed to run in the task context of RTOS. And also exclusive between the
-     * racing tasks. In other word, this function is thread safe.
+     * This member function is programmed to run in the task context of RTOS.
+     * And also exclusive between the racing tasks. In other words, this function is thread-safe.
      *
-     * Followings are the return codes :
+     *  Followings are the return codes :
      * @li @ref murasaki::ki2csOK : All transmission and receive completed.
      * @li @ref murasaki::ki2csNak : Transmission or receive terminated by NAK receiving.
      * @li @ref murasaki::ki2csArbitrationLost : Transmission or receive terminated by an arbitration error of the multi-master.
@@ -211,13 +207,12 @@ class I2cMaster : public I2CMasterStrategy
      * @param ptr Pointer to I2C_HandleTypeDef struct.
      * \return true: ptr matches with peripheral and handle the call back. false : doesn't match.
      * \details
-     * A call back to notify the end of entire block or byte transfer.
-     * This function is called from an ISR.
+     * This callback function notifies the end of the entire block or byte transfer.
+     * You must call this function from ISR.
      *
-     *
-     * This function checks whether the given ptr parameter matches its own device, and if matched, handle it
-     * and return true. If it doesn't match, just return false.
-     * This function have to be called from HAL_I2C_MasterTxCpltCallback()
+     * This function checks whether the given ptr parameter matches its device, and if matched,
+     * handle it and return true. If it doesn't match, return false.
+     * You  must call this function from HAL_I2C_MasterTxCpltCallback(),
      * @code
      * void HAL_I2C_MasterTxCpltCallback(I2C_HandleTypeDef * hi2c)
      * {
@@ -232,11 +227,12 @@ class I2cMaster : public I2CMasterStrategy
      * @param ptr Pointer to I2C_HandleTypeDef struct.
      * \return true: ptr matches with peripheral and handle the call back. false : doesn't match.
      * \details
-     * A call back to notify the end of entire block or byte transfer. This function is called from an ISR.
+     * This  callback function notifies the end of the entire block or byte transfer.
+     * You must call this function from ISR.
      *
-     * This function checks whether the given ptr parameter matches its own device, and if matched, handle it
-     * and return true. If it doesn't match, just return false.
-     * This member function have to be called from HAL_I2C_MasterRxCpltCallback()
+     * This function checks whether the given ptr parameter matches its device, and if matched,
+     * handle it and return true. If it doesn't match, return false.
+     * You  must call this function from HAL_I2C_MasterRxCpltCallback()
      *
      * @code
      * void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef * hi2c) {
@@ -252,9 +248,9 @@ class I2cMaster : public I2CMasterStrategy
      * @param ptr Pointer to I2C_HandleTypeDef struct.
      * \return true: ptr matches with device and handle the error. false : doesn't match.
      * @details
-     * Handle the error case based on the internal error code.
+     * This member function handles the error case based on the internal error code.
      *
-     * This member function have to be called from HAL_I2C_ErrorCallback()
+     * You must call this member function from HAL_I2C_ErrorCallback().
      *
      * @code
      * void HAL_I2C_ErrorCallback(I2C_HandleTypeDef * hi2c) {
