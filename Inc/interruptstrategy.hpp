@@ -17,7 +17,7 @@ namespace murasaki {
  * @brief Abstract interrupt class.
  * @details
  * This is a mother of the interrupt classes. The interrut class provides following functionalities :
- * @li Enable/ Disable interrupt 
+ * @li Enable/ Disable interrupt line by line.
  * @li Synchronization between interrupt and task.
  */
 class InterruptStrategy {

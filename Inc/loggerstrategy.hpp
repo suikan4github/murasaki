@@ -45,8 +45,10 @@ class LoggerStrategy
      * \param message Non null terminated character array. This data is stored or output to the logger.
      * \param size Byte length of the message parameter of the putMessage member function.
      * \details
-     * This function is considered as blcoking. That mean, it will not wayt until
-     * data is stored to the storage or output.
+     * This function is considered as asynchronous and blocking. That mean, it will not wait until
+     * data is stored to the storage or output. 
+     * 
+     * For example, if there is not room in FIFO anymore, this member function will just return without putting data.
      */
     virtual void putMessage(char message[], unsigned int size) = 0;
     /**
@@ -62,10 +64,10 @@ class LoggerStrategy
      * \param debugger_fifo Pointer to the DebuggerFifo class object. This is declared as void to avoid the include confusion.
      * This member function read the data in given FIFO, and then do the auto history.
      *
-     * By default this is not implemented. But in case user implments a method, it should call the
-     * Debugger::SetPostMortem() internaly.
+     * By default this is not implemented. But in case user implements a method, it should call the
+     * Debugger::SetPostMortem() internally.
      */
-    virtual void DoPostMortem(void * debugger_fifo) {
+    virtual void DoPostMortem(void *debugger_fifo) {
         while (true)
             ;
     }
@@ -74,7 +76,7 @@ class LoggerStrategy
      * \brief This special method helps derived loggers. The loggers can access the raw device, in case of the
      * post mortem processing.
      */
-    static void * GetPeripheralHandle(murasaki::PeripheralStrategy * peripheral);
+    static void* GetPeripheralHandle(murasaki::PeripheralStrategy *peripheral);
 };
 /**
  * \}
@@ -83,7 +85,7 @@ class LoggerStrategy
 } /* namespace murasaki */
 
 inline void* murasaki::LoggerStrategy::GetPeripheralHandle(
-                                                           murasaki::PeripheralStrategy* peripheral)
+                                                           murasaki::PeripheralStrategy *peripheral)
                                                            {
     return (peripheral->GetPeripheralHandle());
 }
