@@ -22,27 +22,24 @@
 #define __MURASAKI__FILE__  (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
 #endif
 
-
-
 /**
  * \def MURASAKI_ASSERT
  * \param COND Condition as bool type.
  * \brief Assert the COND is true.
  * \details
- * Print the COND expression to the logging port if COND is false. Do nothing if CODN is true.
+ *  Print the COND expression to the logging port if COND is false. Do nothing if CODN is true.
  *
- * After printing the assertion failure message, this aspersion triggers the Hard Fault exception.
- * The Hard Fault Exception is caught by @ref HardFault_Handler() and eventually invoke the
- * murasaki::debugger->DoPostMortem(), to put the system into the post mortem debug mode.
+ *  After printing the assertion failure message, this aspersion triggers the Hard Fault exception.
+ *  The Hard Fault Exception is caught by @ref HardFault_Handler() and eventually invoke the murasaki::debugger->DoPostMortem(), to put the system into the post mortem debug mode.
  *
- * Following code in the macro definition calls a non-existing function located address 1.
- * Such the access causes a hard fault execusion.
- * @code
- *         { void (*foo)(void) = (void (*)())1; foo();}\
- * @endcode
+ *  The following code in the macro definition calls a non-existing function located address 1.
+ *  Such access causes a hard fault exception.
+ *  @code
+ *          { void (*foo)(void) = (void (*)())1; foo();}\
+*  @endcode
  *
- * This assertion do nothing if programmer defines \ref MURASAKI_CONFIG_NODEBUG macro as true.
- * This macro is defined in the file \ref platform_config.hpp.
+ *  This assertion does nothing if the programmer defines \ref URASAKI_CONFIG_NODEBUG macro as true.
+ *  This macro is defined in the file \ref platform_config.hpp.
  *
  * \ingroup MURASAKI_GROUP
  */
@@ -66,10 +63,10 @@
  * \details
  * Print the ERR expression to the logging port if COND is true. Do nothing if ERR is true.
  *
- * This assertion do nothing if programmer defines \ref MURASAKI_CONFIG_NODEBUG macro as true.
+ * This assertion does nothing if the programmer defines \ref MURASAKI_CONFIG_NODEBUG macro as true.
  * This macro is defined in the file \ref platform_config.hpp.
  *
- * For example, following code is typical usage of this macro. ERROR maccro is copied from STM32Cube HAL source code.
+ * For example, the following code is a typical usage of this macro. ERROR macro is copied from STM32Cube HAL source code.
  * @code
  * bool Uart::HandleError(void* const ptr)
  * {
@@ -103,21 +100,19 @@
     }
 #endif
 
-
 namespace murasaki {
 /**
- * \brief Grobal variable to provide the debugging function.
+ * \brief A global variable to provide the debugging function.
  * \details
- * This variable is declared by murasaki platform. But not instantiated. To make it happen,
- * programmer have to make an variable and initialize it explicitly. Otherwise,
- * Certain debug utility/macro may cause link error, because murasaki::debugger is refered
- * by these utility/macros.
- *
+ * This variable is declared by murasaki platform, but not instantiated.
+ * To make it happen, a programmer has to make a variable and initialize it explicitly.
+ * Otherwise, some debug utility/macro may cause link error because urasaki::debugger is called from these utility/macros.
+
  * \ingroup MURASAKI_PLATFORM_GROUP
  *
  */
 
-extern Debugger* debugger;
+extern Debugger *debugger;
 }
 
 #endif /* MURASAKI_ASSERT_HPP_ */

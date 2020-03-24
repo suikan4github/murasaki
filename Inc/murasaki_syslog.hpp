@@ -24,10 +24,10 @@ void SetSyslogSererityThreshold(murasaki::SyslogSeverity severity);
 
 /**
  * @brief Set the syslog facility mask
- * @param mask Facility bit mask. "1" allows output of the corresponding facility
+ * @param mask Facility bitmask. "1" allows the output of the corresponding facility
  * @details
- * The parameter is not the facility. A bit mask. By default, the bit mask is 0xFFFFFFFF which allows
- * all facility.
+ * The parameter is not the facility. A bitmask. By default, the bitmask is 0xFFFFFFFF which allows
+ * all facilities.
  *
  * See @ref AllowedSyslogOut to understand when the message is out.
  */
@@ -58,9 +58,9 @@ void RemoveSyslogFacilityFromMask(murasaki::SyslogFacility facility);
  * By comparing internal severity threshold and facility mask, decide
  * whether the message can be out or not.
  *
- * If severity is higher than or equal to kseError, message is allowed to out.
+ * If the severity is higher than or equal to kseError, the message is allowed to out.
  *
- * If the severity is lower than kseError, the message is allowered to out only whhen :
+ * If the severity is lower than kseError, the message is allowed to out only when :
  * @li The severity is higher than or equal to the internal threshold
  * @li The facility is "1" in the corresponding bit of the internal facility mask.
  */

@@ -12,7 +12,7 @@
 /**
  * \page murasaki_pg Porting guide
  * \details
- *This porting guide introduces murasaki class library porting.
+ * This porting guide introduces murasaki class library porting.
  * In this guide, user will study the library porting to the STM32 microcomputer
  * system working with STM32Cube HAL.
  * A step by step procedure with screen capture is explained in  <a href="https://github.com/suikan4github/murasaki/wiki/Step-by-Step-Porting-Guide-for-Murasaki">a separated document</a>.

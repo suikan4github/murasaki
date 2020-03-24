@@ -20,7 +20,6 @@ namespace murasaki {
  * Poll all device address and check the response. If no response(NAK),
  * there is no device.
  *
- * This function can be deleted if you don't use.
  */
 void I2cSearch(murasaki::I2CMasterStrategy *master);
 
