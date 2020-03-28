@@ -36,7 +36,8 @@ The Issue 91 fix brings incompatibility to the past. Class name changed.
 - [Issue 105 : Build fail if EXTI_LINE_## is equal to the ##th power of 2](https://github.com/suikan4github/murasaki/issues/105)
 - [Issue 106 : Assertion fail at DebugUart when a terminal emulator is connected. ](https://github.com/suikan4github/murasaki/issues/106)
 - [Issue 108 : template/murasaki_platform.cpp has unnecessary LED control ](https://github.com/suikan4github/murasaki/issues/108)
-  
+- [Issue 114 : Saturation on the DuplexAudio transmitting.](https://github.com/suikan4github/murasaki/issues/114)
+
 ### Security
 ### Known Issue
 

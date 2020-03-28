@@ -5,6 +5,9 @@
  *      Author: Seiichi "Suikan" Horie
  */
 
+#include <math.h>
+#include <cstdint>
+
 #include "duplexaudio.hpp"
 #include "murasaki_assert.hpp"
 #include "murasaki_syslog.hpp"
@@ -177,7 +180,7 @@ void DuplexAudio::TransmitAndReceive(
             for (unsigned int ch_idx = 0; ch_idx < tx_num_of_channels; ch_idx++)
                 for (unsigned int wo_idx = 0; wo_idx < channel_len_; wo_idx++)
                     tx_current_dma_data[wo_idx * tx_num_of_channels + ch_idx] =
-                            static_cast<int16_t>(tx_channels[ch_idx][wo_idx] * scale) >> shift;
+                            static_cast<int16_t>( fminf( tx_channels[ch_idx][wo_idx] * scale, INT16_MAX) ) >> shift;
 
             // Flush the DMA TX data buffer on cache to main memory.
             murasaki::CleanDataCacheByAddress(tx_current_dma_data, block_size_tx_);
@@ -254,7 +257,7 @@ void DuplexAudio::TransmitAndReceive(
             for (unsigned int ch_idx = 0; ch_idx < tx_num_of_channels; ch_idx++)
                 for (unsigned int wo_idx = 0; wo_idx < channel_len_; wo_idx++)
                     tx_current_dma_data[wo_idx * tx_num_of_channels + ch_idx] =
-                            static_cast<int32_t>(tx_channels[ch_idx][wo_idx] * scale) >> shift;
+                            static_cast<int32_t>( fminf( tx_channels[ch_idx][wo_idx] * scale, INT32_MAX ) ) >> shift;
 
             // Is half word swap required by the port hardware?
             // If yes, swap the all data in TX DMA buffer
