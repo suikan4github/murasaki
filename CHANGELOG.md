@@ -22,6 +22,7 @@ The Issue 91 fix brings incompatibility to the past. Class name changed.
 - [Issue 110 : Drop 8bit support from DuplexAudio](https://github.com/suikan4github/murasaki/issues/110)
 - [Issue 111 : Add more parameter check to the SAI](https://github.com/suikan4github/murasaki/issues/111)
 - [Issue 112 : Add more parameter check to the SPI master and slave](https://github.com/suikan4github/murasaki/issues/112)
+- [Issue 115 : ADD DMA checking for Uart and SPI.](https://github.com/suikan4github/murasaki/issues/115)
 
 ### Deprecated
 ### Removed
