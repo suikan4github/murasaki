@@ -143,8 +143,8 @@ So, the compiler can help a programmer to write a correct program.
 
 ## Requirement
 The Murasaki library is developed with the following environment :
- * [Ubuntu 16.04 LTS](http://releases.ubuntu.com/16.04/)
- * [STM32CubeIDE](https://www.st.com/ja/development-tools/stm32cubeide.html) 1.1.0
+ * [Ubuntu 16.04 LTS](http://releases.ubuntu.com/16.04/), [Ubuntu 18.04 LTS](http://releases.ubuntu.com/18.04/)
+ * [STM32CubeIDE](https://www.st.com/ja/development-tools/stm32cubeide.html) 1.3.0
 
 The tested target is following :
  * [Nucleo H743ZI](https://www.st.com/en/evaluation-tools/nucleo-h743zi.html)(Cortex-M7)

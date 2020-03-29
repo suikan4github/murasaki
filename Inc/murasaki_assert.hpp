@@ -38,7 +38,7 @@
  *          { void (*foo)(void) = (void (*)())1; foo();}\
 *  @endcode
  *
- *  This assertion does nothing if the programmer defines \ref URASAKI_CONFIG_NODEBUG macro as true.
+ *  This assertion does nothing if the programmer defines \ref MURASAKI_CONFIG_NODEBUG macro as true.
  *  This macro is defined in the file \ref platform_config.hpp.
  *
  * \ingroup MURASAKI_GROUP

@@ -2,6 +2,15 @@
 Record of the modification in project development.
 
 ## [Unreleased]
+### Added
+### Changed
+### Deprecated
+### Removed
+### Fixed
+### Security
+### Known Issue
+
+## [2.0.0] - 2020-03-29
 The Issue 91 fix brings incompatibility to the past. Class name changed.
 
 ### Added
@@ -209,7 +218,8 @@ Major change at the MURASAKI_ASSERTION to enforce the hard fault. This makes deb
 ### Fixed
 ### Security
 
-[Unreleased]: https://github.com/suikan4github/murasaki/compare/v1.0.1...develop
+[Unreleased]: https://github.com/suikan4github/murasaki/compare/v2.0.0...develop
+[2.0.0]: https://github.com/suikan4github/murasaki/compare/v1.0.1...v2.0.0
 [1.0.1]: https://github.com/suikan4github/murasaki/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/suikan4github/murasaki/compare/v0.4.0...v1.0.0
 [0.4.0]: https://github.com/suikan4github/murasaki/compare/v0.3.0...v0.4.0
