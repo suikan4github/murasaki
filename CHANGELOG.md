@@ -10,7 +10,7 @@ Record of the modification in project development.
 ### Security
 ### Known Issue
 
-## [2.0.0] - 2020-03-29
+## [2.0.0] - 2020-03-31
 The Issue 91 fix brings incompatibility to the past. Class name changed.
 
 ### Added
@@ -50,6 +50,8 @@ The Issue 91 fix brings incompatibility to the past. Class name changed.
 
 ### Security
 ### Known Issue
+- [Issue 117 : STM32G0 cause compile error because of HAL incompatibility.](https://github.com/suikan4github/murasaki/issues/117)
+
 
 ## [1.0.1] - 2020-01-07
 ### Added
