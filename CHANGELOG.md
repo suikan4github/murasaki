@@ -9,7 +9,49 @@ Record of the modification in project development.
 ### Fixed
 ### Security
 ### Known Issue
-- The SPI slave transfer is not tested.
+
+## [2.0.0] - 2020-03-31
+The Issue 91 fix brings incompatibility to the past. Class name changed.
+
+### Added
+- [Issue 51 : Add I2S audio adapter ](https://github.com/suikan4github/murasaki/issues/51)
+- [Issue 53 : Add EXTI control class](https://github.com/suikan4github/murasaki/issues/53)
+- [Issue 54 : Add a rotary encoder class](https://github.com/suikan4github/murasaki/issues/54)
+- [Issue 94 : Add ADC class](https://github.com/suikan4github/murasaki/issues/94)
+- [Issue 104 : Add sample code to the interrupt handler.](https://github.com/suikan4github/murasaki/issues/104)
+
+### Changed
+- [Issue 95 : Update the readme.rd ](https://github.com/suikan4github/murasaki/issues/95)
+- [Issue 100 : Refactor the word size and shift of the DuplexAudio. ](https://github.com/suikan4github/murasaki/issues/100)
+- [Issue 101 : Add I2S and ADC callback handler to the template. ](https://github.com/suikan4github/murasaki/issues/101)
+- [Issue 102 : I2sSearch() should be in separate file ](https://github.com/suikan4github/murasaki/issues/102)
+- [Issue 103 : Restructure the document module hierarchy ](https://github.com/suikan4github/murasaki/issues/103)
+- [Issue 107 : Reject STM32H7 from I2sPortAdapter class by assertion ](https://github.com/suikan4github/murasaki/issues/107)
+- [Issue 109 : Add more parameter check to the I2S](https://github.com/suikan4github/murasaki/issues/109)
+- [Issue 110 : Drop 8bit support from DuplexAudio](https://github.com/suikan4github/murasaki/issues/110)
+- [Issue 111 : Add more parameter check to the SAI](https://github.com/suikan4github/murasaki/issues/111)
+- [Issue 112 : Add more parameter check to the SPI master and slave](https://github.com/suikan4github/murasaki/issues/112)
+- [Issue 115 : ADD DMA checking for Uart and SPI.](https://github.com/suikan4github/murasaki/issues/115)
+
+### Deprecated
+### Removed
+### Fixed
+- [Issue 91 : Class SaiPortAdaptor must be renamed ](https://github.com/suikan4github/murasaki/issues/91)
+- [Issue 92 : SaiPortAdaptor::GetSampleWordSizeTx() check coverage is not complete ](https://github.com/suikan4github/murasaki/issues/92)
+- [Issue 93 : kfaAll and kfaNone is not handled at all.](https://github.com/suikan4github/murasaki/issues/93)
+- [Issue 96 : Test code is left in I2sPortAdapter::StartTransferTx and StartTransferRx](https://github.com/suikan4github/murasaki/issues/96)
+- [Issue 97 : 24bit I2S data is not correctly scaled. ](https://github.com/suikan4github/murasaki/issues/97)
+- [Issue 98 : AudioPortAdapterStrategy::GetSampleDataSizeTx() / GetSampleDataSizeRx() should return the size by bits ](https://github.com/suikan4github/murasaki/issues/98)
+- [Issue 99 : AudioPortAdapterStrategy::GetSampleWordsSizeTX() / GetSampleWordsSizeRX() returns 3 for 24bit word ](https://github.com/suikan4github/murasaki/issues/99)
+- [Issue 105 : Build fail if EXTI_LINE_## is equal to the ##th power of 2](https://github.com/suikan4github/murasaki/issues/105)
+- [Issue 106 : Assertion fail at DebugUart when a terminal emulator is connected. ](https://github.com/suikan4github/murasaki/issues/106)
+- [Issue 108 : template/murasaki_platform.cpp has unnecessary LED control ](https://github.com/suikan4github/murasaki/issues/108)
+- [Issue 114 : Saturation on the DuplexAudio transmitting.](https://github.com/suikan4github/murasaki/issues/114)
+
+### Security
+### Known Issue
+- [Issue 117 : STM32G0 cause compile error because of HAL incompatibility.](https://github.com/suikan4github/murasaki/issues/117)
+
 
 ## [1.0.1] - 2020-01-07
 ### Added
@@ -178,7 +220,8 @@ Major change at the MURASAKI_ASSERTION to enforce the hard fault. This makes deb
 ### Fixed
 ### Security
 
-[Unreleased]: https://github.com/suikan4github/murasaki/compare/v1.0.1...develop
+[Unreleased]: https://github.com/suikan4github/murasaki/compare/v2.0.0...develop
+[2.0.0]: https://github.com/suikan4github/murasaki/compare/v1.0.1...v2.0.0
 [1.0.1]: https://github.com/suikan4github/murasaki/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/suikan4github/murasaki/compare/v0.4.0...v1.0.0
 [0.4.0]: https://github.com/suikan4github/murasaki/compare/v0.3.0...v0.4.0

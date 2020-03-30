@@ -20,27 +20,29 @@ A set of classes provides the abstraction of the following peripherals.
  * SPI slave
  * I2C master
  * I2C slave
- * GPIO
  * SAI
+ * I2S
+ * ADC
+ * GPIO
+ * EXTI
 
-Note that above peripheral abstraction provides the thread-safe, interrupt/DMA based, and blocking IO.
+Note that these peripheral abstraction provides the thread-safe, interrupt/DMA based, and blocking IO.
 
-The thread safe is important under the RTOS environment.
+The thread-safe is necessary under the RTOS environment.
 Because of the multi-tasking, multiple controller algorithms may access one peripheral at once.
-If a task switch happens at the middle of the communication over certain peripheral
-and next task accesses that peripheral,
-the program may be broken.
-To prevent this problem, Murasaki guards the important portion of the control program by a critical section.
-Thus, the programmer doesn't need to care the exclusive access to the peripheral.
+If a task switch happens at the middle of the communication of the specific peripheral, 
+and the next task accesses that peripheral, the program may be broken.
+To prevent this problem, Murasaki guards the critical portion of the control program by a critical section.
+Thus, the programmer doesn't need to care about exclusive access to the peripheral.
 
 The Murasaki peripheral classes use DMA/Interrupt transfer.
-The interrupt/DMA access is also important to utilize the CPU under an RTOS environment.
+The interrupt/DMA access is also essential to utilizing the CPU under an RTOS environment.
 While STM32Cube HAL provides a polling version of API, these API has a waiting loop inside.
 As a result, such the polling API will occupy the CPU while it waits for an event.
 The interrupt/DMA based peripheral access doesn't have such the waiting loop, thus RTOS
 can utilize CPU for other tasks, while peripheral doesn't need CPU's help.
 
-The blocking IO guarantees the end of a communication when the program returns from one IO function.
+The blocking IO guarantees the end of communication when the program returns from one IO function.
 Then, once returned from the function, for example, received data is ready to use in an RX buffer.
 
 In addition to the above peripheral, a set of classes serve the following functionalities :
@@ -51,15 +53,15 @@ In addition to the above peripheral, a set of classes serve the following functi
 
 You can find a set of the sample in the [murasaki_samples](https://github.com/suikan4github/murasaki_samples) project.
 
-The API documentation can be found in murasaki/doc directory. Also, related coumentation can be found in the [project wiki](https://github.com/suikan4github/murasaki/wiki).
+The API documentation can be found in murasaki/doc directory. Also, related documentation can be found in the [project wiki](https://github.com/suikan4github/murasaki/wiki).
 
 ## Sample
 With the Murasaki library, the STM32Cube HAL IO becomes easy to write.
 
-The text output to a serial console is very easy. Programmer can use a printf() style member function.
+The text output to a serial console is straightforward. Programmer can use a printf() style member function.
 Then, a programmer can output text with a well-formatted style.
-This Printf() is Non-blocking and Asynchronous function while the other Murasaki IO are Blocking and Synchronous IO.
-That mean, program doesn't need to wait for the end of transmission through the IO port.
+This Printf() is Non-blocking and Asynchronous function while the other Murasaki IO is blocking and Synchronous IO.
+That means the program doesn't need to wait for the end of transmission through the IO port.
 This behavior allows a programmer can use printf() with the minimum impact the real-time execution. In addition to these characteristics,
 a programmer can use printf() in both tasks and interrupt context.   
 
@@ -68,7 +70,7 @@ murasaki::debugger->Printf("Hello, World!");
 murasaki::debugger->Printf("Coounter value is : %d\n", counter);
 ```
 
-As like printf(), almost functions are implemented as a member function of some classes.
+Like printf(), almost functions are implemented as a member function of some classes.
 
 You can see a sample of the UART transmission in Murasaki. This is also easy to program.
 As opposed to the Printf(), the Transmit() member function of the Uart class is Blocking and Synchronous function.
@@ -98,7 +100,7 @@ stat = murasaki::platform.i2cMaster->Transmit(
                                               5);     // number of data to transmit
 ```
 
-Task is also encapsulated by class.
+The class also encapsulates the task.
 ```C++
 // For demonstration of FreeRTOS task.
     murasaki::platform.task1 = new murasaki::SimpleTask(
@@ -115,7 +117,7 @@ murasaki::platform.task1->Start();
 
 ## VS. Naked STM32Cube HAL
 ### Ease of control
-The STM32 series HAL is designed to cover wide functions as far as possible.
+The STM32 series HAL is designed to cover broad functions as far as possible.
 
 As a result, it can run in either :
  * Polling
@@ -123,26 +125,26 @@ As a result, it can run in either :
  * DMA
 
 transfer styles. And its design is free from the specific RTOS.
-This design added the HAL huge number of functions and requires a programmer to build complex sequence to transmit short data.   
+This design added the HAL large number of functions and required a programmer to build complicated sequences to transmit short data.   
 
 The Murasaki library is designed to support only an RTOS environment.
-This limited use case makes function set smaller. And allows class library encapsulate the complex sequence of using non-blocking
+This limited use case makes the function set smaller. And allows class library encapsulate the complex sequence of using non-blocking
 asynchronous HAL APIs to utilize the CPU with the interrupt / DMA transfers. Then, Murasaki's function is easier to use compared to the naked HAL.
 
 ### Strongly controlled namespace
 The STM32Cube HAL is designed to not only C++ but also C compiler. So, all functions are in the global namespace, and constants are macro.
-This too flat namespace prevent the IDE's completion helps programmer. In addition to this, the wrong macro values are easily passed to the wrong parameters.
+This too flat namespace prevents the IDE's completion helps programmers. In addition to this, the wrong macro values are quickly passed to the incorrect parameters.
 
-Murasaki's design encapsulates the function to the dedicate class. This puts the function into the narrow namespace.
-Then, a programmer can use the help by input completion of IDE.
+Murasaki's design encapsulates the functions into the dedicate class. 
+Then, a programmer can use the help of input completion of IDE.
 
 Each function parameter has a dedicated enumeration type. These design triggers compile error if the wrong type constant is passed.
 So, the compiler can help a programmer to write a correct program.
 
 ## Requirement
 The Murasaki library is developed with the following environment :
- * [Ubuntu 16.04 LTS](http://releases.ubuntu.com/16.04/)
- * [STM32CubeIDE](https://www.st.com/ja/development-tools/stm32cubeide.html) 1.1.0
+ * [Ubuntu 16.04 LTS](http://releases.ubuntu.com/16.04/), [Ubuntu 18.04 LTS](http://releases.ubuntu.com/18.04/)
+ * [STM32CubeIDE](https://www.st.com/ja/development-tools/stm32cubeide.html) 1.3.0
 
 The tested target is following :
  * [Nucleo H743ZI](https://www.st.com/en/evaluation-tools/nucleo-h743zi.html)(Cortex-M7)
@@ -157,7 +159,7 @@ The tested target is following :
 
 Pins, clocks, peripherals, and FreeRTOS have to be configured by CubeMX.
 
-The required memory resoucese for the Nucleo F722 demo application (2 tasks, 1 LED,
+The required memory resources for the Nucleo F722 demo application (2 tasks, 1 LED,
   1 UART , 1 I2C and 1 EXTI) is following:
 
 |Section|Memory|Size|

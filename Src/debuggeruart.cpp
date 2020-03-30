@@ -14,12 +14,13 @@
 
 namespace murasaki {
 
-DebuggerUart::DebuggerUart(UART_HandleTypeDef * const uart)
-        : peripheral_(uart),
-          tx_sync_(new murasaki::Synchronizer),
-          rx_sync_(new murasaki::Synchronizer),
-          tx_critical_section_(new murasaki::CriticalSection),
-          rx_critical_section_(new murasaki::CriticalSection)
+DebuggerUart::DebuggerUart(UART_HandleTypeDef *const uart)
+        :
+        peripheral_(uart),
+        tx_sync_(new murasaki::Synchronizer),
+        rx_sync_(new murasaki::Synchronizer),
+        tx_critical_section_(new murasaki::CriticalSection),
+        rx_critical_section_(new murasaki::CriticalSection)
 {
     // Setup internal variable with given uart structure.
 
@@ -75,7 +76,7 @@ void DebuggerUart::SetHardwareFlowControl(UartHardwareFlowControl control)
 }
 
 murasaki::UartStatus DebuggerUart::Transmit(
-                                            const uint8_t * data,
+                                            const uint8_t *data,
                                             unsigned int size,
                                             unsigned int timeout_ms)
                                             {
@@ -88,11 +89,11 @@ murasaki::UartStatus DebuggerUart::Transmit(
         // Keep coherency between the L2 and cache before DMA
         // No need to invalidate
         murasaki::CleanDataCacheByAddress(
-                                          const_cast<uint8_t *>(data),
+                                          const_cast<uint8_t*>(data),
                                           size);
 
         HAL_StatusTypeDef status = HAL_UART_Transmit_DMA(peripheral_,
-                                                         const_cast<uint8_t *>(data),
+                                                         const_cast<uint8_t*>(data),
                                                          size);
         MURASAKI_ASSERT(HAL_OK == status);
 
@@ -103,7 +104,7 @@ murasaki::UartStatus DebuggerUart::Transmit(
     return murasaki::kursOK;  // always return OK in this class.
 }
 
-bool DebuggerUart::TransmitCompleteCallback(void* const ptr)
+bool DebuggerUart::TransmitCompleteCallback(void *const ptr)
                                             {
     MURASAKI_ASSERT(nullptr != ptr)
 
@@ -117,9 +118,9 @@ bool DebuggerUart::TransmitCompleteCallback(void* const ptr)
 }
 
 murasaki::UartStatus DebuggerUart::Receive(
-                                           uint8_t * data,
+                                           uint8_t *data,
                                            unsigned int size,
-                                           unsigned int * transfered_count,
+                                           unsigned int *transfered_count,
                                            UartTimeout uart_timeout,
                                            unsigned int timeout_ms)
                                            {
@@ -159,7 +160,7 @@ void DebuggerUart::SetSpeed(unsigned int baud_rate)
 
 }
 
-bool DebuggerUart::ReceiveCompleteCallback(void* const ptr)
+bool DebuggerUart::ReceiveCompleteCallback(void *const ptr)
                                            {
     MURASAKI_ASSERT(nullptr != ptr)
 
@@ -172,7 +173,7 @@ bool DebuggerUart::ReceiveCompleteCallback(void* const ptr)
     }
 }
 
-bool DebuggerUart::HandleError(void* const ptr)
+bool DebuggerUart::HandleError(void *const ptr)
                                {
     MURASAKI_ASSERT(nullptr != ptr)
 
@@ -185,8 +186,6 @@ bool DebuggerUart::HandleError(void* const ptr)
         MURASAKI_PRINT_ERROR(peripheral_->ErrorCode & HAL_UART_ERROR_ORE);
         MURASAKI_PRINT_ERROR(peripheral_->ErrorCode & HAL_UART_ERROR_DMA);
 
-        // Force exception by any error.
-        MURASAKI_ASSERT(false);
         return true;  // report the ptr matched
     }
     else {

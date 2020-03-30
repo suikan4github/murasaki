@@ -37,7 +37,14 @@
 #include "i2cslave.hpp"
 #include "bitin.hpp"
 #include "bitout.hpp"
-#include "saiportadaptor.hpp"
+#include "saiportadapter.hpp"
+#include "i2sportadapter.hpp"
+#include "quadratureencoder.hpp"
+#include "adc.hpp"
+#include "exti.hpp"
+
+// Utilities
+#include "murasaki_utility.hpp"
 
 // Third party
 #include "Thirdparty/adau1361.hpp"

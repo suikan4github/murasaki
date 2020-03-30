@@ -23,8 +23,30 @@ namespace murasaki {
  * \brief Thread safe, synchronous and blocking IO. Concrete implementation of UART controller. Based on the STM32Cube HAL DMA Transfer.
  * \details
  *
- * The Uart class is the wrapper of the UART controller. To use the Uart class,
- * make an instance with UART_HandleTypeDef * type pointer. For example, to create
+ * The Uart class is a wrapper of the UART controller.
+ *
+ * ### Configuration
+ * To configure the UART peripheral, chose UART/USART peripheral in the Device Configuration Tool
+ * of the CubeIDE. Set it as Asynchronous mode.
+ *
+ * @image html "uart-config-1.png"
+ * @image latex "uart-config-1.png" width=5.19in
+ *
+ * Make sure setting direction to Receive and Transmit. Other parameters are up to the application.
+ *
+ * The DMA have to be enabled for both TX and RX. The data size is 8bit for both Peripheral and memory.
+ *
+ * @image html "uart-config-2.png"
+ * @image latex "uart-config-2.png" width=3.66in
+ *
+ * And then, enable the interrupt.
+ * @image html "uart-config-3.png"
+ * @image latex "uart-config-3.png" width=3.69in
+ *
+ *
+ * ### Creating a peripheral object
+ * To use the Uart class,
+ * create an instance with UART_HandleTypeDef * type pointer. For example, to create
  * an instance for the UART3 peripheral :
  * \code
  *     my_uart3 = new murasaki::Uart(&huart3);
@@ -33,11 +55,13 @@ namespace murasaki {
  * the UART peripheral have to be configured to use the DMA functionality. The baud rate,
  * length and flow control should be configured by the CubeIDE.
  *
+ * ### Handling an interrupt
  * In addition to the instantiation, we need to prepare an interrupt callback.
  * \code
  * void HAL_UART_TxCpltCallback(UART_HandleTypeDef * huart)
  * {
- *     my_uart3->TransmitCompleteCallback(huart);
+ *     if (my_uart3->TransmitCompleteCallback(huart))
+ *         return;
  * }
  * \endcode
  * Where HAL_UART_TxCpltCallback is a predefined name of the UART interrupt handler.
@@ -52,14 +76,15 @@ namespace murasaki {
  *
  * As same as Tx, RX needs HAL_UART_TxCpltCallback().
  *
+ * ### Transmitting and Receiving
  * Once the instance and callbacks are correctly prepared, we can use the Tx/Rx member function.
  *
  * The @ref Uart::Transmit() member function is a synchronous function. A programmer can specify the
- * timeout by timeout_ms parameter. By default, this parameter is set by kwmsIndefinitely
+ * timeout by timeout_ms parameter. By default, this parameter is set by murasaki::kwmsIndefinitely
  * which specifes never time out.
  *
  * The @ref Uart::Receive() member function is a synchronous function.  A programmer can specify the
- * timeout by timeout_ms parameter. By default, this parameter is set by kwmsIndefinitely
+ * timeout by timeout_ms parameter. By default, this parameter is set by murasaki::kwmsIndefinitely
  * which specifes never time out.
  *
  * Both methods can be called from only the task context. If these are called in the ISR
@@ -75,7 +100,7 @@ class Uart : public UartStrategy
      * Store the given uart pointer into the internal variable. This pointer is passed to the STM32Cube HAL UART functions when needed.
      *
      */
-    Uart(UART_HandleTypeDef * uart);
+    Uart(UART_HandleTypeDef *uart);
     /**
      * \brief Destructor. Delete internal variables.
      */
@@ -120,7 +145,7 @@ class Uart : public UartStrategy
      * This function is forbiddedn to call from ISR.
      */
     virtual murasaki::UartStatus Transmit(
-                                          const uint8_t * data,
+                                          const uint8_t *data,
                                           unsigned int size,
                                           unsigned int timeout_ms);
     /**
@@ -150,9 +175,9 @@ class Uart : public UartStrategy
      * @li other : This is fatal problem in HAL. Peripheral is re-initialized internally.
      */
     virtual murasaki::UartStatus Receive(
-                                         uint8_t * data,
+                                         uint8_t *data,
                                          unsigned int count,
-                                         unsigned int * transfered_count,
+                                         unsigned int *transfered_count,
                                          UartTimeout uart_timeout,
                                          unsigned int timeout_ms);
     /**
@@ -167,8 +192,6 @@ class Uart : public UartStrategy
      * This member function checks whether the given ptr parameter matches its own device, and if matched,
      * Release the waiting task and return true. If it doesn't match, just return false.
      *
-     * This method have to be called from HAL_UART_TxCpltCallback(). See STM32F7 HAL manual for detail
-     *
      * The retun values are:
      * @li @ref murasaki::kursOK : Received complete.
      * @li @ref murasaki::kursTimeOut : Time out occur.
@@ -177,9 +200,19 @@ class Uart : public UartStrategy
      * @li @ref murasaki::kursNoise : Error by noise.
      * @li @ref murasaki::kursDMA : This is fatal problem in HAL. Peripheral is re-initialized internally.
      * @li other : This is fatal problem in HAL. Peripheral is re-initialized internally.
+     *
+     * This method have to be called from HAL_UART_TxCpltCallback(). See STM32F7 HAL manual for detail
+     *
+     * @code
+     * void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
+     * {
+     *     if (murasaki::platform.uart_console->TransmitCompleteCallback(huart))
+     *         return;
+     * }
+     * @endcode
      */
 
-    virtual bool TransmitCompleteCallback(void * const ptr);
+    virtual bool TransmitCompleteCallback(void *const ptr);
     /**
      * \brief Call back for entire block transfer completion.
      * \param ptr Pointer to UART_HandleTypeDef struct.
@@ -192,9 +225,18 @@ class Uart : public UartStrategy
      * This member function checks whether the given ptr parameter matches its own device, and if matched,
      * Release the waiting task and return true. If it doesn't match, just return false.
      *
-     * This method have to be called from HAL_UART_RxCpltCallback(). See STM32F7 HAL manual for detail      */
+     * This method have to be called from HAL_UART_RxCpltCallback(). See STM32F7 HAL manual for detail
+     * @code
+     * void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+     *  {
+     *     if (murasaki::platform.uart_console->ReceiveCompleteCallback(huart))
+     *         return;
+     * }
+     * @endcode
+     *
+     * */
 
-    virtual bool ReceiveCompleteCallback(void* const ptr);
+    virtual bool ReceiveCompleteCallback(void *const ptr);
     /**
      * @brief Error handling
      * @param ptr Pointer to UART_HandleTypeDef struct.
@@ -203,17 +245,28 @@ class Uart : public UartStrategy
      * A handle to print out the error message.
      *
      * Checks whether handle has error and if there is, print appropriate error. Then return.
+     *
+     * This function have to be coalled from().
+     * @code
+     * void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart) {
+     *     if (murasaki::platform.uart_console->HandleError(huart))
+     *         return;
+     * }
+     * @endcode
+     *
      */
-    virtual bool HandleError(void * const ptr);
-     protected:
-    UART_HandleTypeDef* const peripheral_;
+    virtual bool HandleError(void *const ptr);
 
-    Synchronizer * const tx_sync_;
-    Synchronizer * const rx_sync_;
+ protected:
+    UART_HandleTypeDef *const peripheral_;
 
-    CriticalSection * const tx_critical_section_;
-    CriticalSection * const rx_critical_section_;
-     private:
+    Synchronizer *const tx_sync_;
+    Synchronizer *const rx_sync_;
+
+    CriticalSection *const tx_critical_section_;
+    CriticalSection *const rx_critical_section_;
+
+ private:
     murasaki::UartStatus tx_interrupt_status_, rx_interrupt_status_;
     /**
      * @brief Return the Platform dependent device control handle.
@@ -222,7 +275,7 @@ class Uart : public UartStrategy
      * The handle is the pointer ( or some ID ) which specify the control data of
      * specific device.
      */
-    virtual void * GetPeripheralHandle();
+    virtual void* GetPeripheralHandle();
 
 };
 

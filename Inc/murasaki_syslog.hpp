@@ -24,10 +24,10 @@ void SetSyslogSererityThreshold(murasaki::SyslogSeverity severity);
 
 /**
  * @brief Set the syslog facility mask
- * @param mask Facility bit mask. "1" allows output of the corresponding facility
+ * @param mask Facility bitmask. "1" allows the output of the corresponding facility
  * @details
- * The parameter is not the facility. A bit mask. By default, the bit mask is 0xFFFFFFFF which allows
- * all facility.
+ * The parameter is not the facility. A bitmask. By default, the bitmask is 0xFFFFFFFF which allows
+ * all facilities.
  *
  * See @ref AllowedSyslogOut to understand when the message is out.
  */
@@ -52,16 +52,16 @@ void RemoveSyslogFacilityFromMask(murasaki::SyslogFacility facility);
 /**
  * @brief Check if given facility and severity message is allowed to output
  * @param facility Message facility
- * @param severity Message seveirty
+ * @param severity Message severity
  * @return True if the message is allowed to out. False if not allowed.
  * @details
- * By comapring internal seveiry threshold and facility mask, decide
+ * By comparing internal severity threshold and facility mask, decide
  * whether the message can be out or not.
  *
- * If seveirty is higher than or equal to kseError, message is allowed to out.
+ * If the severity is higher than or equal to kseError, the message is allowed to out.
  *
- * If the severity is lower than kseError, the message is allowered to out only whhen :
- * @li The seveiry is higher than or equal to the internal threshold
+ * If the severity is lower than kseError, the message is allowed to out only when :
+ * @li The severity is higher than or equal to the internal threshold
  * @li The facility is "1" in the corresponding bit of the internal facility mask.
  */
 bool AllowedSyslogOut(murasaki::SyslogFacility facility,
@@ -83,7 +83,7 @@ bool AllowedSyslogOut(murasaki::SyslogFacility facility,
  * \details
  * Output the debugg message to debug console output.
  *
- * The output message is filtered by the internal thereshold set by murasaki::SetSyslogSererityThreshold,
+ * The output message is filtered by the internal threshold set by murasaki::SetSyslogSererityThreshold,
  * murasaki::SetSyslogFacilityMask and murasaki::AddSyslogFacilityToMask. See these function's document
  * to understand how filter works.
  *
@@ -101,7 +101,7 @@ bool AllowedSyslogOut(murasaki::SyslogFacility facility,
  * @li File name of source code
  * @li Line number of source code
  * @li Function name
- * @li Other programmer specified infromation
+ * @li Other programmer specified information
  *
  * \ingroup MURASAKI_GROUP
  */

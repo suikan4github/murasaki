@@ -24,8 +24,8 @@ namespace murasaki {
  * If the internal buffer is full, it returns without copy data.
  * This is thread safe and ISR/Task bi-modal.
  *
- * The Get member funciton returns with "copied" data count and data.
- * If the internal buffer is empty, it returns without copy data.
+ * The Get member function returns with "copied" data count and data.
+ * If the internal buffer is empty, it returns without copied data.
  *
  * @ingroup MURASAKI_HELPER_GROUP
  */
@@ -36,7 +36,7 @@ class DebuggerFifo : public FifoStrategy
      * @brief Create an internal buffer
      * @param buffer_size Size of the internal buffer to be allocated [byte]
      * @details
-     * Allocate the internal buffer with given buffer_size.
+     * Allocate an internal buffer with given buffer_size.
      * The buffer contents is initialized by blank.
      */
     DebuggerFifo(unsigned int buffer_size);
@@ -67,11 +67,11 @@ class DebuggerFifo : public FifoStrategy
      *
      */
     virtual void SetPostMortem();
- private:
+     private:
     // Alias to call the parent member function.
     typedef FifoStrategy inherited;
     // For the communication between generator / consumer.
-    Synchronizer * const sync_;
+    Synchronizer *const sync_;
     bool post_mortem_;
 };
 
@@ -81,8 +81,8 @@ class DebuggerFifo : public FifoStrategy
  */
 struct LoggingHelpers
 {
-    murasaki::DebuggerFifo * fifo;
-    murasaki::LoggerStrategy * logger;
+    murasaki::DebuggerFifo *fifo;
+    murasaki::LoggerStrategy *logger;
 
 };
 }

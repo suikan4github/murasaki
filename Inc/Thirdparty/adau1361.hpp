@@ -155,7 +155,7 @@ class Adau1361 : public AudioCodecStrategy {
     virtual void WaitPllLock(void);
     /**
      * @brief Initialize the PLL with given fs and master clock.
-     * @detials
+     * @details
      * At first, initialize the PLL based on the given fst and master clock.
      * Then, setup the Converter sampling rate.
      */
