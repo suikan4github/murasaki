@@ -8,6 +8,7 @@
 #include <spislave.hpp>
 #include "murasaki_assert.hpp"
 #include "murasaki_syslog.hpp"
+#include "callbackrepositorysingleton.hpp"
 
 // Macro for easy-to-read
 #define SPIM_SYSLOG(fmt, ...)    MURASAKI_SYSLOG(this, kfaSpiSlave, kseDebug, fmt, ##__VA_ARGS__)
@@ -17,12 +18,12 @@
 
 namespace murasaki {
 
-SpiSlave::SpiSlave(SPI_HandleTypeDef * spi_handle)
+SpiSlave::SpiSlave(SPI_HandleTypeDef *spi_handle)
         :
-          peripheral_(spi_handle),
-          sync_(new murasaki::Synchronizer),
-          critical_section_(new murasaki::CriticalSection),
-          interrupt_status_(kspisUnknown)
+        peripheral_(spi_handle),
+        sync_(new murasaki::Synchronizer),
+        critical_section_(new murasaki::CriticalSection),
+        interrupt_status_(kspisUnknown)
 {
     // Setup internal variable with given uart structure.
 
@@ -34,7 +35,6 @@ SpiSlave::SpiSlave(SPI_HandleTypeDef * spi_handle)
     MURASAKI_ASSERT(peripheral_->hdmatx != nullptr)
     MURASAKI_ASSERT(peripheral_->hdmarx != nullptr)
 
-
     // For all SPI transfer, the data size have to be byte
     MURASAKI_ASSERT(peripheral_->hdmatx->Init.PeriphDataAlignment == DMA_PDATAALIGN_BYTE)
     MURASAKI_ASSERT(peripheral_->hdmarx->Init.PeriphDataAlignment == DMA_PDATAALIGN_BYTE)
@@ -45,31 +45,34 @@ SpiSlave::SpiSlave(SPI_HandleTypeDef * spi_handle)
     MURASAKI_ASSERT(peripheral_->hdmatx->Init.Mode == DMA_NORMAL)
     MURASAKI_ASSERT(peripheral_->hdmarx->Init.Mode == DMA_NORMAL)
 
+    // Register this object to the list of the interrupt handler class.
+    CallbackRepositorySingleton::GetInstance()->AddPeripheralObject(this);
+
 }
 
 SpiSlave::~SpiSlave()
 {
     // Deleting resouces
-    if ( nullptr != sync_)
+    if (nullptr != sync_)
         delete sync_;
 
-    if ( nullptr != critical_section_)
+    if (nullptr != critical_section_)
         delete critical_section_;
 
 }
 
 SpiStatus SpiSlave::TransmitAndReceive(
-                                       const uint8_t* tx_data,
-                                       uint8_t* rx_data,
+                                       const uint8_t *tx_data,
+                                       uint8_t *rx_data,
                                        unsigned int size,
-                                       unsigned int * transfered_count,
+                                       unsigned int *transfered_count,
                                        unsigned int timeout_ms)
-{
+                                       {
 
     SPIM_SYSLOG("Enter");
 
-    MURASAKI_ASSERT(nullptr!= tx_data);
-    MURASAKI_ASSERT(nullptr!= rx_data);
+    MURASAKI_ASSERT(nullptr != tx_data);
+    MURASAKI_ASSERT(nullptr != rx_data);
     MURASAKI_ASSERT(65536 >= size);
 
     // exclusive operation
@@ -85,7 +88,7 @@ SpiStatus SpiSlave::TransmitAndReceive(
         // Keep coherence between the L2 and cache before DMA
         // No Need to invalidate for TX
         murasaki::CleanDataCacheByAddress(
-                                          const_cast<uint8_t *>(tx_data),
+                                          const_cast<uint8_t*>(tx_data),
                                           size);
         // Need to invalidate for RX
         murasaki::CleanAndInvalidateDataCacheByAddress(rx_data, size);
@@ -93,7 +96,7 @@ SpiStatus SpiSlave::TransmitAndReceive(
         // Transmit over SPI
         HAL_StatusTypeDef status = HAL_SPI_TransmitReceive_DMA(
                                                                peripheral_,
-                                                               const_cast<uint8_t *>(tx_data),
+                                                               const_cast<uint8_t*>(tx_data),
                                                                rx_data,
                                                                size);
         MURASAKI_ASSERT(HAL_OK == status);
@@ -156,8 +159,8 @@ SpiStatus SpiSlave::TransmitAndReceive(
 
 }
 
-bool SpiSlave::TransmitAndReceiveCompleteCallback(void* ptr)
-{
+bool SpiSlave::TransmitAndReceiveCompleteCallback(void *ptr)
+                                                  {
     SPIM_SYSLOG("Enter");
 
     MURASAKI_ASSERT(nullptr != ptr)
@@ -180,8 +183,8 @@ bool SpiSlave::TransmitAndReceiveCompleteCallback(void* ptr)
     }
 }
 
-bool SpiSlave::HandleError(void* ptr)
-{
+bool SpiSlave::HandleError(void *ptr)
+                           {
     SPIM_SYSLOG("Enter");
 
     MURASAKI_ASSERT(nullptr != ptr)
@@ -224,7 +227,7 @@ bool SpiSlave::HandleError(void* ptr)
             // abort the processing
             sync_->Release();
         }
-#ifdef HAL_SPI_ERROR_ABORT
+        #ifdef HAL_SPI_ERROR_ABORT
         else if (peripheral_->ErrorCode & HAL_SPI_ERROR_ABORT) {
             MURASAKI_SYSLOG(this, kfaSpiSlave, kseWarning, "HAL_SPI_ERROR_ABORT");
             // This interrupt happen when program causes problem during abort process
@@ -233,7 +236,7 @@ bool SpiSlave::HandleError(void* ptr)
             // abort the processing
             sync_->Release();
         }
-#endif
+        #endif
         else
         {
             MURASAKI_SYSLOG(this, kfaSpiSlave, kseWarning, "Unknown error interrupt")
@@ -255,9 +258,8 @@ void* SpiSlave::GetPeripheralHandle() {
     SPIM_SYSLOG("Enter");
     SPIM_SYSLOG("Leave");
 
-	return peripheral_;
+    return peripheral_;
 }
-
 
 } /* namespace murasaki */
 

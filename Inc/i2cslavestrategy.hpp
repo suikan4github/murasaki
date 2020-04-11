@@ -9,7 +9,7 @@
 #ifndef I2CSLAVESTRATEGY_HPP_
 #define I2CSLAVESTRATEGY_HPP_
 
-#include <peripheralstrategy.hpp>
+#include "i2cstrategy.hpp"
 
 namespace murasaki {
 /**
@@ -24,7 +24,7 @@ namespace murasaki {
  *
  * These two callback member functions are prepared to sync with the interrupt, which tells the end of Transmit/Receive.
  */
-class I2cSlaveStrategy : public murasaki::PeripheralStrategy {
+class I2cSlaveStrategy : public murasaki::I2cStrategy {
  public:
     /**
      * @brief Thread safe, synchronous transmission over I2C.
