@@ -9,6 +9,7 @@
 
 #include "murasaki_assert.hpp"
 #include "murasaki_syslog.hpp"
+#include "callbackrepositorysingleton.hpp"
 
 // Macro for easy-to-read
 #define ADC_SYSLOG(fmt, ...)    MURASAKI_SYSLOG( this,  kfaAdc, kseDebug, fmt, ##__VA_ARGS__)
@@ -35,6 +36,9 @@ Adc::Adc(ADC_HandleTypeDef *peripheral)
     MURASAKI_ASSERT(nullptr != peripheral_)
     MURASAKI_ASSERT(nullptr != sync_)
     MURASAKI_ASSERT(nullptr != critical_section_)
+
+    // Register this object to the list of the interrupt handler class.
+    CallbackRepositorySingleton::GetInstance()->AddPeripheralObject(this);
 
     ADC_SYSLOG("Exit")
 }
