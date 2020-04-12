@@ -1,9 +1,9 @@
 /**
- * @file murasaki_platform.cpp
+ * @file murasaki_callback.cpp
  *
- * @date 2018/05/20
+ * @date 2020/04/12
  * @author Seiichi "Suikan" Horie
- * @brief A glue file between the user application and HAL/RTOS.
+ * @brief A glue file between the callback and HAL/RTOS.
  */
 
 // Include the definition created by CubeIDE.
