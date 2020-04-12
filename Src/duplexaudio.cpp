@@ -11,6 +11,7 @@
 #include "duplexaudio.hpp"
 #include "murasaki_assert.hpp"
 #include "murasaki_syslog.hpp"
+#include "callbackrepositorysingleton.hpp"
 
 // Macro for easy-to-read
 #define AUDIO_SYSLOG(fmt, ...)    MURASAKI_SYSLOG(this, kfaAudio, kseDebug, fmt, ##__VA_ARGS__)
@@ -58,6 +59,9 @@ DuplexAudio::DuplexAudio(
         tx_dma_buffer_[i] = 0;
     for (unsigned int i = 0; i < buffer_size_rx_; i++)
         rx_dma_buffer_[i] = 0;
+
+    // Register this object to the list of the interrupt handler class.
+    CallbackRepositorySingleton::GetInstance()->AddPeripheralObject(this);
 
     AUDIO_SYSLOG("Return")
 }
@@ -180,7 +184,7 @@ void DuplexAudio::TransmitAndReceive(
             for (unsigned int ch_idx = 0; ch_idx < tx_num_of_channels; ch_idx++)
                 for (unsigned int wo_idx = 0; wo_idx < channel_len_; wo_idx++)
                     tx_current_dma_data[wo_idx * tx_num_of_channels + ch_idx] =
-                            static_cast<int16_t>( fminf( tx_channels[ch_idx][wo_idx] * scale, INT16_MAX) ) >> shift;
+                            static_cast<int16_t>(fminf(tx_channels[ch_idx][wo_idx] * scale, INT16_MAX)) >> shift;
 
             // Flush the DMA TX data buffer on cache to main memory.
             murasaki::CleanDataCacheByAddress(tx_current_dma_data, block_size_tx_);
@@ -257,7 +261,7 @@ void DuplexAudio::TransmitAndReceive(
             for (unsigned int ch_idx = 0; ch_idx < tx_num_of_channels; ch_idx++)
                 for (unsigned int wo_idx = 0; wo_idx < channel_len_; wo_idx++)
                     tx_current_dma_data[wo_idx * tx_num_of_channels + ch_idx] =
-                            static_cast<int32_t>( fminf( tx_channels[ch_idx][wo_idx] * scale, INT32_MAX ) ) >> shift;
+                            static_cast<int32_t>(fminf(tx_channels[ch_idx][wo_idx] * scale, INT32_MAX)) >> shift;
 
             // Is half word swap required by the port hardware?
             // If yes, swap the all data in TX DMA buffer
@@ -331,7 +335,8 @@ bool DuplexAudio::HandleError(void *peripheral)
                               {
     AUDIO_SYSLOG("Enter, peripheral : %p", peripheral);
 
-    bool retval = peripheral_adapter_->Match(peripheral);
+    // Call the HandleError of the audio port.
+    bool retval = peripheral_adapter_->HandleError(peripheral);
 
     AUDIO_SYSLOG(
                  "Return with %s",
@@ -339,4 +344,30 @@ bool DuplexAudio::HandleError(void *peripheral)
 
     return retval;
 }
+
+bool DuplexAudio::Match(void *peripheral_handle) {
+    AUDIO_SYSLOG("Enter, peripheral : %p", peripheral_handle);
+
+    // Check whether given peripheral is audio port.
+    bool retval = peripheral_adapter_->Match(peripheral_handle);
+
+    AUDIO_SYSLOG(
+                 "Return with %s",
+                 (retval ? "true" : "false"));
+
+    return retval;
+}
+
+void* DuplexAudio::GetPeripheralHandle()
+{
+    AUDIO_SYSLOG("Enter");
+
+    // false assertion failer. This function should not be called.
+    MURASAKI_ASSERT(false)
+
+    AUDIO_SYSLOG("Leave with nullptr");
+    return nullptr;
+}
+
 } /* namespace murasaki */
+

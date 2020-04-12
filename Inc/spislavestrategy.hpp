@@ -3,13 +3,13 @@
  *
  * @date 2018/02/11
  * @author: Seiichi "Suikan" Horie
- * @brief SPI master root class.
+ * @brief SPI slave root class.
  */
 
 #ifndef SPISLAVESTRATEGY_HPP_
 #define SPISLAVESTRATEGY_HPP_
 
-#include <peripheralstrategy.hpp>
+#include <spistrategy.hpp>
 
 namespace murasaki {
 
@@ -20,7 +20,7 @@ namespace murasaki {
  *
  * \ingroup MURASAKI_ABSTRACT_GROUP
  */
-class SpiSlaveStrategy : public murasaki::PeripheralStrategy
+class SpiSlaveStrategy : public murasaki::SpiStrategy
 {
  public:
     /**
@@ -33,26 +33,11 @@ class SpiSlaveStrategy : public murasaki::PeripheralStrategy
      * @return true if transfer complete, false if timeout
      */
     virtual SpiStatus TransmitAndReceive(
-                                         const uint8_t * tx_data,
-                                         uint8_t * rx_data,
+                                         const uint8_t *tx_data,
+                                         uint8_t *rx_data,
                                          unsigned int size,
-                                         unsigned int * transfered_count = nullptr,
+                                         unsigned int *transfered_count = nullptr,
                                          unsigned int timeout_ms = murasaki::kwmsIndefinitely)=0;
-    /**
-     * @brief Callback to notifiy the end of transfer
-     * @param ptr Pointer to the control object.
-     * @return true if no error.
-     */
-    virtual bool TransmitAndReceiveCompleteCallback(void * ptr) = 0;
-    /**
-     * @brief Handling error report of device.
-     * @param ptr Pointer for generic use. Usually, points a struct of a device control
-     * @return true if ptr matches with device and handle the error. false if ptr doesn't match
-     * A member function to detect error.
-     *
-     * The error handling is depend on the implementation.
-     */
-    virtual bool HandleError(void * ptr)= 0;
 
 };
 
