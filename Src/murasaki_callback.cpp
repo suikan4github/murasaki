@@ -455,8 +455,8 @@ void HAL_I2S_ErrorCallback(I2S_HandleTypeDef *hi2s) {
  * By default, this routine output a message with location informaiton
  * to the debugger console.
  */
-void CustomAssertFailed(uint8_t *file, uint32_t line)
-                        {
+extern "C" void CustomAssertFailed(uint8_t *file, uint32_t line)
+                                   {
     murasaki::debugger->Printf("Wrong parameters value: file %s on line %d\n",
                                file,
                                line);
@@ -501,7 +501,7 @@ __asm volatile (
  * Do not call from application. This is murasaki_internal_only.
  *
  */
-void PrintFaultResult(unsigned int *stack_pointer) {
+extern "C" void PrintFaultResult(unsigned int *stack_pointer) {
 
     murasaki::debugger->Printf("\nSpurious exception or hardfault occured.  \n");
     murasaki::debugger->Printf("Stacked R0  : 0x%08X \n", stack_pointer[0]);
@@ -535,8 +535,8 @@ void PrintFaultResult(unsigned int *stack_pointer) {
  * This function will be called from FreeRTOS when some task causes overflow.
  * See TaskStrategy::getStackMinHeadroom() for details.
  */
-void vApplicationStackOverflowHook(TaskHandle_t xTask,
-                                   signed char *pcTaskName) {
+extern "C" void vApplicationStackOverflowHook(TaskHandle_t xTask,
+                                              signed char *pcTaskName) {
     murasaki::debugger->Printf("Stack overflow at task : %s \n", pcTaskName);
     MURASAKI_ASSERT(false);
 }
