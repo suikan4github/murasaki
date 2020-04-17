@@ -4,6 +4,8 @@ Record of the modification in project development.
 ## [Unreleased]
 ### Added
 ### Changed
+- [Issue 119 : Make interrupt callback program automatic.](https://github.com/suikan4github/murasaki/issues/119)
+
 ### Deprecated
 ### Removed
 ### Fixed
