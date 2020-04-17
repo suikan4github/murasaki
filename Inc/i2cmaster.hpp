@@ -100,7 +100,7 @@ namespace murasaki {
  *
  * According to the source code of the HAL_I2C_MASTER_ABORT_IT(), no interrupt will be raised by this API call.
  */
-class I2cMaster : public I2CMasterStrategy
+class I2cMaster : public I2cMasterStrategy
 {
  public:
     /**

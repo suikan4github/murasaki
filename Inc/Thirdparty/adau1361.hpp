@@ -71,7 +71,7 @@ class Adau1361 : public AudioCodecStrategy {
     Adau1361(
              unsigned int fs,
              unsigned int master_clock,
-             murasaki::I2CMasterStrategy * controller,
+             murasaki::I2cMasterStrategy *controller,
              unsigned int i2c_device_addr);
 
     /**
@@ -108,7 +108,6 @@ class Adau1361 : public AudioCodecStrategy {
                       murasaki::CodecChannel channel,
                       bool mute = true);
 
-
     /**
      *  Service function for the ADAu1361 board implementer.
      *
@@ -128,7 +127,7 @@ class Adau1361 : public AudioCodecStrategy {
 
  protected:
     const unsigned int master_clock_;
-    murasaki::I2CMasterStrategy * const i2c_;
+    murasaki::I2cMasterStrategy *const i2c_;
     const unsigned int device_addr_;
 
     float line_input_left_gain_;

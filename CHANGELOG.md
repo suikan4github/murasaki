@@ -5,6 +5,7 @@ Record of the modification in project development.
 ### Added
 ### Changed
 - [Issue 119 : Make interrupt callback program automatic.](https://github.com/suikan4github/murasaki/issues/119)
+- [Issue 120 : I2CMasterStrategy must be renamed.](https://github.com/suikan4github/murasaki/issues/120)
 
 ### Deprecated
 ### Removed
