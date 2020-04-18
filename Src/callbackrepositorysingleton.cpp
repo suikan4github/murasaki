@@ -15,7 +15,7 @@ CallbackRepositorySingleton::CallbackRepositorySingleton()
         length_(0)
 {
 
-    for (int i = 0; i < NUM_OF_CALLBACK_OBJECTS; i++)
+    for (int i = 0; i < NUM_OF_EXTI_OBJECTS; i++)
         objects_[i] = nullptr;
 }
 
@@ -29,10 +29,13 @@ CallbackRepositorySingleton* CallbackRepositorySingleton::GetInstance()
 
 void CallbackRepositorySingleton::AddPeripheralObject(murasaki::PeripheralStrategy *peripheral_object) {
     // Check the number of the objects
-    MURASAKI_ASSERT(length_ < NUM_OF_CALLBACK_OBJECTS)
+    MURASAKI_ASSERT(length_ < NUM_OF_EXTI_OBJECTS)
 
     objects_[length_] = peripheral_object;
     length_++;
+
+    if (length_ >= NUM_OF_CALLBACK_OBJECTS)
+        length_ = NUM_OF_CALLBACK_OBJECTS - 1;
 }
 
 murasaki::PeripheralStrategy* CallbackRepositorySingleton::GetPeripheralObject(void *peripheral_handle) {

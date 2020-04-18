@@ -2,16 +2,20 @@
 Record of the modification in project development.
 
 ## [Unreleased]
+The issue 119, 121 changes the file structure of the existing project. The issue 120 change the class name. So, this release has incompatibility to the past release. 
+
 ### Added
 ### Changed
 - [Issue 119 : Make interrupt callback program automatic.](https://github.com/suikan4github/murasaki/issues/119)
 - [Issue 120 : I2CMasterStrategy must be renamed.](https://github.com/suikan4github/murasaki/issues/120)
+- [Issue 121 : Make ESTI callback program automatic.](https://github.com/suikan4github/murasaki/issues/121)
 
 ### Deprecated
 ### Removed
 ### Fixed
 ### Security
 ### Known Issue
+- [Issue 117 : STM32G0 cause compile error because of HAL incompatibility.](https://github.com/suikan4github/murasaki/issues/117)
 
 ## [2.0.0] - 2020-03-31
 The Issue 91 fix brings incompatibility to the past. Class name changed.

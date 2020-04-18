@@ -16,7 +16,7 @@
 namespace murasaki {
 
 /**
-* @brief EXTI wrapper class.
+ * @brief EXTI wrapper class.
  * @details
  * This class allows enabling/disabling EXTI interrupt from GPIO.
  * Only EXTI_0 to EXTI_16 is supported.
@@ -128,6 +128,13 @@ class Exti : public InterruptStrategy {
      * @endcode
      */
     virtual bool Release(unsigned int line);
+
+    /**
+     * @details Check whether given line is handled by this object.
+     * @param line The identifier of the interrupt
+     * @return true if line is matched with this EXTI. false if not matched.
+     */
+    virtual bool Match(unsigned int line);
 
  private:
     // EXTI hande for HAL

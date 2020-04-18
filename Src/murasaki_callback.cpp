@@ -9,6 +9,7 @@
 // Include the definition created by CubeIDE.
 #include <murasaki_platform.hpp>
 #include "callbackrepositorysingleton.hpp"
+#include "exticallbackrepositorysingleton.hpp"
 
 // Include the murasaki class library.
 #include "murasaki.hpp"
@@ -434,6 +435,43 @@ void HAL_I2S_ErrorCallback(I2S_HandleTypeDef *hi2s) {
     audio->HandleError(hi2s);
 }
 #endif
+
+/* -------------------------- EXTI ---------------------------------- */
+
+/**
+ * @brief Optional interrupt handling of EXTI
+ * @ingroup MURASAKI_PLATFORM_GROUP
+ * @param GPIO_Pin Pin number from 0 to 31
+ * @details
+ * This is called from inside of HAL when an EXTI is accepted.
+ *
+ * STM32Cube HAL has same name function internally.
+ * That function is invoked whenever an relevant interrupt happens.
+ * In the other hand, that function is declared as weak bound.
+ * As a result, this function overrides the default error interrupt call back.
+ *
+ * The GPIO_Pin is the number of Pin. For example, if a programmer set the pin name by CubeIDE as FOO, the
+ * macro to identify that EXTI is FOO_Pin
+ */
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
+    // Obtain the responding object.
+    murasaki::InterruptStrategy *exti = murasaki::ExtiCallbackRepositorySingleton::GetInstance()->GetExtiObject(GPIO_Pin);
+    // Handle the callback by the object.
+    exti->Release(GPIO_Pin);
+
+#if 0
+    // Sample of the EXTI call back.
+    // USER_Btn is a standard name of the user push button switch of the Nucleo F722.
+    // This switch can be configured as EXTI interrupt srouce.
+    // In this sample, releasing the waiting task if interrupt comes.
+
+    // Check whether sync object is ready or not.
+    // This check is essential to guard from the interrupt before the platform variable is ready
+    if (murasaki::platform.b1 != nullptr)
+        // release the waiting task
+        murasaki::platform.b1->Release(GPIO_Pin);
+#endif
+}
 
 /* ------------------ ASSERTION AND ERROR -------------------------- */
 
