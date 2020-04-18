@@ -13,6 +13,8 @@ The issue 119, 121 changes the file structure of the existing project. The issue
 ### Deprecated
 ### Removed
 ### Fixed
+- [Issue 123 : STM32G0 EXTI cannot release the task by interrupt](https://github.com/suikan4github/murasaki/issues/123)
+
 ### Security
 ### Known Issue
 - [Issue 117 : STM32G0 cause compile error because of HAL incompatibility.](https://github.com/suikan4github/murasaki/issues/117)

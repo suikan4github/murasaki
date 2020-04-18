@@ -458,19 +458,24 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
     murasaki::InterruptStrategy *exti = murasaki::ExtiCallbackRepositorySingleton::GetInstance()->GetExtiObject(GPIO_Pin);
     // Handle the callback by the object.
     exti->Release(GPIO_Pin);
+}
 
-#if 0
-    // Sample of the EXTI call back.
-    // USER_Btn is a standard name of the user push button switch of the Nucleo F722.
-    // This switch can be configured as EXTI interrupt srouce.
-    // In this sample, releasing the waiting task if interrupt comes.
+/*
+ * Following callback is to fix the incompatibility of the STM32G0 EXTI implementation.
+ * See  https://github.com/suikan4github/murasaki/issues/123
+ */
 
-    // Check whether sync object is ready or not.
-    // This check is essential to guard from the interrupt before the platform variable is ready
-    if (murasaki::platform.b1 != nullptr)
-        // release the waiting task
-        murasaki::platform.b1->Release(GPIO_Pin);
-#endif
+void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin) {
+    HAL_GPIO_EXTI_Callback(GPIO_Pin);
+}
+
+/*
+ * Following callback is to fix the incompatibility of the STM32G0 EXTI implementation.
+ * See  https://github.com/suikan4github/murasaki/issues/123
+ */
+void HAL_GPIO_EXTI_Falling_Callback(uint16_t GPIO_Pin) {
+    HAL_GPIO_EXTI_Callback(GPIO_Pin);
+
 }
 
 /* ------------------ ASSERTION AND ERROR -------------------------- */
