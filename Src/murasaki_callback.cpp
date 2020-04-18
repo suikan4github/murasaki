@@ -383,7 +383,7 @@ void HAL_SAI_ErrorCallback(SAI_HandleTypeDef *hsai) {
 /**
  * @brief Optional I2S interrupt handler at buffer transfer halfway.
  * @ingroup MURASAKI_PLATFORM_GROUP
- * @param hsai Handler of the I2S device.
+ * @param hi2s Handler of the I2S device.
  * @details
  * Invoked after I2S RX DMA complete interrupt is at halfway.
  * This interrupt have to be forwarded to the  murasaki::DuplexAudio::ReceiveCallback().
@@ -401,7 +401,7 @@ void HAL_I2S_RxHalfCpltCallback(I2S_HandleTypeDef *hi2s) {
 /**
  * @brief Optional I2S interrupt handler at buffer transfer complete.
  * @ingroup MURASAKI_PLATFORM_GROUP
- * @param hsai Handler of the I2S device.
+ * @param hi2s Handler of the I2S device.
  * @details
  * Invoked after I2S RX DMA complete interrupt is at halfway.
  * This interrupt have to be forwarded to the  murasaki::DuplexAudio::ReceiveCallback().
@@ -419,7 +419,7 @@ void HAL_I2S_RxCpltCallback(I2S_HandleTypeDef *hi2s) {
 /**
  * @brief Optional I2S error interrupt handler.
  * @ingroup MURASAKI_PLATFORM_GROUP
- * @param hsai Handler of the I2S device.
+ * @param hi2s Handler of the I2S device.
  * @details
  * The error have to be forwarded to murasaki::DuplexAudio::HandleError().
  * Note that DuplexAudio::HandleError() trigger a hard fault.

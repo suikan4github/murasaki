@@ -42,7 +42,7 @@ class CallbackRepositorySingleton {
 
     /**
      * @brief Add the given object to the internal list of the peripheral
-     * @param peripheral_object
+     * @param peripheral_object Add this objedct to the list.
      * @details
      * Store the given object to the internal list. This member function is called from
      * only inside @ref PeripheralStrategy or its sub classes.
@@ -51,7 +51,7 @@ class CallbackRepositorySingleton {
 
     /**
      * @brief Search an interrupt responding object.
-     * @param peripheral_handle
+     * @param peripheral_handle Search the object which has this handle.
      * @return Matched object pointer.
      * @details
      * If the object is not found, Assertion failed.

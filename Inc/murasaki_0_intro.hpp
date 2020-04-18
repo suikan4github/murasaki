@@ -111,7 +111,7 @@
  *
  * \page intro_sec8 Configurable
  * \details
- * Muras
+ * Murasaki can configure its basic parameter by customer. For example, you can change the size of the printf buffer.
  */
 
 #endif /* MURASAKI_0_INTRO_HPP_ */

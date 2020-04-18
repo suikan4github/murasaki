@@ -42,7 +42,7 @@ class ExtiCallbackRepositorySingleton {
 
     /**
      * @brief Add the given object to the internal list of the EXTI
-     * @param peripheral_object
+     * @param exti_object Add this object to the list of the EXTI.
      * @details
      * Store the given object to the internal list. This member function is called from
      * only inside @ref InterruptStrategy or its sub classes.
@@ -51,7 +51,7 @@ class ExtiCallbackRepositorySingleton {
 
     /**
      * @brief Search an EXTI responding object.
-     * @param peripheral_handle
+     * @param line The line cause interrupt.
      * @return Matched object pointer.
      * @details
      * If the object is not found, Assertion failed.
