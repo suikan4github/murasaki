@@ -136,7 +136,18 @@ class Exti : public InterruptStrategy {
      */
     virtual bool Match(unsigned int line);
 
- private:
+    /**
+     * @brief Show  interruptible or not global.
+     * @return true if ready to handle the EXTI interrupt.
+     * @details
+     * At the moment of 1Q/2020, CubeIDE generated code is interruptible from the first.
+     * Precisely speaking, the EXTI is set enable inside main(). That mean, the system is
+     * interruptible before the Murasaki EXTI callback is ready to accept the interrupt.
+     * ( Murasaki creates a list of EXTI object to accept the interrupt inside ExtiCallbackRepsitorySingleton.
+     * If EXTI comes before the list is complete, assertion fails ).
+     */
+    static bool isReady();
+     private:
     // EXTI hande for HAL
     EXTI_HandleTypeDef hexti_;
     // EXTI configuration type to record.
@@ -145,7 +156,8 @@ class Exti : public InterruptStrategy {
     unsigned int line_;
     // For the synchronization between task and interrupt
     Synchronizer *const sync_;
-
+    // true if interruptible.
+    static bool ready_;
 };
 
 }

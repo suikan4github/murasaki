@@ -7,12 +7,13 @@ The issue 119, 121 changes the file structure of the existing project. The issue
 ### Added
 ### Changed
 - [Issue 119 : Make interrupt callback program automatic.](https://github.com/suikan4github/murasaki/issues/119)
-- [Issue 120 : I2CMasterStrategy must be renamed.](https://github.com/suikan4github/murasaki/issues/120)
 - [Issue 121 : Make ESTI callback program automatic.](https://github.com/suikan4github/murasaki/issues/121)
 
 ### Deprecated
 ### Removed
 ### Fixed
+- [Issue 120 : I2CMasterStrategy must be renamed.](https://github.com/suikan4github/murasaki/issues/120)
+- [Issue 122 : ESTI is not disabled at first](https://github.com/suikan4github/murasaki/issues/122)
 - [Issue 123 : STM32G0 EXTI cannot release the task by interrupt](https://github.com/suikan4github/murasaki/issues/123)
 
 ### Security

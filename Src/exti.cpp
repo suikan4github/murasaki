@@ -198,6 +198,9 @@ murasaki::InterruptStatus Exti::Wait(unsigned int timeout)
                                      {
     EXTI_SYSLOG("Enter")
 
+    // The first wait() calling turn the interrupt ready.
+    ready_ = true;
+    // wait for interrupt.
     bool stat = sync_->Wait(timeout);
 
     murasaki::InterruptStatus ret_val =
@@ -245,7 +248,28 @@ bool Exti::Match(unsigned int line)
 
 }
 
+bool Exti::isReady()
+{
+    MURASAKI_SYSLOG(nullptr,
+                    kfaExti,
+                    kseDebug,
+                    "Enter")
+
+    MURASAKI_SYSLOG(nullptr,
+                    kfaExti,
+                    kseDebug,
+                    "Exit with %s",
+                    ready_ ?
+                             "true" :
+                             "false");
+
+    return ready_;
 }
+
+bool Exti::ready_ = false;
+
+}
+
 /* namespace murasaki */
 
 #endif // HAL_EXTI_MODULE_ENABLED

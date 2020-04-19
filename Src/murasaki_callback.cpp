@@ -454,10 +454,12 @@ void HAL_I2S_ErrorCallback(I2S_HandleTypeDef *hi2s) {
  * macro to identify that EXTI is FOO_Pin
  */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
-    // Obtain the responding object.
-    murasaki::InterruptStrategy *exti = murasaki::ExtiCallbackRepositorySingleton::GetInstance()->GetExtiObject(GPIO_Pin);
-    // Handle the callback by the object.
-    exti->Release(GPIO_Pin);
+    if (murasaki::Exti::isReady()) {
+        // Obtain the responding object.
+        murasaki::InterruptStrategy *exti = murasaki::ExtiCallbackRepositorySingleton::GetInstance()->GetExtiObject(GPIO_Pin);
+        // Handle the callback by the object.
+        exti->Release(GPIO_Pin);
+    }
 }
 
 /*
