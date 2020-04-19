@@ -49,33 +49,8 @@ namespace murasaki {
  *
  *
  * ### Handling an interrupt
- * In addition to the instantiation, we need to prepare an interrupt callback.
- * \code
- * void HAL_I2C_MasterTxCpltCallback(I2C_HandleTypeDef * hi2c)
- * {
- *     if (my_i2c3->TransmitCompleteCallback(hi2c))
- *         return;
- * }
- * \endcode
- * Where HAL_I2C_SlaveTxCpltCallback() is a predefined name of the I2C interrupt handler.
- * This function() is invoked by the system whenever an interrupt based I2C transmission is complete.
  *
- *
- * Note that the above callback is invoked by the system for any I2Cn where n is 1, 2, 3... To avoid the
- * confusion, I2cMaster::TransmitCompleteCallback() method checks whether given parameter
- * matches with its I2C_HandleTypeDef * pointer ( which was passed to the constructor ).
- * And only when both matches, the member function execute the interrupt termination process
- * and return with true.
- *
- * As same as Tx, RX needs HAL_I2C_MasterRxCpltCallback() and Error needs HAL_I2C_ErrorCallback().
- * The HAL_I2C_ErrorCallback() is essential to implement. Otherwise, I2C NAK response will not be
- *  handled correctly.
- * @code
- * void HAL_I2C_ErrorCallback(I2C_HandleTypeDef *hi2c) {
- *     if (my_i2c3->HandleError(hi2c))
- *         return;
- * }
- * @endcode
+ * Interrupt is handled automatically. Programmer doesn't need to care.
  *
  * ### Transmitting and Receiving
  * Once the instance and callback are correctly prepared, we can use the Tx/Rx member function.

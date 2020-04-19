@@ -716,7 +716,7 @@
  * }
  *  @endcode
  *
- *  This callback is called from HAL, after the end of peripheral interrupt processing. Then, the @ref CallbackRepositorySingleton
+ *  This callback is called from HAL, after the end of peripheral interrupt processing. Then, the @ref murasaki::CallbackRepositorySingleton
  *  class search for a class object which has responsibility to the given peripheral handle.
  *
  *  Then, its appropriate member function is called.
@@ -728,7 +728,13 @@
  * @details
  * The EXTI flow is very similar to the @ref ug_sect_6_4 except its timing.
  *
+ * By design, CubeIDE generated code enable the EXTI right after main calls MX_GPIO_Init().
+ * This means EXTIs are accepted even before Murasaki prepare the interrupt routines.
+ * If EXTI is accepted before Murasaki is ready, it will cause assertion failure.
+ * To avoid it, Murasaki disable the interrupt callback handling in the HAL_GPIO_EXTI_Callback() until
+ * first @ref Exti::Wait() is executed.
  *
+ * So, all EXTI interrupt before the first Exti::Wait() call is ignored.
  */
 
 #endif /* MURASAKI_2_UG_HPP_ */

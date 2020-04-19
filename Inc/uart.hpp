@@ -56,25 +56,8 @@ namespace murasaki {
  * length and flow control should be configured by the CubeIDE.
  *
  * ### Handling an interrupt
- * In addition to the instantiation, we need to prepare an interrupt callback.
- * \code
- * void HAL_UART_TxCpltCallback(UART_HandleTypeDef * huart)
- * {
- *     if (my_uart3->TransmitCompleteCallback(huart))
- *         return;
- * }
- * \endcode
- * Where HAL_UART_TxCpltCallback is a predefined name of the UART interrupt handler.
- * This is invoked by system whenever a DMA baed UART transmission is complete.
- * Becuase the default function is weakly bound, above definition will overwride the
- * default one.
  *
- * Note that above callback is invoked for any UARTn where n is 1, 2, 3... To avoid the
- * confusion, Uart::TransmitCompleteCallback() method chckes whether given parameter
- * matches with its UART_HandleTypeDef * pointer ( which was passed to constructor ).
- * And only when both matches, the member function execute the interrupt termination process.
- *
- * As same as Tx, RX needs HAL_UART_TxCpltCallback().
+ * Interrupt is handled automatically. Programmer doesn't need to care.
  *
  * ### Transmitting and Receiving
  * Once the instance and callbacks are correctly prepared, we can use the Tx/Rx member function.

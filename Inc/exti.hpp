@@ -56,18 +56,9 @@ namespace murasaki {
  * \endcode
  *
  * ### Interrupt handling
- * In the interrupt callback, you can release the waiting task by calling Exti::Release().
- * The parameter of the HAL_GPIO_EXTI_Callback()  must be passed to the Release() member function.
- * If the given parameter is the same with its EXTI line, the Exti.Release() function releases the
- * waiting task and returns with true.
- *  \code
- * void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
- * {
- *     // Check whether appropriate interrupt or not
- *     if (my_exti.Release(GPIO_Pin))
- *         return;
- * }
- *  \endcode
+ *
+ * Interrupt is handled automatically. Programmer doesn't need to care.
+ *
  *
  * \ingroup MURASAKI_GROUP
  */

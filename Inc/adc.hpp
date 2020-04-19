@@ -48,28 +48,7 @@ namespace murasaki {
  *
  * ### Interrupt Handling
  *
- * The interrupt handler is the HAL_ADC_ConvCpltCallback() and the HAL_ADC_ErrorCallback().
- * These are regulated by HAL manual. If you define these functions, HAL will call that
- * callback whenever the relevant interrupt happens.
- *
- * Inside HAL_ADC_ConvCpltCallback(), you must call the Adc::ConversionCompleteCallback() member function.
- * The parameter should be the hadc parameter of the Interrupt callback.
- * The Adc::ConversionCompleteCallback() will return with if the given hadc is the handle of that object.
- * If the Adc::ConversionCompleteCallback() return true, you can return from the handler.
- *
- * The HAL_ADC_ErrorCallback() is similar but you must call Adc::HandleError().
- * @code
- * void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) {
- *     if (murasaki::platform.adc->ConversionCompleteCallback(hadc))
- *         return;
- * }
- *
- * void HAL_ADC_ErrorCallback(ADC_HandleTypeDef *hadc) {
- *     if (murasaki::platform.adc->HandleError(hadc))
- *         return;
- * }
- *
- * @endcode
+ * Interrupt is handled automatically. Programmer doesn't need to care.
  *
  * ### ADC data reading
  * To read the data, use Adc::Convert() member function.
