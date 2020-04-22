@@ -19,8 +19,8 @@ The issue 119, 121 changes the file structure of the existing project. The issue
 
 ### Security
 ### Known Issue
-- [Issue 117 : STM32G0 misses EXTI error because of HAL incompatibility.](https://github.com/suikan4github/murasaki/issues/117)
-
+- [Issue 117 : STM32G0 misses EXTI because of HAL incompatibility.](https://github.com/suikan4github/murasaki/issues/117)
+- [Issue 126 : STM32L1 fails to compile the Exti class.](https://github.com/suikan4github/murasaki/issues/126)
 
 ## [2.0.0] - 2020-03-31
 The Issue 91 fix brings incompatibility to the past. Class name changed.
