@@ -114,7 +114,7 @@ void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi) {
     // Obtain the responding object.
     murasaki::PeripheralStrategy *peripheral = murasaki::CallbackRepositorySingleton::GetInstance()->GetPeripheralObject(hspi);
     // Convert it to the appropriate type.
-    murasaki::SpiStrategy *spi = reinterpret_cast<murasaki::SpiStrategy*>(peripheral);
+    murasaki::SpiCallbackStrategy *spi = reinterpret_cast<murasaki::SpiCallbackStrategy*>(peripheral);
     // Handle the callback by the object.
     spi->TransmitAndReceiveCompleteCallback(hspi);
 }
@@ -138,7 +138,7 @@ void HAL_SPI_ErrorCallback(SPI_HandleTypeDef *hspi) {
     // Obtain the responding object.
     murasaki::PeripheralStrategy *peripheral = murasaki::CallbackRepositorySingleton::GetInstance()->GetPeripheralObject(hspi);
     // Convert it to the appropriate type.
-    murasaki::SpiStrategy *spi = reinterpret_cast<murasaki::SpiStrategy*>(peripheral);
+    murasaki::SpiCallbackStrategy *spi = reinterpret_cast<murasaki::SpiCallbackStrategy*>(peripheral);
     // Handle the callback by the object.
     spi->HandleError(hspi);
 }
@@ -169,7 +169,7 @@ void HAL_I2C_MasterTxCpltCallback(I2C_HandleTypeDef *hi2c)
     // Obtain the responding object.
     murasaki::PeripheralStrategy *peripheral = murasaki::CallbackRepositorySingleton::GetInstance()->GetPeripheralObject(hi2c);
     // Convert it to the appropriate type.
-    murasaki::I2cStrategy *i2c = reinterpret_cast<murasaki::I2cStrategy*>(peripheral);
+    murasaki::I2cCallbackStrategy *i2c = reinterpret_cast<murasaki::I2cCallbackStrategy*>(peripheral);
     // Handle the callback by the object.
     i2c->TransmitCompleteCallback(hi2c);
 
@@ -193,7 +193,7 @@ void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef *hi2c) {
     // Obtain the responding object.
     murasaki::PeripheralStrategy *peripheral = murasaki::CallbackRepositorySingleton::GetInstance()->GetPeripheralObject(hi2c);
     // Convert it to the appropriate type.
-    murasaki::I2cStrategy *i2c = reinterpret_cast<murasaki::I2cStrategy*>(peripheral);
+    murasaki::I2cCallbackStrategy *i2c = reinterpret_cast<murasaki::I2cCallbackStrategy*>(peripheral);
     // Handle the callback by the object.
     i2c->ReceiveCompleteCallback(hi2c);
 }
@@ -217,7 +217,7 @@ void HAL_I2C_SlaveTxCpltCallback(I2C_HandleTypeDef *hi2c)
     // Obtain the responding object.
     murasaki::PeripheralStrategy *peripheral = murasaki::CallbackRepositorySingleton::GetInstance()->GetPeripheralObject(hi2c);
     // Convert it to the appropriate type.
-    murasaki::I2cStrategy *i2c = reinterpret_cast<murasaki::I2cStrategy*>(peripheral);
+    murasaki::I2cCallbackStrategy *i2c = reinterpret_cast<murasaki::I2cCallbackStrategy*>(peripheral);
     // Handle the callback by the object.
     i2c->TransmitCompleteCallback(hi2c);
 }
@@ -240,7 +240,7 @@ void HAL_I2C_SlaveRxCpltCallback(I2C_HandleTypeDef *hi2c) {
     // Obtain the responding object.
     murasaki::PeripheralStrategy *peripheral = murasaki::CallbackRepositorySingleton::GetInstance()->GetPeripheralObject(hi2c);
     // Convert it to the appropriate type.
-    murasaki::I2cStrategy *i2c = reinterpret_cast<murasaki::I2cStrategy*>(peripheral);
+    murasaki::I2cCallbackStrategy *i2c = reinterpret_cast<murasaki::I2cCallbackStrategy*>(peripheral);
     // Handle the callback by the object.
     i2c->ReceiveCompleteCallback(hi2c);
 }
@@ -264,7 +264,7 @@ void HAL_I2C_ErrorCallback(I2C_HandleTypeDef *hi2c) {
     // Obtain the responding object.
     murasaki::PeripheralStrategy *peripheral = murasaki::CallbackRepositorySingleton::GetInstance()->GetPeripheralObject(hi2c);
     // Convert it to the appropriate type.
-    murasaki::I2cStrategy *i2c = reinterpret_cast<murasaki::I2cStrategy*>(peripheral);
+    murasaki::I2cCallbackStrategy *i2c = reinterpret_cast<murasaki::I2cCallbackStrategy*>(peripheral);
     // Handle the callback by the object.
     i2c->HandleError(hi2c);
 

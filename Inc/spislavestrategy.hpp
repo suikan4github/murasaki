@@ -9,7 +9,7 @@
 #ifndef SPISLAVESTRATEGY_HPP_
 #define SPISLAVESTRATEGY_HPP_
 
-#include <spistrategy.hpp>
+#include <spicallbackstrategy.hpp>
 
 namespace murasaki {
 
@@ -20,7 +20,7 @@ namespace murasaki {
  *
  * \ingroup MURASAKI_ABSTRACT_GROUP
  */
-class SpiSlaveStrategy : public murasaki::SpiStrategy
+class SpiSlaveStrategy : public murasaki::SpiCallbackStrategy
 {
  public:
     /**

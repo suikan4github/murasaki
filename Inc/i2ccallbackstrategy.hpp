@@ -1,13 +1,13 @@
 /**
- * \file i2cstrategy.hpp
+ * \file i2ccallbackstrategy.hpp
  *
  *  \date  2018/02/11
  *  \author: Seiichi "Suikan" Horie
  *  \brief Root class definition of the I2C Master.
  */
 
-#ifndef I2CSTRATEGY_HPP_
-#define I2CSTRATEGY_HPP_
+#ifndef I2CCALLBACKSTRATEGY_HPP_
+#define I2CCALLBACKSTRATEGY_HPP_
 
 #include <peripheralstrategy.hpp>
 
@@ -16,9 +16,10 @@ namespace murasaki {
  * \ingroup MURASAKI_ABSTRACT_GROUP
  * \brief Definition of the root class of I2C .
  * \details
+ * This class specify the unified callbacks between the master and slave dvices.
  */
 
-class I2cStrategy : public murasaki::PeripheralStrategy
+class I2cCallbackStrategy : public murasaki::PeripheralStrategy
 {
  public:
 
@@ -62,4 +63,4 @@ class I2cStrategy : public murasaki::PeripheralStrategy
 
 } /* namespace murasaki */
 
-#endif /* I2CSTRATEGY_HPP_ */
+#endif /* I2CCALLBACKSTRATEGY_HPP_ */

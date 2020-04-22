@@ -1,13 +1,13 @@
 /**
- * @file spistrategy.hpp
+ * @file spicallbackstrategy.hpp
  *
  * @date 2020/04/11
  * @author: Seiichi "Suikan" Horie
  * @brief SPI root class.
  */
 
-#ifndef SPISTRATEGY_HPP_
-#define SPISTRATEGY_HPP_
+#ifndef SPICALLBACKSTRATEGY_HPP_
+#define SPICALLBACKSTRATEGY_HPP_
 
 #include <peripheralstrategy.hpp>
 
@@ -17,7 +17,7 @@ namespace murasaki {
  * \brief Root class of the SPI
  * \ingroup MURASAKI_ABSTRACT_GROUP
  */
-class SpiStrategy : public murasaki::PeripheralStrategy
+class SpiCallbackStrategy : public murasaki::PeripheralStrategy
 {
  public:
     /**
@@ -40,4 +40,4 @@ class SpiStrategy : public murasaki::PeripheralStrategy
 
 } /* namespace murasaki */
 
-#endif /* SPISTRATEGY_HPP_ */
+#endif /* SPICALLBACKSTRATEGY_HPP_ */

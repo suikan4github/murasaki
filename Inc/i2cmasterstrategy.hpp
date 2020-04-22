@@ -9,7 +9,7 @@
 #ifndef I2CMASTERSTRATEGY_HPP_
 #define I2CMASTERSTRATEGY_HPP_
 
-#include "i2cstrategy.hpp"
+#include "i2ccallbackstrategy.hpp"
 
 namespace murasaki {
 /**
@@ -26,7 +26,7 @@ namespace murasaki {
  * which tells the end of Transmit/Receive.
  */
 
-class I2cMasterStrategy : public murasaki::I2cStrategy
+class I2cMasterStrategy : public murasaki::I2cCallbackStrategy
 {
  public:
 

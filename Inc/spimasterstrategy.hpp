@@ -9,7 +9,7 @@
 #ifndef SPIMASTERSTRATEGY_HPP_
 #define SPIMASTERSTRATEGY_HPP_
 
-#include <spistrategy.hpp>
+#include <spicallbackstrategy.hpp>
 #include <spislaveadapterstrategy.hpp>
 
 namespace murasaki {
@@ -21,7 +21,7 @@ namespace murasaki {
  *
  * \ingroup MURASAKI_ABSTRACT_GROUP
  */
-class SpiMasterStrategy : public murasaki::SpiStrategy
+class SpiMasterStrategy : public murasaki::SpiCallbackStrategy
 {
  public:
     /**

@@ -15,10 +15,12 @@ The issue 119, 121 changes the file structure of the existing project. The issue
 - [Issue 120 : I2CMasterStrategy must be renamed.](https://github.com/suikan4github/murasaki/issues/120)
 - [Issue 123 : STM32G0 EXTI cannot release the task by interrupt](https://github.com/suikan4github/murasaki/issues/123)
 - [Issue 124 : Early EXTI call system failure](https://github.com/suikan4github/murasaki/issues/124)
+- [Issue 125 : I2cStrategy and SpiStrategy are not appropriate name](https://github.com/suikan4github/murasaki/issues/125)
 
 ### Security
 ### Known Issue
-- [Issue 117 : STM32G0 cause compile error because of HAL incompatibility.](https://github.com/suikan4github/murasaki/issues/117)
+- [Issue 117 : STM32G0 misses EXTI error because of HAL incompatibility.](https://github.com/suikan4github/murasaki/issues/117)
+
 
 ## [2.0.0] - 2020-03-31
 The Issue 91 fix brings incompatibility to the past. Class name changed.

@@ -732,7 +732,7 @@
  * This means EXTIs are accepted even before Murasaki prepare the interrupt routines.
  * If EXTI is accepted before Murasaki is ready, it will cause assertion failure.
  * To avoid it, Murasaki disable the interrupt callback handling in the HAL_GPIO_EXTI_Callback() until
- * first @ref Exti::Wait() is executed.
+ * first @ref murasaki::Exti::Wait() is executed.
  *
  * So, all EXTI interrupt before the first Exti::Wait() call is ignored.
  */
