@@ -17,7 +17,7 @@ namespace murasaki {
 
 /**
  * @ingroup MURASAKI_GROUP
- * @brief Stereo Audio is served by the descendants of this class.
+ * @brief Stereo Audio is served by this class.
  * @details
  *
  * This class provides an interface to the audio data flow. Also, the internal buffer allocation, multi-phase buffering, and synchronization are provided. The features are :

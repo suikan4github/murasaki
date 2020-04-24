@@ -2,6 +2,19 @@
 Record of the modification in project development.
 
 ## [Unreleased]
+
+### Added
+### Changed
+### Deprecated
+### Removed
+### Fixed
+### Security
+### Known Issue
+- [Issue 117 : STM32G0 misses EXTI because of HAL incompatibility.](https://github.com/suikan4github/murasaki/issues/117)
+- [Issue 126 : STM32L1 fails to compile the Exti class.](https://github.com/suikan4github/murasaki/issues/126)
+
+
+## [3.0.0] - 2020-04-24
 The issue 119, 121 changes the file structure of the existing project. The issue 120 change the class name. So, this release has incompatibility to the past release. 
 
 ### Added
@@ -232,7 +245,8 @@ Major change at the MURASAKI_ASSERTION to enforce the hard fault. This makes deb
 ### Fixed
 ### Security
 
-[Unreleased]: https://github.com/suikan4github/murasaki/compare/v2.0.0...develop
+[Unreleased]: https://github.com/suikan4github/murasaki/compare/v3.0.0...develop
+[3.0.0]: https://github.com/suikan4github/murasaki/compare/v2.0.0...v3.0.0
 [2.0.0]: https://github.com/suikan4github/murasaki/compare/v1.0.1...v2.0.0
 [1.0.1]: https://github.com/suikan4github/murasaki/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/suikan4github/murasaki/compare/v0.4.0...v1.0.0
