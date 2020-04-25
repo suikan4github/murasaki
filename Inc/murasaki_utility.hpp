@@ -21,7 +21,7 @@ namespace murasaki {
  * there is no device.
  *
  */
-void I2cSearch(murasaki::I2CMasterStrategy *master);
+void I2cSearch(murasaki::I2cMasterStrategy *master);
 
 }
 

@@ -33,34 +33,14 @@ namespace murasaki {
  * the UART peripheral have to be configured to use the DMA functionality. The baud rate,
  * length and flow control should be configured by the CubeIDE.
  *
- * In addition to the instantiation, we need to prepare an interrupt callback.
- * \code
- * void HAL_UART_TxCpltCallback(UART_HandleTypeDef * huart)
- * {
- *     my_uart3->TransmitCompleteCallback(huart);
- * }
- * \endcode
- * Where HAL_UART_TxCpltCallback is a predefined name of the UART interrupt handler.
- * This is invoked by system whenever a DMA baed UART transmission is complete.
- * Becuase the default function is weakly bound, above definition will overwride the
- * default one.
  *
- * Note that above callback is invoked for any UARTn where n is 1, 2, 3... To avoid the
- * confusion, Uart::TransmitCompleteCallback() method chckes whether given parameter
- * matches with its UART_HandleTypeDef * pointer ( which was passed to constructor ).
- * And only when both matches, the member function execute the interrupt termination process.
- *
- * As same as Tx, RX needs HAL_UART_TxCpltCallback().
- *
- * Once the instance and callbacks are correctly prepared, we can use the Tx/Rx member function.
- *
- * The @ref Uart::Transmit() member function is a synchrnous function. A programmer can specify the
+ * The @ref Uart::Transmit() member function is a synchronous function. A programmer can specify the
  * timeout by timeout_ms parameter. By default, this parameter is set by kwmsIndefinitely
- * which specifes never time out.
+ * which specifies never time out.
  *
  * The @ref Uart::Receive() member function is a synchronous function.  A programmer can specify the
  * timeout by timeout_ms parameter. By default, this parameter is set by kwmsIndefinitely
- * which specifes never time out.
+ * which specifies never time out.
  *
  * Both methods can be called from only the task context. If these are called in the ISR
  * context, the result is unknown.
@@ -75,7 +55,7 @@ class DebuggerUart : public UartStrategy
      * Store the given uart pointer into the internal variable. This pointer is passed to the STM32Cube HAL UART functions when needed.
      *
      */
-    DebuggerUart(UART_HandleTypeDef * uart);
+    DebuggerUart(UART_HandleTypeDef *uart);
     /**
      * \brief Destructor. Delete internal variables.
      */
@@ -120,7 +100,7 @@ class DebuggerUart : public UartStrategy
      * This function is forbiddedn to call from ISR.
      */
     virtual murasaki::UartStatus Transmit(
-                                          const uint8_t * data,
+                                          const uint8_t *data,
                                           unsigned int size,
                                           unsigned int timeout_ms);
     /**
@@ -143,9 +123,9 @@ class DebuggerUart : public UartStrategy
      * This function is forbiddedn to call from ISR.
      */
     virtual murasaki::UartStatus Receive(
-                                         uint8_t * data,
+                                         uint8_t *data,
                                          unsigned int count,
-                                         unsigned int * transfered_count,
+                                         unsigned int *transfered_count,
                                          UartTimeout uart_timeout,
                                          unsigned int timeout_ms);
     /**
@@ -163,7 +143,7 @@ class DebuggerUart : public UartStrategy
      * This method have to be called from HAL_UART_TxCpltCallback(). See STM32F7 HAL manual for detail
      */
 
-    virtual bool TransmitCompleteCallback(void * const ptr);
+    virtual bool TransmitCompleteCallback(void *const ptr);
     /**
      * \brief Call back for entire block transfer completion.
      * \param ptr Pointer to UART_HandleTypeDef struct.
@@ -178,7 +158,7 @@ class DebuggerUart : public UartStrategy
      *
      * This method have to be called from HAL_UART_RxCpltCallback(). See STM32F7 HAL manual for detail      */
 
-    virtual bool ReceiveCompleteCallback(void* const ptr);
+    virtual bool ReceiveCompleteCallback(void *const ptr);
     /**
      * @brief Error handling
      * @param ptr Pointer to UART_HandleTypeDef struct.
@@ -190,15 +170,15 @@ class DebuggerUart : public UartStrategy
      * Then trigger an assertion.
      *
      */
-    virtual bool HandleError(void * const ptr);
+    virtual bool HandleError(void *const ptr);
      protected:
-    UART_HandleTypeDef* const peripheral_;
+    UART_HandleTypeDef *const peripheral_;
 
-    Synchronizer * const tx_sync_;
-    Synchronizer * const rx_sync_;
+    Synchronizer *const tx_sync_;
+    Synchronizer *const rx_sync_;
 
-    CriticalSection * const tx_critical_section_;
-    CriticalSection * const rx_critical_section_;
+    CriticalSection *const tx_critical_section_;
+    CriticalSection *const rx_critical_section_;
      private:
     /**
      * @brief Return the Platform dependent device control handle.
@@ -207,7 +187,7 @@ class DebuggerUart : public UartStrategy
      * The handle is the pointer ( or some ID ) which specify the control data of
      * specific device.
      */
-    virtual void * GetPeripheralHandle();
+    virtual void* GetPeripheralHandle();
 
 };
 

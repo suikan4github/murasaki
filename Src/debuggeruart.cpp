@@ -8,6 +8,7 @@
 #include "debuggeruart.hpp"
 #include "murasaki_defs.hpp"
 #include "murasaki_assert.hpp"
+#include "callbackrepositorysingleton.hpp"
 
 // Check if CubeIDE generates UART module
 #ifdef HAL_UART_MODULE_ENABLED
@@ -29,6 +30,9 @@ DebuggerUart::DebuggerUart(UART_HandleTypeDef *const uart)
     MURASAKI_ASSERT(nullptr != rx_sync_)
     MURASAKI_ASSERT(nullptr != tx_critical_section_)
     MURASAKI_ASSERT(nullptr != rx_critical_section_)
+
+    // Register this object to the list of the interrupt handler class.
+    CallbackRepositorySingleton::GetInstance()->AddPeripheralObject(this);
 
 }
 

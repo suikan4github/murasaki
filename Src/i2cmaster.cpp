@@ -8,6 +8,7 @@
 #include <i2cmaster.hpp>
 #include "murasaki_assert.hpp"
 #include "murasaki_syslog.hpp"
+#include "callbackrepositorysingleton.hpp"
 
 // Macro for easy-to-read
 #define I2C_SYSLOG(fmt, ...)    MURASAKI_SYSLOG( this,  kfaI2cMaster, kseDebug, fmt, ##__VA_ARGS__)
@@ -17,11 +18,12 @@
 
 namespace murasaki {
 
-I2cMaster::I2cMaster(I2C_HandleTypeDef * i2c_handle)
-        : peripheral_(i2c_handle),
-          sync_(new Synchronizer),
-          critical_section_(new CriticalSection),
-          interrupt_status_(ki2csUnknown)
+I2cMaster::I2cMaster(I2C_HandleTypeDef *i2c_handle)
+        :
+        peripheral_(i2c_handle),
+        sync_(new Synchronizer),
+        critical_section_(new CriticalSection),
+        interrupt_status_(ki2csUnknown)
 
 {
     // setup peripheral handle
@@ -32,6 +34,8 @@ I2cMaster::I2cMaster(I2C_HandleTypeDef * i2c_handle)
 
     MURASAKI_ASSERT(nullptr != critical_section_)
 
+    // Register this object to the list of the interrupt handler class.
+    CallbackRepositorySingleton::GetInstance()->AddPeripheralObject(this);
 }
 
 I2cMaster::~I2cMaster() {
@@ -44,9 +48,9 @@ I2cMaster::~I2cMaster() {
 
 murasaki::I2cStatus I2cMaster::Transmit(
                                         unsigned int addrs,
-                                        const uint8_t* tx_data,
+                                        const uint8_t *tx_data,
                                         unsigned int tx_size,
-                                        unsigned int * transfered_count,
+                                        unsigned int *transfered_count,
                                         unsigned int timeout_ms) {
 
     I2C_SYSLOG("Enter");
@@ -66,7 +70,7 @@ murasaki::I2cStatus I2cMaster::Transmit(
         HAL_StatusTypeDef status = HAL_I2C_Master_Transmit_IT(
                                                               peripheral_,
                                                               addrs << 1,
-                                                              const_cast<uint8_t *>(tx_data),
+                                                              const_cast<uint8_t*>(tx_data),
                                                               tx_size);
         MURASAKI_ASSERT(HAL_OK == status);
 
@@ -95,12 +99,12 @@ murasaki::I2cStatus I2cMaster::Transmit(
                 I2C_SYSLOG("Transmission abort by bus error")
                 break;
             case murasaki::ki2csTimeOut:
-                MURASAKI_SYSLOG( this, kfaI2cMaster, kseWarning, "Transmission timeout. I2C aborted")
+                MURASAKI_SYSLOG(this, kfaI2cMaster, kseWarning, "Transmission timeout. I2C aborted")
                 // Abort on-going and not terminated transfer.
                 HAL_I2C_Master_Abort_IT(peripheral_, addrs << 1);
                 break;
             default:
-                MURASAKI_SYSLOG( this, kfaI2cMaster, kseEmergency, "Error is not handled. Peripheral re-initialized")
+                MURASAKI_SYSLOG(this, kfaI2cMaster, kseEmergency, "Error is not handled. Peripheral re-initialized")
                 // Re-initialize device
                 HAL_I2C_DeInit(peripheral_);
                 HAL_I2C_Init(peripheral_);
@@ -115,9 +119,9 @@ murasaki::I2cStatus I2cMaster::Transmit(
 
 murasaki::I2cStatus I2cMaster::Receive(
                                        unsigned int addrs,
-                                       uint8_t* rx_data,
+                                       uint8_t *rx_data,
                                        unsigned int rx_size,
-                                       unsigned int * transfered_count,
+                                       unsigned int *transfered_count,
                                        unsigned int timeout_ms) {
 
     I2C_SYSLOG("Enter");
@@ -168,12 +172,12 @@ murasaki::I2cStatus I2cMaster::Receive(
                 I2C_SYSLOG("Transmission abort by bus error")
                 break;
             case murasaki::ki2csTimeOut:
-                MURASAKI_SYSLOG( this, kfaI2cMaster, kseWarning, "Receive timeout. I2C aborted")
+                MURASAKI_SYSLOG(this, kfaI2cMaster, kseWarning, "Receive timeout. I2C aborted")
                 // Abort on-going and not terminated transfer.
                 HAL_I2C_Master_Abort_IT(peripheral_, addrs << 1);
                 break;
             default:
-                MURASAKI_SYSLOG( this, kfaI2cMaster, kseEmergency, "Error is not handled. Peripheral re-initialized")
+                MURASAKI_SYSLOG(this, kfaI2cMaster, kseEmergency, "Error is not handled. Peripheral re-initialized")
                 // Re-initialize device
                 HAL_I2C_DeInit(peripheral_);
                 HAL_I2C_Init(peripheral_);
@@ -189,12 +193,12 @@ murasaki::I2cStatus I2cMaster::Receive(
 
 murasaki::I2cStatus I2cMaster::TransmitThenReceive(
                                                    unsigned int addrs,
-                                                   const uint8_t* tx_data,
+                                                   const uint8_t *tx_data,
                                                    unsigned int tx_size,
-                                                   uint8_t* rx_data,
+                                                   uint8_t *rx_data,
                                                    unsigned int rx_size,
-                                                   unsigned int * tx_transfered_count,
-                                                   unsigned int * rx_transfered_count,
+                                                   unsigned int *tx_transfered_count,
+                                                   unsigned int *rx_transfered_count,
                                                    unsigned int timeout_ms) {
 
     I2C_SYSLOG("Enter");
@@ -221,11 +225,11 @@ murasaki::I2cStatus I2cMaster::TransmitThenReceive(
         status = HAL_I2C_Master_Sequential_Transmit_IT(
 
 #endif
-                                                peripheral_,
-                                                addrs << 1,
-                                                const_cast<uint8_t *>(tx_data),
-                                                tx_size,
-                                                I2C_FIRST_FRAME);
+                                                       peripheral_,
+                                                       addrs << 1,
+                                                       const_cast<uint8_t*>(tx_data),
+                                                       tx_size,
+                                                       I2C_FIRST_FRAME);
         MURASAKI_ASSERT(HAL_OK == status);
 
         // wait for the completion
@@ -260,11 +264,11 @@ murasaki::I2cStatus I2cMaster::TransmitThenReceive(
                 status = HAL_I2C_Master_Sequential_Receive_IT(
 
 #endif
-                                                       peripheral_,
-                                                       addrs << 1,
-                                                       rx_data,
-                                                       rx_size,
-                                                       I2C_LAST_FRAME);
+                                                              peripheral_,
+                                                              addrs << 1,
+                                                              rx_data,
+                                                              rx_size,
+                                                              I2C_LAST_FRAME);
                 MURASAKI_ASSERT(HAL_OK == status)
                 ;
 
@@ -293,12 +297,12 @@ murasaki::I2cStatus I2cMaster::TransmitThenReceive(
                         I2C_SYSLOG("Transmission abort by bus error")
                         break;
                     case murasaki::ki2csTimeOut:
-                        MURASAKI_SYSLOG( this, kfaI2cMaster, kseWarning, "Receive timeout. I2C aborted.")
+                        MURASAKI_SYSLOG(this, kfaI2cMaster, kseWarning, "Receive timeout. I2C aborted.")
                         // Abort on-going and not terminated transfer.
                         HAL_I2C_Master_Abort_IT(peripheral_, addrs << 1);
                         break;
                     default:
-                        MURASAKI_SYSLOG( this, kfaI2cMaster, kseEmergency, "Error is not handled. Peripheral re-initialized")
+                        MURASAKI_SYSLOG(this, kfaI2cMaster, kseEmergency, "Error is not handled. Peripheral re-initialized")
                         // Re-initialize device
                         HAL_I2C_DeInit(peripheral_);
                         HAL_I2C_Init(peripheral_);
@@ -316,12 +320,12 @@ murasaki::I2cStatus I2cMaster::TransmitThenReceive(
                 I2C_SYSLOG("Transmission abort by bus error")
                 break;
             case murasaki::ki2csTimeOut:
-                MURASAKI_SYSLOG( this, kfaI2cMaster, kseWarning, "Transmission timeout. I2C aborted.")
+                MURASAKI_SYSLOG(this, kfaI2cMaster, kseWarning, "Transmission timeout. I2C aborted.")
                 // Abort on-going and not terminated transfer.
                 HAL_I2C_Master_Abort_IT(peripheral_, addrs << 1);
                 break;
             default:
-                MURASAKI_SYSLOG( this, kfaI2cMaster, kseEmergency, "Error is not handled.  Peripheral re-initialized")
+                MURASAKI_SYSLOG(this, kfaI2cMaster, kseEmergency, "Error is not handled.  Peripheral re-initialized")
                 // Re-initialize device
                 HAL_I2C_DeInit(peripheral_);
                 HAL_I2C_Init(peripheral_);
@@ -335,7 +339,7 @@ murasaki::I2cStatus I2cMaster::TransmitThenReceive(
     return interrupt_status_;  // return false if timeout
 }
 
-bool I2cMaster::TransmitCompleteCallback(void* ptr) {
+bool I2cMaster::TransmitCompleteCallback(void *ptr) {
     I2C_SYSLOG("Enter");
 
     MURASAKI_ASSERT(nullptr != ptr)
@@ -357,7 +361,7 @@ bool I2cMaster::TransmitCompleteCallback(void* ptr) {
     }
 }
 
-bool I2cMaster::ReceiveCompleteCallback(void* ptr) {
+bool I2cMaster::ReceiveCompleteCallback(void *ptr) {
     I2C_SYSLOG("Enter");
 
     MURASAKI_ASSERT(nullptr != ptr)
@@ -379,7 +383,7 @@ bool I2cMaster::ReceiveCompleteCallback(void* ptr) {
     }
 }
 
-bool I2cMaster::HandleError(void* ptr) {
+bool I2cMaster::HandleError(void *ptr) {
     I2C_SYSLOG("Enter");
 
     MURASAKI_ASSERT(nullptr != ptr)
@@ -387,35 +391,35 @@ bool I2cMaster::HandleError(void* ptr) {
     if (this->Match(ptr)) {
         // Check error and halde it.
         if (peripheral_->ErrorCode & HAL_I2C_ERROR_AF) {
-            MURASAKI_SYSLOG( this, kfaI2cMaster, kseWarning, "HAL_I2C_ERROR_AF");
+            MURASAKI_SYSLOG(this, kfaI2cMaster, kseWarning, "HAL_I2C_ERROR_AF");
             // This interrupt happen when device doesn't respond or return NAK.
             interrupt_status_ = murasaki::ki2csNak;
             // abort the processing
             sync_->Release();
         }
         else if (peripheral_->ErrorCode & HAL_I2C_ERROR_BERR) {
-            MURASAKI_SYSLOG( this, kfaI2cMaster, kseWarning, "HAL_I2C_ERROR_BERR");
+            MURASAKI_SYSLOG(this, kfaI2cMaster, kseWarning, "HAL_I2C_ERROR_BERR");
             // This interrupt happen when device detected STOP/START condition at illegal place.
             interrupt_status_ = murasaki::ki2csBussError;
             // abort the processing
             sync_->Release();
         }
         else if (peripheral_->ErrorCode & HAL_I2C_ERROR_ARLO) {
-            MURASAKI_SYSLOG( this, kfaI2cMaster, kseWarning, "HAL_I2C_ERROR_ARLO");
+            MURASAKI_SYSLOG(this, kfaI2cMaster, kseWarning, "HAL_I2C_ERROR_ARLO");
             // This interrupt happen when device causes Arbitration lost against other master
             interrupt_status_ = murasaki::ki2csArbitrationLost;
             // abort the processing
             sync_->Release();
         }
         else if (peripheral_->ErrorCode & HAL_I2C_ERROR_OVR) {
-            MURASAKI_SYSLOG( this, kfaI2cMaster, kseWarning, "HAL_I2C_ERROR_OVR");
+            MURASAKI_SYSLOG(this, kfaI2cMaster, kseWarning, "HAL_I2C_ERROR_OVR");
             // This interrupt happen when device causes Overrun or Underrun. Slave only
             interrupt_status_ = murasaki::ki2csOverrun;
             // abort the processing
             sync_->Release();
         }
         else if (peripheral_->ErrorCode & HAL_I2C_ERROR_DMA) {
-            MURASAKI_SYSLOG( this, kfaI2cMaster, kseWarning, "HAL_I2C_ERROR_DMA");
+            MURASAKI_SYSLOG(this, kfaI2cMaster, kseWarning, "HAL_I2C_ERROR_DMA");
             // This interrupt happen when some error is detected in DMA.
             interrupt_status_ = murasaki::ki2csDMA;
             // abort the processing
@@ -423,7 +427,7 @@ bool I2cMaster::HandleError(void* ptr) {
         }
         #ifdef         HAL_I2C_ERROR_SIZE
         else if (peripheral_->ErrorCode & HAL_I2C_ERROR_SIZE) {
-            MURASAKI_SYSLOG( this, kfaI2cMaster, kseWarning, "HAL_I2C_ERROR_SIZE");
+            MURASAKI_SYSLOG(this, kfaI2cMaster, kseWarning, "HAL_I2C_ERROR_SIZE");
             // This interrupt happen when.
             interrupt_status_ = murasaki::ki2csSizeError;
             // abort the processing
@@ -431,7 +435,7 @@ bool I2cMaster::HandleError(void* ptr) {
         }
         #endif
         else {
-            MURASAKI_SYSLOG( this, kfaI2cMaster, kseEmergency, "Unknown error");
+            MURASAKI_SYSLOG(this, kfaI2cMaster, kseEmergency, "Unknown error");
             // Unknown interrupt. Must be updated this program by the newest HAL spec.
             interrupt_status_ = murasaki::ki2csUnknown;
             // abort the processing

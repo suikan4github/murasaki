@@ -26,13 +26,13 @@ namespace murasaki {
 Adau1361::Adau1361(
                    unsigned int fs,
                    unsigned int master_clock,
-                   murasaki::I2CMasterStrategy * controller,
+                   murasaki::I2cMasterStrategy *controller,
                    unsigned int i2c_device_addr)
         :
-          AudioCodecStrategy(fs),
-          master_clock_(master_clock),
-          i2c_(controller),
-          device_addr_(i2c_device_addr) {
+        AudioCodecStrategy(fs),
+        master_clock_(master_clock),
+        i2c_(controller),
+        device_addr_(i2c_device_addr) {
 }
 
 // Core clock setting
@@ -182,7 +182,7 @@ void Adau1361::WaitPllLock(void) {
         count++;
         if (count > 10)
                 {
-            MURASAKI_SYSLOG( this,
+            MURASAKI_SYSLOG(this,
                             kfaAudioCodec,
                             kseCritical,
                             "Codec at I2C address 0x%02x doesn't lock",
@@ -390,7 +390,7 @@ void Adau1361::ConfigurePll(void) {
             }
 
             default:
-                MURASAKI_SYSLOG( this,
+                MURASAKI_SYSLOG(this,
                                 kfaAudioCodec,
                                 kseCritical,
                                 "Non supported master clock %dHz",
@@ -436,7 +436,7 @@ void Adau1361::ConfigurePll(void) {
                 break;
             }
             default:
-                MURASAKI_SYSLOG( this,
+                MURASAKI_SYSLOG(this,
                                 kfaAudioCodec,
                                 kseCritical,
                                 "Non supported fs %dHz",
@@ -637,7 +637,7 @@ void Adau1361::ConfigurePll(void) {
             }
 
             default:
-                MURASAKI_SYSLOG( this,
+                MURASAKI_SYSLOG(this,
                                 kfaAudioCodec,
                                 kseCritical,
                                 "Non supported master clock %dHz",
@@ -675,7 +675,7 @@ void Adau1361::ConfigurePll(void) {
                 break;
             }
             default:
-                MURASAKI_SYSLOG( this,
+                MURASAKI_SYSLOG(this,
                                 kfaAudioCodec,
                                 kseCritical,
                                 "Not supported fs %dHz",
@@ -684,7 +684,7 @@ void Adau1361::ConfigurePll(void) {
         }
     }
     else {  // if the required Fs is unknown, it is critical error.
-        MURASAKI_SYSLOG( this,
+        MURASAKI_SYSLOG(this,
                         kfaAudioCodec,
                         kseCritical,
                         "Not supported fs %dHz",
@@ -710,7 +710,7 @@ void Adau1361::Start(void) {
             {
         // If it I2C returns NAK, there is no CODEC device on the specific I2C address.
         // Report it
-        MURASAKI_SYSLOG( this,
+        MURASAKI_SYSLOG(this,
                         kfaAudioCodec,
                         kseCritical,
                         "Given audio codec at I2C address %02x doesn't response or something is wrong",
@@ -747,13 +747,12 @@ void Adau1361::Start(void) {
     line_output_right_gain_ = 0.0;
     hp_output_left_gain_ = 0.0;     // headphone
     hp_output_right_gain_ = 0.0;
-    
+
     // Mute all channels.
     Mute(murasaki::kccLineInput);
     Mute(murasaki::kccAuxInput);
     Mute(murasaki::kccLineOutput);
     Mute(murasaki::kccHeadphoneOutput);
-
 
     CODEC_SYSLOG("Leave.")
 }
@@ -827,14 +826,10 @@ void Adau1361::Mute(murasaki::CodecChannel channel, bool mute) {
         default:
             MURASAKI_SYSLOG(this, kfaAudioCodec, kseCritical, "Unknown value in parameter channel : %d ", channel)
             MURASAKI_ASSERT(false)
-        break;
+            break;
     }
     CODEC_SYSLOG("Leave.")
 }
-
-
-
-
 
 #define DATA 2  /* data payload of register */
 #define ADDL 1  /* lower address of register */
@@ -1147,6 +1142,5 @@ void Adau1361::SetHpOutputGain(
 }
 
 } /* namespace murasaki */
-
 
 #endif //  HAL_I2C_MODULE_ENABLED

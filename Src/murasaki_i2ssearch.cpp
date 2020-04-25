@@ -7,7 +7,7 @@
 
 #include "murasaki.hpp"
 
-void murasaki::I2cSearch(murasaki::I2CMasterStrategy *master)
+void murasaki::I2cSearch(murasaki::I2cMasterStrategy *master)
                          {
     uint8_t tx_buf[1];
 

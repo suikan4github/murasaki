@@ -8,6 +8,7 @@
 #include "uart.hpp"
 #include "murasaki_assert.hpp"
 #include "murasaki_syslog.hpp"
+#include "callbackrepositorysingleton.hpp"
 
 // Macro for easy-to-read
 #define UART_SYSLOG(fmt, ...)    MURASAKI_SYSLOG( this, kfaSerial, kseDebug, fmt, ##__VA_ARGS__)
@@ -17,14 +18,15 @@
 
 namespace murasaki {
 
-Uart::Uart(UART_HandleTypeDef * const uart)
-        : peripheral_(uart),
-          tx_sync_(new murasaki::Synchronizer),
-          rx_sync_(new murasaki::Synchronizer),
-          tx_critical_section_(new murasaki::CriticalSection),
-          rx_critical_section_(new murasaki::CriticalSection),
-          tx_interrupt_status_(kursUnknown),
-          rx_interrupt_status_(kursUnknown)
+Uart::Uart(UART_HandleTypeDef *const uart)
+        :
+        peripheral_(uart),
+        tx_sync_(new murasaki::Synchronizer),
+        rx_sync_(new murasaki::Synchronizer),
+        tx_critical_section_(new murasaki::CriticalSection),
+        rx_critical_section_(new murasaki::CriticalSection),
+        tx_interrupt_status_(kursUnknown),
+        rx_interrupt_status_(kursUnknown)
 {
     // Setup internal variable with given uart structure.
 
@@ -37,11 +39,9 @@ Uart::Uart(UART_HandleTypeDef * const uart)
     rx_interrupt_status_ = murasaki::kursUnknown;
     tx_interrupt_status_ = murasaki::kursUnknown;
 
-
     // We need DMA
     MURASAKI_ASSERT(peripheral_->hdmatx != nullptr)
     MURASAKI_ASSERT(peripheral_->hdmarx != nullptr)
-
 
     // For all SPI transfer, the data size have to be byte
     MURASAKI_ASSERT(peripheral_->hdmatx->Init.PeriphDataAlignment == DMA_PDATAALIGN_BYTE)
@@ -52,6 +52,9 @@ Uart::Uart(UART_HandleTypeDef * const uart)
     // The DMA mode have to be normal
     MURASAKI_ASSERT(peripheral_->hdmatx->Init.Mode == DMA_NORMAL)
     MURASAKI_ASSERT(peripheral_->hdmarx->Init.Mode == DMA_NORMAL)
+
+    // Register this object to the list of the interrupt handler class.
+    CallbackRepositorySingleton::GetInstance()->AddPeripheralObject(this);
 
 }
 
@@ -103,7 +106,7 @@ void Uart::SetHardwareFlowControl(UartHardwareFlowControl control)
 }
 
 murasaki::UartStatus Uart::Transmit(
-                                    const uint8_t * data,
+                                    const uint8_t *data,
                                     unsigned int size,
                                     unsigned int timeout_ms)
                                     {
@@ -121,10 +124,10 @@ murasaki::UartStatus Uart::Transmit(
         // Keep coherence between the L2 and cache before DMA
         // No need to invalidate
         murasaki::CleanDataCacheByAddress(
-                                          const_cast<uint8_t *>(data),
+                                          const_cast<uint8_t*>(data),
                                           size);
 
-        HAL_StatusTypeDef status = HAL_UART_Transmit_DMA(peripheral_, const_cast<uint8_t *>(data), size);
+        HAL_StatusTypeDef status = HAL_UART_Transmit_DMA(peripheral_, const_cast<uint8_t*>(data), size);
         MURASAKI_ASSERT(HAL_OK == status);
 
         tx_sync_->Wait(timeout_ms);
@@ -137,11 +140,11 @@ murasaki::UartStatus Uart::Transmit(
                 UART_SYSLOG("Transmission complete successfully")
                 break;
             case murasaki::kursTimeOut:
-                MURASAKI_SYSLOG( this, kfaSerial, kseWarning, "Transmission timeout")
+                MURASAKI_SYSLOG(this, kfaSerial, kseWarning, "Transmission timeout")
                 // TODO: probably, we should think how to know the number of transmission.
                 break;
             default:
-                MURASAKI_SYSLOG( this, kfaSerial, kseEmergency, "Error is not handled")
+                MURASAKI_SYSLOG(this, kfaSerial, kseEmergency, "Error is not handled")
                 // Re-initializing device
                 HAL_UART_DeInit(peripheral_);
                 HAL_UART_Init(peripheral_);
@@ -153,7 +156,7 @@ murasaki::UartStatus Uart::Transmit(
     return tx_interrupt_status_;
 }
 
-bool Uart::TransmitCompleteCallback(void* const ptr)
+bool Uart::TransmitCompleteCallback(void *const ptr)
                                     {
     UART_SYSLOG("Enter");
 
@@ -177,9 +180,9 @@ bool Uart::TransmitCompleteCallback(void* const ptr)
 }
 
 murasaki::UartStatus Uart::Receive(
-                                   uint8_t * data,
+                                   uint8_t *data,
                                    unsigned int size,
-                                   unsigned int * transfered_count,
+                                   unsigned int *transfered_count,
                                    UartTimeout uart_timeout,
                                    unsigned int timeout_ms)
                                    {
@@ -211,26 +214,26 @@ murasaki::UartStatus Uart::Receive(
                 UART_SYSLOG("Receiving complete successfully")
                 break;
             case murasaki::kursTimeOut:
-                MURASAKI_SYSLOG( this, kfaSerial, kseWarning, "Receiving timeout")
+                MURASAKI_SYSLOG(this, kfaSerial, kseWarning, "Receiving timeout")
                 // return without resetting device.
                 break;
             case murasaki::kursFrame:
                 case murasaki::kursParity:
                 case murasaki::kursNoise:
-                MURASAKI_SYSLOG( this, kfaSerial, kseWarning, "Receiving error by frame, parity or noise error")
+                MURASAKI_SYSLOG(this, kfaSerial, kseWarning, "Receiving error by frame, parity or noise error")
                 // return without resetting device.
                 break;
             case murasaki::kursOverrun:
-                MURASAKI_SYSLOG( this, kfaSerial, kseError, "Overrun error on transmission. ")
+                MURASAKI_SYSLOG(this, kfaSerial, kseError, "Overrun error on transmission. ")
                 break;
             case murasaki::kursDMA:
-                MURASAKI_SYSLOG( this, kfaSerial, kseError, "Un-recoverable DMA error. Peripheral re-initialized")
+                MURASAKI_SYSLOG(this, kfaSerial, kseError, "Un-recoverable DMA error. Peripheral re-initialized")
                 // Re-initializing device
                 HAL_UART_DeInit(peripheral_);
                 HAL_UART_Init(peripheral_);
                 break;
             default:
-                MURASAKI_SYSLOG( this, kfaSerial, kseEmergency, "Error is not handled. Peripheral re-initialized.")
+                MURASAKI_SYSLOG(this, kfaSerial, kseEmergency, "Error is not handled. Peripheral re-initialized.")
                 // Re-initializing device
                 HAL_UART_DeInit(peripheral_);
                 HAL_UART_Init(peripheral_);
@@ -260,7 +263,7 @@ void Uart::SetSpeed(unsigned int baud_rate)
     UART_SYSLOG("Leave");
 }
 
-bool Uart::ReceiveCompleteCallback(void* const ptr)
+bool Uart::ReceiveCompleteCallback(void *const ptr)
                                    {
     UART_SYSLOG("Enter");
 
@@ -283,7 +286,7 @@ bool Uart::ReceiveCompleteCallback(void* const ptr)
     }
 }
 
-bool Uart::HandleError(void* const ptr)
+bool Uart::HandleError(void *const ptr)
                        {
     UART_SYSLOG("Enter");
 
@@ -292,42 +295,42 @@ bool Uart::HandleError(void* const ptr)
     if (this->Match(ptr)) {
         // Check error and halde it.
         if (peripheral_->ErrorCode & HAL_UART_ERROR_PE) {
-            MURASAKI_SYSLOG( this, kfaSerial, kseWarning, "HAL_UART_ERROR_PE");
+            MURASAKI_SYSLOG(this, kfaSerial, kseWarning, "HAL_UART_ERROR_PE");
             // This interrupt happen when RX cause parity error.
             rx_interrupt_status_ = murasaki::kursParity;
             // abort the processing
             rx_sync_->Release();
         }
         else if (peripheral_->ErrorCode & HAL_UART_ERROR_FE) {
-            MURASAKI_SYSLOG( this, kfaSerial, kseWarning, "HAL_UART_ERROR_FE");
+            MURASAKI_SYSLOG(this, kfaSerial, kseWarning, "HAL_UART_ERROR_FE");
             // This interrupt happen when rx detect the character frame is wrong.
             rx_interrupt_status_ = murasaki::kursFrame;
             // abort the processing
             rx_sync_->Release();
         }
         else if (peripheral_->ErrorCode & HAL_UART_ERROR_NE) {
-            MURASAKI_SYSLOG( this, kfaSerial, kseWarning, "HAL_UART_ERROR_NE");
+            MURASAKI_SYSLOG(this, kfaSerial, kseWarning, "HAL_UART_ERROR_NE");
             // This interrupt happen when rx detect the problem by noise.
             rx_interrupt_status_ = murasaki::kursNoise;
             // abort the processing
             rx_sync_->Release();
         }
         else if (peripheral_->ErrorCode & HAL_UART_ERROR_ORE) {
-            MURASAKI_SYSLOG( this, kfaSerial, kseWarning, "HAL_UART_ERROR_ORE");
+            MURASAKI_SYSLOG(this, kfaSerial, kseWarning, "HAL_UART_ERROR_ORE");
             // This interrupt happen when rx register is full and next data comes.
             rx_interrupt_status_ = murasaki::kursOverrun;
             // abort the processing
             rx_sync_->Release();
         }
         else if (peripheral_->ErrorCode & HAL_UART_ERROR_DMA) {
-            MURASAKI_SYSLOG( this, kfaSerial, kseWarning, "HAL_UART_ERROR_DMA");
+            MURASAKI_SYSLOG(this, kfaSerial, kseWarning, "HAL_UART_ERROR_DMA");
             // This interrupt happen when something problem happen in DMA. This is fatal.
             rx_interrupt_status_ = murasaki::kursDMA;
             // abort the processing
             rx_sync_->Release();
         }
         else {
-            MURASAKI_SYSLOG( this, kfaSerial, kseEmergency, "Unknown error");
+            MURASAKI_SYSLOG(this, kfaSerial, kseEmergency, "Unknown error");
             // Unknown interrupt. Must be updated this program by the newest HAL spec.
             rx_interrupt_status_ = murasaki::kursUnknown;
             // abort the processing

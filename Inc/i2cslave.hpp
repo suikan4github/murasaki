@@ -40,33 +40,7 @@ namespace murasaki {
  *
  * ### Handling an interrupt
  *
- * In addition to the instantiation, we need to prepare an interrupt callback. and error callback
- * \code
- * void HAL_I2C_SlaveTxCpltCallback(I2C_HandleTypeDef * hi2c)
- * {
- *    if ( my_i2c3->TransmitCompleteCallback(hi2c))
- *      return;
- * }
- *
- * \endcode
- * Where HAL_I2C_SlaveTxCpltCallback() is a predefined name of the I2C interrupt handler.
- * This function is invoked by the system whenever an interrupt based I2C transmission is complete.
- * Because the default function is weakly bound, the above definition overrides the default one.
- *
- * Note that Any I2Cn where n is 1, 2, 3, ... call the above callback function. To avoid the confusion, I2cMaster::TransmitCompleteCallback() method checks whether given parameter matches with its I2C_HandleTypeDef * pointer ( which was passed to the constructor ).
- * And only when both matches, the member function execute the interrupt termination process.
- * In the case of the successful match, it returns true.
- *
- * As same as Tx, RX needs HAL_I2C_SlaveRxCpltCallback() and Error needs HAL_I2C_ErrorCallback().
- * The HAL_I2C_ErrorCallback() is essential to implement. Otherwise, NAK response will not be  handled correctly.
- * @code
- * void HAL_I2C_ErrorCallback(I2C_HandleTypeDef * hi2c)
- * {
- *    if (my_i2c3->HandleError(hi2c))
- *       return;
- *
- * }
- * @endcode
+ * Interrupt is handled automatically. Programmer doesn't need to care.
  *
  * ### Transmission and Receiving
  * Once the instance and callbacks are correctly prepared, we can use the Tx/Rx member function.
@@ -79,13 +53,6 @@ namespace murasaki {
  * Note : In case an time out occurs during transmit / receive, this implementation
  * calls HAL_I2C_DeInit()/HAL_I2C_Init(). But it is unknown whether this is the right thing to do.
  * The HAL reference of the STM32F7 is not clear for this case. For example, it doesn't tell what programmer do to stop the transfer at the middle.
- *
- *
- *
- *
- *
- *
- *
  *
  */
 class I2cSlave : public I2cSlaveStrategy {

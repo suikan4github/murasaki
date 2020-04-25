@@ -45,9 +45,16 @@ class InterruptStrategy {
     /**
      * @details Release the waiting task
      * @param line The identifier of the interrupt
-     * @return true if line is matched with this EXTI. false if not matched.
+     * @return true if line is matched with this EXTI and release. false if not matched.
      */
     virtual bool Release(unsigned int line) = 0;
+
+    /**
+     * @details Check whether given line is handled by this object.
+     * @param line The identifier of the interrupt
+     * @return true if line is matched with this EXTI. false if not matched.
+     */
+    virtual bool Match(unsigned int line) = 0;
 };
 
 }

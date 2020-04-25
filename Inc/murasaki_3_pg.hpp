@@ -436,25 +436,30 @@
  * The murasaki_platform.cpp has skeletons of HAL callback.
  * These callbacks are pre-defined inside HAL as receptors of interrupt.
  * These definitions inside HAL are "weak" binding. Thus, these skeletons in murasaki_platform.cpp overrides the definition.
- * The porting programmer have to program these skeltons correctly.
+ * The porting programmer have to program these skeletons correctly.
  *
- * In the Murasaki manner, the skeletons have to call the relevant callback member function of platform variables.
- * For example, this is the typical programming of the call back :
- * @code
- * void HAL_UART_TxCpltCallback(UART_HandleTypeDef * huart)
- * {
- *     if (murasaki::platform.uart_console->TransmitCompleteCallback(huart))
- *         return;
+ *  Murasaki is using these callback to notify the end of processing, to the peripheral class objects.
+ *  These callback are managed automatically. For example, the following is the UART RX completion call back inside @ref murasaki_callback.cpp.
  *
+ *  @code
+ * void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+ *                              {
+ *     // Obtain the responding object.
+ *     murasaki::PeripheralStrategy *peripheral = murasaki::CallbackRepositorySingleton::GetInstance()->GetPeripheralObject(huart);
+ *     // Convert it to the appropriate type.
+ *     murasaki::UartStrategy *uart = reinterpret_cast<murasaki::UartStrategy*>(peripheral);
+ *     // Handle the callback by the object.
+ *     uart->ReceiveCompleteCallback(huart);
  * }
- * @endcode
+ *  @endcode
  *
- * In this sample, the TxCpltCallback() calles murasaki::platform.uart_console->TransmitCompleteCallback() member funciton.
- * And then return if that member function returns true. Note that all the callacks in the
- * Murasaki class returns true if the given peripheral handle matches with its internal handle.
- * Thus, this is good way to poll all the UART peripheral inside this callback function.
+ *  This callback is called from HAL, after the end of peripheral interrupt processing. Then, the @ref murasaki::CallbackRepositorySingleton
+ *  class search for a class object which has responsibility to the given peripheral handle.
  *
- * Following is the list of the interrupts which applicaiton have to route to the peripehral class variables.
+ *  Then, its appropriate member function is called.
+
+ *
+ * Following is the list of the interrupts which applicaiton have to route to the peripheral class variables.
  *
  * \li void HAL_UART_TxCpltCallback(UART_HandleTypeDef * huart);
  * \li void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart);

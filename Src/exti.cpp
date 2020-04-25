@@ -11,6 +11,7 @@
 
 #include "murasaki_assert.hpp"
 #include "murasaki_syslog.hpp"
+#include "exticallbackrepositorysingleton.hpp"
 
 // Macro for easy-to-read
 #define EXTI_SYSLOG(fmt, ...)    MURASAKI_SYSLOG(this, kfaExti, kseDebug, fmt, ##__VA_ARGS__)
@@ -150,9 +151,12 @@ Exti::Exti(unsigned int line)
     }
     MURASAKI_ASSERT(HAL_OK == stat)
 
-    // Retrieve the interrupt configuraiton from peripheral.
+    // Retrieve the interrupt configuration from peripheral.
     stat = HAL_EXTI_GetConfigLine(&hexti_, &hconfig_);
     MURASAKI_ASSERT(HAL_OK == stat)
+
+    // Register this object to the list of the interrupt handler class.
+    ExtiCallbackRepositorySingleton::GetInstance()->AddExtiObject(this);
 
     EXTI_SYSLOG("Exit.")
 }
@@ -194,6 +198,9 @@ murasaki::InterruptStatus Exti::Wait(unsigned int timeout)
                                      {
     EXTI_SYSLOG("Enter")
 
+    // The first wait() calling turn the interrupt ready.
+    ready_ = true;
+    // wait for interrupt.
     bool stat = sync_->Wait(timeout);
 
     murasaki::InterruptStatus ret_val =
@@ -210,23 +217,59 @@ bool Exti::Release(unsigned int line)
                    {
     EXTI_SYSLOG("Enter")
 
-    if (line == line_) {
-        EXTI_SYSLOG("Matched")
+    if (Match(line)) {
+        EXTI_SYSLOG("Matched and release")
 
         sync_->Release();
 
-        EXTI_SYSLOG("Exit.")
+        EXTI_SYSLOG("Exit with true.")
         return true;
     }
     else {
         EXTI_SYSLOG("Not Matched")
-        EXTI_SYSLOG("Exit.")
+        EXTI_SYSLOG("Exit with false.")
         return false;
     }
 
 }
 
+bool Exti::Match(unsigned int line)
+                 {
+    EXTI_SYSLOG("Enter")
+
+    if (line == line_) {
+        EXTI_SYSLOG("Matched. Exit with true")
+        return true;
+    }
+    else {
+        EXTI_SYSLOG("Not Matched. Exit with false")
+        return false;
+    }
+
 }
+
+bool Exti::isReady()
+{
+    MURASAKI_SYSLOG(nullptr,
+                    kfaExti,
+                    kseDebug,
+                    "Enter")
+
+    MURASAKI_SYSLOG(nullptr,
+                    kfaExti,
+                    kseDebug,
+                    "Exit with %s",
+                    ready_ ?
+                             "true" :
+                             "false");
+
+    return ready_;
+}
+
+bool Exti::ready_ = false;
+
+}
+
 /* namespace murasaki */
 
 #endif // HAL_EXTI_MODULE_ENABLED

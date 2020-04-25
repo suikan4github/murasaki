@@ -132,6 +132,32 @@
 #endif
 
 /**
+ * @def NUM_OF_CALLBACK_OBJECTS
+ * @brief The number of the interrupt callback handling objects.
+ * @details
+ * Up to this number, Murasaki can handle the interrupt objects.
+ * This is summation of the interrupt generation peripheral like
+ * UART1, UART2, SPI1, SPI2,... except EXTI.
+ *
+ * Usually, 8 is enough.
+ */
+#ifndef NUM_OF_CALLBACK_OBJECTS
+#define NUM_OF_CALLBACK_OBJECTS 8
+#endif
+
+/**
+ * @def NUM_OF_EXTI_OBJECTS
+ * @brief The number of the EXTI callback handling objects.
+ * @details
+ * Up to this number, Murasaki can handle the interrupt objects.
+ *
+ * Usually, 8 is enough.
+ */
+#ifndef NUM_OF_EXTI_OBJECTS
+#define NUM_OF_EXTI_OBJECTS 8
+#endif
+
+/**
  * \}
  * end of the MURASAKI_PLATFORM_CONFIGURATION
  */

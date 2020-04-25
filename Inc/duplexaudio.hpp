@@ -9,14 +9,15 @@
 #ifndef DUPLEXAUDIO_HPP_
 #define DUPLEXAUDIO_HPP_
 
-#include <synchronizer.hpp>
+#include "synchronizer.hpp"
 #include "audioportadapterstrategy.hpp"
+#include "peripheralstrategy.hpp"
 
 namespace murasaki {
 
 /**
  * @ingroup MURASAKI_GROUP
- * @brief Stereo Audio is served by the descendants of this class.
+ * @brief Stereo Audio is served by this class.
  * @details
  *
  * This class provides an interface to the audio data flow. Also, the internal buffer allocation, multi-phase buffering, and synchronization are provided. The features are :
@@ -49,7 +50,7 @@ namespace murasaki {
  * The number of phases is specified to the constructor, by the programmer. This phase has to be aligned with hardware.
  *
  */
-class DuplexAudio {
+class DuplexAudio : public PeripheralStrategy {
  public:
     DuplexAudio() = delete;
     /**
@@ -266,6 +267,21 @@ class DuplexAudio {
      * @endcode
      */
     virtual bool HandleError(void *peripheral);
+    /**
+     * @details Check if audio port peripheral handle matched with given handle.
+     * @param peripheral_handle
+     * @return true if match, false if not match.
+     */
+    virtual bool Match(void *peripheral_handle);
+
+ protected:
+    /**
+     * @brief Dummy member function.
+     * @return nothing
+     * @details nullptr
+     * Do nothing. cause assertion fail.
+     */
+    virtual void* GetPeripheralHandle();
 
  private:
 

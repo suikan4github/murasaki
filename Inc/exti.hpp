@@ -16,7 +16,7 @@
 namespace murasaki {
 
 /**
-* @brief EXTI wrapper class.
+ * @brief EXTI wrapper class.
  * @details
  * This class allows enabling/disabling EXTI interrupt from GPIO.
  * Only EXTI_0 to EXTI_16 is supported.
@@ -56,18 +56,9 @@ namespace murasaki {
  * \endcode
  *
  * ### Interrupt handling
- * In the interrupt callback, you can release the waiting task by calling Exti::Release().
- * The parameter of the HAL_GPIO_EXTI_Callback()  must be passed to the Release() member function.
- * If the given parameter is the same with its EXTI line, the Exti.Release() function releases the
- * waiting task and returns with true.
- *  \code
- * void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
- * {
- *     // Check whether appropriate interrupt or not
- *     if (my_exti.Release(GPIO_Pin))
- *         return;
- * }
- *  \endcode
+ *
+ * Interrupt is handled automatically. Programmer doesn't need to care.
+ *
  *
  * \ingroup MURASAKI_GROUP
  */
@@ -129,7 +120,25 @@ class Exti : public InterruptStrategy {
      */
     virtual bool Release(unsigned int line);
 
- private:
+    /**
+     * @details Check whether given line is handled by this object.
+     * @param line The identifier of the interrupt
+     * @return true if line is matched with this EXTI. false if not matched.
+     */
+    virtual bool Match(unsigned int line);
+
+    /**
+     * @brief Show  interruptible or not global.
+     * @return true if ready to handle the EXTI interrupt.
+     * @details
+     * At the moment of 1Q/2020, CubeIDE generated code is interruptible from the first.
+     * Precisely speaking, the EXTI is set enable inside main(). That mean, the system is
+     * interruptible before the Murasaki EXTI callback is ready to accept the interrupt.
+     * ( Murasaki creates a list of EXTI object to accept the interrupt inside ExtiCallbackRepsitorySingleton.
+     * If EXTI comes before the list is complete, assertion fails ).
+     */
+    static bool isReady();
+     private:
     // EXTI hande for HAL
     EXTI_HandleTypeDef hexti_;
     // EXTI configuration type to record.
@@ -138,7 +147,8 @@ class Exti : public InterruptStrategy {
     unsigned int line_;
     // For the synchronization between task and interrupt
     Synchronizer *const sync_;
-
+    // true if interruptible.
+    static bool ready_;
 };
 
 }
