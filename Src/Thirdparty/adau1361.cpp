@@ -396,7 +396,7 @@ void Adau1361::ConfigurePll(void) {
                                 "Non supported master clock %dHz",
                                 master_clock_)
                 MURASAKI_ASSERT(false)
-
+                ;
         }
 
         // Wait for PLL lock
@@ -442,6 +442,7 @@ void Adau1361::ConfigurePll(void) {
                                 "Non supported fs %dHz",
                                 fs_)
                 MURASAKI_ASSERT(false)
+                ;
         }
 
     }
@@ -643,6 +644,7 @@ void Adau1361::ConfigurePll(void) {
                                 "Non supported master clock %dHz",
                                 master_clock_)
                 MURASAKI_ASSERT(false)
+                ;
         }
 
         // Waiting for the PLL lock.
@@ -681,6 +683,7 @@ void Adau1361::ConfigurePll(void) {
                                 "Not supported fs %dHz",
                                 fs_)
                 MURASAKI_ASSERT(false)
+                ;
         }
     }
     else {  // if the required Fs is unknown, it is critical error.
