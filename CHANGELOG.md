@@ -8,6 +8,9 @@ Record of the modification in project development.
 ### Deprecated
 ### Removed
 ### Fixed
+- [Issue 132 : Compile failure of adau1361.cpp when No debug, No syslog option](https://github.com/suikan4github/murasaki/issues/132)
+
+
 ### Security
 ### Known Issue
 - [Issue 117 : STM32G0 misses EXTI because of HAL incompatibility.](https://github.com/suikan4github/murasaki/issues/117)
