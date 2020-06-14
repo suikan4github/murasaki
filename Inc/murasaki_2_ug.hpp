@@ -110,6 +110,8 @@
  *
  * These features help the programmer to display the message in the real-time, multi-task application.
  *
+ *
+ * \section ug_sec_3_1 HAL failure hook
  * In addition to this simple debugging variable, a programmer can use assert_failure() function of the STM32 HAL.
  * The STM32Cube HAL has assert_failure() to check the parameter on the fly.
  * By default, this function is disabled.
@@ -141,6 +143,35 @@
  * \endcode
  * Once above programming is done, you can watch the integrity of the HAL parameter by
  * reading the console output.
+ *
+ * \section ug_sec_3_3 Syslog and Assertion
+ *
+ * The @ref MURASAKI_SYSLOG provides the system logging functionality with severity and facility filiter.
+ * See @ref MURASAKI_SYSLOG for details.
+ *
+ * The @ref MURASAKI_ASSERT provides a dedicated assertions. This assertion prints the message to the debug console, and then halt the program.
+ *
+ * \section ug_sec_3_4 Checking task stack head room
+ *
+ * The @ref murasaki::TaskStrategy::getStackMinHeadroom() provides the minimum memory area which was not used in the task stack.
+ * Or in other words, this return value is the [ total_stack_size - maximum_used_stack_size ].
+ *
+ * To use this function, application programmer have to configure the FreeRTOS correctly from the GUI
+ * by two parameters.
+ *
+ * The first parameter is the CHECK_FOR_STACK_OVERFLOW.
+ * This have to be <a href="https://www.freertos.org/Stacks-and-stack-overflow-checking.html">set as option1 or option2</a>.
+ *
+ *  @image html  "stack_headroom_1.png"
+ *  @image latex "stack_headroom_1.png" width=5.20in
+ *
+ *  The second parameter is uxTaskGetStackHighWaterMark.
+ *  This parameter have to be enabled to check the Stack headroom.
+ *
+ *  @image html  "stack_headroom_2.png"
+ *  @image latex "stack_headroom_2.png" width=4.95in
+ *
+ * \section ug_sec_3_5 History function
  *
  * Above debugging mechanism redirects all HAL assertion, Murasaki assertion and
  * application debug message to the specified logging port.

@@ -4,13 +4,14 @@ Record of the modification in project development.
 ## [Unreleased]
 
 ### Added
+- [Issue 130 : Need description of the Stack headroom.](https://github.com/suikan4github/murasaki/issues/130)
+
 ### Changed
 ### Deprecated
 ### Removed
 ### Fixed
 - [Issue 129 : SetSyslogSeverityLevel() is misspelled.](https://github.com/suikan4github/murasaki/issues/129)
 - [Issue 132 : Compile failure of adau1361.cpp when No debug, No syslog option](https://github.com/suikan4github/murasaki/issues/132)
-
 
 ### Security
 ### Known Issue

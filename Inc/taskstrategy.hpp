@@ -41,8 +41,8 @@ class TaskStrategy
      * @param task_priority Priority of the task. from 1 to up to configMAX_PRIORITIES -1. The high number is the high priority.
      * @param task_parameter Optional parameter to the task.
      */
-    TaskStrategy(const char * task_name, unsigned short stack_depth, murasaki::TaskPriority task_priority,
-                 const void * task_parameter);
+    TaskStrategy(const char *task_name, unsigned short stack_depth, murasaki::TaskPriority task_priority,
+                 const void *task_parameter);
     /**
      * @brief Destructor
      */
@@ -65,7 +65,7 @@ class TaskStrategy
      * @brief Get a name of task.
      * @return A name of task.
      */
-    const char * GetName();
+    const char* GetName();
 
     /**
      * @brief Obtain the size of the stack.
@@ -87,21 +87,23 @@ class TaskStrategy
      * - configCHECK_FOR_STACK_OVERFLOW have to be non zero
      *
      * If above conditions are not met, this function returns -1.
+     * 
+     * Regarding the GUI setting of the above configuration, see @ref ug_sec_3 for details. 
      */
     int getStackMinHeadroom();
 
  protected:
     TaskHandle_t task_;                 // Task handle of FreeRTOS
-    const char * const name_;           // Name of task in FreeRTOS
+    const char *const name_;           // Name of task in FreeRTOS
     const unsigned short stack_depth_;  // Stack depth specification.
-    const void * const parameter_;            // Optional parameter to pass the @ref TaskBody().
+    const void *const parameter_;            // Optional parameter to pass the @ref TaskBody().
     const murasaki::TaskPriority priority_;        //
 
     /**
      * @brief Internal use only. Create a task from TaskBody()
      * @param ptr passing "this" pointer.
      */
-    static void Launch(void * ptr);
+    static void Launch(void *ptr);
     /**
      * @brief Actual task entity. Must be overridden by programmer.
      * @param ptr Optional parameter to the task body. This ptr is copied from the task_parameter of the Constructor.
@@ -111,7 +113,7 @@ class TaskStrategy
      *
      * From this member function, class members are able to access.
      */
-    virtual void TaskBody(const void * ptr) = 0;
+    virtual void TaskBody(const void *ptr) = 0;
 };
 
 } /* namespace murasaki */
