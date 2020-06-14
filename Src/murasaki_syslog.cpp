@@ -13,7 +13,7 @@ static uint32_t facility_mask = 0xFFFFFFFF;
 // threshold for the Syslog severity check
 static murasaki::SyslogSeverity severity_threashold = murasaki::kseError;
 
-void SetSyslogSererityThreshold(murasaki::SyslogSeverity severity) {
+void SetSyslogSeverityThreshold(murasaki::SyslogSeverity severity) {
     severity_threashold = severity;
 }
 
