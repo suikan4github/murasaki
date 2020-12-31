@@ -218,7 +218,7 @@ murasaki::I2cStatus I2cMaster::TransmitThenReceive(
         // This value will be updated by interrupt handler
         interrupt_status_ = murasaki::ki2csTimeOut;
 
-#if defined(STM32L1) || defined(STM32F0)
+#if 0 //defined(STM32L1) || defined(STM32F0)
         status = HAL_I2C_Master_Seq_Transmit_IT(
 
 #else
@@ -257,7 +257,7 @@ murasaki::I2cStatus I2cMaster::TransmitThenReceive(
                 interrupt_status_ = murasaki::ki2csTimeOut;
 
                 // receive with restart condition. Address shift is required by HAL specification.
-#if defined(STM32L1) || defined(STM32F0)
+#if 0 //defined(STM32L1) || defined(STM32F0)
                 status = HAL_I2C_Master_Seq_Receive_IT(
 
 #else
