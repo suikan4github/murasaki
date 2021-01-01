@@ -10,14 +10,14 @@ Record of the modification in project development.
 ### Deprecated
 ### Removed
 ### Fixed
+- [Issue 117 : STM32G0 misses EXTI because of HAL incompatibility.](https://github.com/suikan4github/murasaki/issues/117)
+- [Issue 126 : STM32L1 fails to compile the Exti class.](https://github.com/suikan4github/murasaki/issues/126)
 - [Issue 129 : SetSyslogSeverityLevel() is misspelled.](https://github.com/suikan4github/murasaki/issues/129)
 - [Issue 132 : Compile failure of adau1361.cpp when No debug, No syslog option](https://github.com/suikan4github/murasaki/issues/132)
 - [Issue 133 : Removing the L1/F0 I2C workaround](https://github.com/suikan4github/murasaki/issues/133)
 
 ### Security
 ### Known Issue
-- [Issue 117 : STM32G0 misses EXTI because of HAL incompatibility.](https://github.com/suikan4github/murasaki/issues/117)
-- [Issue 126 : STM32L1 fails to compile the Exti class.](https://github.com/suikan4github/murasaki/issues/126)
 
 
 ## [3.0.0] - 2020-04-24
