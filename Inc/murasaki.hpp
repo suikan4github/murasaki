@@ -48,6 +48,7 @@
 
 // Third party
 #include "Thirdparty/adau1361.hpp"
+#include "Thirdparty/si5351.hpp"
 
 // Debuggers
 #include "uartlogger.hpp"

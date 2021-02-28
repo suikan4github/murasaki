@@ -52,6 +52,7 @@ enum SyslogFacility {
     kfaEncoder = 1 << 11,  //!< kfaEncoder is specified when the message is from the Encoder module.
     kfaAdc = 1 << 12,   //!< kfaAdc is specified when the message is from the Adc module.
     kfaExti = 1 << 13,  //!< kfaExti is specified when the message is from the Exti module.
+    kfaPll = 1 << 14,    //!< kfaPll is specified when the message is from the PLL module.
     kfaUser0 = 1 << 24,  //!< User defined facility
     kfaUser1 = 1 << 25,  //!< User defined facility
     kfaUser2 = 1 << 26,  //!< User defined facility
@@ -247,7 +248,7 @@ enum AdcStatus
 };
 
 /**
- * @brief Codec channel specifiler
+ * @brief Codec channel specifier
  * @details
  * Codec channels are codec dependent.
  * Thus, channels are not hard coded as member function, but coded as parameter of the member function.
@@ -260,6 +261,21 @@ enum CodecChannel {
     kccHeadphoneOutput   //!< kccHpOutput Headphone Output
 
 };
+
+/**
+ * @brief Status of the Si5351
+ * @details
+ * These enums are dedicated to the @ref Si5351 class.
+ *
+ */
+enum Si5351Status
+{
+    s5351Ok, /**< s5351Ok */
+    s5351SeekFailure/**< s5351SeekFailure */
+};
+
+
+
 /**
  * @brief Status return by InterruptStartegy type
  */
