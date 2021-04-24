@@ -12,10 +12,31 @@
 
 namespace murasaki {
 
+/**
+ * @ingroup MURASAKI_THIRDPARTY_TESTER
+ */
 class I2cMasterStubSi5351 : public I2cMasterStubStragegy {
  public:
-    I2cMasterStubSi5351();
+    struct DataBuffer
+    {
+        int buffer_num_;    ///< Number of the buffers in this struct.
+        int buffer_size;    ///< Size of the each buffer.
+        uint8_t **buffers_;  ///< A pointer to an array of the pointers to the buffers.
+        int *data_sizes;    ///< Stores actual data size in the each buffer
+        int data_num;       ///< Number of data buffere actually used. if 3, buffer 0..2 are used.
+    };
+
+	/**
+     * @brief Constructor with internal buffer size.
+     * @param tx_buf_count The count of the TX buffer which stores TX data
+     * @param tx_buf_size The size of the each TX buffer.
+     * @details
+     * Store the tx_buf_count and create internal tx buffer as specified by tx_buf_count.
+	 */
+    I2cMasterStubSi5351(int tx_buf_count, int tx_buf_size);
     virtual ~I2cMasterStubSi5351();
+
+
 
     /**
      * @brief Thread safe, synchronous receiving over I2C.
@@ -65,6 +86,12 @@ class I2cMasterStubSi5351 : public I2cMasterStubStragegy {
                                                     unsigned int *rx_transfered_count = nullptr,
                                                     unsigned int timeout_ms = murasaki::kwmsIndefinitely);
 
+ private:
+    // Internal buffer to store the TX data. Stored for each time TX function is called.
+    DataBuffer tx_data_buffer_;
+    // Internal buffer to store the RX data. Used for each time RX function is called.
+    DataBuffer *rx_Data_buffer_;
+    // Number of the buffer used in the RX data buffer.
 };
 
 } /* namespace murasaki */

@@ -11,14 +11,20 @@
 
 #include <Thirdparty/testsi5351.hpp>
 
+#define TESTXTAL 25000000
+
 namespace murasaki {
 
 
 bool TestSi5351()
 {
-	murasaki::I2cMasterStrategy *i2c_stub = new murasaki::I2cMasterStubSi5351();
-	murasaki::Si5351 * si5351 = new murasaki::Si5351(i2c_stub, 25000000);
+	// Create an test stub peripheral
+	murasaki::I2cMasterStubSi5351 *i2c_stub = new murasaki::I2cMasterStubSi5351();
 
+	// Create an object under test
+	murasaki::Si5351 * si5351 = new murasaki::Si5351(i2c_stub, TESTXTAL);
+
+	return true;
 }
 
 } /* namespace murasaki */

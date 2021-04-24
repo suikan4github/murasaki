@@ -11,6 +11,7 @@
 namespace murasaki {
 
 /**
+ * @ingroup MURASAKI_THIRDPARTY_TESTER
  * @brief Test driver of the @ref Si5351 class.
  */
 bool TestSi5351();
