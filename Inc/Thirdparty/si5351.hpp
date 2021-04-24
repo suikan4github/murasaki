@@ -1,5 +1,5 @@
-/*
- * si5351.hpp
+/**
+ * @file si5351.hpp
  *
  *  Created on: Feb 27, 2021
  *      Author: takemasa
@@ -13,6 +13,10 @@
 
 namespace murasaki {
 
+/**
+ * @ingroup MURASAKI_THIRDPARTY_GROUP
+ * @brief Si5351 driver class.
+ */
 class Si5351 {
  public:
     Si5351(murasaki::I2cMasterStrategy *controller, uint32_t xtal_freq);

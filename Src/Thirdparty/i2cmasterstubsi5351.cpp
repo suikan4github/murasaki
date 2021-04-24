@@ -6,6 +6,7 @@
  */
 
 #include "Thirdparty/i2cmasterstubsi5351.hpp"
+#include "murasaki_assert.hpp"
 
 namespace murasaki {
 
@@ -27,6 +28,8 @@ murasaki::I2cStatus I2cMasterStubSi5351::Receive(
                                                  unsigned int *transfered_count,
                                                  unsigned int timeout_ms)
                             {
+	MURASAKI_ASSERT(false);
+   return( murasaki::ki2csUnknown);
 
 }
 
@@ -40,6 +43,8 @@ murasaki::I2cStatus I2cMasterStubSi5351::TransmitThenReceive(
                                                              unsigned int *rx_transfered_count,
                                                              unsigned int timeout_ms)
                                         {
+	MURASAKI_ASSERT(false);
+   return( murasaki::ki2csUnknown);
 
 }
 
