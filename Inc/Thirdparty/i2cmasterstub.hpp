@@ -1,12 +1,12 @@
 /*
- * i2cmasterstubstrategy.hpp
+ * i2cmasterstub.hpp
  *
  *  Created on: Feb 27, 2021
  *      Author: takemasa
  */
 
-#ifndef THIRDPARTY_I2CMASTERSTUB_STRATEGY_HPP_
-#define THIRDPARTY_I2CMASTERSTUB_STRATEGY_HPP_
+#ifndef THIRDPARTY_I2CMASTERSTUB_HPP_
+#define THIRDPARTY_I2CMASTERSTUB_HPP_
 
 #include <i2cmasterstrategy.hpp>
 
@@ -40,10 +40,90 @@ namespace murasaki {
  * provide the specific test feature. For each class-under-test, customized sub-class
  * might be created.
  */
-class I2cMasterStubStragegy : public I2cMasterStrategy {
+class I2cMasterStub : public I2cMasterStrategy {
  public:
-    I2cMasterStubStragegy();
-    virtual ~I2cMasterStubStragegy();
+    /**
+     * @brief List of data buffers.
+     * @details
+     * A set of buffers and its management variables.
+     *
+     * These buffers are used to store the TX and RX data in I2C stub.
+     * For example, Transimit() / TransmitAndThenReceive() will copy the TX data to one of empty buffer from the head.
+     * For each time TX data is written, data_num is incremented.
+     * In the other words, data_num_ filed is the index of the next buffer to be written.
+     *
+     * Also, Receive() / TransmitAndThenReceive() will copy the data from buffer as RX data.
+     * For each time TX data is read, the read_index is incremented.
+     *
+     * Overflow or Underflow will trigger an Assertion failure.
+     *
+     */
+    struct DataBuffer
+    {
+        int buffer_num_;    ///< Number of the buffers in this struct.
+        int buffer_size_;    ///< Size of the each buffer [BYTE].
+        uint8_t **buffers_;  ///< A pointer to an array of the pointers to the buffers.
+        int *data_sizes_;    ///< Stores actual data size in the each buffer
+        int write_index_;       ///< Number of data buffer actually used. if 3, buffer 0..2 are used.
+        int read_index_;     ///< Next index of the buffer to read.
+    };
+
+    /**
+     * @brief Constructor with internal buffer size.
+     * @param buf_count The count of the TX buffer which stores TX data
+     * @param buf_size The size of the each TX buffer.
+     * @details
+     * Create the tx_buffer_ and rx_data_buffer_ based on the given parameters.
+     * The size and count of buffer are common between TX and RX.
+     * Both buffers are Initialized as empty.
+     */
+    I2cMasterStub(int buf_count, int buf_size);
+    virtual ~I2cMasterStub();
+
+    /**
+     * @brief Get how many buffers are in use in the TX buffers.
+     *
+     * @return Number of the buffer in use. 0 means no buffer is used.
+     * @details
+     * The TX buffer is used for each @ref Transmit() or @ref TransmitThenReceive() is called.
+     * For each time of use, the TX data is stored to the new buffers.
+     * In the other word, each buffers contain the data from independent TX.
+     */
+    int getNumTxBuffer();
+
+    /**
+     * @brief Make all buffers empty.
+     *
+     */
+    void clearTxBuffer();
+    /**
+     * @brief Make all buffers empty.
+     *
+     */
+    void clearRxBuffer();
+
+    /**
+     * @brief Copy a set of data into a buffer.
+     *
+     * @param data Pointer to the data.
+     * @param length Data length to write [BYTE].
+     * @details
+     * Find a new RX buffer and copy the byte string from data. If buffers are empty, assertion fails.
+     */
+    void writeRxBuffer(uint8_t *data, int length);
+
+    /**
+     * @brief Copy a set of data from a buffer.
+     *
+     * @param data Pointer to the data area.
+     * @param max_size of the data buffer [BYTE]
+     * @param length Data length to read [BYTE].
+     * @details
+     * Find a oldest TX buffer which is still not read, and copy the byte string from buffer to data.
+     * If there is not buffers still not be read, assertion failed.
+     */
+
+    void readTxBuffer(uint8_t *data, int max_length, int *length);
 
     /**
      * @brief Thread safe, synchronous transmission over I2C.
@@ -148,7 +228,41 @@ class I2cMasterStubStragegy : public I2cMasterStrategy {
     }
     ;
 
+ private:
+
+    // Internal buffer to store the TX data. Stored for each time TX function is called.
+    DataBuffer *tx_data_buffer_;
+    // Internal buffer to store the RX data. Used for each time RX function is called.
+    DataBuffer *rx_data_buffer_;
+    // Number of the buffer used in the RX data buffer.
+
+    /**
+     * @brief Create a set of buffers by given parameter.
+     *
+     * @param buf_count Number of the buffers to create.
+     * @param buf_size Size of the each buffer [BYTE]
+     * @return Created Buffers
+     * @details
+     * Create a @ref DataBuffer variable from the heap, and then, allocate buffers based on the given parameters.
+     * The DataBuffer::data_sizes_ are also allocated.
+     *
+     * The @ref DataBuffer::data_num_ are initialized to zero.
+     */
+    DataBuffer* newBuffers(int buf_count, int buf_size);
+
+    /**
+     * @brief Delete the given buffer.
+     *
+     * @param buffers Buffers to delete.
+     * @deletes
+     * Delete the all internal variables of the buffers and then, delete the buffer itself.
+     */
+    void deleteBuffers(DataBuffer *buffers);
+
  protected:
+    void writeTxBuffer(uint8_t *data, int length);
+    void readRxBuffer(uint8_t *data, int max_length, int *length);
+
     /**
      * @brief pass the raw peripheral handler
      * @return pointer to the raw peripheral handler hidden in a class.
@@ -161,4 +275,4 @@ class I2cMasterStubStragegy : public I2cMasterStrategy {
 
 } /* namespace murasaki */
 
-#endif /* THIRDPARTY_I2CMASTERSTUB_STRATEGY_HPP_ */
+#endif /* THIRDPARTY_I2CMASTERSTUB_HPP_ */
