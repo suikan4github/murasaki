@@ -30,7 +30,6 @@ namespace murasaki {
  * This function uses the I2cMasterStubSi5351 class as test stub of the Si5351.
  */
 
-
 /**
  * @ingroup MURASAKI_THIRDPARTY_TESTER
  * @brief Debug Stub for the I2C master client.
@@ -70,24 +69,26 @@ class I2cMasterStub : public I2cMasterStrategy {
      */
     struct DataBuffer
     {
-        int buffer_num_;    ///< Number of the buffers in this struct.
-        int buffer_size_;    ///< Size of the each buffer [BYTE].
+        unsigned int buffer_num_;    ///< Number of the buffers in this struct.
+        unsigned int buffer_size_;    ///< Size of the each buffer [BYTE].
         uint8_t **buffers_;  ///< A pointer to an array of the pointers to the buffers.
-        int *data_sizes_;    ///< Stores actual data size in the each buffer
-        int write_index_;       ///< Number of data buffer actually used. if 3, buffer 0..2 are used.
-        int read_index_;     ///< Next index of the buffer to read.
+        unsigned int *data_sizes_;    ///< Stores actual data size in the each buffer
+        unsigned int write_index_;       ///< Number of data buffer actually used. if 3, buffer 0..2 are used.
+        unsigned int read_index_;     ///< Next index of the buffer to read.
     };
 
     /**
      * @brief Constructor with internal buffer size.
      * @param buf_count The count of the TX buffer which stores TX data
      * @param buf_size The size of the each TX buffer.
+     * @param addrs Target device I2C address. This object fetched only when the I2C communication matches with this address.
+     * @param addrs_filterring true : Address filtering enable. false : Address filtering is ignored.
      * @details
      * Create the tx_buffer_ and rx_data_buffer_ based on the given parameters.
      * The size and count of buffer are common between TX and RX.
      * Both buffers are Initialized as empty.
      */
-    I2cMasterStub(int buf_count, int buf_size);
+    I2cMasterStub(unsigned int buf_count, unsigned int buf_size, unsigned int addrs, bool addrs_filtering);
     virtual ~I2cMasterStub();
 
     /**
@@ -239,7 +240,10 @@ class I2cMasterStub : public I2cMasterStrategy {
     ;
 
  private:
-
+    // Communication matches with this address is simulated.
+    unsigned int addrs_;
+    // if false, address matching is disabled by addrs_;
+    bool addrs_filterring_;
     // Internal buffer to store the TX data. Stored for each time TX function is called.
     DataBuffer *tx_data_buffer_;
     // Internal buffer to store the RX data. Used for each time RX function is called.

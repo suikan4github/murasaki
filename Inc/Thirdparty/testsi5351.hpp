@@ -13,6 +13,9 @@ namespace murasaki {
 /**
  * @ingroup MURASAKI_THIRDPARTY_TESTER
  * @brief Test driver of the @ref Si5351 class.
+ * @param freq_step Step of the frequency during the test
+ * @details
+ *
  */
 bool TestSi5351(int freq_step);
 

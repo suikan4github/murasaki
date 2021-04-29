@@ -11,7 +11,13 @@
 
 #include <Thirdparty/testsi5351.hpp>
 
+/// Fixed frequency for the Si5351 object test.
 #define TESTXTAL 25000000
+
+/// End frequency of the scan test of the Si5351::Si5351ConfigSeek()
+#define ENDFREQ 200000000
+/// Start frequency of the scan test of the Si5351::Si5351ConfigSeek()
+#define STARTFREQ 3
 
 namespace murasaki {
 
@@ -20,10 +26,10 @@ bool TestSi5351(int freq_step)
     bool error = false;
 
     // Create an test stub peripheral
-    murasaki::I2cMasterStub *i2c_stub = new murasaki::I2cMasterStub(5, 40);
+    murasaki::I2cMasterStub *i2c_stub = new murasaki::I2cMasterStub(5, 40, 1, true);
 
-    // Create an object under test
-    murasaki::Si5351 *si5351 = new murasaki::Si5351(i2c_stub, TESTXTAL);
+    // Create an object under test. Address can be any.
+    murasaki::Si5351 *si5351 = new murasaki::Si5351(i2c_stub, 1, TESTXTAL);
 
     uint32_t stage1_a, stage1_b, stage1_c;
     uint32_t stage2_a, stage2_b, stage2_c;
@@ -41,9 +47,9 @@ bool TestSi5351(int freq_step)
         int step = 1;
 
         // test from 3Hz to 200MHz
-        for (int i = 3; i < 200000000; i += step) {
+        for (int i = STARTFREQ; i < ENDFREQ; i += step) {
 
-            if (i > 10000)
+            if (i > freq_step)
                 step = freq_step;
             // Configure PLL by given frequency.
             si5351->Si5351ConfigSeek(xfreq, i, stage1_a, stage1_b, stage1_c, stage2_a, stage2_b, stage2_c, div_by_4, r);

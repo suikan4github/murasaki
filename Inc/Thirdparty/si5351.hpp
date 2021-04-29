@@ -22,13 +22,25 @@ class Si5351 {
     friend bool TestSi5351(int freq_step);
 
  public:
-    Si5351(murasaki::I2cMasterStrategy *controller, uint32_t xtal_freq);
+    /**
+     * @brief Initialize an PLL control object.
+     *
+     * @param controller Pointer to the I2C master.
+     * @param addrs 7bits address of the I2C devices. Right aligned.
+     * @param xtal_freq Frequency of the Xtal oscillator [Hz]
+     * @details
+     * Initialize a PLL control object. The controller is the pointer to the I2C master controller.
+     * This object communicate with the PLL device through this controller.
+     *
+     */
+    Si5351(murasaki::I2cMasterStrategy *controller, unsigned int addrs, uint32_t xtal_freq);
 
     virtual ~Si5351();
 
  private:
     const uint32_t ext_freq_;
     murasaki::I2cMasterStrategy *const i2c_;
+    unsigned int addrs_;
 
     /**
      * @brief Seek the appropriate configuration of the Si5351.

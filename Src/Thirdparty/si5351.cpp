@@ -12,18 +12,18 @@
 
 #define PLL_SYSLOG(fmt, ...)    MURASAKI_SYSLOG( this,  kfaPll, kseDebug, fmt, ##__VA_ARGS__)
 
-
 #define R_DIV_MUSB_BE_1_TO_128_AS_POWER_OF_TWO 256
-
 
 namespace murasaki {
 
-Si5351:: Si5351(
-        murasaki::I2cMasterStrategy *controller,
-        uint32_t xtal_freq)
+Si5351::Si5351(
+               murasaki::I2cMasterStrategy *controller,
+               unsigned int addrs,
+               uint32_t xtal_freq)
         :
         ext_freq_(xtal_freq),
-        i2c_(controller)
+        i2c_(controller),
+        addrs_(addrs)
 {
     // TODO Auto-generated constructor stub
 
@@ -35,17 +35,17 @@ Si5351::~Si5351()
 }
 
 Si5351Status Si5351::Si5351ConfigSeek(
-                              const uint32_t xtal_freq,
-                              const uint32_t output_freq,
-                              uint32_t &stage1_int,
-                              uint32_t &stage1_num,
-                              uint32_t &stage1_denom,
-                              uint32_t &stage2_int,
-                              uint32_t &stage2_num,
-                              uint32_t &stage2_c,
-                              uint32_t &div_by_4,
-                              uint32_t &r_div)
-                              {
+                                      const uint32_t xtal_freq,
+                                      const uint32_t output_freq,
+                                      uint32_t &stage1_int,
+                                      uint32_t &stage1_num,
+                                      uint32_t &stage1_denom,
+                                      uint32_t &stage2_int,
+                                      uint32_t &stage2_num,
+                                      uint32_t &stage2_c,
+                                      uint32_t &div_by_4,
+                                      uint32_t &r_div)
+                                      {
     // Because the div_by_4 mode is tricky, keep second stage divider value here.
     uint32_t second_stage_divider;
 
@@ -185,13 +185,13 @@ Si5351Status Si5351::Si5351ConfigSeek(
 }
 
 void Si5351::Si5351PackRegister(
-                        const uint32_t integer,
-                        const uint32_t numerator,
-                        const uint32_t denominator,
-                        const uint32_t div_by_4,
-                        const uint32_t r_div,
-                        uint8_t reg[8])
-                        {
+                                const uint32_t integer,
+                                const uint32_t numerator,
+                                const uint32_t denominator,
+                                const uint32_t div_by_4,
+                                const uint32_t r_div,
+                                uint8_t reg[8])
+                                {
     // integer part must be no bigger than 18bits.
     MURASAKI_ASSERT((integer & 0xFFFC0000) == 0)
     // numarator and denominator part must be no bigger than 20bits.

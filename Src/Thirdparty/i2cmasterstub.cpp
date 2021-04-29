@@ -10,8 +10,10 @@
 
 namespace murasaki {
 
-I2cMasterStub::I2cMasterStub(int buf_count, int buf_size)
-{
+I2cMasterStub::I2cMasterStub(unsigned int buf_count, unsigned int buf_size, unsigned int addrs, bool addrs_filtering)
+        :
+        addrs_(addrs),
+        addrs_filterring_(addrs_filtering) {
     // Create internal buffers.
     tx_data_buffer_ = newBuffers(buf_count, buf_size);
     MURASAKI_ASSERT(tx_data_buffer_ != nullptr)
@@ -31,29 +33,30 @@ murasaki::I2cStatus I2cMasterStub::Transmit(
                                             const uint8_t *tx_data,
                                             unsigned int tx_size,
                                             unsigned int *transfered_count,
-                                            unsigned int timeout_ms)
-                                                    {
+                                            unsigned int timeout_ms) {
     // print address and write sign
     murasaki::debugger->Printf("%02x W ", addrs);
-    // print data
-    for (unsigned int i = 0; i < tx_size; i++)
-        murasaki::debugger->Printf("0x02 ", tx_data[i]);
-    // then, line feed
+    if (addrs == addrs_) {
+        // print data
+        for (unsigned int i = 0; i < tx_size; i++)
+            murasaki::debugger->Printf("0x02 ", tx_data[i]);
+        // then, line feed
+
+    }
     murasaki::debugger->Printf("\n");
 
-    return( murasaki::ki2csOK);
+    return (murasaki::ki2csOK);
 
 }
 
 murasaki::I2cStatus I2cMasterStub::Receive(
-                                    unsigned int addrs,
-                                    uint8_t *rx_data,
-                                    unsigned int rx_size,
-                                    unsigned int *transfered_count,
-                                    unsigned int timeout_ms )
-{
-	MURASAKI_ASSERT(false);
-   return( murasaki::ki2csUnknown);
+                                           unsigned int addrs,
+                                           uint8_t *rx_data,
+                                           unsigned int rx_size,
+                                           unsigned int *transfered_count,
+                                           unsigned int timeout_ms) {
+    MURASAKI_ASSERT(false);
+    return (murasaki::ki2csUnknown);
 }
 
 I2cMasterStub::DataBuffer* I2cMasterStub::newBuffers(int buf_count, int buf_size)
@@ -67,7 +70,7 @@ I2cMasterStub::DataBuffer* I2cMasterStub::newBuffers(int buf_count, int buf_size
     buffers->buffers_ = new uint8_t*[buffers->buffer_num_];         // allocate pointer array.
     for (int i = 0; i < buffers->buffer_num_; i++)                  // allocate buffers
         buffers->buffers_[i] = new uint8_t[buffers->buffer_size_];
-    buffers->data_sizes_ = new int[buffers->buffer_num_];           // Allocate the data size variables.
+    buffers->data_sizes_ = new unsigned int[buffers->buffer_num_];           // Allocate the data size variables.
     buffers->write_index_ = 0;                                      // No buffer is used.
     buffers->read_index_ = 0;                                      // Next buffer to read.
 
@@ -142,17 +145,17 @@ void I2cMasterStub::deleteBuffers(DataBuffer *buffers)
 }
 
 murasaki::I2cStatus I2cMasterStub::TransmitThenReceive(
-                                                unsigned int addrs,
-                                                const uint8_t *tx_data,
-                                                unsigned int tx_size,
-                                                uint8_t *rx_data,
-                                                unsigned int rx_size,
-                                                unsigned int *tx_transfered_count,
-                                                unsigned int *rx_transfered_count,
-                                                unsigned int timeout_ms )
-{
-	MURASAKI_ASSERT(false);
-   return( murasaki::ki2csUnknown);
+                                                       unsigned int addrs,
+                                                       const uint8_t *tx_data,
+                                                       unsigned int tx_size,
+                                                       uint8_t *rx_data,
+                                                       unsigned int rx_size,
+                                                       unsigned int *tx_transfered_count,
+                                                       unsigned int *rx_transfered_count,
+                                                       unsigned int timeout_ms)
+                                                       {
+    MURASAKI_ASSERT(false);
+    return (murasaki::ki2csUnknown);
 
 }
 
