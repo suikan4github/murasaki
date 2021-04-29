@@ -70,6 +70,8 @@ I2cMasterStub::DataBuffer* I2cMasterStub::newBuffers(int buf_count, int buf_size
     buffers->data_sizes_ = new int[buffers->buffer_num_];           // Allocate the data size variables.
     buffers->write_index_ = 0;                                      // No buffer is used.
     buffers->read_index_ = 0;                                      // Next buffer to read.
+
+    return buffers;
 }
 
 int I2cMasterStub::getNumTxBuffer()

@@ -14,7 +14,7 @@ namespace murasaki {
  * @ingroup MURASAKI_THIRDPARTY_TESTER
  * @brief Test driver of the @ref Si5351 class.
  */
-bool TestSi5351();
+bool TestSi5351(int freq_step);
 
-} // namespace murasaki ;
+}  // namespace murasaki ;
 #endif /* THIRDPARTY_TESTSI5351_HPP_ */

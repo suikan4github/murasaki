@@ -10,6 +10,7 @@
 
 #include <murasaki_defs.hpp>
 #include <i2cmasterstrategy.hpp>
+#include "testsi5351.hpp"
 
 namespace murasaki {
 
@@ -18,6 +19,8 @@ namespace murasaki {
  * @brief Si5351 driver class.
  */
 class Si5351 {
+    friend bool TestSi5351(int freq_step);
+
  public:
     Si5351(murasaki::I2cMasterStrategy *controller, uint32_t xtal_freq);
 

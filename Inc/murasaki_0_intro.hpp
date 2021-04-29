@@ -82,7 +82,7 @@
  * \page intro_sec5 Versatile printf() logger
  * \details
  * Logging or "printf debug" is a strong tool in the embedded system development.
- * Murasaki has three levels of the printf debugging mechanism. One is the \ref murasaki::debugger->Printf(),
+ * Murasaki has three levels of the printf debugging mechanism. One is the murasaki::debugger->Printf(),
  * the second is \ref MURASAKI_ASSERT macro. In addition to these two, \ref MURASAKI_SYSLOG macro is available.
  *
  * The murasaki::debugger->Printf() is flexible output mechanism which has several good
