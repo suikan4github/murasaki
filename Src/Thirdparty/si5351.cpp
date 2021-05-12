@@ -194,7 +194,7 @@ void Si5351::Si5351PackRegister(
                                 {
     // integer part must be no bigger than 18bits.
     MURASAKI_ASSERT((integer & 0xFFFC0000) == 0)
-    // numarator and denominator part must be no bigger than 20bits.
+    // Numerator and denominator part must be no bigger than 20bits.
     MURASAKI_ASSERT((numerator & 0xFFF00000) == 0)
     MURASAKI_ASSERT((denominator & 0xFFF00000) == 0)
     // Right value of div by four must be 0 or 3
@@ -204,8 +204,8 @@ void Si5351::Si5351PackRegister(
     reg[1] = (denominator) & 0x00FF;                 // extract [7:0]
     reg[3] = (integer >> 8) & 0x00FF;              // extract [15:8]
     reg[4] = (integer) & 0x00FF;                     // extract [7:0]
-    reg[5] = (((denominator) >> 16) & 0x0F) << 4 |  // extract [19:16]
-            (numerator >> 16) & 0x0F;             // extract [19:16]
+    reg[5] = ((((denominator) >> 16) & 0x0F) << 4) |  // extract [19:16]
+            ((numerator >> 16) & 0x0F);             // extract [19:16]
     reg[6] = (numerator >> 8) & 0x00FF;            // extract [15:8]
     reg[7] = (numerator) & 0x00FF;                   // extract [7:0]
 
@@ -214,16 +214,14 @@ void Si5351::Si5351PackRegister(
     reg[2] |= (integer >> 16) & 0x03;
     reg[2] |= div_by_4 << 2;
 
-    // Calcurate the field value for the r_div.
+    // Calculate the field value for the r_div.
     // The r_div is true divider value. That is the value of the 2^x.
     // The field value mast be this "x". Following code seeks the x for r_div.
     uint32_t field = R_DIV_MUSB_BE_1_TO_128_AS_POWER_OF_TWO;  // 256 is an error value.
 
-    int value = 1;
-    for (int i = 0; i < 8; i++)
-            {
-        if (value == r_div)
-                {
+    unsigned int value = 1;
+    for (unsigned int i = 0; i < 8; i++) {
+        if (value == r_div) {
             field = i;
             break;
         }
