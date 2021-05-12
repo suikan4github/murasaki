@@ -121,7 +121,7 @@ class I2cMasterStub : public I2cMasterStrategy {
      * @details
      * Find a new RX buffer and copy the byte string from data. If buffers are empty, assertion fails.
      */
-    void writeRxBuffer(uint8_t *data, int length);
+    void writeRxBuffer(const uint8_t *data, unsigned int length);
 
     /**
      * @brief Copy a set of data from a buffer.
@@ -134,7 +134,7 @@ class I2cMasterStub : public I2cMasterStrategy {
      * If there is not buffers still not be read, assertion failed.
      */
 
-    void readTxBuffer(uint8_t *data, int max_length, int *length);
+    void readTxBuffer(uint8_t *data, unsigned int max_length, unsigned int *length);
 
     /**
      * @brief Thread safe, synchronous transmission over I2C.
@@ -274,8 +274,8 @@ class I2cMasterStub : public I2cMasterStrategy {
     void deleteBuffers(DataBuffer *buffers);
 
  protected:
-    void writeTxBuffer(uint8_t *data, int length);
-    void readRxBuffer(uint8_t *data, int max_length, int *length);
+    void writeTxBuffer(const uint8_t *data, unsigned int length);
+    void readRxBuffer(uint8_t *data, unsigned int max_length, unsigned int *length);
 
     /**
      * @brief pass the raw peripheral handler

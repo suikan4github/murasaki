@@ -34,16 +34,9 @@ murasaki::I2cStatus I2cMasterStub::Transmit(
                                             unsigned int tx_size,
                                             unsigned int *transfered_count,
                                             unsigned int timeout_ms) {
-    // print address and write sign
-    murasaki::debugger->Printf("%02x W ", addrs);
-    if (addrs == addrs_) {
-        // print data
-        for (unsigned int i = 0; i < tx_size; i++)
-            murasaki::debugger->Printf("0x02 ", tx_data[i]);
-        // then, line feed
-
+    if ((addrs == addrs_) || !addrs_filterring_) {
+        writeTxBuffer(tx_data, tx_size);
     }
-    murasaki::debugger->Printf("\n");
 
     return (murasaki::ki2csOK);
 
@@ -55,7 +48,10 @@ murasaki::I2cStatus I2cMasterStub::Receive(
                                            unsigned int rx_size,
                                            unsigned int *transfered_count,
                                            unsigned int timeout_ms) {
-    MURASAKI_ASSERT(false);
+    if ((addrs == addrs_) || !addrs_filterring_) {
+        unsigned int size;
+        readTxBuffer(rx_data, rx_size, &size);
+    }
     return (murasaki::ki2csUnknown);
 }
 
@@ -68,7 +64,7 @@ I2cMasterStub::DataBuffer* I2cMasterStub::newBuffers(int buf_count, int buf_size
     buffers->buffer_num_ = buf_count;
     buffers->buffer_size_ = buf_size;
     buffers->buffers_ = new uint8_t*[buffers->buffer_num_];         // allocate pointer array.
-    for (int i = 0; i < buffers->buffer_num_; i++)                  // allocate buffers
+    for (unsigned int i = 0; i < buffers->buffer_num_; i++)                  // allocate buffers
         buffers->buffers_[i] = new uint8_t[buffers->buffer_size_];
     buffers->data_sizes_ = new unsigned int[buffers->buffer_num_];           // Allocate the data size variables.
     buffers->write_index_ = 0;                                      // No buffer is used.
@@ -95,10 +91,10 @@ void I2cMasterStub::clearRxBuffer()
     rx_data_buffer_->read_index_ = 0;
 }
 
-void I2cMasterStub::writeRxBuffer(uint8_t *data, int length)
+void I2cMasterStub::writeRxBuffer(const uint8_t *data, unsigned int length)
                                   {
 
-    int widx = rx_data_buffer_->write_index_;
+    unsigned int widx = rx_data_buffer_->write_index_;
 
     // Overflow check
     MURASAKI_ASSERT(widx < rx_data_buffer_->buffer_num_)
@@ -112,7 +108,7 @@ void I2cMasterStub::writeRxBuffer(uint8_t *data, int length)
     rx_data_buffer_->write_index_++;
 }
 
-void I2cMasterStub::readTxBuffer(uint8_t *data, int max_length, int *length)
+void I2cMasterStub::readTxBuffer(uint8_t *data, unsigned int max_length, unsigned int *length)
                                  {
     int ridx = tx_data_buffer_->read_index_;
     int widx = tx_data_buffer_->write_index_;
@@ -135,7 +131,7 @@ void I2cMasterStub::readTxBuffer(uint8_t *data, int max_length, int *length)
 void I2cMasterStub::deleteBuffers(DataBuffer *buffers)
                                   {
     // release buffers.
-    for (int i = 0; i < buffers->buffer_num_; i++)
+    for (unsigned int i = 0; i < buffers->buffer_num_; i++)
         delete[] (buffers->buffers_[i]);
     // release pointer array.
     delete[] (buffers->buffers_);
@@ -159,10 +155,10 @@ murasaki::I2cStatus I2cMasterStub::TransmitThenReceive(
 
 }
 
-void I2cMasterStub::writeTxBuffer(uint8_t *data, int length)
+void I2cMasterStub::writeTxBuffer(const uint8_t *data, unsigned int length)
                                   {
 
-    int widx = tx_data_buffer_->write_index_;
+    unsigned int widx = tx_data_buffer_->write_index_;
 
     // Overflow check
     MURASAKI_ASSERT(widx < tx_data_buffer_->buffer_num_)
@@ -176,7 +172,7 @@ void I2cMasterStub::writeTxBuffer(uint8_t *data, int length)
     tx_data_buffer_->write_index_++;
 }
 
-void I2cMasterStub::readRxBuffer(uint8_t *data, int max_length, int *length)
+void I2cMasterStub::readRxBuffer(uint8_t *data, unsigned int max_length, unsigned int *length)
                                  {
     int ridx = rx_data_buffer_->read_index_;
     int widx = rx_data_buffer_->write_index_;
