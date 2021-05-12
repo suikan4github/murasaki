@@ -49,8 +49,7 @@ murasaki::I2cStatus I2cMasterStub::Receive(
                                            unsigned int *transfered_count,
                                            unsigned int timeout_ms) {
     if ((addrs == addrs_) || !addrs_filterring_) {
-        unsigned int size;
-        readTxBuffer(rx_data, rx_size, &size);
+        readTxBuffer(rx_data, rx_size, transfered_count);
     }
     return (murasaki::ki2csUnknown);
 }
