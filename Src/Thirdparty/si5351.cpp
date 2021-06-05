@@ -10,6 +10,15 @@
 #include "murasaki_assert.hpp"
 #include "murasaki_syslog.hpp"
 
+// Deivce registers
+#define SI5351_STARTUS_REG 0
+
+#define SI5351_SYS_INIT_BIT 7
+#define SI5351_LOL_B_BIT 6
+#define SI5351_LOL_A_BIT 5
+#define SI5351_LOCLKIN_BIT 4
+#define SI5351_LOXTAL_BIT 3
+
 #define PLL_SYSLOG(fmt, ...)    MURASAKI_SYSLOG( this,  kfaPll, kseDebug, fmt, ##__VA_ARGS__)
 
 #define R_DIV_MUSB_BE_1_TO_128_AS_POWER_OF_TWO 256
@@ -232,6 +241,63 @@ void Si5351::Si5351PackRegister(
     MURASAKI_ASSERT(field != R_DIV_MUSB_BE_1_TO_128_AS_POWER_OF_TWO)
     // Make sure the field value is not error.
     reg[2] |= field << 4;
+}
+
+uint8_t Si5351::getRegister(unsigned int reg_num)
+                            {
+    murasaki::I2cStatus status;
+    uint8_t reg, register_num;
+    unsigned int transfered_count;
+
+    register_num = reg_num;
+    status = i2c_->Transmit(addrs_,         // Address of PLL Si5351.
+            &register_num,      // Register # .
+            1,                  // Send 1 byte to set the register to read
+            &transfered_count,  // Dummy.
+            10);                // Wait 10 mSec.
+
+    MURASAKI_ASSERT(status == murasaki::ki2csOK)
+
+    status = i2c_->Receive(addrs_,         // Address of PLL Si5351.
+            &reg,               // received Register  .
+            1,                  // Receive 1 byte.
+            &transfered_count,  // Dummy.
+            10);                // Wait 10 mSec.
+
+    MURASAKI_ASSERT(status == murasaki::ki2csOK)
+
+    return reg;
+}
+
+// Return true if still initializing.
+bool Si5351::IsInitializing()
+{
+    uint8_t reg = getRegister(SI5351_STARTUS_REG);       // Get Device Status.
+    return (((1 << SI5351_SYS_INIT_BIT) & reg) != 0);     // is SI5351_LOL_A_BIT  H?
+}
+
+bool Si5351::IsLossOfLockA()
+{
+    uint8_t reg = getRegister(SI5351_STARTUS_REG);       // Get Device Status.
+    return (((1 << SI5351_LOL_A_BIT) & reg) != 0);     // is SI5351_LOL_A_BIT H?
+}
+
+bool Si5351::IsLossOfLockB()
+{
+    uint8_t reg = getRegister(SI5351_STARTUS_REG);       // Get Device Status.
+    return (((1 << SI5351_LOL_B_BIT) & reg) != 0);     // is SI5351_LOL_B_BIT H?
+}
+
+bool Si5351::IsLossOfClkin()
+{
+    uint8_t reg = getRegister(SI5351_STARTUS_REG);       // Get Device Status.
+    return (((1 << SI5351_LOCLKIN_BIT) & reg) != 0);     // is SI5351_LOCLKIN_BIT H?
+}
+
+bool Si5351::IsLossOfXtal()
+{
+    uint8_t reg = getRegister(SI5351_STARTUS_REG);       // Get Device Status.
+    return (((1 << SI5351_LOXTAL_BIT) & reg) != 0);     // is SI5351_LOXTAL_BIT H?
 }
 
 } /* namespace murasaki */

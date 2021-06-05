@@ -32,15 +32,54 @@ class Si5351 {
      * Initialize a PLL control object. The controller is the pointer to the I2C master controller.
      * This object communicate with the PLL device through this controller.
      *
+     * @li <a href="https://www.silabs.com/documents/public/data-sheets/Si5351-B.pdf">Si5351A/B/C-B I2C-PROGRAMMABLE ANY-FREQUENCY CMOS CLOCKGENERATOR + VCXO</a>
+     * @li <a href="https://www.silabs.com/documents/public/application-notes/AN619.pdf">AN619 Manually Generating an Si5351 Register Map for 10-MSOP and 20-QFN Devices</a>.
      */
     Si5351(murasaki::I2cMasterStrategy *controller, unsigned int addrs, uint32_t xtal_freq);
 
     virtual ~Si5351();
 
+    /**
+     * @brief Check whether PLL is initializing or not.
+     * @return true : PLL is still under initializing. false : PLL initialization is done.
+     */
+    bool IsInitializing();
+
+    /**
+     * @brief Check whether PLL A is locked or not.
+     * @return true : PLL A lost the lock. false : PLL A is locked.
+     */
+    bool IsLossOfLockA();
+
+    /**
+     * @brief Check whether PLL B is locked or not.
+     * @return true : PLL B lost the lock. false : PLL B is locked.
+     */
+    bool IsLossOfLockB();
+    /**
+     * @brief Check whether Clock in is lost.
+     * @return true : Clock in signal is lost. false : clock in signal is alive.
+     */
+    bool IsLossOfClkin();
+
+    /**
+     * @brief Check whether XTAL is lost.
+     * @return true : XTAL signal is lost. false : XTAL signal is alive.
+     */
+    bool IsLossOfXtal();
+
+#if 0 // not yet implemented.
+
+    void ClockEnable(int8_t mask);
+#endif
+
  private:
     const uint32_t ext_freq_;
     murasaki::I2cMasterStrategy *const i2c_;
     unsigned int addrs_;
+
+    // Get specified register.
+    uint8_t getRegister(unsigned int reg_num);
 
     /**
      * @brief Seek the appropriate configuration of the Si5351.

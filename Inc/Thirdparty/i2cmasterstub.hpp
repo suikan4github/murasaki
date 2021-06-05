@@ -34,19 +34,22 @@ namespace murasaki {
  * @ingroup MURASAKI_THIRDPARTY_TESTER
  * @brief Debug Stub for the I2C master client.
  * @details
- * This stub class printout the given output data on the transmit member function.
+ * This stub class logs the given output data on the transmit member function.
  *
  * During the test, this class logs all TX activity inside buffer. This buffer can be read by
  * @ref readTxBuffer(). For each call of readTxBuffer(), the internal buffer pointer is
- * incremented and assign new buffer. Thus, each calls read one buffer. If there is not stored log, assertion failed.
- * To avoid it programmer,  must know the number of the internal logged buffer by getNumTxBuffer.
- * To clear the TX buffer, call clearTxBuffer.
+ * incremented and assign new buffer.
+ * Thus, each call uses one buffer. If there is not stored log, assertion failed.
+ * To avoid it,  programmer must know the number of the internal logged buffer by getNumTxBuffer.
+ * To clear the TX buffer, call @ref clearTxBuffer() mumber function.
  *
  * Also, programmer can specify the RX data by RX buffer. To store the RX data, call
  * writeRxBuffer(). For each call of writeRxBuffer(), the internal buffer pointer is
  * incremented and assign new buffer. Thus, each calls write one buffer.
  * If there is no buffer to write, an assertion fail is triggered. To avoid it, a programmer
  * have to allocate enough buffer by the parameter of the constructor.
+ *
+ * The number of buffers and the length of buffers are specified by the constructor.
  */
 class I2cMasterStub : public I2cMasterStrategy {
  public:
