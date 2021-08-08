@@ -34,12 +34,12 @@ void TestSi5351::TestIsInitializing() {
     uint8_t buffer[SI5351_TEST_BUFFER_LEN];
     unsigned int transffered_len;
     bool flag;
+    // Si5351 : Register 0, bit 7
+    const int BUT = 7;   // Bit under test
+    const int RUT = 0;   // Register under test
 
     // ****************************************************************************
     MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "The IsInitializing() test ")
-// Si5351 : Register 0, bit 7
-#define BUT 7   // Bit under test
-#define RUT 0   // Register under test
     buffer[0] = 1 << BUT;   // System is initializing.
     i2c_stub_->writeRxBuffer(buffer, 1);
     buffer[0] = 0xFF;   // System is initializing.
@@ -68,6 +68,159 @@ void TestSi5351::TestIsInitializing() {
     i2c_stub_->clearTxBuffer();
 }
 
+void TestSi5351::TestIsLossOfLockA() {
+    uint8_t buffer[SI5351_TEST_BUFFER_LEN];
+    unsigned int transffered_len;
+    bool flag;
+    // Si5351 : Register 0, bit 5
+    const int BUT = 5;   // Bit under test
+    const int RUT = 0;   // Register under test
+
+    // ****************************************************************************
+    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "The IsLossOfLockA() test ")
+    buffer[0] = 1 << BUT;   // LoL
+    i2c_stub_->writeRxBuffer(buffer, 1);
+    buffer[0] = 0xFF;   // LoL.
+    i2c_stub_->writeRxBuffer(buffer, 1);
+    buffer[0] = 0x00;   // NOT LoL.
+    i2c_stub_->writeRxBuffer(buffer, 1);
+    buffer[0] = ~(1 << BUT);   // NOT LoL.
+    i2c_stub_->writeRxBuffer(buffer, 1);
+
+    // check result.
+    flag = si5351_->IsLossOfLockA();   // status 0x80
+    MURASAKI_ASSERT(flag)
+    flag = si5351_->IsLossOfLockA();    // status 0xFF
+    MURASAKI_ASSERT(flag)
+    flag = si5351_->IsLossOfLockA();    // status 0x00
+    MURASAKI_ASSERT(!flag)
+    flag = si5351_->IsLossOfLockA();    // status 0x7F
+    MURASAKI_ASSERT(!flag)
+
+    // check the register access
+    i2c_stub_->readTxBuffer(buffer, SI5351_TEST_BUFFER_LEN, &transffered_len);
+    MURASAKI_ASSERT(transffered_len == 1)
+    MURASAKI_ASSERT(buffer[0] == RUT)
+
+    i2c_stub_->clearRxBuffer();
+    i2c_stub_->clearTxBuffer();
+}
+
+void TestSi5351::TestIsLossOfLockB() {
+    uint8_t buffer[SI5351_TEST_BUFFER_LEN];
+    unsigned int transffered_len;
+    bool flag;
+    // Si5351 : Register 0, bit 6
+    const int BUT = 6;   // Bit under test
+    const int RUT = 0;   // Register under test
+
+    // ****************************************************************************
+    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "The IsLossOfLockB() test ")
+    buffer[0] = 1 << BUT;   // LoL
+    i2c_stub_->writeRxBuffer(buffer, 1);
+    buffer[0] = 0xFF;   // LoL.
+    i2c_stub_->writeRxBuffer(buffer, 1);
+    buffer[0] = 0x00;   // NOT LoL.
+    i2c_stub_->writeRxBuffer(buffer, 1);
+    buffer[0] = ~(1 << BUT);   // NOT LoL.
+    i2c_stub_->writeRxBuffer(buffer, 1);
+
+    // check result.
+    flag = si5351_->IsLossOfLockB();
+    MURASAKI_ASSERT(flag)
+    flag = si5351_->IsLossOfLockB();
+    MURASAKI_ASSERT(flag)
+    flag = si5351_->IsLossOfLockB();
+    MURASAKI_ASSERT(!flag)
+    flag = si5351_->IsLossOfLockB();
+    MURASAKI_ASSERT(!flag)
+
+    // check the register access
+    i2c_stub_->readTxBuffer(buffer, SI5351_TEST_BUFFER_LEN, &transffered_len);
+    MURASAKI_ASSERT(transffered_len == 1)
+    MURASAKI_ASSERT(buffer[0] == RUT)
+
+    i2c_stub_->clearRxBuffer();
+    i2c_stub_->clearTxBuffer();
+}
+
+void TestSi5351::TestIsLossOfClkin() {
+    uint8_t buffer[SI5351_TEST_BUFFER_LEN];
+    unsigned int transffered_len;
+    bool flag;
+    // Si5351 : Register 0, bit 4
+    const int BUT = 4;   // Bit under test
+    const int RUT = 0;   // Register under test
+
+    // ****************************************************************************
+    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "The IsLossOfClkin() test ")
+    buffer[0] = 1 << BUT;   // LoL
+    i2c_stub_->writeRxBuffer(buffer, 1);
+    buffer[0] = 0xFF;   // LoL.
+    i2c_stub_->writeRxBuffer(buffer, 1);
+    buffer[0] = 0x00;   // NOT LoL.
+    i2c_stub_->writeRxBuffer(buffer, 1);
+    buffer[0] = ~(1 << BUT);   // NOT LoL.
+    i2c_stub_->writeRxBuffer(buffer, 1);
+
+    // check result.
+    flag = si5351_->IsLossOfClkin();
+    MURASAKI_ASSERT(flag)
+    flag = si5351_->IsLossOfClkin();
+    MURASAKI_ASSERT(flag)
+    flag = si5351_->IsLossOfClkin();
+    MURASAKI_ASSERT(!flag)
+    flag = si5351_->IsLossOfClkin();
+    MURASAKI_ASSERT(!flag)
+
+    // check the register access
+    i2c_stub_->readTxBuffer(buffer, SI5351_TEST_BUFFER_LEN, &transffered_len);
+    MURASAKI_ASSERT(transffered_len == 1)
+    MURASAKI_ASSERT(buffer[0] == RUT)
+
+    i2c_stub_->clearRxBuffer();
+    i2c_stub_->clearTxBuffer();
+
+}
+
+void TestSi5351::TestIsLossOfXtal() {
+    uint8_t buffer[SI5351_TEST_BUFFER_LEN];
+    unsigned int transffered_len;
+    bool flag;
+    // Si5351 : Register 0, bit 3
+    const int BUT = 3;   // Bit under test
+    const int RUT = 0;   // Register under test
+
+    // ****************************************************************************
+    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "The IsLossOfXtal() test ")
+    buffer[0] = 1 << BUT;   // LoL
+    i2c_stub->writeRxBuffer(buffer, 1);
+    buffer[0] = 0xFF;   // LoL.
+    i2c_stub->writeRxBuffer(buffer, 1);
+    buffer[0] = 0x00;   // NOT LoL.
+    i2c_stub->writeRxBuffer(buffer, 1);
+    buffer[0] = ~(1 << BUT);   // NOT LoL.
+    i2c_stub->writeRxBuffer(buffer, 1);
+
+    // check result.
+    flag = si5351->IsLossOfXtal();
+    MURASAKI_ASSERT(flag)
+    flag = si5351->IsLossOfXtal();
+    MURASAKI_ASSERT(flag)
+    flag = si5351->IsLossOfXtal();
+    MURASAKI_ASSERT(!flag)
+    flag = si5351->IsLossOfXtal();
+    MURASAKI_ASSERT(!flag)
+
+    // check the register access
+    i2c_stub->readTxBuffer(buffer, SI5351_TEST_BUFFER_LEN, &transffered_len);
+    MURASAKI_ASSERT(transffered_len == 1)
+    MURASAKI_ASSERT(buffer[0] == RUT)
+
+    i2c_stub->clearRxBuffer();
+    i2c_stub->clearTxBuffer();
+}
+
 bool TestSi5351Driver(int freq_step)
                       {
     bool error = false;
@@ -81,7 +234,7 @@ bool TestSi5351Driver(int freq_step)
                                              1,  // DUT I2C address
                                              true)  // Address filtering is on
                                              );
-                                                                // @formatter:on
+                                                                                                        // @formatter:on
 
     uint32_t stage1_a, stage1_b, stage1_c;
     uint32_t stage2_a, stage2_b, stage2_c;
@@ -213,134 +366,6 @@ bool TestSi5351Driver(int freq_step)
     MURASAKI_ASSERT(((registers[2] >> 4) & 0x07) == 0x07)
 
     // Now, testing the basic functions.
-
-    // ****************************************************************************
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "The IsLossOfLockA() test ")
-    // Si5351 : Register 0, bit 5
-#undef BUT
-#define BUT 5
-    buffer[0] = 1 << BUT;   // LoL
-    i2c_stub->writeRxBuffer(buffer, 1);
-    buffer[0] = 0xFF;   // LoL.
-    i2c_stub->writeRxBuffer(buffer, 1);
-    buffer[0] = 0x00;   // NOT LoL.
-    i2c_stub->writeRxBuffer(buffer, 1);
-    buffer[0] = ~(1 << BUT);   // NOT LoL.
-    i2c_stub->writeRxBuffer(buffer, 1);
-
-    // check result.
-    flag = si5351->IsLossOfLockA();   // status 0x80
-    MURASAKI_ASSERT(flag)
-    flag = si5351->IsLossOfLockA();    // status 0xFF
-    MURASAKI_ASSERT(flag)
-    flag = si5351->IsLossOfLockA();    // status 0x00
-    MURASAKI_ASSERT(!flag)
-    flag = si5351->IsLossOfLockA();    // status 0x7F
-    MURASAKI_ASSERT(!flag)
-
-    // check the register access
-    i2c_stub->readTxBuffer(buffer, SI5351_TEST_BUFFER_LEN, &transffered_len);
-    MURASAKI_ASSERT(transffered_len == 1)
-    MURASAKI_ASSERT(buffer[0] == RUT)
-
-    i2c_stub->clearRxBuffer();
-    i2c_stub->clearTxBuffer();
-
-    // ****************************************************************************
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "The IsLossOfLockB() test ")
-    // Si5351 : Register 0, bit 6
-#undef BUT
-#define BUT 6
-    buffer[0] = 1 << BUT;   // LoL
-    i2c_stub->writeRxBuffer(buffer, 1);
-    buffer[0] = 0xFF;   // LoL.
-    i2c_stub->writeRxBuffer(buffer, 1);
-    buffer[0] = 0x00;   // NOT LoL.
-    i2c_stub->writeRxBuffer(buffer, 1);
-    buffer[0] = ~(1 << BUT);   // NOT LoL.
-    i2c_stub->writeRxBuffer(buffer, 1);
-
-    // check result.
-    flag = si5351->IsLossOfLockB();
-    MURASAKI_ASSERT(flag)
-    flag = si5351->IsLossOfLockB();
-    MURASAKI_ASSERT(flag)
-    flag = si5351->IsLossOfLockB();
-    MURASAKI_ASSERT(!flag)
-    flag = si5351->IsLossOfLockB();
-    MURASAKI_ASSERT(!flag)
-
-    // check the register access
-    i2c_stub->readTxBuffer(buffer, SI5351_TEST_BUFFER_LEN, &transffered_len);
-    MURASAKI_ASSERT(transffered_len == 1)
-    MURASAKI_ASSERT(buffer[0] == RUT)
-
-    i2c_stub->clearRxBuffer();
-    i2c_stub->clearTxBuffer();
-
-    // ****************************************************************************
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "The IsLossOfClkin() test ")
-    // Si5351 : Register 0, bit 4
-#undef BUT
-#define BUT 4
-    buffer[0] = 1 << BUT;   // LoL
-    i2c_stub->writeRxBuffer(buffer, 1);
-    buffer[0] = 0xFF;   // LoL.
-    i2c_stub->writeRxBuffer(buffer, 1);
-    buffer[0] = 0x00;   // NOT LoL.
-    i2c_stub->writeRxBuffer(buffer, 1);
-    buffer[0] = ~(1 << BUT);   // NOT LoL.
-    i2c_stub->writeRxBuffer(buffer, 1);
-
-    // check result.
-    flag = si5351->IsLossOfClkin();
-    MURASAKI_ASSERT(flag)
-    flag = si5351->IsLossOfClkin();
-    MURASAKI_ASSERT(flag)
-    flag = si5351->IsLossOfClkin();
-    MURASAKI_ASSERT(!flag)
-    flag = si5351->IsLossOfClkin();
-    MURASAKI_ASSERT(!flag)
-
-    // check the register access
-    i2c_stub->readTxBuffer(buffer, SI5351_TEST_BUFFER_LEN, &transffered_len);
-    MURASAKI_ASSERT(transffered_len == 1)
-    MURASAKI_ASSERT(buffer[0] == RUT)
-
-    i2c_stub->clearRxBuffer();
-    i2c_stub->clearTxBuffer();
-
-    // ****************************************************************************
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "The IsLossOfXtal() test ")
-    // Si5351 : Register 0, bit 3
-#undef BUT
-#define BUT 3
-    buffer[0] = 1 << BUT;   // LoL
-    i2c_stub->writeRxBuffer(buffer, 1);
-    buffer[0] = 0xFF;   // LoL.
-    i2c_stub->writeRxBuffer(buffer, 1);
-    buffer[0] = 0x00;   // NOT LoL.
-    i2c_stub->writeRxBuffer(buffer, 1);
-    buffer[0] = ~(1 << BUT);   // NOT LoL.
-    i2c_stub->writeRxBuffer(buffer, 1);
-
-    // check result.
-    flag = si5351->IsLossOfXtal();
-    MURASAKI_ASSERT(flag)
-    flag = si5351->IsLossOfXtal();
-    MURASAKI_ASSERT(flag)
-    flag = si5351->IsLossOfXtal();
-    MURASAKI_ASSERT(!flag)
-    flag = si5351->IsLossOfXtal();
-    MURASAKI_ASSERT(!flag)
-
-    // check the register access
-    i2c_stub->readTxBuffer(buffer, SI5351_TEST_BUFFER_LEN, &transffered_len);
-    MURASAKI_ASSERT(transffered_len == 1)
-    MURASAKI_ASSERT(buffer[0] == RUT)
-
-    i2c_stub->clearRxBuffer();
-    i2c_stub->clearTxBuffer();
 
     return !error;
 }
