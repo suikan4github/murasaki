@@ -5,10 +5,6 @@
  *      Author: takemasa
  */
 
-#include <Thirdparty/i2cmasterstub.hpp>
-#include "Thirdparty/si5351.hpp"
-#include "murasaki.hpp"
-
 #include <Thirdparty/testsi5351.hpp>
 
 /// Fixed frequency for the Si5351 object test.
@@ -24,20 +20,68 @@
 
 namespace murasaki {
 
-bool TestSi5351(int freq_step)
-                {
+TestSi5351::TestSi5351(
+                       murasaki::I2cMasterStub *i2c_stub
+                       )
+        :
+        i2c_stub_(i2c_stub),
+        si5351_(new murasaki::Si5351(i2c_stub, 1, TESTXTAL))
+{
+
+}
+
+void TestSi5351::TestIsInitializing() {
+    uint8_t buffer[SI5351_TEST_BUFFER_LEN];
+    unsigned int transffered_len;
+    bool flag;
+
+    // ****************************************************************************
+    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "The IsInitializing() test ")
+// Si5351 : Register 0, bit 7
+#define BUT 7   // Bit under test
+#define RUT 0   // Register under test
+    buffer[0] = 1 << BUT;   // System is initializing.
+    i2c_stub_->writeRxBuffer(buffer, 1);
+    buffer[0] = 0xFF;   // System is initializing.
+    i2c_stub_->writeRxBuffer(buffer, 1);
+    buffer[0] = 0x00;   // System is NOT initializing.
+    i2c_stub_->writeRxBuffer(buffer, 1);
+    buffer[0] = ~(1 << BUT);   // System is NOT initializing.
+    i2c_stub_->writeRxBuffer(buffer, 1);
+
+    // check result.
+    flag = si5351_->IsInitializing();   // status 0x80
+    MURASAKI_ASSERT(flag)
+    flag = si5351_->IsInitializing();    // status 0xFF
+    MURASAKI_ASSERT(flag)
+    flag = si5351_->IsInitializing();    // status 0x00
+    MURASAKI_ASSERT(!flag)
+    flag = si5351_->IsInitializing();    // status 0x7F
+    MURASAKI_ASSERT(!flag)
+
+    // check the register access
+    i2c_stub_->readTxBuffer(buffer, SI5351_TEST_BUFFER_LEN, &transffered_len);
+    MURASAKI_ASSERT(transffered_len == 1)
+    MURASAKI_ASSERT(buffer[0] == RUT)
+
+    i2c_stub_->clearRxBuffer();
+    i2c_stub_->clearTxBuffer();
+}
+
+bool TestSi5351Driver(int freq_step)
+                      {
     bool error = false;
 
-    // Create an test stub peripheral
-    murasaki::I2cMasterStub *i2c_stub =
-            new murasaki::I2cMasterStub(
-            SI5351_TEST_BUFFER_NUM,  // Number of the TX RX test buffers.
-                    SI5351_TEST_BUFFER_LEN,  // LENGTH of the TX RX test buffers.
-                    1,  // DUT I2C address
-                    true);  // Address filtering is on
-
-    // Create an object under test. Address can be any.
-    murasaki::Si5351 *si5351 = new murasaki::Si5351(i2c_stub, 1, TESTXTAL);
+    // Create an Device Under Test.
+    // @formatter:off
+    TestSi5351 *dut = new TestSi5351(
+                                     new murasaki::I2cMasterStub(
+                                             SI5351_TEST_BUFFER_NUM,  // Number of the TX RX test buffers.
+                                             SI5351_TEST_BUFFER_LEN,  // LENGTH of the TX RX test buffers.
+                                             1,  // DUT I2C address
+                                             true)  // Address filtering is on
+                                             );
+                                                                // @formatter:on
 
     uint32_t stage1_a, stage1_b, stage1_c;
     uint32_t stage2_a, stage2_b, stage2_c;
@@ -170,42 +214,6 @@ bool TestSi5351(int freq_step)
 
     // Now, testing the basic functions.
 
-    uint8_t buffer[SI5351_TEST_BUFFER_LEN];
-    unsigned int transffered_len;
-    bool flag;
-
-    // ****************************************************************************
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "The IsInitializing() test ")
-// Si5351 : Register 0, bit 7
-#define BUT 7   // Bit under test
-#define RUT 0   // Register under test
-    buffer[0] = 1 << BUT;   // System is initializing.
-    i2c_stub->writeRxBuffer(buffer, 1);
-    buffer[0] = 0xFF;   // System is initializing.
-    i2c_stub->writeRxBuffer(buffer, 1);
-    buffer[0] = 0x00;   // System is NOT initializing.
-    i2c_stub->writeRxBuffer(buffer, 1);
-    buffer[0] = ~(1 << BUT);   // System is NOT initializing.
-    i2c_stub->writeRxBuffer(buffer, 1);
-
-    // check result.
-    flag = si5351->IsInitializing();   // status 0x80
-    MURASAKI_ASSERT(flag)
-    flag = si5351->IsInitializing();    // status 0xFF
-    MURASAKI_ASSERT(flag)
-    flag = si5351->IsInitializing();    // status 0x00
-    MURASAKI_ASSERT(!flag)
-    flag = si5351->IsInitializing();    // status 0x7F
-    MURASAKI_ASSERT(!flag)
-
-    // check the register access
-    i2c_stub->readTxBuffer(buffer, SI5351_TEST_BUFFER_LEN, &transffered_len);
-    MURASAKI_ASSERT(transffered_len == 1)
-    MURASAKI_ASSERT(buffer[0] == RUT)
-
-    i2c_stub->clearRxBuffer();
-    i2c_stub->clearTxBuffer();
-
     // ****************************************************************************
     MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "The IsLossOfLockA() test ")
     // Si5351 : Register 0, bit 5
@@ -303,7 +311,7 @@ bool TestSi5351(int freq_step)
     i2c_stub->clearTxBuffer();
 
     // ****************************************************************************
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "The IsLossOfClkin() test ")
+    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "The IsLossOfXtal() test ")
     // Si5351 : Register 0, bit 3
 #undef BUT
 #define BUT 3

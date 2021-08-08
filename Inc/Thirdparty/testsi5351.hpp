@@ -8,6 +8,11 @@
 #ifndef THIRDPARTY_TESTSI5351_HPP_
 #define THIRDPARTY_TESTSI5351_HPP_
 
+#include "Thirdparty/i2cmasterstub.hpp"
+#include "Thirdparty/si5351.hpp"
+
+#include "murasaki.hpp"
+
 namespace murasaki {
 
 /**
@@ -17,7 +22,26 @@ namespace murasaki {
  * @details
  *
  */
-bool TestSi5351(int freq_step);
+bool TestSi5351Driver(int freq_step);
 
-}  // namespace murasaki ;
+class TestSi5351 {
+ public:
+    TestSi5351(
+               murasaki::I2cMasterStub *i2c_stub
+               );
+
+    void TestIsInitializing();
+    void TestIsLossOfLockA();
+    void TestIsLossOfLockB();
+    void TestIsLossOfClkin();
+    void TestIsLossOfXtal();
+
+ private:
+    murasaki::I2cMasterStub *const i2c_stub_;
+    murasaki::Si5351 *const si5351_;
+};
+
+}
+// namespace murasaki ;
+
 #endif /* THIRDPARTY_TESTSI5351_HPP_ */

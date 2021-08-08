@@ -10,7 +10,7 @@
 #include "murasaki_assert.hpp"
 #include "murasaki_syslog.hpp"
 
-// Deivce registers
+// Device registers
 #define SI5351_STARTUS_REG 0
 
 #define SI5351_SYS_INIT_BIT 7

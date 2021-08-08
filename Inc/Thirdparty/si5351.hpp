@@ -19,6 +19,7 @@ namespace murasaki {
  * @brief Si5351 driver class.
  */
 class Si5351 {
+    friend TestSi5351;
     friend bool TestSi5351(int freq_step);
 
  public:
