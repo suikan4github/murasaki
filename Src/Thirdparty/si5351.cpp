@@ -190,17 +190,17 @@ Si5351Status Si5351::Si5351ConfigSeek(
     PLL_SYSLOG("stage1_num = %d", stage1_num);
     PLL_SYSLOG("stage1_denom = %d", stage1_denom);
 
-    return s5351Ok;
+    return ks5351Ok;
 }
 
-void Si5351::Si5351PackRegister(
-                                const uint32_t integer,
-                                const uint32_t numerator,
-                                const uint32_t denominator,
-                                const uint32_t div_by_4,
-                                const uint32_t r_div,
-                                uint8_t reg[8])
-                                {
+void Si5351::PackRegister(
+                          const uint32_t integer,
+                          const uint32_t numerator,
+                          const uint32_t denominator,
+                          const uint32_t div_by_4,
+                          const uint32_t r_div,
+                          uint8_t reg[8])
+                          {
     // integer part must be no bigger than 18bits.
     MURASAKI_ASSERT((integer & 0xFFFC0000) == 0)
     // Numerator and denominator part must be no bigger than 20bits.

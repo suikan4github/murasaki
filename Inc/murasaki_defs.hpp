@@ -263,20 +263,6 @@ enum CodecChannel {
 };
 
 /**
- * @brief Status of the Si5351
- * @details
- * These enums are dedicated to the @ref Si5351 class.
- *
- */
-enum Si5351Status
-{
-    s5351Ok, /**< s5351Ok */
-    s5351SeekFailure/**< s5351SeekFailure */
-};
-
-
-
-/**
  * @brief Status return by InterruptStartegy type
  */
 enum InterruptStatus {

@@ -194,52 +194,39 @@ void TestSi5351::TestIsLossOfXtal() {
     // ****************************************************************************
     MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "The IsLossOfXtal() test ")
     buffer[0] = 1 << BUT;   // LoL
-    i2c_stub->writeRxBuffer(buffer, 1);
+    i2c_stub_->writeRxBuffer(buffer, 1);
     buffer[0] = 0xFF;   // LoL.
-    i2c_stub->writeRxBuffer(buffer, 1);
+    i2c_stub_->writeRxBuffer(buffer, 1);
     buffer[0] = 0x00;   // NOT LoL.
-    i2c_stub->writeRxBuffer(buffer, 1);
+    i2c_stub_->writeRxBuffer(buffer, 1);
     buffer[0] = ~(1 << BUT);   // NOT LoL.
-    i2c_stub->writeRxBuffer(buffer, 1);
+    i2c_stub_->writeRxBuffer(buffer, 1);
 
     // check result.
-    flag = si5351->IsLossOfXtal();
+    flag = si5351_->IsLossOfXtal();
     MURASAKI_ASSERT(flag)
-    flag = si5351->IsLossOfXtal();
+    flag = si5351_->IsLossOfXtal();
     MURASAKI_ASSERT(flag)
-    flag = si5351->IsLossOfXtal();
+    flag = si5351_->IsLossOfXtal();
     MURASAKI_ASSERT(!flag)
-    flag = si5351->IsLossOfXtal();
+    flag = si5351_->IsLossOfXtal();
     MURASAKI_ASSERT(!flag)
 
     // check the register access
-    i2c_stub->readTxBuffer(buffer, SI5351_TEST_BUFFER_LEN, &transffered_len);
+    i2c_stub_->readTxBuffer(buffer, SI5351_TEST_BUFFER_LEN, &transffered_len);
     MURASAKI_ASSERT(transffered_len == 1)
     MURASAKI_ASSERT(buffer[0] == RUT)
 
-    i2c_stub->clearRxBuffer();
-    i2c_stub->clearTxBuffer();
+    i2c_stub_->clearRxBuffer();
+    i2c_stub_->clearTxBuffer();
 }
 
-bool TestSi5351Driver(int freq_step)
-                      {
-    bool error = false;
-
-    // Create an Device Under Test.
-    // @formatter:off
-    TestSi5351 *dut = new TestSi5351(
-                                     new murasaki::I2cMasterStub(
-                                             SI5351_TEST_BUFFER_NUM,  // Number of the TX RX test buffers.
-                                             SI5351_TEST_BUFFER_LEN,  // LENGTH of the TX RX test buffers.
-                                             1,  // DUT I2C address
-                                             true)  // Address filtering is on
-                                             );
-                                                                                                        // @formatter:on
-
+void TestSi5351::TestSi5351ConfigSeek(int freq_step) {
     uint32_t stage1_a, stage1_b, stage1_c;
     uint32_t stage2_a, stage2_b, stage2_c;
     uint32_t div_by_4;
     uint32_t r;
+    bool error = false;
 
     MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "The Si5351ConfigSeek() test ")
 
@@ -258,7 +245,7 @@ bool TestSi5351Driver(int freq_step)
             if (i > freq_step)
                 step = freq_step;
             // Configure PLL by given frequency.
-            si5351->Si5351ConfigSeek(xfreq, i, stage1_a, stage1_b, stage1_c, stage2_a, stage2_b, stage2_c, div_by_4, r);
+            si5351_->Si5351ConfigSeek(xfreq, i, stage1_a, stage1_b, stage1_c, stage2_a, stage2_b, stage2_c, div_by_4, r);
 
             // Calculate the synthesized frequency
             double output, fvco;
@@ -320,6 +307,10 @@ bool TestSi5351Driver(int freq_step)
         }
     }   // end of for.
 
+}
+
+void TestSi5351::TestPackRegister() {
+
     // Register construction test for the PLL coefficient.
     MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "The Si5351PackRegister() test")
 
@@ -331,7 +322,7 @@ bool TestSi5351Driver(int freq_step)
     num = 0x000ABCDE;
     div_4 = 3;
     r_div = 8;
-    si5351->Si5351PackRegister(inte, num, denom, div_4, r_div, registers);
+    si5351_->PackRegister(inte, num, denom, div_4, r_div, registers);
 
     MURASAKI_ASSERT(registers[0] == 0x56)
     MURASAKI_ASSERT(registers[1] == 0x78)
@@ -351,7 +342,7 @@ bool TestSi5351Driver(int freq_step)
     num = 0x000FFFFF & ~num;
     div_4 = 0;
     r_div = 128;
-    si5351->Si5351PackRegister(inte, num, denom, div_4, r_div, registers);
+    si5351_->PackRegister(inte, num, denom, div_4, r_div, registers);
 
     MURASAKI_ASSERT(registers[0] == (0xFF & ~0x56))
     MURASAKI_ASSERT(registers[1] == (0xFF & ~0x78))
@@ -367,7 +358,28 @@ bool TestSi5351Driver(int freq_step)
 
     // Now, testing the basic functions.
 
-    return !error;
+}
+
+void TestSi5351Driver(int freq_step)
+                      {
+
+    // Create an Device Under Test.
+    // @formatter:off
+    TestSi5351 *dut = new TestSi5351(
+                                     new murasaki::I2cMasterStub(
+                                             SI5351_TEST_BUFFER_NUM,  // Number of the TX RX test buffers.
+                                             SI5351_TEST_BUFFER_LEN,  // LENGTH of the TX RX test buffers.
+                                             1,  // DUT I2C address
+                                             true)  // Address filtering is on
+                                             );
+                                                                                                                                                                                // @formatter:on
+    dut->TestIsInitializing();
+    dut->TestIsLossOfLockA();
+    dut->TestIsLossOfLockB();
+    dut->TestIsLossOfXtal();
+    dut->TestIsLossOfClkin();
+    dut->TestSi5351ConfigSeek(freq_step);
+    dut->TestPackRegister();
 }
 
 } /* namespace murasaki */

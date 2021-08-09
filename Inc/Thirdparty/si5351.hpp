@@ -10,9 +10,51 @@
 
 #include <murasaki_defs.hpp>
 #include <i2cmasterstrategy.hpp>
-#include "testsi5351.hpp"
-
 namespace murasaki {
+
+/**
+ * @ingroup MURASAKI_DEFINITION_GROUP
+ * @brief Status of the Si5351
+ * @details
+ * These enums are dedicated to the @ref Si5351 class.
+ *
+ */
+enum Si5351Status
+{
+    ks5351Ok, /**< s5351Ok */
+    ks5351SeekFailure/**< s5351SeekFailure */
+};
+
+/**
+ * @ingroup MURASAKI_DEFINITION_GROUP
+ * @brief PLL ID
+ * @details
+ * These enums are dedicated to the @ref Si5351 class.
+ *
+ */
+enum Si5351Pll
+{
+    ks5351PllA, /**< PLLA */
+    ks5351PllB /**< PLLB */
+};
+
+/**
+ * @ingroup MURASAKI_DEFINITION_GROUP
+ * @brief Dividor ID.
+ * @details
+ * These enums are dedicated to the @ref Si5351 class.
+ *
+ * These dividors are located at the output of PLL
+ *
+ */
+enum Si5351Div
+{
+    ks5351Div0, /**< Divider 0 */
+    ks5351Div1, /**< Divider 1 */
+    ks5351Div2 /**< Divider 2 */
+};
+
+class TestSi5351;
 
 /**
  * @ingroup MURASAKI_THIRDPARTY_GROUP
@@ -68,6 +110,19 @@ class Si5351 {
      * @return true : XTAL signal is lost. false : XTAL signal is alive.
      */
     bool IsLossOfXtal();
+
+    bool SetFrequency(
+                      murasaki::Si5351Pll pll,
+                      murasaki::Si5351Pll div,
+                      uint32_t frequency
+                      );
+
+    bool SetQuadratureFrequency(
+                                murasaki::Si5351Pll pll,
+                                murasaki::Si5351Pll divI,
+                                murasaki::Si5351Pll divQ,
+                                uint32_t frequency
+                                );
 
 #if 0 // not yet implemented.
 
@@ -161,13 +216,13 @@ class Si5351 {
      *
      * So the r_div must be the power of 2.
      */
-    void Si5351PackRegister(
-                            const uint32_t integer,
-                            const uint32_t numerator,
-                            const uint32_t denominator,
-                            const uint32_t div_by_4,
-                            const uint32_t r_div,
-                            uint8_t reg[8]);
+    void PackRegister(
+                      const uint32_t integer,
+                      const uint32_t numerator,
+                      const uint32_t denominator,
+                      const uint32_t div_by_4,
+                      const uint32_t r_div,
+                      uint8_t reg[8]);
 
 };
 

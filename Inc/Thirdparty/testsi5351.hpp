@@ -22,7 +22,7 @@ namespace murasaki {
  * @details
  *
  */
-bool TestSi5351Driver(int freq_step);
+void TestSi5351Driver(int freq_step);
 
 class TestSi5351 {
  public:
@@ -35,6 +35,8 @@ class TestSi5351 {
     void TestIsLossOfLockB();
     void TestIsLossOfClkin();
     void TestIsLossOfXtal();
+    void TestSi5351ConfigSeek(int freq_step);
+    void TestPackRegister();
 
  private:
     murasaki::I2cMasterStub *const i2c_stub_;
