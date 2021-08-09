@@ -21,8 +21,9 @@ namespace murasaki {
  */
 enum Si5351Status
 {
-    ks5351Ok, /**< s5351Ok */
-    ks5351SeekFailure/**< s5351SeekFailure */
+    ks5351Ok, /**< OK */
+    ks5351SeekFailure, /**< Failure on the PLL setup seek */
+    ks5351Ng /**< NG */
 };
 
 /**
@@ -38,20 +39,19 @@ enum Si5351Pll
     ks5351PllB /**< PLLB */
 };
 
-/**
- * @ingroup MURASAKI_DEFINITION_GROUP
- * @brief Dividor ID.
- * @details
- * These enums are dedicated to the @ref Si5351 class.
- *
- * These dividors are located at the output of PLL
- *
- */
-enum Si5351Div
+enum Si5351OutputSource
 {
-    ks5351Div0, /**< Divider 0 */
-    ks5351Div1, /**< Divider 1 */
-    ks5351Div2 /**< Divider 2 */
+    ks5351osXtal,
+    ks5351osClk,
+    ks5351osDivider
+};
+
+enum Si5351OutputDrive
+{
+    ks5351od2mA,
+    ks5351od4mA,
+    ks5351od6mA,
+    ks5351od8mA
 };
 
 class TestSi5351;
@@ -111,18 +111,63 @@ class Si5351 {
      */
     bool IsLossOfXtal();
 
-    bool SetFrequency(
-                      murasaki::Si5351Pll pll,
-                      murasaki::Si5351Pll div,
-                      uint32_t frequency
-                      );
+    /**
+     * @brief Reset PLL.
+     * @param pll ks5351PllA for PLL A, ks5351PllB for PLL B.
+     */
+    todo implement
+    void ResetPLL(murasaki::Si5351Pll pll);
 
-    bool SetQuadratureFrequency(
-                                murasaki::Si5351Pll pll,
-                                murasaki::Si5351Pll divI,
-                                murasaki::Si5351Pll divQ,
-                                uint32_t frequency
-                                );
+    /**
+     * @brief Set the phase offset. The LSB is quarter cycle of PLL VCO frequency.
+     * @param ch 0 to 2
+     * @param offset 0 to 127
+     * @details
+     * When the post PLL divider is N, setting N to the offset parameter makes pi/2 delay on the output.
+     */
+    todo implement
+    void SetPhaseOffset(unsigned int ch, uint8_t offset);
+
+    todo doxygen
+    void ConfigOutput(
+                      unsigned int channel,
+                      bool outputEnable,
+                      bool powerDown,
+                      bool integerMode,
+                      murasaki::Si5351Pll srcPll,
+                      bool inverted,
+                      murasaki::Si5351OutputSource outputSrc,
+                      murasaki::Si5351OutputDrive drive
+                      );
+    /**
+     * @brief Set up the PLL and divider
+     * @param pll ks5351PllA for PLL A, ks5351PllB for PLL B.
+     * @param div ks5351Div0, 1 or 2 for the divider 0, 1 or 2, respectively.
+     * @param frequency Desired PLL IC output [Hz].
+     * @return ks5351Ok on success. ks5351Ok on failure.
+     */
+    Si5351Status SetFrequency(
+                              murasaki::Si5351Pll pll,
+                              unsigned int div,
+                              uint32_t frequency
+                              );
+
+    /**
+     * @brief Set up the PLL and divider
+     * @param pll ks5351PllA for PLL A, ks5351PllB for PLL B.
+     * @param divI ks5351Div0, 1 or 2 for the divider 0, 1 or 2, respectively.
+     * @param divQ ks5351Div0, 1 or 2 for the divider 0, 1 or 2, respectively.
+     * @param frequency Desired PLL IC output [Hz].
+     * @return ks5351Ok on success. ks5351Ok on failure.
+     * @details
+     * The output corresponding to divI and divQ has 90degree difference.Always, div Q output is delayed.
+     */
+    Si5351Status SetQuadratureFrequency(
+                                        murasaki::Si5351Pll pll,
+                                        murasaki::Si5351Pll divI,
+                                        murasaki::Si5351Pll divQ,
+                                        uint32_t frequency
+                                        );
 
 #if 0 // not yet implemented.
 
@@ -134,7 +179,7 @@ class Si5351 {
     murasaki::I2cMasterStrategy *const i2c_;
     unsigned int addrs_;
 
-    // Get specified register.
+// Get specified register.
     uint8_t getRegister(unsigned int reg_num);
 
     /**
