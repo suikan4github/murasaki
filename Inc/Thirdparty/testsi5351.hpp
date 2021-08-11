@@ -35,6 +35,7 @@ class TestSi5351 {
     void TestIsLossOfLockB();
     void TestIsLossOfClkin();
     void TestIsLossOfXtal();
+    void TestResetPLL();
     void TestSi5351ConfigSeek(int freq_step);
     void TestPackRegister();
 

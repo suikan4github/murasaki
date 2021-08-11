@@ -360,6 +360,35 @@ void TestSi5351::TestPackRegister() {
 
 }
 
+void TestSi5351::TestResetPLL()
+{
+    uint8_t buffer[SI5351_TEST_BUFFER_LEN];
+    unsigned int transffered_len;
+    bool flag;
+    // Si5351 : Register 177
+    const int RUT = 177;   // RESET regsiter
+
+    // ****************************************************************************
+    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "The ResetPLL() test ")
+    // check result.
+    si5351_->ResetPLL(murasaki::ks5351PllA);
+    si5351_->ResetPLL(murasaki::ks5351PllB);
+
+    // check the register access
+    i2c_stub_->readTxBuffer(buffer, SI5351_TEST_BUFFER_LEN, &transffered_len);
+    MURASAKI_ASSERT(transffered_len == 2)
+    MURASAKI_ASSERT(buffer[0] == RUT)
+    MURASAKI_ASSERT(buffer[1] == 1 << 5)
+
+    i2c_stub_->readTxBuffer(buffer, SI5351_TEST_BUFFER_LEN, &transffered_len);
+    MURASAKI_ASSERT(transffered_len == 2)
+    MURASAKI_ASSERT(buffer[0] == RUT)
+    MURASAKI_ASSERT(buffer[1] == 1 << 7)
+
+    i2c_stub_->clearRxBuffer();
+    i2c_stub_->clearTxBuffer();
+}
+
 void TestSi5351Driver(int freq_step)
                       {
 
@@ -372,14 +401,15 @@ void TestSi5351Driver(int freq_step)
                                              1,  // DUT I2C address
                                              true)  // Address filtering is on
                                              );
-                                                                                                                                                                                // @formatter:on
+                                                                                                                                                                                                // @formatter:on
     dut->TestIsInitializing();
     dut->TestIsLossOfLockA();
     dut->TestIsLossOfLockB();
     dut->TestIsLossOfXtal();
     dut->TestIsLossOfClkin();
-    dut->TestSi5351ConfigSeek(freq_step);
+    dut->TestResetPLL();
     dut->TestPackRegister();
+    dut->TestSi5351ConfigSeek(freq_step);
 }
 
 } /* namespace murasaki */

@@ -12,6 +12,7 @@
 
 // Device registers
 #define SI5351_STARTUS_REG 0
+#define SI5351_PLL_RESET_REG 177
 
 #define SI5351_SYS_INIT_BIT 7
 #define SI5351_LOL_B_BIT 6
@@ -193,6 +194,24 @@ Si5351Status Si5351::Si5351ConfigSeek(
     return ks5351Ok;
 }
 
+void Si5351::setRegister(unsigned int reg_addr, uint8_t value)
+                         {
+    murasaki::I2cStatus status;
+    uint8_t regs[2];
+    unsigned int transfered_count;
+
+    regs[0] = reg_addr;     // address of regsiter
+    regs[1] = value;        // value to set
+    status = i2c_->Transmit(addrs_,         // Address of PLL Si5351.
+            regs,      // Register # .
+            2,                  // Send 1 byte to set the register to read
+            &transfered_count,  // Dummy.
+            10);                // Wait 10 mSec.
+
+    MURASAKI_ASSERT(status == murasaki::ki2csOK)
+
+}
+
 void Si5351::PackRegister(
                           const uint32_t integer,
                           const uint32_t numerator,
@@ -243,13 +262,13 @@ void Si5351::PackRegister(
     reg[2] |= field << 4;
 }
 
-uint8_t Si5351::getRegister(unsigned int reg_num)
+uint8_t Si5351::getRegister(unsigned int reg_addr)
                             {
     murasaki::I2cStatus status;
     uint8_t reg, register_num;
     unsigned int transfered_count;
 
-    register_num = reg_num;
+    register_num = reg_addr;
     status = i2c_->Transmit(addrs_,         // Address of PLL Si5351.
             &register_num,      // Register # .
             1,                  // Send 1 byte to set the register to read
@@ -298,6 +317,21 @@ bool Si5351::IsLossOfXtal()
 {
     uint8_t reg = getRegister(SI5351_STARTUS_REG);       // Get Device Status.
     return (((1 << SI5351_LOXTAL_BIT) & reg) != 0);     // is SI5351_LOXTAL_BIT H?
+}
+
+void Si5351::ResetPLL(murasaki::Si5351Pll pll)
+                      {
+    switch (pll) {
+        case murasaki::ks5351PllA:
+            setRegister(SI5351_PLL_RESET_REG, 1 << 5);  // PLLB_RST
+            break;
+        case murasaki::ks5351PllB:
+            setRegister(SI5351_PLL_RESET_REG, 1 << 7);  // PLLB_RST
+            break;
+        default:
+            // illegal value
+            MURASAKI_ASSERT(false)
+    }
 }
 
 } /* namespace murasaki */

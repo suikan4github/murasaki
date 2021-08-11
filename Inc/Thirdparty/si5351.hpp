@@ -130,19 +130,19 @@ class Si5351 {
 
     /**
      * @brief Configure the output pin of the Si5351
-     * 
+     *
      * @param channel 0 to 2. This channel is physical output port
      * @param outputEnable true : enable, false : disable.
      * @param powerDown true : power down, false : power on.
-     * @param integerMode true : divider is integer mode, false : divider is fractional mode. 
+     * @param integerMode true : divider is integer mode, false : divider is fractional mode.
      * @param srcPll ks5351PllA or ks5351PllB
      * @param inverted true : phase inverted, false : not inverted
-     * @param outputSrc : ks5351osXtal, ks5351osClkin or ks5351osDivider. 
+     * @param outputSrc : ks5351osXtal, ks5351osClkin or ks5351osDivider.
      * @param drive : ks5351od2mA to ks5351od8mA
      * @details
-     * In the case of "Phase delay" by SetPhaseOffset() is not 0, the intgerMode must be false. 
-     * 
-     * If you set outputSrc to ks5351osXtal or ks5351osXtal, the PLL and divider are bypassed. 
+     * In the case of "Phase delay" by SetPhaseOffset() is not 0, the intgerMode must be false.
+     *
+     * If you set outputSrc to ks5351osXtal or ks5351osXtal, the PLL and divider are bypassed.
      */
     void ConfigOutput(
                       unsigned int channel,
@@ -196,6 +196,8 @@ class Si5351 {
 
 // Get specified register.
     uint8_t getRegister(unsigned int reg_num);
+    // Set value to the specified register.
+    void setRegister(unsigned int reg_num, uint8_t value);
 
     /**
      * @brief Seek the appropriate configuration of the Si5351.
