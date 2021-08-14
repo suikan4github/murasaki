@@ -35,23 +35,54 @@ enum Si5351Status
  */
 enum Si5351Pll
 {
-    ks5351PllA, /**< PLLA */
+    ks5351PllA = 0, /**< PLLA */
     ks5351PllB /**< PLLB */
 };
 
+/**
+ * @ingroup MURASAKI_DEFINITION_GROUP
+ * @brief Output pin, source clock configuration.
+ * @details
+ * Applied to the CLK_SRC field of the Register 17 to 23 of Si5351.
+ */
 enum Si5351OutputSource
 {
-    ks5351osXtal,
-    ks5351osClk,
-    ks5351osDivider
+    ks5351osXtal = 0,       ///< Select the XTAL as the clock source for CLK.
+    ks5351osClkin,          ///< Select the CLKIN as the clock source for CLK.
+    ks5351osMultiSynth1,    ///< Select the Multisynth1 as the clock source for CLK.
+    ks5351osNativeDivider   ///< Select the native Multisynth divider as clock source.
 };
 
+/**
+ * @ingroup MURASAKI_DEFINITION_GROUP
+ * @brief Output dirver current configuration.
+ * @details
+ * Applied to the CLK_IDRV field of the Register 17 to 23 of Si5351.
+ */
 enum Si5351OutputDrive
 {
-    ks5351od2mA,
+    ks5351od2mA = 0,
     ks5351od4mA,
     ks5351od6mA,
     ks5351od8mA
+};
+
+/**
+ * @ingroup MURASAKI_DEFINITION_GROUP
+ * @brief Correction of the clock control
+ * @details
+ * Applied to the Register 17 to 23 of Si5351.
+ */
+union Si5351ClockControl {
+    uint8_t value;  ///< Aggregated value. This value represents the value in the CLK Control register.
+    struct {
+        murasaki::Si5351OutputDrive clk_idrv :2;  ///< CLK_IDRV field. ks5351od2mA ... ks5351od8mA
+        murasaki::Si5351OutputSource clk_src :2;  ///< CLK1_SRC field. Use ks5351osNativeDivider for normal clock generating.
+        bool clk_inv :1;                        ///< CLK_INV field. Set true to inverse.
+        murasaki::Si5351Pll ms_src :1;          ///< MS_SRC field. ks5351PllA or ks5351PllB
+        bool ms_int :1;                         ///< MS_INT field. Set true to integer mode.
+        bool clk_pdn :1;                        ///< CLK_PDN field. Set true to power down.
+    } fields;
 };
 
 class TestSi5351;
@@ -124,6 +155,7 @@ class Si5351 {
      * @param offset 0 to 127
      * @details
      * When the post PLL divider is N, setting N to the offset parameter makes pi/2 delay on the output.
+     *
      */
 
     void SetPhaseOffset(unsigned int ch, uint8_t offset);
@@ -132,28 +164,27 @@ class Si5351 {
      * @brief Configure the output pin of the Si5351
      *
      * @param channel 0 to 2. This channel is physical output port
-     * @param outputEnable true : enable, false : disable.
-     * @param powerDown true : power down, false : power on.
-     * @param integerMode true : divider is integer mode, false : divider is fractional mode.
-     * @param srcPll ks5351PllA or ks5351PllB
-     * @param inverted true : phase inverted, false : not inverted
-     * @param outputSrc : ks5351osXtal, ks5351osClkin or ks5351osDivider.
-     * @param drive : ks5351od2mA to ks5351od8mA
+     * @param clockConfig Value of the clock clock output control.
      * @details
      * In the case of "Phase delay" by SetPhaseOffset() is not 0, the intgerMode must be false.
      *
      * If you set outputSrc to ks5351osXtal or ks5351osXtal, the PLL and divider are bypassed.
      */
-    void ConfigOutput(
-                      unsigned int channel,
-                      bool outputEnable,
-                      bool powerDown,
-                      bool integerMode,
-                      murasaki::Si5351Pll srcPll,
-                      bool inverted,
-                      murasaki::Si5351OutputSource outputSrc,
-                      murasaki::Si5351OutputDrive drive
-                      );
+    void SetClockConfig(
+                        unsigned int channel,
+                        union Si5351ClockControl clockConfig
+                        );
+
+    /**
+     * @brief Read the output pin config of the Si5351
+     *
+     * @param channel 0 to 2. This channel is physical output port
+     * @return clockConfig Value of the clock clock output control.
+     * @details
+     */
+    union Si5351ClockControl GetClockConfig(
+                                            unsigned int channel
+                                            );
     /**
      * @brief Set up the PLL and divider
      * @param pll ks5351PllA for PLL A, ks5351PllB for PLL B.

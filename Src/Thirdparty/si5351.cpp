@@ -13,6 +13,8 @@
 // Device registers
 #define SI5351_STARTUS_REG 0
 #define SI5351_PLL_RESET_REG 177
+#define SI5351_CLK0_INITIAL_PHASE_OFFSET_REG 165
+#define SI5351_CLK0_CONTROL_REG 16
 
 #define SI5351_SYS_INIT_BIT 7
 #define SI5351_LOL_B_BIT 6
@@ -204,12 +206,52 @@ void Si5351::setRegister(unsigned int reg_addr, uint8_t value)
     regs[1] = value;        // value to set
     status = i2c_->Transmit(addrs_,         // Address of PLL Si5351.
             regs,      // Register # .
-            2,                  // Send 1 byte to set the register to read
+            2,                  // Send 1 byte to set the register to read, and 1 another as data.
             &transfered_count,  // Dummy.
             10);                // Wait 10 mSec.
 
     MURASAKI_ASSERT(status == murasaki::ki2csOK)
 
+}
+
+void Si5351::SetPhaseOffset(unsigned int ch, uint8_t offset) {
+    // Channel must be 0, 1 or 2.
+    MURASAKI_ASSERT(ch < 3)
+    // Register address of the phase offset to change.
+    uint8_t offset_reg = SI5351_CLK0_INITIAL_PHASE_OFFSET_REG + ch;
+
+    // offset must be 7 bits.
+    MURASAKI_ASSERT(offset < 128)
+
+    // Set the desired offset to the right register.
+    setRegister(offset_reg, offset);
+
+}
+
+void Si5351::SetClockConfig(unsigned int channel, union Si5351ClockControl clockConfig) {
+    // Channel must be 0, 1 or 2.
+    MURASAKI_ASSERT(channel < 3)
+
+    // Register address of the integer mode to change.
+    uint8_t ctrl_reg = SI5351_CLK0_CONTROL_REG + channel;
+
+    // Set the Clock control regsiter.
+    setRegister(ctrl_reg, clockConfig.value);
+
+}
+
+union Si5351ClockControl Si5351::GetClockConfig(unsigned int channel) {
+    // Channel must be 0, 1 or 2.
+    MURASAKI_ASSERT(channel < 3)
+
+    // Register address of the integer mode to change.
+    uint8_t ctrl_reg = SI5351_CLK0_CONTROL_REG + channel;
+
+    // Get CLK# Control register value.
+    Si5351ClockControl retval;
+    retval.value = getRegister(ctrl_reg);
+
+    return retval;
 }
 
 void Si5351::PackRegister(
@@ -220,32 +262,32 @@ void Si5351::PackRegister(
                           const uint32_t r_div,
                           uint8_t reg[8])
                           {
-    // integer part must be no bigger than 18bits.
+// integer part must be no bigger than 18bits.
     MURASAKI_ASSERT((integer & 0xFFFC0000) == 0)
-    // Numerator and denominator part must be no bigger than 20bits.
+// Numerator and denominator part must be no bigger than 20bits.
     MURASAKI_ASSERT((numerator & 0xFFF00000) == 0)
     MURASAKI_ASSERT((denominator & 0xFFF00000) == 0)
-    // Right value of div by four must be 0 or 3
+// Right value of div by four must be 0 or 3
     MURASAKI_ASSERT((div_by_4 == 0) || (div_by_4 == 3))
 
-    reg[0] = (denominator >> 8) & 0x00FF;          // extract [15:8]
-    reg[1] = (denominator) & 0x00FF;                 // extract [7:0]
-    reg[3] = (integer >> 8) & 0x00FF;              // extract [15:8]
-    reg[4] = (integer) & 0x00FF;                     // extract [7:0]
-    reg[5] = ((((denominator) >> 16) & 0x0F) << 4) |  // extract [19:16]
-            ((numerator >> 16) & 0x0F);             // extract [19:16]
-    reg[6] = (numerator >> 8) & 0x00FF;            // extract [15:8]
-    reg[7] = (numerator) & 0x00FF;                   // extract [7:0]
+    reg[0] = (denominator >> 8) & 0x00FF;    // extract [15:8]
+    reg[1] = (denominator) & 0x00FF;    // extract [7:0]
+    reg[3] = (integer >> 8) & 0x00FF;    // extract [15:8]
+    reg[4] = (integer) & 0x00FF;    // extract [7:0]
+    reg[5] = ((((denominator) >> 16) & 0x0F) << 4) |    // extract [19:16]
+            ((numerator >> 16) & 0x0F);    // extract [19:16]
+    reg[6] = (numerator >> 8) & 0x00FF;    // extract [15:8]
+    reg[7] = (numerator) & 0x00FF;    // extract [7:0]
 
     reg[2] = 0;
 
     reg[2] |= (integer >> 16) & 0x03;
     reg[2] |= div_by_4 << 2;
 
-    // Calculate the field value for the r_div.
-    // The r_div is true divider value. That is the value of the 2^x.
-    // The field value mast be this "x". Following code seeks the x for r_div.
-    uint32_t field = R_DIV_MUSB_BE_1_TO_128_AS_POWER_OF_TWO;  // 256 is an error value.
+// Calculate the field value for the r_div.
+// The r_div is true divider value. That is the value of the 2^x.
+// The field value mast be this "x". Following code seeks the x for r_div.
+    uint32_t field = R_DIV_MUSB_BE_1_TO_128_AS_POWER_OF_TWO;    // 256 is an error value.
 
     unsigned int value = 1;
     for (unsigned int i = 0; i < 8; i++) {
@@ -258,30 +300,31 @@ void Si5351::PackRegister(
     }
 
     MURASAKI_ASSERT(field != R_DIV_MUSB_BE_1_TO_128_AS_POWER_OF_TWO)
-    // Make sure the field value is not error.
+// Make sure the field value is not error.
     reg[2] |= field << 4;
 }
 
-uint8_t Si5351::getRegister(unsigned int reg_addr)
-                            {
+uint8_t
+Si5351::getRegister(unsigned int reg_addr)
+                    {
     murasaki::I2cStatus status;
     uint8_t reg, register_num;
     unsigned int transfered_count;
 
     register_num = reg_addr;
     status = i2c_->Transmit(addrs_,         // Address of PLL Si5351.
-            &register_num,      // Register # .
-            1,                  // Send 1 byte to set the register to read
-            &transfered_count,  // Dummy.
-            10);                // Wait 10 mSec.
+            &register_num,         // Register # .
+            1,         // Send 1 byte to set the register to read
+            &transfered_count,         // Dummy.
+            10);         // Wait 10 mSec.
 
     MURASAKI_ASSERT(status == murasaki::ki2csOK)
 
     status = i2c_->Receive(addrs_,         // Address of PLL Si5351.
-            &reg,               // received Register  .
-            1,                  // Receive 1 byte.
-            &transfered_count,  // Dummy.
-            10);                // Wait 10 mSec.
+            &reg,         // received Register  .
+            1,         // Receive 1 byte.
+            &transfered_count,         // Dummy.
+            10);         // Wait 10 mSec.
 
     MURASAKI_ASSERT(status == murasaki::ki2csOK)
 
@@ -292,31 +335,31 @@ uint8_t Si5351::getRegister(unsigned int reg_addr)
 bool Si5351::IsInitializing()
 {
     uint8_t reg = getRegister(SI5351_STARTUS_REG);       // Get Device Status.
-    return (((1 << SI5351_SYS_INIT_BIT) & reg) != 0);     // is SI5351_LOL_A_BIT  H?
+    return (((1 << SI5351_SYS_INIT_BIT) & reg) != 0);       // is SI5351_LOL_A_BIT  H?
 }
 
 bool Si5351::IsLossOfLockA()
 {
     uint8_t reg = getRegister(SI5351_STARTUS_REG);       // Get Device Status.
-    return (((1 << SI5351_LOL_A_BIT) & reg) != 0);     // is SI5351_LOL_A_BIT H?
+    return (((1 << SI5351_LOL_A_BIT) & reg) != 0);       // is SI5351_LOL_A_BIT H?
 }
 
 bool Si5351::IsLossOfLockB()
 {
     uint8_t reg = getRegister(SI5351_STARTUS_REG);       // Get Device Status.
-    return (((1 << SI5351_LOL_B_BIT) & reg) != 0);     // is SI5351_LOL_B_BIT H?
+    return (((1 << SI5351_LOL_B_BIT) & reg) != 0);       // is SI5351_LOL_B_BIT H?
 }
 
 bool Si5351::IsLossOfClkin()
 {
     uint8_t reg = getRegister(SI5351_STARTUS_REG);       // Get Device Status.
-    return (((1 << SI5351_LOCLKIN_BIT) & reg) != 0);     // is SI5351_LOCLKIN_BIT H?
+    return (((1 << SI5351_LOCLKIN_BIT) & reg) != 0);       // is SI5351_LOCLKIN_BIT H?
 }
 
 bool Si5351::IsLossOfXtal()
 {
     uint8_t reg = getRegister(SI5351_STARTUS_REG);       // Get Device Status.
-    return (((1 << SI5351_LOXTAL_BIT) & reg) != 0);     // is SI5351_LOXTAL_BIT H?
+    return (((1 << SI5351_LOXTAL_BIT) & reg) != 0);       // is SI5351_LOXTAL_BIT H?
 }
 
 void Si5351::ResetPLL(murasaki::Si5351Pll pll)

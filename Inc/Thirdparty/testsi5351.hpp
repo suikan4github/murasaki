@@ -36,6 +36,10 @@ class TestSi5351 {
     void TestIsLossOfClkin();
     void TestIsLossOfXtal();
     void TestResetPLL();
+    void TestSetClockConfig();
+    void TestGetClockConfig();
+    void TestSi5351ClockControl();
+    void TestSetPhaseOffset();
     void TestSi5351ConfigSeek(int freq_step);
     void TestPackRegister();
 
