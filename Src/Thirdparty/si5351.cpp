@@ -270,7 +270,7 @@ Si5351Status Si5351::SetFrequency(murasaki::Si5351Pll pll, unsigned int div_ch, 
                                             stage2_denom,
                                             div_by_4,
                                             r_div);
-                            // @formatter:on
+                                                                                                                                                    // @formatter:on
     MURASAKI_ASSERT(status == murasaki::ks5351Ok)
 
     // Construct the register field for PLL
@@ -311,6 +311,103 @@ Si5351Status Si5351::SetFrequency(murasaki::Si5351Pll pll, unsigned int div_ch, 
     clockConfig.fields.clk_pdn = false;
     clockConfig.fields.ms_int = (stage2_num == 0);       // set integer mode.
     SetClockConfig(div_ch, clockConfig);
+
+    // Reset the PLL to make phase offset correct. This is required by specification.
+    ResetPLL(pll);
+}
+
+Si5351Status Si5351::SetQuadratureFrequency(murasaki::Si5351Pll pll, unsigned int divI_ch, unsigned int divQ_ch, uint32_t frequency) {
+    // div must be 0, 1 or 2.
+    MURASAKI_ASSERT(divI_ch < 3)
+    MURASAKI_ASSERT(divQ_ch < 3)
+    MURASAKI_ASSERT(frequency >= 4725000);         // must be higher than 4.725MHz.
+    MURASAKI_ASSERT(150000000 >= frequency);  // must be lower than or equal to 150MHz
+
+    // Parameter receiving variables.
+    uint32_t stage1_int;
+    uint32_t stage1_num;
+    uint32_t stage1_denom;
+    uint32_t stage2_int;
+    uint32_t stage2_num;
+    uint32_t stage2_denom;
+    uint32_t div_by_4;
+    uint32_t r_div;
+
+    // Seek the best parameter combination for the given external frquency and output frequency.
+    Si5351Status status = Si5351ConfigSeek(  //@formatter:off
+                                            ext_freq_,   // external clock source frequency
+                                            frequency,   // output frequency
+                                            stage1_int,
+                                            stage1_num,
+                                            stage1_denom,
+                                            stage2_int,
+                                            stage2_num,
+                                            stage2_denom,
+                                            div_by_4,
+                                            r_div);
+                                                                                                                                                    // @formatter:on
+    MURASAKI_ASSERT(status == murasaki::ks5351Ok)
+    MURASAKI_ASSERT(127 >= stage2_int)
+
+    // Construct the register field for PLL
+    uint8_t pll_reg[8];
+    Si5351::PackRegister(
+                         stage1_int,
+                         stage1_num,
+                         stage1_denom,
+                         0,  // div_by_4 must be zero for PLL
+                         0,  // r_div must be zero for PLL
+                         pll_reg);
+
+    // calculate the offset to the PLL multisynth parameters.
+    unsigned int offset = (pll == murasaki::ks5351PllA) ? 0 : SI5351_MULTISYNTH_REG_LEN;
+
+    // set PLL multithynth parameters.
+    SetRegister(SI5351_MULTISYNTH_NA_REG + offset,
+                pll_reg,
+                SI5351_MULTISYNTH_REG_LEN);
+
+    // Construct the register filed for the post PLL divider
+    uint8_t div_reg[8];
+    Si5351::PackRegister(
+                         stage2_int,
+                         stage2_num,
+                         stage2_denom,
+                         div_by_4,
+                         r_div,
+                         div_reg);
+
+    // set the post PLL multithynth divider I parameters.
+    SetRegister(SI5351_MULTISYNTH_0_REG + SI5351_MULTISYNTH_REG_LEN * divI_ch,
+                div_reg,
+                SI5351_MULTISYNTH_REG_LEN);
+
+    // set the post PLL multithynth divider Q parameters.
+    SetRegister(SI5351_MULTISYNTH_0_REG + SI5351_MULTISYNTH_REG_LEN * divQ_ch,
+                div_reg,
+                SI5351_MULTISYNTH_REG_LEN);
+
+    // Configure fraction mode and disable powern down of the output.
+    // Fractional mode is required by specification of phase offset.
+    murasaki::Si5351ClockControl clockConfig = GetClockConfig(divI_ch);
+    clockConfig.fields.clk_pdn = false;
+    clockConfig.fields.ms_int = false;       // set fractional mode.
+    SetClockConfig(divI_ch, clockConfig);
+
+    clockConfig = GetClockConfig(divQ_ch);
+    clockConfig.fields.clk_pdn = false;
+    clockConfig.fields.ms_int = false;       // set fractional mode.
+    SetClockConfig(divQ_ch, clockConfig);
+
+    // Configure delay.
+    // The LSB of the phase offset register is pi/2 of the PLL VCO.
+    // On the other hand, the MS divider divide it by stage2_int value.
+    // Thus, setting stage2_int makes pi/2 delay of output.
+    SetPhaseOffset(divI_ch, 0);
+    SetPhaseOffset(divQ_ch, stage2_int);
+
+    // Reset the PLL to make phase offset correct. This is required by specification.
+    ResetPLL(pll);
 }
 
 void Si5351::PackRegister(

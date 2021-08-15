@@ -16,7 +16,7 @@
 #define STARTFREQ 3
 
 #define SI5351_TEST_BUFFER_LEN 40
-#define SI5351_TEST_BUFFER_NUM 8
+#define SI5351_TEST_BUFFER_NUM 12
 
 namespace murasaki {
 
@@ -38,7 +38,7 @@ void TestSi5351::TestIsInitializing() {
     const int BUT = 7;   // Bit under test
     const int RUT = 0;   // Register under test
 
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "The IsInitializing() test start.")
+    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test start.")
 
     i2c_stub_->clearRxBuffer();
     i2c_stub_->clearTxBuffer();
@@ -49,7 +49,7 @@ void TestSi5351::TestIsInitializing() {
     i2c_stub_->writeRxBuffer(buffer, 1);
     buffer[0] = 0x00;   // System is NOT initializing.
     i2c_stub_->writeRxBuffer(buffer, 1);
-    buffer[0] = ~(1 << BUT);   // System is NOT initializing.
+    buffer[0] = 0xFF & ~(1 << BUT);   // System is NOT initializing.
     i2c_stub_->writeRxBuffer(buffer, 1);
 
     // check result.
@@ -67,7 +67,7 @@ void TestSi5351::TestIsInitializing() {
     MURASAKI_ASSERT(transffered_len == 1)
     MURASAKI_ASSERT(buffer[0] == RUT)
 
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "The IsInitializing() test done.")
+    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test done.")
 }
 
 void TestSi5351::TestIsLossOfLockA() {
@@ -78,7 +78,7 @@ void TestSi5351::TestIsLossOfLockA() {
     const int BUT = 5;   // Bit under test
     const int RUT = 0;   // Register under test
 
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "The IsLossOfLockA() test start.")
+    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test start.")
 
     i2c_stub_->clearRxBuffer();
     i2c_stub_->clearTxBuffer();
@@ -107,7 +107,7 @@ void TestSi5351::TestIsLossOfLockA() {
     MURASAKI_ASSERT(transffered_len == 1)
     MURASAKI_ASSERT(buffer[0] == RUT)
 
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "The IsLossOfLockA() test done.")
+    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test done.")
 }
 
 void TestSi5351::TestIsLossOfLockB() {
@@ -118,7 +118,7 @@ void TestSi5351::TestIsLossOfLockB() {
     const int BUT = 6;   // Bit under test
     const int RUT = 0;   // Register under test
 
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "The IsLossOfLockB() test start.")
+    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test start.")
 
     i2c_stub_->clearRxBuffer();
     i2c_stub_->clearTxBuffer();
@@ -147,7 +147,7 @@ void TestSi5351::TestIsLossOfLockB() {
     MURASAKI_ASSERT(transffered_len == 1)
     MURASAKI_ASSERT(buffer[0] == RUT)
 
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "The IsLossOfLockB() test done.")
+    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test done.")
 }
 
 void TestSi5351::TestIsLossOfClkin() {
@@ -158,7 +158,7 @@ void TestSi5351::TestIsLossOfClkin() {
     const int BUT = 4;   // Bit under test
     const int RUT = 0;   // Register under test
 
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "The IsLossOfClkin() test start.")
+    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test start.")
 
     i2c_stub_->clearRxBuffer();
     i2c_stub_->clearTxBuffer();
@@ -187,7 +187,7 @@ void TestSi5351::TestIsLossOfClkin() {
     MURASAKI_ASSERT(transffered_len == 1)
     MURASAKI_ASSERT(buffer[0] == RUT)
 
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "The IsLossOfClkin() test done.")
+    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test done.")
 
 }
 
@@ -199,7 +199,7 @@ void TestSi5351::TestIsLossOfXtal() {
     const int BUT = 3;   // Bit under test
     const int RUT = 0;   // Register under test
 
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "The IsLossOfXtal() test start.")
+    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test start.")
 
     i2c_stub_->clearRxBuffer();
     i2c_stub_->clearTxBuffer();
@@ -228,7 +228,7 @@ void TestSi5351::TestIsLossOfXtal() {
     MURASAKI_ASSERT(transffered_len == 1)
     MURASAKI_ASSERT(buffer[0] == RUT)
 
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "The IsLossOfXtal() test done.")
+    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test done.")
 
 }
 
@@ -239,7 +239,7 @@ void TestSi5351::TestSi5351ConfigSeek(int freq_step) {
     uint32_t r;
     bool error = false;
 
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "The Si5351ConfigSeek() test start.")
+    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test start.")
 
     // Massive test for the basic coefficient calculation.
     // From input frequency 10Mhz to 30MHz by 5MHz step
@@ -317,14 +317,14 @@ void TestSi5351::TestSi5351ConfigSeek(int freq_step) {
             }
         }
     }   // end of for.
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "The Si5351ConfigSeek() test done.")
+    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test done.")
 
 }
 
 void TestSi5351::TestPackRegister() {
 
     // Register construction test for the PLL coefficient.
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "The Si5351PackRegister() test start.")
+    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test start.")
 
     uint32_t inte, num, denom, div_4, r_div;
     uint8_t registers[8];
@@ -369,7 +369,7 @@ void TestSi5351::TestPackRegister() {
     MURASAKI_ASSERT(((registers[2] >> 4) & 0x07) == 0x07)
 
     // Now, testing the basic functions.
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "The Si5351PackRegister() test done.")
+    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test done.")
 
 }
 
@@ -377,11 +377,10 @@ void TestSi5351::TestResetPLL()
 {
     uint8_t buffer[SI5351_TEST_BUFFER_LEN];
     unsigned int transffered_len;
-    bool flag;
     // Si5351 : Register 177
     const int RUT = 177;   // RESET register
 
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "The ResetPLL() test start.")
+    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test start.")
 
     i2c_stub_->clearRxBuffer();
     i2c_stub_->clearTxBuffer();
@@ -401,7 +400,7 @@ void TestSi5351::TestResetPLL()
     MURASAKI_ASSERT(buffer[0] == RUT)
     MURASAKI_ASSERT(buffer[1] == 1 << 7)
 
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "The ResetPLL() test done.")
+    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test done.")
 
 }
 
@@ -409,12 +408,9 @@ void TestSi5351::TestSetPhaseOffset()
 {
     uint8_t buffer[SI5351_TEST_BUFFER_LEN];
     unsigned int transffered_len;
-    bool flag;
-    // Si5351 : Register 177
-    const int CTRL_REG = 16;   // control register
     const int OFST_REG = 165;   // phase offset register
 
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "The SetPhaseOffset() test start. ")
+    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test start. ")
 
     // ch=0, offset=0
     i2c_stub_->clearRxBuffer();
@@ -464,7 +460,7 @@ void TestSi5351::TestSetPhaseOffset()
     MURASAKI_ASSERT(buffer[0] == OFST_REG + 2)
     MURASAKI_ASSERT(buffer[1] == 11);    // offset value
 
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "The SetPhaseOffset() test done.")
+    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test done.")
 
 }
 
@@ -475,7 +471,7 @@ void TestSi5351::TestSetClockConfig()
     // Si5351 : Register 16
     const int CTRL_REG = 16;   // control register
 
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "The TestSetClockConfig() test start. ")
+    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test start. ")
 
     // ch=0, offset=0
     i2c_stub_->clearRxBuffer();
@@ -511,7 +507,7 @@ void TestSi5351::TestSetClockConfig()
     MURASAKI_ASSERT(buffer[0] == CTRL_REG + 2)
     MURASAKI_ASSERT(clockConfig.value == 0x55)
 
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "The TestSetClockConfig() test done. ")
+    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test done. ")
 }
 
 void TestSi5351::TestGetClockConfig()
@@ -521,7 +517,7 @@ void TestSi5351::TestGetClockConfig()
     // Si5351 : Register 16
     const int CTRL_REG = 16;   // control register
 
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "The TestGetClockConfig() test start. ")
+    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test start. ")
 
     // ch=0, offset=0
     i2c_stub_->clearRxBuffer();
@@ -553,14 +549,14 @@ void TestSi5351::TestGetClockConfig()
     MURASAKI_ASSERT(buffer[0] == CTRL_REG + 2)
     MURASAKI_ASSERT(buffer[1] == 0xDE);    // offset value
 
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "The TestGetClockConfig() test done. ")
+    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test done. ")
 }
 
 void TestSi5351::TestSi5351ClockControl()
 {
     murasaki::Si5351ClockControl clockConfig;
 
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "The TestSi5351ClockControl() test start. ")
+    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test start. ")
 
     MURASAKI_ASSERT(sizeof(clockConfig) == 1)
     clockConfig.value = 0;
@@ -588,36 +584,8 @@ void TestSi5351::TestSi5351ClockControl()
     clockConfig.value = 1 << 7;
     MURASAKI_ASSERT(clockConfig.fields.clk_pdn)
 
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "The TestSi5351ClockControl() test done. ")
+    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test done. ")
 
-}
-
-void TestSi5351Driver(int freq_step) {
-
-    // Create an Device Under Test.
-    // @formatter:off
-    TestSi5351 *dut = new TestSi5351(
-                                     new murasaki::I2cMasterStub(
-                                             SI5351_TEST_BUFFER_NUM,  // Number of the TX RX test buffers.
-                                             SI5351_TEST_BUFFER_LEN,  // LENGTH of the TX RX test buffers.
-                                             1,  // DUT I2C address
-                                             true)  // Address filtering is on
-                                             );
-                                                                                                                                                                                                                                                                                                   // @formatter:on
-
-    dut->TestSi5351ClockControl();
-    dut->TestIsInitializing();
-    dut->TestIsLossOfLockA();
-    dut->TestIsLossOfLockB();
-    dut->TestIsLossOfXtal();
-    dut->TestIsLossOfClkin();
-    dut->TestResetPLL();
-    dut->TestSetClockConfig();
-    dut->TestGetClockConfig();
-    dut->TestSetPhaseOffset();
-    dut->TestSetFrequency();
-    dut->TestPackRegister();
-    dut->TestSi5351ConfigSeek(freq_step);
 }
 
 void TestSi5351::TestSetFrequency()
@@ -628,7 +596,7 @@ void TestSi5351::TestSetFrequency()
     const int PLLA = 26;   // RESET register
     const int MSDIV0 = 42;   // RESET register
 
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "The TestSetFrequency() test start.")
+    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test start.")
 
     i2c_stub_->clearRxBuffer();
     i2c_stub_->clearTxBuffer();
@@ -690,7 +658,7 @@ void TestSi5351::TestSetFrequency()
             0,// output port 0
             161234000// 161.234 MHz
     );
-                                                    //@formatter:on
+                                                                                                                                                                                                                            //@formatter:on
 
             // check the PLL register configuration
     i2c_stub_->readTxBuffer(buffer, SI5351_TEST_BUFFER_LEN, &transffered_len);
@@ -724,7 +692,146 @@ void TestSi5351::TestSetFrequency()
     MURASAKI_ASSERT((buffer[1] & (1 << 6)) && !(buffer[1] & (1 << 7)))
     // power down disable, integer mode enable.
 
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "The TestSetFrequency() test done.")
+    // Check PLL reset
+    const int PLL_RESET_REG = 177;   // RESET register
+    i2c_stub_->readTxBuffer(buffer, SI5351_TEST_BUFFER_LEN, &transffered_len);
+    MURASAKI_ASSERT(transffered_len == 2)
+    MURASAKI_ASSERT(buffer[0] == PLL_RESET_REG)
+    MURASAKI_ASSERT(buffer[1] == 1 << 5)
+
+    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test done.")
+}
+
+void TestSi5351::TestSetQuadratureFrequency()
+{
+    uint8_t buffer[SI5351_TEST_BUFFER_LEN];
+    unsigned int transffered_len;
+    const int CLKCTRL = 16;   // RESET register
+    const int PLLA = 26;   // RESET register
+    const int MSDIV0 = 42;   // RESET register
+    const int OFST_REG = 165;   // phase offset register
+
+    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test start.")
+
+    i2c_stub_->clearRxBuffer();
+    i2c_stub_->clearTxBuffer();
+
+    buffer[0] = 0xFF;   // Set test data as register for CLK_CTRL register.
+    i2c_stub_->writeRxBuffer(buffer, 1);    // for I
+    i2c_stub_->writeRxBuffer(buffer, 1);    // for Q
+
+    // check result.
+
+    si5351_->SetQuadratureFrequency(    //@formatter:off
+                          murasaki::ks5351PllB,     // PLL A
+                          1,                        // output port 1
+                          2,                        // output port 2
+                          50490000                      // 50.490 MHz
+                          );            //@formatter:on
+
+            // check the PLL register configuration
+    i2c_stub_->readTxBuffer(buffer, SI5351_TEST_BUFFER_LEN, &transffered_len);
+    MURASAKI_ASSERT(transffered_len == 9)
+    MURASAKI_ASSERT(buffer[0] == PLLA + 8)
+    MURASAKI_ASSERT((((buffer[3] & 0x03) << 16) + (buffer[4] << 8) + buffer[5]) == 24);    // PLL INTEGER part
+    MURASAKI_ASSERT((((buffer[6] & 0x03) << 16) + (buffer[7] << 8) + buffer[8]) == 147);    // PLL NUM part
+    MURASAKI_ASSERT((((buffer[6] & 0xF0) << 12) + (buffer[1] << 8) + buffer[2]) == 625);    // PLL DENOM part
+    MURASAKI_ASSERT((buffer[3] & 0x0C) >> 2 == 0);    // PLL DIV_BY_4
+    MURASAKI_ASSERT((buffer[3] & 0x70) >> 4 == 0);    // PLL RDIV
+
+    // check the DIVIDER I register configuration
+    i2c_stub_->readTxBuffer(buffer, SI5351_TEST_BUFFER_LEN, &transffered_len);
+    MURASAKI_ASSERT(transffered_len == 9)
+    MURASAKI_ASSERT(buffer[0] == MSDIV0 + 8)
+    MURASAKI_ASSERT((((buffer[3] & 0x03) << 16) + (buffer[4] << 8) + buffer[5]) == 12);    // MS INTEGER part
+    MURASAKI_ASSERT((((buffer[6] & 0x03) << 16) + (buffer[7] << 8) + buffer[8]) == 0);    // MS NUM part
+    MURASAKI_ASSERT((((buffer[6] & 0xF0) << 12) + (buffer[1] << 8) + buffer[2]) == 1);    // MS DENOM part
+    MURASAKI_ASSERT((buffer[3] & 0x0C) >> 2 == 0);    // MS DIV_BY_4
+    MURASAKI_ASSERT((buffer[3] & 0x70) >> 4 == 0);    // MS RDIV
+
+    // check the DIVIDER Q register configuration
+    i2c_stub_->readTxBuffer(buffer, SI5351_TEST_BUFFER_LEN, &transffered_len);
+    MURASAKI_ASSERT(transffered_len == 9)
+    MURASAKI_ASSERT(buffer[0] == MSDIV0 + 8 * 2)
+    MURASAKI_ASSERT((((buffer[3] & 0x03) << 16) + (buffer[4] << 8) + buffer[5]) == 12);    // MS INTEGER part
+    MURASAKI_ASSERT((((buffer[6] & 0x03) << 16) + (buffer[7] << 8) + buffer[8]) == 0);    // MS NUM part
+    MURASAKI_ASSERT((((buffer[6] & 0xF0) << 12) + (buffer[1] << 8) + buffer[2]) == 1);    // MS DENOM part
+    MURASAKI_ASSERT((buffer[3] & 0x0C) >> 2 == 0);    // MS DIV_BY_4
+    MURASAKI_ASSERT((buffer[3] & 0x70) >> 4 == 0);    // MS RDIV
+
+    // check the CLKCTRL address set
+    // I
+    i2c_stub_->readTxBuffer(buffer, SI5351_TEST_BUFFER_LEN, &transffered_len);
+    MURASAKI_ASSERT(transffered_len == 1)
+    MURASAKI_ASSERT(buffer[0] == CLKCTRL + 1)
+    // check the CLKCTRL read-modify-write
+    // I
+    i2c_stub_->readTxBuffer(buffer, SI5351_TEST_BUFFER_LEN, &transffered_len);
+    MURASAKI_ASSERT(transffered_len == 2)
+    MURASAKI_ASSERT(buffer[0] == CLKCTRL + 1)
+    MURASAKI_ASSERT(!(buffer[1] & 0xC0));    // power down disable, integer mode disable.
+
+    // check the CLKCTRL address set
+    // Q
+    i2c_stub_->readTxBuffer(buffer, SI5351_TEST_BUFFER_LEN, &transffered_len);
+    MURASAKI_ASSERT(transffered_len == 1)
+    MURASAKI_ASSERT(buffer[0] == CLKCTRL + 2)
+    // check the CLKCTRL read-modify-write
+    // Q
+    i2c_stub_->readTxBuffer(buffer, SI5351_TEST_BUFFER_LEN, &transffered_len);
+    MURASAKI_ASSERT(transffered_len == 2)
+    MURASAKI_ASSERT(buffer[0] == CLKCTRL + 2)
+    MURASAKI_ASSERT(!(buffer[1] & 0xC0));    // power down disable, integer mode disable.
+
+    // PHASE CONTROL for I
+    i2c_stub_->readTxBuffer(buffer, SI5351_TEST_BUFFER_LEN, &transffered_len);
+    MURASAKI_ASSERT(transffered_len == 2)
+    MURASAKI_ASSERT(buffer[0] == OFST_REG + 1)
+    MURASAKI_ASSERT(buffer[1] == 0);    // must be zero
+
+    // PHASE CONTROL for Q
+    i2c_stub_->readTxBuffer(buffer, SI5351_TEST_BUFFER_LEN, &transffered_len);
+    MURASAKI_ASSERT(transffered_len == 2)
+    MURASAKI_ASSERT(buffer[0] == OFST_REG + 2)
+    MURASAKI_ASSERT(buffer[1] == 12);    // = MS INTEGER PART
+
+    // Check PLL reset
+    const int PLL_RESET_REG = 177;   // RESET register
+    i2c_stub_->readTxBuffer(buffer, SI5351_TEST_BUFFER_LEN, &transffered_len);
+    MURASAKI_ASSERT(transffered_len == 2)
+    MURASAKI_ASSERT(buffer[0] == PLL_RESET_REG)
+    MURASAKI_ASSERT(buffer[1] == 1 << 7)
+
+    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test done.")
+}
+
+void TestSi5351Driver(int freq_step) {
+
+    // Create an Device Under Test.
+    // @formatter:off
+    TestSi5351 *dut = new TestSi5351(
+                                     new murasaki::I2cMasterStub(
+                                             SI5351_TEST_BUFFER_NUM,  // Number of the TX RX test buffers.
+                                             SI5351_TEST_BUFFER_LEN,  // LENGTH of the TX RX test buffers.
+                                             1,  // DUT I2C address
+                                             true)  // Address filtering is on
+                                             );
+                                                                                                                                                                                                                                                                                                                                                           // @formatter:on
+
+    dut->TestSi5351ClockControl();
+    dut->TestIsInitializing();
+    dut->TestIsLossOfLockA();
+    dut->TestIsLossOfLockB();
+    dut->TestIsLossOfXtal();
+    dut->TestIsLossOfClkin();
+    dut->TestResetPLL();
+    dut->TestSetClockConfig();
+    dut->TestGetClockConfig();
+    dut->TestSetPhaseOffset();
+    dut->TestSetFrequency();
+    dut->TestSetQuadratureFrequency();
+    dut->TestPackRegister();
+    dut->TestSi5351ConfigSeek(freq_step);
 }
 
 } /* namespace murasaki */

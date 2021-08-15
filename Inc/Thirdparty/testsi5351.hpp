@@ -43,6 +43,7 @@ class TestSi5351 {
     void TestSi5351ConfigSeek(int freq_step);
     void TestPackRegister();
     void TestSetFrequency();
+    void TestSetQuadratureFrequency();
 
  private:
     murasaki::I2cMasterStub *const i2c_stub_;

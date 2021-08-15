@@ -207,11 +207,16 @@ class Si5351 {
      * @return ks5351Ok on success. ks5351Ok on failure.
      * @details
      * The output corresponding to divI and divQ has 90degree difference.Always, div Q output is delayed.
+     *
+     * The frequency must be less than or equal to 150MHz to avoid the div_by_4 mode.
+     * This is required by the specification.
+     *
+     * Also, the the min frequency is 4.725MHz, to limit the divider ration less or equal to 127.
      */
     Si5351Status SetQuadratureFrequency(
                                         murasaki::Si5351Pll pll,
-                                        murasaki::Si5351Pll divI_ch,
-                                        murasaki::Si5351Pll divQ_ch,
+                                        unsigned int divI_ch,
+                                        unsigned int divQ_ch,
                                         uint32_t frequency
                                         );
 
