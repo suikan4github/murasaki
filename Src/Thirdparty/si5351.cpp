@@ -10,11 +10,17 @@
 #include "murasaki_assert.hpp"
 #include "murasaki_syslog.hpp"
 
+#include <cstring>
+
 // Device registers
 #define SI5351_STARTUS_REG 0
 #define SI5351_PLL_RESET_REG 177
 #define SI5351_CLK0_INITIAL_PHASE_OFFSET_REG 165
 #define SI5351_CLK0_CONTROL_REG 16
+#define SI5351_MULTISYNTH_NA_REG 26
+#define SI5351_MULTISYNTH_0_REG 42
+
+#define SI5351_MULTISYNTH_REG_LEN 8
 
 #define SI5351_SYS_INIT_BIT 7
 #define SI5351_LOL_B_BIT 6
@@ -54,7 +60,7 @@ Si5351Status Si5351::Si5351ConfigSeek(
                                       uint32_t &stage1_denom,
                                       uint32_t &stage2_int,
                                       uint32_t &stage2_num,
-                                      uint32_t &stage2_c,
+                                      uint32_t &stage2_denom,
                                       uint32_t &div_by_4,
                                       uint32_t &r_div)
                                       {
@@ -79,7 +85,7 @@ Si5351Status Si5351::Si5351ConfigSeek(
         div_by_4 = 3;  // requed by Si5351 data sheet
         stage2_int = 0;
         stage2_num = 0;
-        stage2_c = 1;
+        stage2_denom = 1;
 
         // For output freq > 150MHz, r_div is set to 1;
         r_div = 1;
@@ -95,7 +101,7 @@ Si5351Status Si5351::Si5351ConfigSeek(
         div_by_4 = 0;  // requed by Si5351 data sheet
         stage2_int = 6;
         stage2_num = 0;
-        stage2_c = 1;
+        stage2_denom = 1;
 
         // r_div is set to 1;
         r_div = 1;
@@ -111,7 +117,7 @@ Si5351Status Si5351::Si5351ConfigSeek(
         div_by_4 = 0;  // requed by Si5351 data sheet
         stage2_int = 8;
         stage2_num = 0;
-        stage2_c = 1;
+        stage2_denom = 1;
 
         // r_div is set to 1;
         r_div = 1;
@@ -146,13 +152,13 @@ Si5351Status Si5351::Si5351ConfigSeek(
         div_by_4 = 0;  // requed by Si5351 data sheet
         stage2_int = second_stage_divider;
         stage2_num = 0;
-        stage2_c = 1;
+        stage2_denom = 1;
     }
 
     PLL_SYSLOG("r_div = %d", r_div);
     PLL_SYSLOG("stage2_int = %d", stage2_int);
     PLL_SYSLOG("stage2_num = %d", stage2_num);
-    PLL_SYSLOG("stage2_c = %d", stage2_c);
+    PLL_SYSLOG("stage2_denom = %d", stage2_denom);
 
     uint32_t vco_freq = output_freq * second_stage_divider * r_div;
     PLL_SYSLOG("VCO frequency = %d", vco_freq);
@@ -196,24 +202,6 @@ Si5351Status Si5351::Si5351ConfigSeek(
     return ks5351Ok;
 }
 
-void Si5351::setRegister(unsigned int reg_addr, uint8_t value)
-                         {
-    murasaki::I2cStatus status;
-    uint8_t regs[2];
-    unsigned int transfered_count;
-
-    regs[0] = reg_addr;     // address of regsiter
-    regs[1] = value;        // value to set
-    status = i2c_->Transmit(addrs_,         // Address of PLL Si5351.
-            regs,      // Register # .
-            2,                  // Send 1 byte to set the register to read, and 1 another as data.
-            &transfered_count,  // Dummy.
-            10);                // Wait 10 mSec.
-
-    MURASAKI_ASSERT(status == murasaki::ki2csOK)
-
-}
-
 void Si5351::SetPhaseOffset(unsigned int ch, uint8_t offset) {
     // Channel must be 0, 1 or 2.
     MURASAKI_ASSERT(ch < 3)
@@ -224,7 +212,7 @@ void Si5351::SetPhaseOffset(unsigned int ch, uint8_t offset) {
     MURASAKI_ASSERT(offset < 128)
 
     // Set the desired offset to the right register.
-    setRegister(offset_reg, offset);
+    SetRegister(offset_reg, offset);
 
 }
 
@@ -236,7 +224,7 @@ void Si5351::SetClockConfig(unsigned int channel, union Si5351ClockControl clock
     uint8_t ctrl_reg = SI5351_CLK0_CONTROL_REG + channel;
 
     // Set the Clock control regsiter.
-    setRegister(ctrl_reg, clockConfig.value);
+    SetRegister(ctrl_reg, clockConfig.value);
 
 }
 
@@ -249,9 +237,80 @@ union Si5351ClockControl Si5351::GetClockConfig(unsigned int channel) {
 
     // Get CLK# Control register value.
     Si5351ClockControl retval;
-    retval.value = getRegister(ctrl_reg);
+    retval.value = GetRegister(ctrl_reg);
 
     return retval;
+}
+
+Si5351Status Si5351::SetFrequency(murasaki::Si5351Pll pll, unsigned int div_ch, uint32_t frequency) {
+    // div must be 0, 1 or 2.
+    MURASAKI_ASSERT(div_ch < 3)
+    MURASAKI_ASSERT(frequency > 2);         // must be higher than 2Hz.
+    MURASAKI_ASSERT(200000000 > frequency);  // must be lower than or equal to 200MHz
+
+    // Parameter receiving variables.
+    uint32_t stage1_int;
+    uint32_t stage1_num;
+    uint32_t stage1_denom;
+    uint32_t stage2_int;
+    uint32_t stage2_num;
+    uint32_t stage2_denom;
+    uint32_t div_by_4;
+    uint32_t r_div;
+
+    // Seek the best parameter combination for the given external frquency and output frequency.
+    Si5351Status status = Si5351ConfigSeek(  //@formatter:off
+                                            ext_freq_,   // external clock source frequency
+                                            frequency,   // output frequency
+                                            stage1_int,
+                                            stage1_num,
+                                            stage1_denom,
+                                            stage2_int,
+                                            stage2_num,
+                                            stage2_denom,
+                                            div_by_4,
+                                            r_div);
+                            // @formatter:on
+    MURASAKI_ASSERT(status == murasaki::ks5351Ok)
+
+    // Construct the register field for PLL
+    uint8_t pll_reg[8];
+    Si5351::PackRegister(
+                         stage1_int,
+                         stage1_num,
+                         stage1_denom,
+                         0,  // div_by_4 must be zero for PLL
+                         0,  // r_div must be zero for PLL
+                         pll_reg);
+
+    // calculate the offset to the PLL multisynth parameters.
+    unsigned int offset = (pll == murasaki::ks5351PllA) ? 0 : SI5351_MULTISYNTH_REG_LEN;
+
+    // set PLL multithynth parameters.
+    SetRegister(SI5351_MULTISYNTH_NA_REG + offset,
+                pll_reg,
+                SI5351_MULTISYNTH_REG_LEN);
+
+    // Construct the register filed for the post PLL divider
+    uint8_t div_reg[8];
+    Si5351::PackRegister(
+                         stage2_int,
+                         stage2_num,
+                         stage2_denom,
+                         div_by_4,
+                         r_div,
+                         div_reg);
+
+    // set the post PLL multithynth divider parameters.
+    SetRegister(SI5351_MULTISYNTH_0_REG + SI5351_MULTISYNTH_REG_LEN * div_ch,
+                div_reg,
+                SI5351_MULTISYNTH_REG_LEN);
+
+    // Configure integer mode and disable powern down of the output.
+    murasaki::Si5351ClockControl clockConfig = GetClockConfig(div_ch);
+    clockConfig.fields.clk_pdn = false;
+    clockConfig.fields.ms_int = (stage2_num == 0);       // set integer mode.
+    SetClockConfig(div_ch, clockConfig);
 }
 
 void Si5351::PackRegister(
@@ -289,14 +348,20 @@ void Si5351::PackRegister(
 // The field value mast be this "x". Following code seeks the x for r_div.
     uint32_t field = R_DIV_MUSB_BE_1_TO_128_AS_POWER_OF_TWO;    // 256 is an error value.
 
-    unsigned int value = 1;
-    for (unsigned int i = 0; i < 8; i++) {
-        if (value == r_div) {
-            field = i;
-            break;
+    if (r_div == 0) {
+        field = 0;  // r_div == 0 is given for PLL register set.
+    }
+    else {
+        unsigned int value = 1;
+        for (unsigned int i = 0; i < 8; i++) {
+            if (value == r_div) {
+                field = i;
+                break;
+            }
+            else
+                value <<= 1;
         }
-        else
-            value <<= 1;
+
     }
 
     MURASAKI_ASSERT(field != R_DIV_MUSB_BE_1_TO_128_AS_POWER_OF_TWO)
@@ -305,7 +370,7 @@ void Si5351::PackRegister(
 }
 
 uint8_t
-Si5351::getRegister(unsigned int reg_addr)
+Si5351::GetRegister(unsigned int reg_addr)
                     {
     murasaki::I2cStatus status;
     uint8_t reg, register_num;
@@ -331,34 +396,74 @@ Si5351::getRegister(unsigned int reg_addr)
     return reg;
 }
 
+void Si5351::SetRegister(unsigned int reg_addr, uint8_t value)
+                         {
+    murasaki::I2cStatus status;
+    uint8_t regs[2];
+    unsigned int transfered_count;
+
+    regs[0] = reg_addr;     // address of regsiter
+    regs[1] = value;        // value to set
+    status = i2c_->Transmit(addrs_,         // Address of PLL Si5351.
+            regs,      // Register # .
+            2,                  // Send 1 byte to set the register to read, and 1 another as data.
+            &transfered_count,  // Dummy.
+            10);                // Wait 10 mSec.
+
+    MURASAKI_ASSERT(status == murasaki::ki2csOK)
+
+}
+
+void Si5351::SetRegister(unsigned int reg_num, uint8_t *values, uint8_t length) {
+    murasaki::I2cStatus status;
+    uint8_t buf[9];
+    unsigned int transfered_count;
+
+    MURASAKI_ASSERT(length <= 8)
+
+    buf[0] = reg_num;     // address of register
+    std::memcpy(            // copy the transmit data to the buffer.
+            &buf[1],
+            values,
+            length);
+    status = i2c_->Transmit(addrs_,         // Address of PLL Si5351.
+            buf,      // Register # .
+            length + 1,                  // Send 1 byte to set the register to read, and subsequent data.
+            &transfered_count,  // Dummy.
+            10);                // Wait 10 mSec.
+
+    MURASAKI_ASSERT(status == murasaki::ki2csOK)
+
+}
+
 // Return true if still initializing.
 bool Si5351::IsInitializing()
 {
-    uint8_t reg = getRegister(SI5351_STARTUS_REG);       // Get Device Status.
+    uint8_t reg = GetRegister(SI5351_STARTUS_REG);       // Get Device Status.
     return (((1 << SI5351_SYS_INIT_BIT) & reg) != 0);       // is SI5351_LOL_A_BIT  H?
 }
 
 bool Si5351::IsLossOfLockA()
 {
-    uint8_t reg = getRegister(SI5351_STARTUS_REG);       // Get Device Status.
+    uint8_t reg = GetRegister(SI5351_STARTUS_REG);       // Get Device Status.
     return (((1 << SI5351_LOL_A_BIT) & reg) != 0);       // is SI5351_LOL_A_BIT H?
 }
 
 bool Si5351::IsLossOfLockB()
 {
-    uint8_t reg = getRegister(SI5351_STARTUS_REG);       // Get Device Status.
+    uint8_t reg = GetRegister(SI5351_STARTUS_REG);       // Get Device Status.
     return (((1 << SI5351_LOL_B_BIT) & reg) != 0);       // is SI5351_LOL_B_BIT H?
 }
 
 bool Si5351::IsLossOfClkin()
 {
-    uint8_t reg = getRegister(SI5351_STARTUS_REG);       // Get Device Status.
+    uint8_t reg = GetRegister(SI5351_STARTUS_REG);       // Get Device Status.
     return (((1 << SI5351_LOCLKIN_BIT) & reg) != 0);       // is SI5351_LOCLKIN_BIT H?
 }
 
 bool Si5351::IsLossOfXtal()
 {
-    uint8_t reg = getRegister(SI5351_STARTUS_REG);       // Get Device Status.
+    uint8_t reg = GetRegister(SI5351_STARTUS_REG);       // Get Device Status.
     return (((1 << SI5351_LOXTAL_BIT) & reg) != 0);       // is SI5351_LOXTAL_BIT H?
 }
 
@@ -366,10 +471,10 @@ void Si5351::ResetPLL(murasaki::Si5351Pll pll)
                       {
     switch (pll) {
         case murasaki::ks5351PllA:
-            setRegister(SI5351_PLL_RESET_REG, 1 << 5);  // PLLB_RST
+            SetRegister(SI5351_PLL_RESET_REG, 1 << 5);  // PLLB_RST
             break;
         case murasaki::ks5351PllB:
-            setRegister(SI5351_PLL_RESET_REG, 1 << 7);  // PLLB_RST
+            SetRegister(SI5351_PLL_RESET_REG, 1 << 7);  // PLLB_RST
             break;
         default:
             // illegal value

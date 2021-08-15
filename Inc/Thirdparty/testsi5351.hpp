@@ -42,6 +42,7 @@ class TestSi5351 {
     void TestSetPhaseOffset();
     void TestSi5351ConfigSeek(int freq_step);
     void TestPackRegister();
+    void TestSetFrequency();
 
  private:
     murasaki::I2cMasterStub *const i2c_stub_;

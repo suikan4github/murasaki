@@ -188,21 +188,21 @@ class Si5351 {
     /**
      * @brief Set up the PLL and divider
      * @param pll ks5351PllA for PLL A, ks5351PllB for PLL B.
-     * @param div ks5351Div0, 1 or 2 for the divider 0, 1 or 2, respectively.
+     * @param div_ch 1,2 or 3 for multisynth divider 1,2 or 3 , respectively.
      * @param frequency Desired PLL IC output [Hz].
      * @return ks5351Ok on success. ks5351Ok on failure.
      */
     Si5351Status SetFrequency(
                               murasaki::Si5351Pll pll,
-                              unsigned int div,
+                              unsigned int div_ch,
                               uint32_t frequency
                               );
 
     /**
      * @brief Set up the PLL and divider
      * @param pll ks5351PllA for PLL A, ks5351PllB for PLL B.
-     * @param divI ks5351Div0, 1 or 2 for the divider 0, 1 or 2, respectively.
-     * @param divQ ks5351Div0, 1 or 2 for the divider 0, 1 or 2, respectively.
+     * @param divI_ch 1,2 or 3 for multisynth divider 1,2 or 3 , respectively.
+     * @param divQ_ch 1,2 or 3 for multisynth divider 1,2 or 3 , respectively.
      * @param frequency Desired PLL IC output [Hz].
      * @return ks5351Ok on success. ks5351Ok on failure.
      * @details
@@ -210,25 +210,23 @@ class Si5351 {
      */
     Si5351Status SetQuadratureFrequency(
                                         murasaki::Si5351Pll pll,
-                                        murasaki::Si5351Pll divI,
-                                        murasaki::Si5351Pll divQ,
+                                        murasaki::Si5351Pll divI_ch,
+                                        murasaki::Si5351Pll divQ_ch,
                                         uint32_t frequency
                                         );
-
-#if 0 // not yet implemented.
-
-    void ClockEnable(int8_t mask);
-#endif
 
  private:
     const uint32_t ext_freq_;
     murasaki::I2cMasterStrategy *const i2c_;
     unsigned int addrs_;
 
-// Get specified register.
-    uint8_t getRegister(unsigned int reg_num);
+    // Get specified register.
+    uint8_t GetRegister(unsigned int reg_num);
     // Set value to the specified register.
-    void setRegister(unsigned int reg_num, uint8_t value);
+    void SetRegister(unsigned int reg_num, uint8_t value);
+    // Set value to the specified register.
+    // length must be lower than or equal to 8.
+    void SetRegister(unsigned int reg_num, uint8_t *values, uint8_t length);
 
     /**
      * @brief Seek the appropriate configuration of the Si5351.
