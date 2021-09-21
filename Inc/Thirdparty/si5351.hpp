@@ -220,18 +220,18 @@ class Si5351 {
                                         uint32_t frequency
                                         );
 
- private:
-    const uint32_t ext_freq_;
-    murasaki::I2cMasterStrategy *const i2c_;
-    unsigned int addrs_;
-
-    // Get specified register.
+    // Get specified register.]
     uint8_t GetRegister(unsigned int reg_num);
     // Set value to the specified register.
     void SetRegister(unsigned int reg_num, uint8_t value);
     // Set value to the specified register.
     // length must be lower than or equal to 8.
     void SetRegister(unsigned int reg_num, uint8_t *values, uint8_t length);
+
+ private:
+    const uint32_t ext_freq_;
+    murasaki::I2cMasterStrategy *const i2c_;
+    unsigned int addrs_;
 
     /**
      * @brief Seek the appropriate configuration of the Si5351.
