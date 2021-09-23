@@ -11,12 +11,26 @@
 #define TESTXTAL 25000000
 
 /// End frequency of the scan test of the Si5351::Si5351ConfigSeek()
+/// 200MHz is the Highest frequency in Si5351 specification
 #define ENDFREQ 200000000
 /// Start frequency of the scan test of the Si5351::Si5351ConfigSeek()
-#define STARTFREQ 3
+/// 2.5kHz is the lowest frequency in Si5351 specification
+#define STARTFREQ 2500
 
 #define SI5351_TEST_BUFFER_LEN 40
 #define SI5351_TEST_BUFFER_NUM 12
+
+// Parameter configuration macro for Si5351. See datasheet for details of P1, P2, P3
+#define P1(a,b,c) (128*a+(128*b/c)-512)
+#define P2(a,b,c) (128*b-c*(128*b/c))
+#define P3(a,b,c) (c)
+
+// To test, calculate the P1, P2, P3 from the packed registers.
+#define PACKED_P1(reg) (((reg[2] & 0x03) << 16)+ (reg[3]<<8) + reg[4])
+#define PACKED_P2(reg) (( (reg[5] & 0x0F) << 16) + (reg[6] << 8 ) + reg[7] )
+#define PACKED_P3(reg) (((reg[5]>>4)<<16) + (reg[0]<<8) + reg[1])
+#define PACKED_DIVBY4(reg) ((reg[2] & 0x0C) >> 2)
+#define PACKED_RDIV(reg) ((reg[2] & 0x70) >> 4)
 
 namespace murasaki {
 
@@ -247,16 +261,11 @@ void TestSi5351::TestSi5351ConfigSeek(int freq_step) {
             {
         MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "xfreq     %dHz ", xfreq)
 
-        // initial step of the frequency test is 1Hz.
-        int step = 1;
+        // test on the given range.
+        for (int frequency = STARTFREQ; frequency < ENDFREQ; frequency += freq_step) {
 
-        // test from 3Hz to 200MHz
-        for (int i = STARTFREQ; i < ENDFREQ; i += step) {
-
-            if (i > freq_step)
-                step = freq_step;
             // Configure PLL by given frequency.
-            si5351_->Si5351ConfigSeek(xfreq, i, stage1_a, stage1_b, stage1_c, stage2_a, stage2_b, stage2_c, div_by_4, r);
+            si5351_->Si5351ConfigSeek(xfreq, frequency, stage1_a, stage1_b, stage1_c, stage2_a, stage2_b, stage2_c, div_by_4, r);
 
             // Calculate the synthesized frequency
             double output, fvco;
@@ -269,6 +278,36 @@ void TestSi5351::TestSi5351ConfigSeek(int freq_step) {
                 error = true;
             }
 
+            // Range check of the PLL P1, P2, P3. See data sheet for detail.
+            if (P1(stage1_a, stage1_b, stage1_c) >= 262144) {   // if P1 is bigger or eq 2^18.
+                MURASAKI_SYSLOG(nullptr, kfaPll, kseError, "PLL parameter overflow. P1 :  %d ", P1(stage1_a, stage1_b, stage1_c))
+                error = true;
+            }
+            if (P2(stage1_a, stage1_b, stage1_c) >= 1048576) {   // if P2 is bigger or eq 2^20.
+                MURASAKI_SYSLOG(nullptr, kfaPll, kseError, "PLL parameter overflow. P2 :  %d ", P2(stage1_a, stage1_b, stage1_c))
+                error = true;
+            }
+            if (P3(stage1_a, stage1_b, stage1_c) >= 1048576) {   // if P3 is bigger or eq 2^20.
+                MURASAKI_SYSLOG(nullptr, kfaPll, kseError, "PLL parameter overflow. P3 :  %d ", P3(stage1_a, stage1_b, stage1_c))
+                error = true;
+            }
+
+            // In case of the divide by four mode, ignore the multi-synth divider.
+            if (div_by_4 != 3) {
+                // Range check of the Multi-Synth divider P1, P2, P3. See data sheet for detail.
+                if (P1(stage2_a, stage2_b, stage2_c) >= 262144) {   // if P1 is bigger or eq 2^18.
+                    MURASAKI_SYSLOG(nullptr, kfaPll, kseError, "multi-synth divider parameter overflow. P1 :  %d ", P1(stage2_a, stage2_b, stage2_c))
+                    error = true;
+                }
+                if (P2(stage2_a, stage2_b, stage2_c) >= 1048576) {   // if P2 is bigger or eq 2^20.
+                    MURASAKI_SYSLOG(nullptr, kfaPll, kseError, "multi-synth divider parameter overflow. P2 :  %d ", P2(stage2_a, stage2_b, stage2_c))
+                    error = true;
+                }
+                if (P3(stage2_a, stage2_b, stage2_c) >= 1048576) {   // if P3 is bigger or eq 2^20.
+                    MURASAKI_SYSLOG(nullptr, kfaPll, kseError, "multi-synth divider parameter overflow. P3 :  %d ", P3(stage2_a, stage2_b, stage2_c))
+                    error = true;
+                }
+            }
             // See data sheet to understand the restriction of the div_by_4
             if (div_by_4 == 3)
                 output = fvco / 4;
@@ -295,21 +334,22 @@ void TestSi5351::TestSi5351ConfigSeek(int freq_step) {
             }
 
             // The mantissa of the double is 15digit. Accept 2digit error.
-            int delta = i - output;
+            int delta = frequency - output;
             delta = (delta > 0) ? delta : -delta;
-            if (delta > double(i) * 1e-13) {
-                MURASAKI_SYSLOG(nullptr, kfaPll, kseError, "Error at %dHz, difference is %dHz ", i, int(output - i));
+            if (delta > double(frequency) * 1e-13) {
+                MURASAKI_SYSLOG(nullptr, kfaPll, kseError, "Error at %dHz, difference is %dHz ", frequency, int(output - frequency));
                 error = true;
             }
 
             if (error) {
 
-                MURASAKI_SYSLOG(nullptr, kfaPll, kseError, "starge1_a %d ", stage1_a);
-                MURASAKI_SYSLOG(nullptr, kfaPll, kseError, "starge1_b %d ", stage1_b);
-                MURASAKI_SYSLOG(nullptr, kfaPll, kseError, "starge1_c %d ", stage1_c);
-                MURASAKI_SYSLOG(nullptr, kfaPll, kseError, "starge2_a %d ", stage2_a);
-                MURASAKI_SYSLOG(nullptr, kfaPll, kseError, "starge2_b %d ", stage2_b);
-                MURASAKI_SYSLOG(nullptr, kfaPll, kseError, "starge2_c %d ", stage2_c);
+                MURASAKI_SYSLOG(nullptr, kfaPll, kseError, "frequency %d ", frequency);
+                MURASAKI_SYSLOG(nullptr, kfaPll, kseError, "stage1_a %d  ", stage1_a);
+                MURASAKI_SYSLOG(nullptr, kfaPll, kseError, "stage1_b %d  ", stage1_b);
+                MURASAKI_SYSLOG(nullptr, kfaPll, kseError, "stage1_c %d  ", stage1_c);
+                MURASAKI_SYSLOG(nullptr, kfaPll, kseError, "stage2_a %d  ", stage2_a);
+                MURASAKI_SYSLOG(nullptr, kfaPll, kseError, "stage2_b %d  ", stage2_b);
+                MURASAKI_SYSLOG(nullptr, kfaPll, kseError, "stage2_c %d  ", stage2_c);
                 MURASAKI_SYSLOG(nullptr, kfaPll, kseError, "div by 4  %d ", div_by_4);
                 MURASAKI_SYSLOG(nullptr, kfaPll, kseError, "r         %d ", r);
                 MURASAKI_ASSERT(false);
@@ -320,16 +360,6 @@ void TestSi5351::TestSi5351ConfigSeek(int freq_step) {
     MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test done.")
 
 }
-
-#define P1(a,b,c) (128*a+(128*b/c)-512)
-#define P2(a,b,c) (128*b-c*(128*b/c))
-#define P3(a,b,c) (c)
-
-#define PACKED_P1(reg) (((reg[2] & 0x03) << 16)+ (reg[3]<<8) + reg[4])
-#define PACKED_P2(reg) (( (reg[5] & 0x0F) << 16) + (reg[6] << 8 ) + reg[7] )
-#define PACKED_P3(reg) (((reg[5]>>4)<<16) + (reg[0]<<8) + reg[1])
-#define PACKED_DIVBY4(reg) ((reg[2] & 0x0C) >> 2)
-#define PACKED_RDIV(reg) ((reg[2] & 0x70) >> 4)
 
 void TestSi5351::TestPackRegister() {
 
@@ -659,7 +689,7 @@ void TestSi5351::TestSetFrequency()
             0,// output port 0
             161234000// 161.234 MHz
     );
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    //@formatter:on
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        //@formatter:on
 
             // check the PLL register configuration
     i2c_stub_->readTxBuffer(buffer, SI5351_TEST_BUFFER_LEN, &transffered_len);
@@ -817,7 +847,7 @@ void TestSi5351Driver(int freq_step) {
                                              1,  // DUT I2C address
                                              true)  // Address filtering is on
                                              );
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                           // @formatter:on
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       // @formatter:on
 
     dut->TestSi5351ClockControl();
     dut->TestIsInitializing();
