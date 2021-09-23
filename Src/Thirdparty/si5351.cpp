@@ -83,9 +83,9 @@ Si5351Status Si5351::Si5351ConfigSeek(
         // Note that followings are required by Si5351 data sheet.
         // In case of divide by 4 mode, the second stage have to be integer mode.
         div_by_4 = 3;  // requed by Si5351 data sheet
-        stage2_int = 0;
-        stage2_num = 0;
-        stage2_denom = 1;
+        stage2_int = 0;     // This will be ignored.
+        stage2_num = 0;     // This will be ignored.
+        stage2_denom = 0;   // This will be ignored.
 
         // For output freq > 150MHz, r_div is set to 1;
         r_div = 1;
@@ -271,7 +271,7 @@ Si5351Status Si5351::SetFrequency(murasaki::Si5351Pll pll, unsigned int div_ch, 
                                             stage2_denom,
                                             div_by_4,
                                             r_div);
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                            // @formatter:on
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        // @formatter:on
     MURASAKI_ASSERT(status == murasaki::ks5351Ok)
 
     // Construct the register field for PLL
@@ -346,9 +346,10 @@ Si5351Status Si5351::SetQuadratureFrequency(murasaki::Si5351Pll pll, unsigned in
                                             stage2_denom,
                                             div_by_4,
                                             r_div);
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                            // @formatter:on
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        // @formatter:on
     MURASAKI_ASSERT(status == murasaki::ks5351Ok)
     MURASAKI_ASSERT(127 >= stage2_int)
+    MURASAKI_ASSERT(div_by_4 != 3);  // must not be in div by 4 mode.
 
     // Construct the register field for PLL
     uint8_t pll_reg[8];
@@ -419,7 +420,7 @@ Si5351Status Si5351::SetQuadratureFrequency(murasaki::Si5351Pll pll, unsigned in
 
 //@formatter:off
 inline uint32_t synth_p1(uint32_t a, uint32_t b, uint32_t c) { return 128 * a + (128 * b) / c - 512; }
-inline uint32_t synth_p2(uint32_t a, uint32_t b, uint32_t c) { return 128*b + c*((128 * b) / c); }
+inline uint32_t synth_p2(uint32_t a, uint32_t b, uint32_t c) { return 128 * b - c*((128 * b) / c); }
 inline uint32_t synth_p3(uint32_t a, uint32_t b, uint32_t c) { return c; }
 
 inline uint8_t msynth_reg0(uint32_t p1, uint32_t p2, uint32_t p3) { return (p3 >> 8) & 0xFF; }
@@ -448,10 +449,22 @@ void Si5351::PackRegister(
 // Right value of div by four must be 0 or 3
     MURASAKI_ASSERT((div_by_4 == 0) || (div_by_4 == 3))
 
-    // Set up the internal variable. See AN619 of the Si5351
-    uint32_t p1 = synth_p1(integer, numerator, denominator);
-    uint32_t p2 = synth_p2(integer, numerator, denominator);
-    uint32_t p3 = synth_p3(integer, numerator, denominator);
+    uint32_t p1;
+    uint32_t p2;
+    uint32_t p3;
+
+    if (div_by_4 == 0) {
+        // Set up the internal variable. See AN619 of the Si5351
+        p1 = synth_p1(integer, numerator, denominator);
+        p2 = synth_p2(integer, numerator, denominator);
+        p3 = synth_p3(integer, numerator, denominator);
+    }
+    else    // if div by 4 mode.
+    {
+        p1 = 0;
+        p2 = 0;
+        p3 = 1;
+    }
 
 // Calculate the field value for the r_div.
 // The r_div is true divider value. That is the value of the 2^x.
