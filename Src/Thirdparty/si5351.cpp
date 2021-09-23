@@ -67,7 +67,7 @@ Si5351Status Si5351::Si5351ConfigSeek(
     // Because the div_by_4 mode is tricky, keep second stage divider value here.
     uint32_t second_stage_divider;
 
-    MURASAKI_ASSERT(output_freq > 2);         // must be higher than 2Hz.
+    MURASAKI_ASSERT(output_freq >= 2500);         // must be higher than 2.5kHz.
     MURASAKI_ASSERT(200000000 > output_freq);  // must be lower than or equal to 200MHz
 
     PLL_SYSLOG("Xtal Frequency is %d Hz", xtal_freq);
@@ -147,8 +147,9 @@ Si5351Status Si5351::Si5351ConfigSeek(
             // round up. Now, second_stage_divider * r_div * output_freq is bigger than 600MHz.
             second_stage_divider++;
         }
+        MURASAKI_ASSERT(256 > r_div);  // must be lower than 256.
 
-        // divide by 6
+        // setup the divider value
         div_by_4 = 0;  // requed by Si5351 data sheet
         stage2_int = second_stage_divider;
         stage2_num = 0;
@@ -270,7 +271,7 @@ Si5351Status Si5351::SetFrequency(murasaki::Si5351Pll pll, unsigned int div_ch, 
                                             stage2_denom,
                                             div_by_4,
                                             r_div);
-                                                                                                                                                    // @formatter:on
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                            // @formatter:on
     MURASAKI_ASSERT(status == murasaki::ks5351Ok)
 
     // Construct the register field for PLL
@@ -345,7 +346,7 @@ Si5351Status Si5351::SetQuadratureFrequency(murasaki::Si5351Pll pll, unsigned in
                                             stage2_denom,
                                             div_by_4,
                                             r_div);
-                                                                                                                                                    // @formatter:on
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                            // @formatter:on
     MURASAKI_ASSERT(status == murasaki::ks5351Ok)
     MURASAKI_ASSERT(127 >= stage2_int)
 
@@ -391,12 +392,18 @@ Si5351Status Si5351::SetQuadratureFrequency(murasaki::Si5351Pll pll, unsigned in
     // Fractional mode is required by specification of phase offset.
     murasaki::Si5351ClockControl clockConfig = GetClockConfig(divI_ch);
     clockConfig.fields.clk_pdn = false;
+    clockConfig.fields.clk_inv = false;
+    clockConfig.fields.clk_src = murasaki::ks5351osNativeDivider;
     clockConfig.fields.ms_int = false;       // set fractional mode.
+    clockConfig.fields.ms_src = pll;
     SetClockConfig(divI_ch, clockConfig);
 
     clockConfig = GetClockConfig(divQ_ch);
     clockConfig.fields.clk_pdn = false;
+    clockConfig.fields.clk_inv = false;
+    clockConfig.fields.clk_src = murasaki::ks5351osNativeDivider;
     clockConfig.fields.ms_int = false;       // set fractional mode.
+    clockConfig.fields.ms_src = pll;
     SetClockConfig(divQ_ch, clockConfig);
 
     // Configure delay.
@@ -409,6 +416,21 @@ Si5351Status Si5351::SetQuadratureFrequency(murasaki::Si5351Pll pll, unsigned in
     // Reset the PLL to make phase offset correct. This is required by specification.
     ResetPLL(pll);
 }
+
+//@formatter:off
+inline uint32_t synth_p1(uint32_t a, uint32_t b, uint32_t c) { return 128 * a + (128 * b) / c - 512; }
+inline uint32_t synth_p2(uint32_t a, uint32_t b, uint32_t c) { return 128*b + c*((128 * b) / c); }
+inline uint32_t synth_p3(uint32_t a, uint32_t b, uint32_t c) { return c; }
+
+inline uint8_t msynth_reg0(uint32_t p1, uint32_t p2, uint32_t p3) { return (p3 >> 8) & 0xFF; }
+inline uint8_t msynth_reg1(uint32_t p1, uint32_t p2, uint32_t p3) { return p3 & 0xFF; }
+inline uint8_t msynth_reg2(uint32_t p1, uint32_t p2, uint32_t p3, uint32_t r_div, uint32_t divby4) { return ((r_div & 0x07) << 4) | ((divby4 & 0x03) << 2) | ((p1 >> 16) & 0x03); }
+inline uint8_t msynth_reg3(uint32_t p1, uint32_t p2, uint32_t p3) { return (p1 >> 8) & 0xFF; }
+inline uint8_t msynth_reg4(uint32_t p1, uint32_t p2, uint32_t p3) { return p1 & 0xFF; }
+inline uint8_t msynth_reg5(uint32_t p1, uint32_t p2, uint32_t p3) { return (((p3 >> 16) & 0x0F ) << 4 ) | ((p2 >> 16) & 0x0F); }
+inline uint8_t msynth_reg6(uint32_t p1, uint32_t p2, uint32_t p3) { return (p2 >> 8) & 0xFF; }
+inline uint8_t msynth_reg7(uint32_t p1, uint32_t p2, uint32_t p3) { return p2 & 0xFF; }
+//@formatter:on
 
 void Si5351::PackRegister(
                           const uint32_t integer,
@@ -426,44 +448,60 @@ void Si5351::PackRegister(
 // Right value of div by four must be 0 or 3
     MURASAKI_ASSERT((div_by_4 == 0) || (div_by_4 == 3))
 
-    reg[0] = (denominator >> 8) & 0x00FF;    // extract [15:8]
-    reg[1] = (denominator) & 0x00FF;    // extract [7:0]
-    reg[3] = (integer >> 8) & 0x00FF;    // extract [15:8]
-    reg[4] = (integer) & 0x00FF;    // extract [7:0]
-    reg[5] = ((((denominator) >> 16) & 0x0F) << 4) |    // extract [19:16]
-            ((numerator >> 16) & 0x0F);    // extract [19:16]
-    reg[6] = (numerator >> 8) & 0x00FF;    // extract [15:8]
-    reg[7] = (numerator) & 0x00FF;    // extract [7:0]
-
-    reg[2] = 0;
-
-    reg[2] |= (integer >> 16) & 0x03;
-    reg[2] |= div_by_4 << 2;
+    // Set up the internal variable. See AN619 of the Si5351
+    uint32_t p1 = synth_p1(integer, numerator, denominator);
+    uint32_t p2 = synth_p2(integer, numerator, denominator);
+    uint32_t p3 = synth_p3(integer, numerator, denominator);
 
 // Calculate the field value for the r_div.
 // The r_div is true divider value. That is the value of the 2^x.
 // The field value mast be this "x". Following code seeks the x for r_div.
-    uint32_t field = R_DIV_MUSB_BE_1_TO_128_AS_POWER_OF_TWO;    // 256 is an error value.
+    uint32_t rdiv_field = R_DIV_MUSB_BE_1_TO_128_AS_POWER_OF_TWO;    // 256 is an error value.
 
-    if (r_div == 0) {
-        field = 0;  // r_div == 0 is given for PLL register set.
+    switch (r_div)
+    {
+        case 0:  // r_div 0 is allowed only for the PLL setting.
+        case 1:
+            rdiv_field = 0;
+            break;
+        case 2:
+            rdiv_field = 1;
+            break;
+        case 4:
+            rdiv_field = 2;
+            break;
+        case 8:
+            rdiv_field = 3;
+            break;
+        case 16:
+            rdiv_field = 4;
+            break;
+        case 32:
+            rdiv_field = 5;
+            break;
+        case 64:
+            rdiv_field = 6;
+            break;
+        case 128:
+            rdiv_field = 7;
+            break;
+        default:    // illegal case.
+            rdiv_field = R_DIV_MUSB_BE_1_TO_128_AS_POWER_OF_TWO;
     }
-    else {
-        unsigned int value = 1;
-        for (unsigned int i = 0; i < 8; i++) {
-            if (value == r_div) {
-                field = i;
-                break;
-            }
-            else
-                value <<= 1;
-        }
 
-    }
+    // Check wether the r_div is regular value or not.
+    MURASAKI_ASSERT(rdiv_field != R_DIV_MUSB_BE_1_TO_128_AS_POWER_OF_TWO)
 
-    MURASAKI_ASSERT(field != R_DIV_MUSB_BE_1_TO_128_AS_POWER_OF_TWO)
-// Make sure the field value is not error.
-    reg[2] |= field << 4;
+    // Pack the register for PLL.
+    reg[0] = msynth_reg0(p1, p2, p3);
+    reg[1] = msynth_reg1(p1, p2, p3);
+    reg[2] = msynth_reg2(p1, p2, p3, rdiv_field, div_by_4);
+    reg[3] = msynth_reg3(p1, p2, p3);
+    reg[4] = msynth_reg4(p1, p2, p3);
+    reg[5] = msynth_reg5(p1, p2, p3);
+    reg[6] = msynth_reg6(p1, p2, p3);
+    reg[7] = msynth_reg7(p1, p2, p3);
+
 }
 
 uint8_t
