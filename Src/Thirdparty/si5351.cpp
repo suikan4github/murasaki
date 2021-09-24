@@ -271,7 +271,7 @@ Si5351Status Si5351::SetFrequency(murasaki::Si5351Pll pll, unsigned int div_ch, 
                                             stage2_denom,
                                             div_by_4,
                                             r_div);
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        // @formatter:on
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    // @formatter:on
     MURASAKI_ASSERT(status == murasaki::ks5351Ok)
 
     // Construct the register field for PLL
@@ -346,7 +346,7 @@ Si5351Status Si5351::SetQuadratureFrequency(murasaki::Si5351Pll pll, unsigned in
                                             stage2_denom,
                                             div_by_4,
                                             r_div);
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        // @formatter:on
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    // @formatter:on
     MURASAKI_ASSERT(status == murasaki::ks5351Ok)
     MURASAKI_ASSERT(127 >= stage2_int)
     MURASAKI_ASSERT(div_by_4 != 3);  // must not be in div by 4 mode.
@@ -458,6 +458,19 @@ void Si5351::PackRegister(
         p1 = synth_p1(integer, numerator, denominator);
         p2 = synth_p2(integer, numerator, denominator);
         p3 = synth_p3(integer, numerator, denominator);
+
+        // The p2 and p3 could be overflow from the 20bit field.
+        // To prevent it, both field have to be scaled down if overflow.
+        uint32_t num = numerator;
+        uint32_t denom = denominator;
+        while (p2 >= 1048575 || p3 >= 1048257)
+        {
+            num >>= 1;        // scale down
+            denom >>= 1;      // scale down
+            // now, p2 and p3 must be about half of before
+            p2 = synth_p2(integer, num, denom);
+            p3 = synth_p3(integer, num, denom);
+        }
     }
     else    // if div by 4 mode.
     {
@@ -502,10 +515,10 @@ void Si5351::PackRegister(
             rdiv_field = R_DIV_MUSB_BE_1_TO_128_AS_POWER_OF_TWO;
     }
 
-    // Check wether the r_div is regular value or not.
+// Check wether the r_div is regular value or not.
     MURASAKI_ASSERT(rdiv_field != R_DIV_MUSB_BE_1_TO_128_AS_POWER_OF_TWO)
 
-    // Pack the register for PLL.
+// Pack the register for PLL.
     reg[0] = msynth_reg0(p1, p2, p3);
     reg[1] = msynth_reg1(p1, p2, p3);
     reg[2] = msynth_reg2(p1, p2, p3, rdiv_field, div_by_4);

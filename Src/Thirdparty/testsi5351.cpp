@@ -278,6 +278,7 @@ void TestSi5351::TestSi5351ConfigSeek(int freq_step) {
                 error = true;
             }
 
+#if 0
             // Range check of the PLL P1, P2, P3. See data sheet for detail.
             if (P1(stage1_a, stage1_b, stage1_c) >= 262144) {   // if P1 is bigger or eq 2^18.
                 MURASAKI_SYSLOG(nullptr, kfaPll, kseError, "PLL parameter overflow. P1 :  %d ", P1(stage1_a, stage1_b, stage1_c))
@@ -308,6 +309,7 @@ void TestSi5351::TestSi5351ConfigSeek(int freq_step) {
                     error = true;
                 }
             }
+#endif
             // See data sheet to understand the restriction of the div_by_4
             if (div_by_4 == 3)
                 output = fvco / 4;
@@ -689,7 +691,7 @@ void TestSi5351::TestSetFrequency()
             0,// output port 0
             161234000// 161.234 MHz
     );
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        //@formatter:on
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                //@formatter:on
 
             // check the PLL register configuration
     i2c_stub_->readTxBuffer(buffer, SI5351_TEST_BUFFER_LEN, &transffered_len);
@@ -838,6 +840,8 @@ void TestSi5351::TestSetQuadratureFrequency()
 
 void TestSi5351Driver(int freq_step) {
 
+    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test start.")
+
 // Create an Device Under Test.
 // @formatter:off
     TestSi5351 *dut = new TestSi5351(
@@ -847,7 +851,7 @@ void TestSi5351Driver(int freq_step) {
                                              1,  // DUT I2C address
                                              true)  // Address filtering is on
                                              );
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       // @formatter:on
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               // @formatter:on
 
     dut->TestSi5351ClockControl();
     dut->TestIsInitializing();
@@ -863,6 +867,8 @@ void TestSi5351Driver(int freq_step) {
     dut->TestSetQuadratureFrequency();
     dut->TestPackRegister();
     dut->TestSi5351ConfigSeek(freq_step);
+
+    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test done.")
 }
 
 } /* namespace murasaki */
