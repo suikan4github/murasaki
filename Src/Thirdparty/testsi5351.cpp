@@ -691,7 +691,7 @@ void TestSi5351::TestSetFrequency()
             0,// output port 0
             161234000// 161.234 MHz
     );
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                //@formatter:on
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            //@formatter:on
 
             // check the PLL register configuration
     i2c_stub_->readTxBuffer(buffer, SI5351_TEST_BUFFER_LEN, &transffered_len);
@@ -840,7 +840,7 @@ void TestSi5351::TestSetQuadratureFrequency()
 
 void TestSi5351Driver(int freq_step) {
 
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test start.")
+    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test start : %dHz step.", freq_step)
 
 // Create an Device Under Test.
 // @formatter:off
@@ -851,7 +851,7 @@ void TestSi5351Driver(int freq_step) {
                                              1,  // DUT I2C address
                                              true)  // Address filtering is on
                                              );
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               // @formatter:on
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   // @formatter:on
 
     dut->TestSi5351ClockControl();
     dut->TestIsInitializing();
