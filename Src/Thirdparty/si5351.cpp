@@ -43,8 +43,13 @@ Si5351::Si5351(
         i2c_(controller),
         addrs_(addrs)
 {
-    // TODO Auto-generated constructor stub
-
+    MURASAKI_ASSERT((addrs_ == 0x60) || (addrs_ == 0x61))
+    MURASAKI_ASSERT((i2c_ != nullptr))
+    // external frequency must be in the range of [10MHz, 40MHz].
+    // Note that Xtal freq is limited as 25MHz and 27MHz only.
+    // It is not defined when the external clock other than 25MHz or 27MHz
+    // is injected to Xin pin.
+    MURASAKI_ASSERT((40000000 >= ext_freq_) && (ext_freq_ >= 10000000))
 }
 
 Si5351::~Si5351()
@@ -68,7 +73,7 @@ Si5351Status Si5351::Si5351ConfigSeek(
     uint32_t second_stage_divider;
 
     MURASAKI_ASSERT(output_freq >= 2500);         // must be higher than 2.5kHz.
-    MURASAKI_ASSERT(200000000 > output_freq);  // must be lower than or equal to 200MHz
+    MURASAKI_ASSERT(200000000 >= output_freq);  // must be lower than or equal to 200MHz
 
     PLL_SYSLOG("Xtal Frequency is %d Hz", xtal_freq);
     PLL_SYSLOG("Output Frequency is %d Hz", output_freq);
@@ -271,7 +276,7 @@ Si5351Status Si5351::SetFrequency(murasaki::Si5351Pll pll, unsigned int div_ch, 
                                             stage2_denom,
                                             div_by_4,
                                             r_div);
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    // @formatter:on
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    // @formatter:on
     MURASAKI_ASSERT(status == murasaki::ks5351Ok)
 
     // Construct the register field for PLL
@@ -346,7 +351,7 @@ Si5351Status Si5351::SetQuadratureFrequency(murasaki::Si5351Pll pll, unsigned in
                                             stage2_denom,
                                             div_by_4,
                                             r_div);
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    // @formatter:on
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    // @formatter:on
     MURASAKI_ASSERT(status == murasaki::ks5351Ok)
     MURASAKI_ASSERT(127 >= stage2_int)
     MURASAKI_ASSERT(div_by_4 != 3);  // must not be in div by 4 mode.
@@ -604,16 +609,12 @@ bool Si5351::IsInitializing()
     return (((1 << SI5351_SYS_INIT_BIT) & reg) != 0);       // is SI5351_LOL_A_BIT  H?
 }
 
-bool Si5351::IsLossOfLockA()
-{
-    uint8_t reg = GetRegister(SI5351_STARTUS_REG);       // Get Device Status.
-    return (((1 << SI5351_LOL_A_BIT) & reg) != 0);       // is SI5351_LOL_A_BIT H?
-}
+bool Si5351::IsLossOfLock(murasaki::Si5351Pll pll) {
+    // Determine Loss of Lock bit position.
+    int lol_bit = (pll == murasaki::ks5351PllA) ? SI5351_LOL_A_BIT : SI5351_LOL_B_BIT;
 
-bool Si5351::IsLossOfLockB()
-{
     uint8_t reg = GetRegister(SI5351_STARTUS_REG);       // Get Device Status.
-    return (((1 << SI5351_LOL_B_BIT) & reg) != 0);       // is SI5351_LOL_B_BIT H?
+    return (((1 << lol_bit) & reg) != 0);       // is LOL bit 1 ?
 }
 
 bool Si5351::IsLossOfClkin()

@@ -90,6 +90,28 @@ class TestSi5351;
 /**
  * @ingroup MURASAKI_THIRDPARTY_GROUP
  * @brief Si5351 driver class.
+ * @details
+ * A driver class for the Si5351A device.
+ *
+ * While certain member function can support 8ch product, this class is dedicated to the 10pin
+ * variant of the Si5351. Thus, only 3ch output are supported.
+ *
+ * For the almost cases, only the following two steps are required to set the frequency and get output.
+ * @code
+ *     GetClockConfig();
+ *     SetFrequency();
+ * @endcode
+ *
+ * The GetClockCConfig() is needed to set the output driver power (mA) and other settings.
+ *
+ * In the case of the quadrature output, following 3 steps are needed.
+ * @code
+ *     GetClockConfig();
+ *     GetClockConfig();
+ *     SetQuadratureFrequency();
+ * @endcode
+ *
+ * The GetClockConfig() have to be called twice to initialize the I and Q output.
  */
 class Si5351 {
     friend TestSi5351;
@@ -100,17 +122,22 @@ class Si5351 {
      * @brief Initialize an PLL control object.
      *
      * @param controller Pointer to the I2C master.
-     * @param addrs 7bits address of the I2C devices. Right aligned.
+     * @param addrs 7bits address of the I2C devices. Right aligned. Must be 0x60 or 0x61.
      * @param xtal_freq Frequency of the Xtal oscillator [Hz]
      * @details
      * Initialize a PLL control object. The controller is the pointer to the I2C master controller.
-     * This object communicate with the PLL device through this controller.
+     * This object communicates with the PLL device through that controller.
      *
+     * Followings are the reference documents :
      * @li <a href="https://www.silabs.com/documents/public/data-sheets/Si5351-B.pdf">Si5351A/B/C-B I2C-PROGRAMMABLE ANY-FREQUENCY CMOS CLOCKGENERATOR + VCXO</a>
      * @li <a href="https://www.silabs.com/documents/public/application-notes/AN619.pdf">AN619 Manually Generating an Si5351 Register Map for 10-MSOP and 20-QFN Devices</a>.
      */
     Si5351(murasaki::I2cMasterStrategy *controller, unsigned int addrs, uint32_t xtal_freq);
 
+    /**
+     * @brief Destructor. Do nothing actually.
+     *
+     */
     virtual ~Si5351();
 
     /**
@@ -120,16 +147,12 @@ class Si5351 {
     bool IsInitializing();
 
     /**
-     * @brief Check whether PLL A is locked or not.
-     * @return true : PLL A lost the lock. false : PLL A is locked.
+     * @brief Check whether specified PLL is locked or not.
+     * @param pll Specify which PLL A or B have to be checked. 
+     * @return true : PLL lost the lock. false : PLL is locked.
      */
-    bool IsLossOfLockA();
+    bool IsLossOfLock(murasaki::Si5351Pll pll);
 
-    /**
-     * @brief Check whether PLL B is locked or not.
-     * @return true : PLL B lost the lock. false : PLL B is locked.
-     */
-    bool IsLossOfLockB();
     /**
      * @brief Check whether Clock in is lost.
      * @return true : Clock in signal is lost. false : clock in signal is alive.
@@ -188,7 +211,7 @@ class Si5351 {
     /**
      * @brief Set up the PLL and divider
      * @param pll ks5351PllA for PLL A, ks5351PllB for PLL B.
-     * @param div_ch 1,2 or 3 for multisynth divider 1,2 or 3 , respectively.
+     * @param div_ch 1,2 or 3 for multi-synth divider 1,2 or 3 , respectively.
      * @param frequency Desired PLL IC output [Hz].
      * @return ks5351Ok on success. ks5351Ok on failure.
      */
@@ -220,6 +243,11 @@ class Si5351 {
                                         uint32_t frequency
                                         );
 
+ private:
+    const uint32_t ext_freq_;
+    murasaki::I2cMasterStrategy *const i2c_;
+    unsigned int addrs_;
+
     // Get specified register.]
     uint8_t GetRegister(unsigned int reg_num);
     // Set value to the specified register.
@@ -227,11 +255,6 @@ class Si5351 {
     // Set value to the specified register.
     // length must be lower than or equal to 8.
     void SetRegister(unsigned int reg_num, uint8_t *values, uint8_t length);
-
- private:
-    const uint32_t ext_freq_;
-    murasaki::I2cMasterStrategy *const i2c_;
-    unsigned int addrs_;
 
     /**
      * @brief Seek the appropriate configuration of the Si5351.

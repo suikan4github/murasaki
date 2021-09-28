@@ -31,8 +31,7 @@ class TestSi5351 {
                );
 
     void TestIsInitializing();
-    void TestIsLossOfLockA();
-    void TestIsLossOfLockB();
+    void TestIsLossOfLock();
     void TestIsLossOfClkin();
     void TestIsLossOfXtal();
     void TestResetPLL();

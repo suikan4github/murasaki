@@ -84,13 +84,16 @@ void TestSi5351::TestIsInitializing() {
     MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test done.")
 }
 
-void TestSi5351::TestIsLossOfLockA() {
+void TestSi5351::TestIsLossOfLock() {
+
     uint8_t buffer[SI5351_TEST_BUFFER_LEN];
     unsigned int transffered_len;
     bool flag;
     // Si5351 : Register 0, bit 5
-    const int BUT = 5;   // Bit under test
-    const int RUT = 0;   // Register under test
+    int BUT = 5;   // Bit under test
+    int RUT = 0;   // Register under test
+
+    // Test PLL A
 
     MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test start.")
 
@@ -107,13 +110,13 @@ void TestSi5351::TestIsLossOfLockA() {
     i2c_stub_->writeRxBuffer(buffer, 1);
 
     // check result.
-    flag = si5351_->IsLossOfLockA();   // status 0x80
+    flag = si5351_->IsLossOfLock(murasaki::ks5351PllA);   // status 0x80
     MURASAKI_ASSERT(flag)
-    flag = si5351_->IsLossOfLockA();    // status 0xFF
+    flag = si5351_->IsLossOfLock(murasaki::ks5351PllA);    // status 0xFF
     MURASAKI_ASSERT(flag)
-    flag = si5351_->IsLossOfLockA();    // status 0x00
+    flag = si5351_->IsLossOfLock(murasaki::ks5351PllA);    // status 0x00
     MURASAKI_ASSERT(!flag)
-    flag = si5351_->IsLossOfLockA();    // status 0x7F
+    flag = si5351_->IsLossOfLock(murasaki::ks5351PllA);    // status 0x7F
     MURASAKI_ASSERT(!flag)
 
     // check the register access
@@ -121,18 +124,11 @@ void TestSi5351::TestIsLossOfLockA() {
     MURASAKI_ASSERT(transffered_len == 1)
     MURASAKI_ASSERT(buffer[0] == RUT)
 
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test done.")
-}
+    // Test PLL B
 
-void TestSi5351::TestIsLossOfLockB() {
-    uint8_t buffer[SI5351_TEST_BUFFER_LEN];
-    unsigned int transffered_len;
-    bool flag;
     // Si5351 : Register 0, bit 6
-    const int BUT = 6;   // Bit under test
-    const int RUT = 0;   // Register under test
-
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test start.")
+    BUT = 6;   // Bit under test
+    RUT = 0;   // Register under test
 
     i2c_stub_->clearRxBuffer();
     i2c_stub_->clearTxBuffer();
@@ -147,13 +143,13 @@ void TestSi5351::TestIsLossOfLockB() {
     i2c_stub_->writeRxBuffer(buffer, 1);
 
     // check result.
-    flag = si5351_->IsLossOfLockB();
+    flag = si5351_->IsLossOfLock(murasaki::ks5351PllB);
     MURASAKI_ASSERT(flag)
-    flag = si5351_->IsLossOfLockB();
+    flag = si5351_->IsLossOfLock(murasaki::ks5351PllB);
     MURASAKI_ASSERT(flag)
-    flag = si5351_->IsLossOfLockB();
+    flag = si5351_->IsLossOfLock(murasaki::ks5351PllB);
     MURASAKI_ASSERT(!flag)
-    flag = si5351_->IsLossOfLockB();
+    flag = si5351_->IsLossOfLock(murasaki::ks5351PllB);
     MURASAKI_ASSERT(!flag)
 
     // check the register access
@@ -252,17 +248,28 @@ void TestSi5351::TestSi5351ConfigSeek(int freq_step) {
     uint32_t div_by_4;
     uint32_t r;
     bool error = false;
+    // Xtal frequency test range. Note that Si5351A allows only Xtal and its 25 and 27MHz
+    int xfreq_range[] = {
+            25000000,  // 25MHz Si5351 Xtal frequency
+            27000000,  // 27MHz Si5351 Xtal frequency
+            10000000,  // 10MHz
+            15000000,  // 15MHz
+            20000000,  // 20MHz
+            30000000,  // 30MHz
+            35000000,  // 35MHz
+            40000000 };  // 40MHz
 
     MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test start.")
 
     // Massive test for the basic coefficient calculation.
-    // From input frequency 10Mhz to 30MHz by 5MHz step
-    for (int xfreq = 10000000; xfreq < 35000000; xfreq += 5000000)
-            {
+    // From input frequency 10Mhz to 40MHz by 5MHz step, and 27MHz
+    for (const auto &xfreq : xfreq_range)
+    {
         MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "xfreq     %dHz ", xfreq)
 
         // test on the given range.
-        for (int frequency = STARTFREQ; frequency < ENDFREQ; frequency += freq_step) {
+        // Be careful, the ENDFREQ must be tested/
+        for (int frequency = STARTFREQ; frequency <= ENDFREQ; frequency += freq_step) {
 
             // Configure PLL by given frequency.
             si5351_->Si5351ConfigSeek(xfreq, frequency, stage1_a, stage1_b, stage1_c, stage2_a, stage2_b, stage2_c, div_by_4, r);
@@ -272,7 +279,7 @@ void TestSi5351::TestSi5351ConfigSeek(int freq_step) {
             fvco = xfreq * (stage1_a + double(stage1_b) / stage1_c);
 
             // VCO frequency must be between 900MHz and 600MHz
-            if ((fvco > 900000000) or (600000000 > fvco))
+            if ((fvco >= 900000000) or (600000000 >= fvco))
                     {
                 MURASAKI_SYSLOG(nullptr, kfaPll, kseError, "VCO error fvco = %d ", int(fvco))
                 error = true;
@@ -691,7 +698,7 @@ void TestSi5351::TestSetFrequency()
             0,// output port 0
             161234000// 161.234 MHz
     );
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            //@formatter:on
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            //@formatter:on
 
             // check the PLL register configuration
     i2c_stub_->readTxBuffer(buffer, SI5351_TEST_BUFFER_LEN, &transffered_len);
@@ -851,12 +858,11 @@ void TestSi5351Driver(int freq_step) {
                                              1,  // DUT I2C address
                                              true)  // Address filtering is on
                                              );
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   // @formatter:on
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   // @formatter:on
 
     dut->TestSi5351ClockControl();
     dut->TestIsInitializing();
-    dut->TestIsLossOfLockA();
-    dut->TestIsLossOfLockB();
+    dut->TestIsLossOfLock();
     dut->TestIsLossOfXtal();
     dut->TestIsLossOfClkin();
     dut->TestResetPLL();
