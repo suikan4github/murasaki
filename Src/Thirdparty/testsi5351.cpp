@@ -9,6 +9,8 @@
 
 /// Fixed frequency for the Si5351 object test.
 #define TESTXTAL 25000000
+/// Fixed Test I2C address of Si5351.
+#define TESTI2CADDRESS 0x60
 
 /// End frequency of the scan test of the Si5351::Si5351ConfigSeek()
 /// 200MHz is the Highest frequency in Si5351 specification
@@ -39,7 +41,7 @@ TestSi5351::TestSi5351(
                        )
         :
         i2c_stub_(i2c_stub),
-        si5351_(new murasaki::Si5351(i2c_stub, 1, TESTXTAL))
+        si5351_(new murasaki::Si5351(i2c_stub, TESTI2CADDRESS, TESTXTAL))
 {
 
 }
@@ -52,7 +54,7 @@ void TestSi5351::TestIsInitializing() {
     const int BUT = 7;   // Bit under test
     const int RUT = 0;   // Register under test
 
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test start.")
+    MURASAKI_SYSLOG(this, kfaPll, kseNotice, "Test start.")
 
     i2c_stub_->clearRxBuffer();
     i2c_stub_->clearTxBuffer();
@@ -81,7 +83,7 @@ void TestSi5351::TestIsInitializing() {
     MURASAKI_ASSERT(transffered_len == 1)
     MURASAKI_ASSERT(buffer[0] == RUT)
 
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test done.")
+    MURASAKI_SYSLOG(this, kfaPll, kseNotice, "Test done.")
 }
 
 void TestSi5351::TestIsLossOfLock() {
@@ -95,7 +97,7 @@ void TestSi5351::TestIsLossOfLock() {
 
     // Test PLL A
 
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test start.")
+    MURASAKI_SYSLOG(this, kfaPll, kseNotice, "Test start.")
 
     i2c_stub_->clearRxBuffer();
     i2c_stub_->clearTxBuffer();
@@ -157,7 +159,7 @@ void TestSi5351::TestIsLossOfLock() {
     MURASAKI_ASSERT(transffered_len == 1)
     MURASAKI_ASSERT(buffer[0] == RUT)
 
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test done.")
+    MURASAKI_SYSLOG(this, kfaPll, kseNotice, "Test done.")
 }
 
 void TestSi5351::TestIsLossOfClkin() {
@@ -168,7 +170,7 @@ void TestSi5351::TestIsLossOfClkin() {
     const int BUT = 4;   // Bit under test
     const int RUT = 0;   // Register under test
 
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test start.")
+    MURASAKI_SYSLOG(this, kfaPll, kseNotice, "Test start.")
 
     i2c_stub_->clearRxBuffer();
     i2c_stub_->clearTxBuffer();
@@ -197,7 +199,7 @@ void TestSi5351::TestIsLossOfClkin() {
     MURASAKI_ASSERT(transffered_len == 1)
     MURASAKI_ASSERT(buffer[0] == RUT)
 
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test done.")
+    MURASAKI_SYSLOG(this, kfaPll, kseNotice, "Test done.")
 
 }
 
@@ -209,7 +211,7 @@ void TestSi5351::TestIsLossOfXtal() {
     const int BUT = 3;   // Bit under test
     const int RUT = 0;   // Register under test
 
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test start.")
+    MURASAKI_SYSLOG(this, kfaPll, kseNotice, "Test start.")
 
     i2c_stub_->clearRxBuffer();
     i2c_stub_->clearTxBuffer();
@@ -238,7 +240,7 @@ void TestSi5351::TestIsLossOfXtal() {
     MURASAKI_ASSERT(transffered_len == 1)
     MURASAKI_ASSERT(buffer[0] == RUT)
 
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test done.")
+    MURASAKI_SYSLOG(this, kfaPll, kseNotice, "Test done.")
 
 }
 
@@ -259,13 +261,13 @@ void TestSi5351::TestSi5351ConfigSeek(int freq_step) {
             35000000,  // 35MHz
             40000000 };  // 40MHz
 
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test start.")
+    MURASAKI_SYSLOG(this, kfaPll, kseNotice, "Test start.")
 
     // Massive test for the basic coefficient calculation.
     // From input frequency 10Mhz to 40MHz by 5MHz step, and 27MHz
     for (const auto &xfreq : xfreq_range)
     {
-        MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "xfreq     %dHz ", xfreq)
+        MURASAKI_SYSLOG(this, kfaPll, kseNotice, "xfreq     %dHz ", xfreq)
 
         // test on the given range.
         // Be careful, the ENDFREQ must be tested/
@@ -276,47 +278,17 @@ void TestSi5351::TestSi5351ConfigSeek(int freq_step) {
 
             // Calculate the synthesized frequency
             double output, fvco;
-            fvco = xfreq * (stage1_a + double(stage1_b) / stage1_c);
+            // To reduce the round error, original a + b/c is transformed.
+            fvco = xfreq * (stage1_a * double(stage1_c) + stage1_b) / stage1_c;
 
             // VCO frequency must be between 900MHz and 600MHz
-            if ((fvco >= 900000000) or (600000000 >= fvco))
+            // To allow the error, upper boundary is +1Hz.
+            if ((fvco > 900000001) or (600000000 > fvco))
                     {
-                MURASAKI_SYSLOG(nullptr, kfaPll, kseError, "VCO error fvco = %d ", int(fvco))
+                MURASAKI_SYSLOG(this, kfaPll, kseError, "VCO error fvco = %d ", int(fvco))
                 error = true;
             }
 
-#if 0
-            // Range check of the PLL P1, P2, P3. See data sheet for detail.
-            if (P1(stage1_a, stage1_b, stage1_c) >= 262144) {   // if P1 is bigger or eq 2^18.
-                MURASAKI_SYSLOG(nullptr, kfaPll, kseError, "PLL parameter overflow. P1 :  %d ", P1(stage1_a, stage1_b, stage1_c))
-                error = true;
-            }
-            if (P2(stage1_a, stage1_b, stage1_c) >= 1048576) {   // if P2 is bigger or eq 2^20.
-                MURASAKI_SYSLOG(nullptr, kfaPll, kseError, "PLL parameter overflow. P2 :  %d ", P2(stage1_a, stage1_b, stage1_c))
-                error = true;
-            }
-            if (P3(stage1_a, stage1_b, stage1_c) >= 1048576) {   // if P3 is bigger or eq 2^20.
-                MURASAKI_SYSLOG(nullptr, kfaPll, kseError, "PLL parameter overflow. P3 :  %d ", P3(stage1_a, stage1_b, stage1_c))
-                error = true;
-            }
-
-            // In case of the divide by four mode, ignore the multi-synth divider.
-            if (div_by_4 != 3) {
-                // Range check of the Multi-Synth divider P1, P2, P3. See data sheet for detail.
-                if (P1(stage2_a, stage2_b, stage2_c) >= 262144) {   // if P1 is bigger or eq 2^18.
-                    MURASAKI_SYSLOG(nullptr, kfaPll, kseError, "multi-synth divider parameter overflow. P1 :  %d ", P1(stage2_a, stage2_b, stage2_c))
-                    error = true;
-                }
-                if (P2(stage2_a, stage2_b, stage2_c) >= 1048576) {   // if P2 is bigger or eq 2^20.
-                    MURASAKI_SYSLOG(nullptr, kfaPll, kseError, "multi-synth divider parameter overflow. P2 :  %d ", P2(stage2_a, stage2_b, stage2_c))
-                    error = true;
-                }
-                if (P3(stage2_a, stage2_b, stage2_c) >= 1048576) {   // if P3 is bigger or eq 2^20.
-                    MURASAKI_SYSLOG(nullptr, kfaPll, kseError, "multi-synth divider parameter overflow. P3 :  %d ", P3(stage2_a, stage2_b, stage2_c))
-                    error = true;
-                }
-            }
-#endif
             // See data sheet to understand the restriction of the div_by_4
             if (div_by_4 == 3)
                 output = fvco / 4;
@@ -332,7 +304,7 @@ void TestSi5351::TestSi5351ConfigSeek(int freq_step) {
                         case 3:
                         case 5:
                         case 7:
-                        MURASAKI_SYSLOG(nullptr, kfaPll, kseError, "Divider error stage2_a = %d ", stage2_a)
+                        MURASAKI_SYSLOG(this, kfaPll, kseError, "Divider error stage2_a = %d ", stage2_a)
                         error = true;
                 }
 
@@ -346,34 +318,34 @@ void TestSi5351::TestSi5351ConfigSeek(int freq_step) {
             int delta = frequency - output;
             delta = (delta > 0) ? delta : -delta;
             if (delta > double(frequency) * 1e-13) {
-                MURASAKI_SYSLOG(nullptr, kfaPll, kseError, "Error at %dHz, difference is %dHz ", frequency, int(output - frequency));
+                MURASAKI_SYSLOG(this, kfaPll, kseError, "Error at %dHz, difference is %dHz ", frequency, int(output - frequency));
                 error = true;
             }
 
             if (error) {
 
-                MURASAKI_SYSLOG(nullptr, kfaPll, kseError, "frequency %d ", frequency);
-                MURASAKI_SYSLOG(nullptr, kfaPll, kseError, "stage1_a %d  ", stage1_a);
-                MURASAKI_SYSLOG(nullptr, kfaPll, kseError, "stage1_b %d  ", stage1_b);
-                MURASAKI_SYSLOG(nullptr, kfaPll, kseError, "stage1_c %d  ", stage1_c);
-                MURASAKI_SYSLOG(nullptr, kfaPll, kseError, "stage2_a %d  ", stage2_a);
-                MURASAKI_SYSLOG(nullptr, kfaPll, kseError, "stage2_b %d  ", stage2_b);
-                MURASAKI_SYSLOG(nullptr, kfaPll, kseError, "stage2_c %d  ", stage2_c);
-                MURASAKI_SYSLOG(nullptr, kfaPll, kseError, "div by 4  %d ", div_by_4);
-                MURASAKI_SYSLOG(nullptr, kfaPll, kseError, "r         %d ", r);
+                MURASAKI_SYSLOG(this, kfaPll, kseError, "frequency %d ", frequency);
+                MURASAKI_SYSLOG(this, kfaPll, kseError, "stage1_a %d  ", stage1_a);
+                MURASAKI_SYSLOG(this, kfaPll, kseError, "stage1_b %d  ", stage1_b);
+                MURASAKI_SYSLOG(this, kfaPll, kseError, "stage1_c %d  ", stage1_c);
+                MURASAKI_SYSLOG(this, kfaPll, kseError, "stage2_a %d  ", stage2_a);
+                MURASAKI_SYSLOG(this, kfaPll, kseError, "stage2_b %d  ", stage2_b);
+                MURASAKI_SYSLOG(this, kfaPll, kseError, "stage2_c %d  ", stage2_c);
+                MURASAKI_SYSLOG(this, kfaPll, kseError, "div by 4  %d ", div_by_4);
+                MURASAKI_SYSLOG(this, kfaPll, kseError, "r         %d ", r);
                 MURASAKI_ASSERT(false);
 
             }
         }
     }   // end of for.
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test done.")
+    MURASAKI_SYSLOG(this, kfaPll, kseNotice, "Test done.")
 
 }
 
 void TestSi5351::TestPackRegister() {
 
     // Register construction test for the PLL coefficient.
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test start.")
+    MURASAKI_SYSLOG(this, kfaPll, kseNotice, "Test start.")
 
     uint8_t registers[8];
     for (int i = 8; i < 2048; i += 100)  // integer part
@@ -409,7 +381,7 @@ void TestSi5351::TestPackRegister() {
     MURASAKI_ASSERT(PACKED_DIVBY4(registers) == 3)
 
 // Now, testing the basic functions.
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test done.")
+    MURASAKI_SYSLOG(this, kfaPll, kseNotice, "Test done.")
 
 }
 
@@ -420,7 +392,7 @@ void TestSi5351::TestResetPLL()
 // Si5351 : Register 177
     const int RUT = 177;   // RESET register
 
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test start.")
+    MURASAKI_SYSLOG(this, kfaPll, kseNotice, "Test start.")
 
     i2c_stub_->clearRxBuffer();
     i2c_stub_->clearTxBuffer();
@@ -440,7 +412,7 @@ void TestSi5351::TestResetPLL()
     MURASAKI_ASSERT(buffer[0] == RUT)
     MURASAKI_ASSERT(buffer[1] == 1 << 7)
 
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test done.")
+    MURASAKI_SYSLOG(this, kfaPll, kseNotice, "Test done.")
 
 }
 
@@ -450,7 +422,7 @@ void TestSi5351::TestSetPhaseOffset()
     unsigned int transffered_len;
     const int OFST_REG = 165;   // phase offset register
 
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test start. ")
+    MURASAKI_SYSLOG(this, kfaPll, kseNotice, "Test start. ")
 
 // ch=0, offset=0
     i2c_stub_->clearRxBuffer();
@@ -500,7 +472,7 @@ void TestSi5351::TestSetPhaseOffset()
     MURASAKI_ASSERT(buffer[0] == OFST_REG + 2)
     MURASAKI_ASSERT(buffer[1] == 11);    // offset value
 
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test done.")
+    MURASAKI_SYSLOG(this, kfaPll, kseNotice, "Test done.")
 
 }
 
@@ -511,7 +483,7 @@ void TestSi5351::TestSetClockConfig()
 // Si5351 : Register 16
     const int CTRL_REG = 16;   // control register
 
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test start. ")
+    MURASAKI_SYSLOG(this, kfaPll, kseNotice, "Test start. ")
 
 // ch=0, offset=0
     i2c_stub_->clearRxBuffer();
@@ -547,7 +519,7 @@ void TestSi5351::TestSetClockConfig()
     MURASAKI_ASSERT(buffer[0] == CTRL_REG + 2)
     MURASAKI_ASSERT(clockConfig.value == 0x55)
 
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test done. ")
+    MURASAKI_SYSLOG(this, kfaPll, kseNotice, "Test done. ")
 }
 
 void TestSi5351::TestGetClockConfig()
@@ -557,7 +529,7 @@ void TestSi5351::TestGetClockConfig()
 // Si5351 : Register 16
     const int CTRL_REG = 16;   // control register
 
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test start. ")
+    MURASAKI_SYSLOG(this, kfaPll, kseNotice, "Test start. ")
 
 // ch=0, offset=0
     i2c_stub_->clearRxBuffer();
@@ -589,14 +561,14 @@ void TestSi5351::TestGetClockConfig()
     MURASAKI_ASSERT(buffer[0] == CTRL_REG + 2)
     MURASAKI_ASSERT(buffer[1] == 0xDE);    // offset value
 
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test done. ")
+    MURASAKI_SYSLOG(this, kfaPll, kseNotice, "Test done. ")
 }
 
 void TestSi5351::TestSi5351ClockControl()
 {
     murasaki::Si5351ClockControl clockConfig;
 
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test start. ")
+    MURASAKI_SYSLOG(this, kfaPll, kseNotice, "Test start. ")
 
     MURASAKI_ASSERT(sizeof(clockConfig) == 1)
     clockConfig.value = 0;
@@ -624,7 +596,7 @@ void TestSi5351::TestSi5351ClockControl()
     clockConfig.value = 1 << 7;
     MURASAKI_ASSERT(clockConfig.fields.clk_pdn)
 
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test done. ")
+    MURASAKI_SYSLOG(this, kfaPll, kseNotice, "Test done. ")
 
 }
 
@@ -636,7 +608,7 @@ void TestSi5351::TestSetFrequency()
     const int PLLA = 26;   // RESET register
     const int MSDIV0 = 42;   // RESET register
 
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test start.")
+    MURASAKI_SYSLOG(this, kfaPll, kseNotice, "Test start.")
 
     i2c_stub_->clearRxBuffer();
     i2c_stub_->clearTxBuffer();
@@ -698,7 +670,7 @@ void TestSi5351::TestSetFrequency()
             0,// output port 0
             161234000// 161.234 MHz
     );
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            //@formatter:on
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                //@formatter:on
 
             // check the PLL register configuration
     i2c_stub_->readTxBuffer(buffer, SI5351_TEST_BUFFER_LEN, &transffered_len);
@@ -739,7 +711,7 @@ void TestSi5351::TestSetFrequency()
     MURASAKI_ASSERT(buffer[0] == PLL_RESET_REG)
     MURASAKI_ASSERT(buffer[1] == 1 << 5)
 
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test done.")
+    MURASAKI_SYSLOG(this, kfaPll, kseNotice, "Test done.")
 }
 
 void TestSi5351::TestSetQuadratureFrequency()
@@ -751,7 +723,7 @@ void TestSi5351::TestSetQuadratureFrequency()
     const int MSDIV0 = 42;   // RESET register
     const int OFST_REG = 165;   // phase offset register
 
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test start.")
+    MURASAKI_SYSLOG(this, kfaPll, kseNotice, "Test start.")
 
     i2c_stub_->clearRxBuffer();
     i2c_stub_->clearTxBuffer();
@@ -842,7 +814,7 @@ void TestSi5351::TestSetQuadratureFrequency()
     MURASAKI_ASSERT(buffer[0] == PLL_RESET_REG)
     MURASAKI_ASSERT(buffer[1] == 1 << 7)
 
-    MURASAKI_SYSLOG(nullptr, kfaPll, kseNotice, "Test done.")
+    MURASAKI_SYSLOG(this, kfaPll, kseNotice, "Test done.")
 }
 
 void TestSi5351Driver(int freq_step) {
@@ -855,10 +827,10 @@ void TestSi5351Driver(int freq_step) {
                                      new murasaki::I2cMasterStub(
                                              SI5351_TEST_BUFFER_NUM,  // Number of the TX RX test buffers.
                                              SI5351_TEST_BUFFER_LEN,  // LENGTH of the TX RX test buffers.
-                                             1,  // DUT I2C address
+                                             TESTI2CADDRESS,  // DUT I2C address
                                              true)  // Address filtering is on
                                              );
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   // @formatter:on
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               // @formatter:on
 
     dut->TestSi5351ClockControl();
     dut->TestIsInitializing();
