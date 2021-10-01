@@ -276,7 +276,7 @@ Si5351Status Si5351::SetFrequency(murasaki::Si5351Pll pll, unsigned int div_ch, 
                                             stage2_denom,
                                             div_by_4,
                                             r_div);
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    // @formatter:on
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            // @formatter:on
     MURASAKI_ASSERT(status == murasaki::ks5351Ok)
 
     // Construct the register field for PLL
@@ -351,7 +351,7 @@ Si5351Status Si5351::SetQuadratureFrequency(murasaki::Si5351Pll pll, unsigned in
                                             stage2_denom,
                                             div_by_4,
                                             r_div);
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    // @formatter:on
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            // @formatter:on
     MURASAKI_ASSERT(status == murasaki::ks5351Ok)
     MURASAKI_ASSERT(127 >= stage2_int)
     MURASAKI_ASSERT(div_by_4 != 3);  // must not be in div by 4 mode.
@@ -437,6 +437,22 @@ inline uint8_t msynth_reg5(uint32_t p1, uint32_t p2, uint32_t p3) { return (((p3
 inline uint8_t msynth_reg6(uint32_t p1, uint32_t p2, uint32_t p3) { return (p2 >> 8) & 0xFF; }
 inline uint8_t msynth_reg7(uint32_t p1, uint32_t p2, uint32_t p3) { return p2 & 0xFF; }
 //@formatter:on
+
+void Si5351::EnableOutput(unsigned int ch, bool enable) {
+    // div must be 0, 1 or 2.
+    MURASAKI_ASSERT(ch < 3)
+
+    uint8_t value = GetRegister(3);  // Get OE regiser
+
+    if (enable) {
+        value &= ~(1 << ch);   // in case of enable, set the corresponding bit to 0;
+    }
+    else {
+        value |= 1 << ch;   // in case of disable, set the corresponding bit to 1;
+    }
+
+    SetRegister(3, value);  // Set OE register.
+}
 
 void Si5351::PackRegister(
                           const uint32_t integer,

@@ -148,7 +148,7 @@ class Si5351 {
 
     /**
      * @brief Check whether specified PLL is locked or not.
-     * @param pll Specify which PLL A or B have to be checked. 
+     * @param pll Specify which PLL A or B have to be checked.
      * @return true : PLL lost the lock. false : PLL is locked.
      */
     bool IsLossOfLock(murasaki::Si5351Pll pll);
@@ -165,6 +165,18 @@ class Si5351 {
      */
     bool IsLossOfXtal();
 
+    /**
+     * @brief Control the Output Enable state of the specific output channel
+     *
+     * @param ch Output channel. 0..2
+     * @param enable true : enable, false : disable.
+     * @details
+     * Control the OE bit of the register 3 of the Si5351.
+     *
+     * When the enable parameter is true, the bit[ch] of the register 3 is set to "0".
+     * By specification, "0" means enable. See AN619.
+     */
+    void EnableOutput(unsigned int ch, bool enable = true);
     /**
      * @brief Reset PLL.
      * @param pll ks5351PllA for PLL A, ks5351PllB for PLL B.

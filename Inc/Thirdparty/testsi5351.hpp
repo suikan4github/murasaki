@@ -34,6 +34,7 @@ class TestSi5351 {
     void TestIsLossOfLock();
     void TestIsLossOfClkin();
     void TestIsLossOfXtal();
+    void TestEnableOutput();
     void TestResetPLL();
     void TestSetClockConfig();
     void TestGetClockConfig();

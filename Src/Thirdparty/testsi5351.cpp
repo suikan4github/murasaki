@@ -244,6 +244,157 @@ void TestSi5351::TestIsLossOfXtal() {
 
 }
 
+void TestSi5351::TestEnableOutput()
+{
+    uint8_t buffer[SI5351_TEST_BUFFER_LEN];
+    unsigned int transffered_len;
+    bool flag;
+    // Si5351 : Register 3 for OE
+    const int RUT = 3;   // Register under test
+
+    MURASAKI_SYSLOG(this, kfaPll, kseNotice, "Test start.")
+
+    // ************** Enable to enable, bit 0
+    i2c_stub_->clearRxBuffer();
+    i2c_stub_->clearTxBuffer();
+
+    buffer[0] = 0x00;   // Set value to be read.
+    i2c_stub_->writeRxBuffer(buffer, 1);
+
+    si5351_->EnableOutput(0);   // enable;
+
+    i2c_stub_->readTxBuffer(buffer, SI5351_TEST_BUFFER_LEN, &transffered_len);
+    // must be 1byte transmission to specify the register address.
+    MURASAKI_ASSERT(transffered_len == 1)
+    // must be OE register address.
+    MURASAKI_ASSERT(buffer[0] == RUT)
+
+    i2c_stub_->readTxBuffer(buffer, SI5351_TEST_BUFFER_LEN, &transffered_len);
+    // must be 1byte transmission to specify the register address.
+    MURASAKI_ASSERT(transffered_len == 2)
+    // must be OE register address.
+    MURASAKI_ASSERT(buffer[0] == RUT)
+    // if enable, it must be 0 in bit 0.
+    MURASAKI_ASSERT(buffer[1] == 0)
+
+    // ************** Disable to enable, bit 0
+    i2c_stub_->clearRxBuffer();
+    i2c_stub_->clearTxBuffer();
+
+    buffer[0] = 0x07;   // Set value to be read.
+    i2c_stub_->writeRxBuffer(buffer, 1);
+
+    si5351_->EnableOutput(0);   // enable;
+
+    i2c_stub_->readTxBuffer(buffer, SI5351_TEST_BUFFER_LEN, &transffered_len);
+    // must be 1byte transmission to specify the register address.
+    MURASAKI_ASSERT(transffered_len == 1)
+    // must be OE register address.
+    MURASAKI_ASSERT(buffer[0] == RUT)
+
+    i2c_stub_->readTxBuffer(buffer, SI5351_TEST_BUFFER_LEN, &transffered_len);
+    // must be 1byte transmission to specify the register address.
+    MURASAKI_ASSERT(transffered_len == 2)
+    // must be OE register address.
+    MURASAKI_ASSERT(buffer[0] == RUT)
+    // if enable, it must be 0 in bit 0.
+    MURASAKI_ASSERT(buffer[1] == 0x06)
+
+    // ************** Enable to disable, bit 0
+    i2c_stub_->clearRxBuffer();
+    i2c_stub_->clearTxBuffer();
+
+    buffer[0] = 0x00;   // Set value to be read.
+    i2c_stub_->writeRxBuffer(buffer, 1);
+
+    si5351_->EnableOutput(0, false);   // enable;
+
+    i2c_stub_->readTxBuffer(buffer, SI5351_TEST_BUFFER_LEN, &transffered_len);
+    // must be 1byte transmission to specify the register address.
+    MURASAKI_ASSERT(transffered_len == 1)
+    // must be OE register address.
+    MURASAKI_ASSERT(buffer[0] == RUT)
+
+    i2c_stub_->readTxBuffer(buffer, SI5351_TEST_BUFFER_LEN, &transffered_len);
+    // must be 1byte transmission to specify the register address.
+    MURASAKI_ASSERT(transffered_len == 2)
+    // must be OE register address.
+    MURASAKI_ASSERT(buffer[0] == RUT)
+    // if enable, it must be 0 in bit 0.
+    MURASAKI_ASSERT(buffer[1] == 1)
+
+    // ************** Disable to disable, bit 0
+    i2c_stub_->clearRxBuffer();
+    i2c_stub_->clearTxBuffer();
+
+    buffer[0] = 0x07;   // Set value to be read.
+    i2c_stub_->writeRxBuffer(buffer, 1);
+
+    si5351_->EnableOutput(0, false);   // enable;
+
+    i2c_stub_->readTxBuffer(buffer, SI5351_TEST_BUFFER_LEN, &transffered_len);
+    // must be 1byte transmission to specify the register address.
+    MURASAKI_ASSERT(transffered_len == 1)
+    // must be OE register address.
+    MURASAKI_ASSERT(buffer[0] == RUT)
+
+    i2c_stub_->readTxBuffer(buffer, SI5351_TEST_BUFFER_LEN, &transffered_len);
+    // must be 1byte transmission to specify the register address.
+    MURASAKI_ASSERT(transffered_len == 2)
+    // must be OE register address.
+    MURASAKI_ASSERT(buffer[0] == RUT)
+    // if enable, it must be 0 in bit 0.
+    MURASAKI_ASSERT(buffer[1] == 0x7)
+
+    // ************** Disable to enable, bit 1
+    i2c_stub_->clearRxBuffer();
+    i2c_stub_->clearTxBuffer();
+
+    buffer[0] = 0x07;   // Set value to be read.
+    i2c_stub_->writeRxBuffer(buffer, 1);
+
+    si5351_->EnableOutput(1);   // enable;
+
+    i2c_stub_->readTxBuffer(buffer, SI5351_TEST_BUFFER_LEN, &transffered_len);
+    // must be 1byte transmission to specify the register address.
+    MURASAKI_ASSERT(transffered_len == 1)
+    // must be OE register address.
+    MURASAKI_ASSERT(buffer[0] == RUT)
+
+    i2c_stub_->readTxBuffer(buffer, SI5351_TEST_BUFFER_LEN, &transffered_len);
+    // must be 1byte transmission to specify the register address.
+    MURASAKI_ASSERT(transffered_len == 2)
+    // must be OE register address.
+    MURASAKI_ASSERT(buffer[0] == RUT)
+    // if enable, it must be 1 in bit 0.
+    MURASAKI_ASSERT(buffer[1] == 0x05)
+
+    // ************** Enable to disable, bit 2
+    i2c_stub_->clearRxBuffer();
+    i2c_stub_->clearTxBuffer();
+
+    buffer[0] = 0x00;   // Set value to be read.
+    i2c_stub_->writeRxBuffer(buffer, 1);
+
+    si5351_->EnableOutput(2, false);   // enable;
+
+    i2c_stub_->readTxBuffer(buffer, SI5351_TEST_BUFFER_LEN, &transffered_len);
+    // must be 1byte transmission to specify the register address.
+    MURASAKI_ASSERT(transffered_len == 1)
+    // must be OE register address.
+    MURASAKI_ASSERT(buffer[0] == RUT)
+
+    i2c_stub_->readTxBuffer(buffer, SI5351_TEST_BUFFER_LEN, &transffered_len);
+    // must be 1byte transmission to specify the register address.
+    MURASAKI_ASSERT(transffered_len == 2)
+    // must be OE register address.
+    MURASAKI_ASSERT(buffer[0] == RUT)
+    // if enable, it must be 2 in bit 0.
+    MURASAKI_ASSERT(buffer[1] == 0x04)
+
+    MURASAKI_SYSLOG(this, kfaPll, kseNotice, "Test done.")
+}
+
 void TestSi5351::TestSi5351ConfigSeek(int freq_step) {
     uint32_t stage1_a, stage1_b, stage1_c;
     uint32_t stage2_a, stage2_b, stage2_c;
@@ -670,7 +821,7 @@ void TestSi5351::TestSetFrequency()
             0,// output port 0
             161234000// 161.234 MHz
     );
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                //@formatter:on
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                //@formatter:on
 
             // check the PLL register configuration
     i2c_stub_->readTxBuffer(buffer, SI5351_TEST_BUFFER_LEN, &transffered_len);
@@ -830,13 +981,14 @@ void TestSi5351Driver(int freq_step) {
                                              TESTI2CADDRESS,  // DUT I2C address
                                              true)  // Address filtering is on
                                              );
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               // @formatter:on
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               // @formatter:on
 
     dut->TestSi5351ClockControl();
     dut->TestIsInitializing();
     dut->TestIsLossOfLock();
     dut->TestIsLossOfXtal();
     dut->TestIsLossOfClkin();
+    dut->TestEnableOutput();
     dut->TestResetPLL();
     dut->TestSetClockConfig();
     dut->TestGetClockConfig();
