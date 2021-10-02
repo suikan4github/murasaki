@@ -16,6 +16,7 @@ Record of the modification in project development.
 - [Issue 129 : SetSyslogSeverityLevel() is misspelled.](https://github.com/suikan4github/murasaki/issues/129)
 - [Issue 132 : Compile failure of adau1361.cpp when No debug, No syslog option](https://github.com/suikan4github/murasaki/issues/132)
 - [Issue 133 : Removing the L1/F0 I2C workaround](https://github.com/suikan4github/murasaki/issues/133)
+- [Issue 141 : Cycle counter works only when a program is loaded by debugger.](https://github.com/suikan4github/murasaki/issues/141)
 
 ### Security
 ### Known Issue
