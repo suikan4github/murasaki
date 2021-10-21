@@ -8,6 +8,8 @@ Record of the modification in project development.
 - [Issue 139 : Add Si5351A Support.](https://github.com/suikan4github/murasaki/issues/139)
 
 ### Changed
+- [Issue 142 : Split the thirdparty module as separate project.](https://github.com/suikan4github/murasaki/issues/142)
+
 ### Deprecated
 ### Removed
 ### Fixed
