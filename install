@@ -38,7 +38,7 @@ if [ $SUPDIRNUM -gt "1" ] ; then
   exit
 fi
 
-# Variables to poin the source, include and startup directories. 
+# Variables to point the source, include and startup directories. 
 SRCDIR=$(dirname `find .. -name main.c`)
 INCDIR=$(dirname `find .. -name main.h`)
 SUPDIR=$(dirname `find .. -name startup_stm32*.s`)
@@ -47,9 +47,14 @@ echo Found $SRCDIR as the source directory.
 echo Found $INCDIR as the include directory.
 echo Found $SUPDIR as the startup directory.
 
+# Copy the template files. Deleting ".tmp" extention by basename command. 
 if [ ! -f ${SRCDIR}/murasaki_platform.cpp ]; then
-  cp template/*.hpp ${INCDIR}
-  cp template/*.cpp ${SRCDIR}
+  for filename in template/*.hpp.tmp; do
+    cp $filename ${INCDIR}/`basename $filename .tmp`
+  done
+  for filename in template/*.cpp.tmp; do
+    cp $filename ${SRCDIR}/`basename $filename .tmp`
+  done
   echo template files copied
 else
   echo template files exist. No change.

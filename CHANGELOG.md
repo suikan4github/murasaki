@@ -10,6 +10,7 @@ Record of the modification in project development.
 
 ### Changed
 - [Issue 142 : Split the thirdparty module as separate project.](https://github.com/suikan4github/murasaki/issues/142)
+- [Issue 144 : Change extentions of tempaltes.](https://github.com/suikan4github/murasaki/issues/144)
 
 ### Deprecated
 ### Removed
