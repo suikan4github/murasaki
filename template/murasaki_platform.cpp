@@ -46,7 +46,76 @@ extern SPI_HandleTypeDef hspi1;
 extern SPI_HandleTypeDef hspi4;
 extern UART_HandleTypeDef huart2;
 #endif
-extern UART_HandleTypeDef huart3;
+
+// Definition for Nucleo.
+// Note that the given processor name MACRO doesn't have the suffix. Thus, certain processor
+// Which has multiple Nucleo ( ex: G431 32/48 pin, F446 48/144 pin ) may cause problem.
+#if defined(STM32F091xx)
+// For Nucleo F091RC (32pin)
+#define UART_PORT huart2
+#define LED_PORT LD2_GPIO_Port
+#define LED_PIN LD2_Pin
+extern UART_HandleTypeDef UART_PORT;
+
+#elif defined(STM32F446xx)
+// For Nucleo G431RB (48pin)
+#define UART_PORT huart2
+#define LED_PORT LD2_GPIO_Port
+#define LED_PIN LD2_Pin
+extern UART_HandleTypeDef UART_PORT;
+
+#elif defined(STM32F722xx)
+// For Nucleo F722ZE (144pin)
+#define UART_PORT huart3
+#define LED_PORT LD2_GPIO_Port
+#define LED_PIN LD2_Pin
+extern UART_HandleTypeDef UART_PORT;
+
+#elif defined(STM32F746xx)
+// For Nucleo F746ZG (144pin)
+#define UART_PORT huart3
+#define LED_PORT LD2_GPIO_Port
+#define LED_PIN LD2_Pin
+extern UART_HandleTypeDef UART_PORT;
+
+#elif defined(STM32G070xx)
+// For Nucleo G070RB (48pin)
+#define UART_PORT huart2
+#define LED_PORT LD4_GPIO_Port
+#define LED_PIN LD4_Pin
+extern UART_HandleTypeDef UART_PORT;
+
+#elif defined(STM32G431xx)
+// For Nucleo G431RB (48pin)
+#define UART_PORT hlpuart1
+#define LED_PORT LD2_GPIO_Port
+#define LED_PIN LD2_Pin
+extern UART_HandleTypeDef UART_PORT;
+
+#elif defined(STM32H743xx)
+// For Nucleo H743ZI (144pin)
+#define UART_PORT huart3
+#define LED_PORT LD2_GPIO_Port
+#define LED_PIN LD2_Pin
+extern UART_HandleTypeDef UART_PORT;
+
+#elif defined(STM32L152xx)
+// For Nucleo L152RE (48pin)
+#define UART_PORT hlpuart2
+#define LED_PORT LD2_GPIO_Port
+#define LED_PIN LD2_Pin
+extern UART_HandleTypeDef UART_PORT;
+
+#elif defined(STM32L412xx)
+// For Nucleo L412RB (48pin)
+#define UART_PORT huart2
+#define LED_PORT LD4_GPIO_Port
+#define LED_PIN LD4_Pin
+extern UART_HandleTypeDef UART_PORT;
+
+#else
+#error "Unknown nucleo. Please define the UART_PORT, LED_PORT, LED_PIN macro."
+#endif
 
 /* -------------------- PLATFORM Prototypes ------------------------- */
 
@@ -54,7 +123,7 @@ void TaskBodyFunction(const void *ptr);
 
 /* -------------------- PLATFORM Implementation ------------------------- */
 
-// Initialization of the asystem. 
+// Initialization of the system.
 void InitPlatform()
 {
 #if ! MURASAKI_CONFIG_NOCYCCNT
@@ -64,7 +133,7 @@ void InitPlatform()
     // UART device setting for console interface.
     // On Nucleo, the port connected to the USB port of ST-Link is
     // referred here.
-    murasaki::platform.uart_console = new murasaki::DebuggerUart(&huart3);
+    murasaki::platform.uart_console = new murasaki::DebuggerUart(&UART_PORT);
     while (nullptr == murasaki::platform.uart_console)
         ;  // stop here on the memory allocation failure.
 
@@ -84,7 +153,7 @@ void InitPlatform()
 
     // For demonstration, one GPIO LED port is reserved.
     // The port and pin names are fined by CubeIDE.
-    murasaki::platform.led = new murasaki::BitOut(LD2_GPIO_Port, LD2_Pin);
+    murasaki::platform.led = new murasaki::BitOut(LED_PORT, LED_PIN);
     MURASAKI_ASSERT(nullptr != murasaki::platform.led)
 
     // For demonstration of FreeRTOS task.
