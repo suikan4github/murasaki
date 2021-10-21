@@ -201,7 +201,7 @@ cat > ${INCDIR}/murasaki_include_stub.h <<EOF
 * On the other hand, this is not enough to determine the appropriate include file inside murasaki_defs.hpp. 
 * As a result, there are difficulties to include the appropriate file. 
 * 
-* One of the naive appropach is to enumulate all possible pre-defined macro to determine the filename as following.
+* One of the naive approach is to emulate all possible pre-defined macro to determine the filename as following.
 * 
 * @code
 * #elif defined (STM32F405xx) || defined (STM32F415xx) || defined (STM32F407xx) || defined (STM32F417xx) || \
