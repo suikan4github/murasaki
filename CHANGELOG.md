@@ -6,6 +6,7 @@ Record of the modification in project development.
 ### Added
 - [Issue 130 : Need description of the Stack headroom.](https://github.com/suikan4github/murasaki/issues/130)
 - [Issue 139 : Add Si5351A Support.](https://github.com/suikan4github/murasaki/issues/139)
+- [Issue 143 : Conditional compile on debug port ](https://github.com/suikan4github/murasaki/issues/143)
 
 ### Changed
 - [Issue 142 : Split the thirdparty module as separate project.](https://github.com/suikan4github/murasaki/issues/142)
