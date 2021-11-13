@@ -113,6 +113,13 @@ extern UART_HandleTypeDef UART_PORT;
 #define LED_PIN LD4_Pin
 extern UART_HandleTypeDef UART_PORT;
 
+#elif defined(STM32G0B1xx)
+// For Nucleo G01B1RE (48pin)
+#define UART_PORT huart2
+#define LED_PORT LED_GREEN_GPIO_Port
+#define LED_PIN LED_GREEN_Pin
+extern UART_HandleTypeDef UART_PORT;
+
 #else
 #error "Unknown nucleo. Please define the UART_PORT, LED_PORT, LED_PIN macro."
 #endif
