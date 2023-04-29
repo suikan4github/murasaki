@@ -28,7 +28,7 @@ Followings are tested in the Ubuntu 16.04 LTS
 sudo apt-get update
 sudo apt-get upgrade
 sudo apt-get install doxygen
-cd murasaki # this directory
+cd murasaki/doc # this directory
 doxygen murasaki.doxyfile
 ```
  You will see the documents in the html sub-direcotry.
@@ -41,7 +41,7 @@ To make a PDF manual, follow :
 2. execute following
 ```
  sudo apt-get install texlive-latex-base texlive-fonts-recommended texlive-fonts-extra texlive-latex-extra
- cd murasaki # this directory
+ cd murasaki/doc # this directory
  cd latex
  make
 ```
