@@ -86,25 +86,50 @@ function check_target_string() {
 #    add the following line before that one.
 #    CustomAssertFailed(file, line);
 #
+# In the case of the using x-CUBE=FREERTOS package, the 
+# following lines have to be insereted after "USER CODE BEGIN defaultTask"
+# of the app_freertos.c instead of main.c. In this case, main.c 
+# doesn't have "USER CODE BEGIN 5".
+
 
 # Check whether appropriate file and string exist
 TARGET_FILE=${SRCDIR}/main.c
+TARGET_APP_FREERTOS=${SRCDIR}/app_freertos.c
 check_target_string ${TARGET_FILE} "USER CODE BEGIN Includes"
 check_target_string ${TARGET_FILE} "USER CODE END 6"
-check_target_string ${TARGET_FILE} "USER CODE BEGIN 5"
+# Check the key string of the StartDefaultTask() function. 
+# The location of this function is up to the ST implementaiton. 
+# If app_freertos.c exist in the project, that function must be in it. 
+# If else, that function must be in main.c. 
+if [ -e ${TARGET_APP_FREERTOS} ]; then
+  check_target_string ${TARGET_APP_FREERTOS} "USER CODE BEGIN defaultTask"
+else
+  check_target_string ${TARGET_FILE} "USER CODE BEGIN 5"
+fi
 
 # Is murasaki already isntalled in this file? 
 grep "CustomAssertFailed" ${TARGET_FILE} > /dev/null
 if [ $? -ne 0 ]; then 
-  cat  ${SRCDIR}/main.c  | awk -f <(cat - <<- 'EDO'
+  cat  ${TARGET_FILE}  | awk -f <(cat - <<- 'EDO'
     /USER CODE END 6/{print "    CustomAssertFailed(file, line);"}
     {print $0}
     /USER CODE BEGIN Includes/{print "#include \"murasaki_platform.hpp\""}
     /USER CODE BEGIN 5/{print "  InitPlatform();"; print "  ExecPlatform();"}
 EDO
   ) > foo.txt
-  mv foo.txt ${SRCDIR}/main.c
+  mv foo.txt ${TARGET_FILE}
   echo ${TARGET_FILE} modified.
+
+  # Does app_freertos.c exist? 
+  if [ -e ${TARGET_APP_FREERTOS} ]; then
+    cat  ${TARGET_APP_FREERTOS}  | awk -f <(cat - <<- 'EDO'
+      {print $0}
+      /USER CODE BEGIN defaultTask/{print "  InitPlatform();"; print "  ExecPlatform();"}
+EDO
+    ) > foo.txt
+    mv foo.txt ${TARGET_APP_FREERTOS}
+    echo ${TARGET_APP_FREERTOS} modified.
+  fi
 else
   echo ${TARGET_FILE} have been already modified. No change.
 fi
