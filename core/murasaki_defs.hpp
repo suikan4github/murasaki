@@ -12,7 +12,6 @@
 #include "murasaki_include_stub.h"
 
 #include <FreeRTOS.h>
-#include <cmsis_os.h>
 #include <task.h>
 
 /**
