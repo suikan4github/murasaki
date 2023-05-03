@@ -14,6 +14,7 @@ Record of the modification in project development.
 - [Issue 142 : Split the thirdparty module as separate project.](https://github.com/suikan4github/murasaki/issues/142)
 - [Issue 144 : Change extensions of templates.](https://github.com/suikan4github/murasaki/issues/144)
 - [Issue 146 : Re-struct the directories](https://github.com/suikan4github/murasaki/issues/146)
+- [Issue 148 : Use xPortIsInsideInterrupt() rather than original function. ](https://github.com/suikan4github/murasaki/issues/148)
 
 ### Deprecated
 ### Removed
