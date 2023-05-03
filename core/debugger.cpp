@@ -107,7 +107,7 @@ void Debugger::Printf(const char * fmt, ...)
 
 char Debugger::GetchFromTask()
 {
-    MURASAKI_ASSERT(IsTaskContext());
+    MURASAKI_ASSERT(pdFalse == xPortIsInsideInterrupt());
 
     return helpers_.logger->getCharacter();
 }
@@ -123,7 +123,7 @@ void Debugger::RePrint()
 
 void Debugger::AutoRePrint()
 {
-    MURASAKI_ASSERT(IsTaskContext());
+    MURASAKI_ASSERT(pdFalse == xPortIsInsideInterrupt());
     // protecting from double task creation
     if (auto_reprint_enable_)
         return;

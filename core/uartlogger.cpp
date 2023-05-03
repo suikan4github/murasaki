@@ -26,7 +26,7 @@ void UartLogger::putMessage(char message[], unsigned int size)
                             {
     MURASAKI_ASSERT(nullptr != message)
     MURASAKI_ASSERT(65536 > size);
-    MURASAKI_ASSERT(IsTaskContext());
+    MURASAKI_ASSERT(pdFalse == xPortIsInsideInterrupt());
     uart_->Transmit(reinterpret_cast<uint8_t *>(message),  // Message to send
             size,  // length of message by byte.
             PLATFORM_CONFIG_DEBUG_SERIAL_TIMEOUT  // wait eternaly
@@ -38,7 +38,7 @@ char UartLogger::getCharacter()
 {
     char buf;
 
-    MURASAKI_ASSERT(IsTaskContext());
+    MURASAKI_ASSERT(pdFalse == xPortIsInsideInterrupt());
     uart_->Receive(
                    reinterpret_cast<uint8_t *>(&buf),  // buffer to receive
             1  // receive one char

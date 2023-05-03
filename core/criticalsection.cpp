@@ -26,7 +26,7 @@ CriticalSection::~CriticalSection()
 
 void CriticalSection::Enter()
 {
-    MURASAKI_ASSERT(IsTaskContext());
+    MURASAKI_ASSERT(pdFalse == xPortIsInsideInterrupt());
     bool result = xSemaphoreTake(mutex_, kwmsIndefinitely);
     MURASAKI_ASSERT(result);    // true if xSemaphoreTake() success
 
@@ -34,7 +34,7 @@ void CriticalSection::Enter()
 
 void CriticalSection::Leave()
 {
-    MURASAKI_ASSERT(IsTaskContext());
+    MURASAKI_ASSERT(pdFalse == xPortIsInsideInterrupt());
     bool result = xSemaphoreGive(mutex_);
     MURASAKI_ASSERT(result);    // true if xSemaphoreGive() success
 }
