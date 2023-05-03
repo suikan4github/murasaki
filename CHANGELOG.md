@@ -9,6 +9,7 @@ Record of the modification in project development.
 - [Issue 143 : Conditional compile on debug port ](https://github.com/suikan4github/murasaki/issues/143)
 - [Issue 145 : Add Nucleo G0B1RE Support to murasaki_platform.cpp.tmp ](https://github.com/suikan4github/murasaki/issues/145)
 - [Issue 147 : Support new FreeRTOS installation by CubeIDE.](https://github.com/suikan4github/murasaki/issues/147)
+- [Issue 149 : Support STM32H5](https://github.com/suikan4github/murasaki/issues/149)
 
 ### Changed
 - [Issue 142 : Split the thirdparty module as separate project.](https://github.com/suikan4github/murasaki/issues/142)
