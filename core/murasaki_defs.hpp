@@ -303,30 +303,6 @@ enum TaskPriority {
  * \{
  */
 
-/**
- * \brief determine task or ISR context
- * \returns true if task context, false if ISR context.
- */
-static inline bool IsTaskContext()
-{
-// To check the task/interrupt context is done by ISPR.
-// The ISPR has ISR number, which is ongoing.
-// If this field is zero, CPU is in the threaded mode, which is task context.
-// If this field is non-zero, CPU is in the handler mode, which is interrupted context.
-// The field length depends on the CORE type.
-// For the detail of the ISPR, see the "Cortex-Mx Devices Generic User Guide," where Mx is one of M0, M0+, M1, M3, M4, M7
-
-#if defined( __CORE_CM7_H_GENERIC ) ||defined ( __CORE_CM3_H_GENERIC ) ||defined ( __CORE_CM4_H_GENERIC )
-    const unsigned int active_interrupt_mask = 0x1FF; /* bit 8:0 */
-#elif defined ( __CORE_CM0_H_GENERIC ) ||defined ( __CORE_CM0PLUS_H_GENERIC ) || defined ( __CORE_CM1_H_GENERIC )
-const unsigned int active_interrupt_mask = 0x03F; /* bit 5:0 */
-#else
-#error "Unknown core"
-#endif
-
-    return !(__get_IPSR() && active_interrupt_mask);
-
-}
 
 /**
  * @brief Clean and Flush the specific region of the data cache.
