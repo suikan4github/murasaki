@@ -328,7 +328,7 @@ static inline void CleanAndInvalidateDataCacheByAddress(void *address, size_t si
     size += adjustment;  // Because the start address is lower, the size is bigger.
 
     ::SCB_CleanInvalidateDCache_by_Addr(reinterpret_cast<long unsigned int *>(aligned_address), size);
-#elif defined ( __CORE_CM0_H_GENERIC ) ||defined ( __CORE_CM0PLUS_H_GENERIC ) ||defined ( __CORE_CM3_H_GENERIC ) ||defined ( __CORE_CM4_H_GENERIC ) ||defined ( __CORE_CM1_H_GENERIC )
+#elif defined ( __CORE_CM0_H_GENERIC ) ||defined ( __CORE_CM0PLUS_H_GENERIC ) ||defined ( __CORE_CM3_H_GENERIC ) ||defined ( __CORE_CM4_H_GENERIC ) ||defined ( __CORE_CM1_H_GENERIC )  ||defined ( __CORE_CM33_H_GENERIC )
 // Do nothing. These core doesn't have d-cache.
 #else
 #error "Unknown core"
@@ -359,7 +359,7 @@ static inline void CleanDataCacheByAddress(void *address, size_t size)
     size += adjustment;  // Because the start address is lower, the size is bigger.
 
     ::SCB_CleanDCache_by_Addr(reinterpret_cast<long unsigned int *>(aligned_address), size);
-#elif defined ( __CORE_CM0_H_GENERIC ) ||defined ( __CORE_CM0PLUS_H_GENERIC ) ||defined ( __CORE_CM3_H_GENERIC ) ||defined ( __CORE_CM4_H_GENERIC ) ||defined ( __CORE_CM1_H_GENERIC )
+#elif defined ( __CORE_CM0_H_GENERIC ) ||defined ( __CORE_CM0PLUS_H_GENERIC ) ||defined ( __CORE_CM3_H_GENERIC ) ||defined ( __CORE_CM4_H_GENERIC ) ||defined ( __CORE_CM1_H_GENERIC ) ||defined ( __CORE_CM33_H_GENERIC )
 // Do nothing. These core doesn't have d-cache.
 #else
 #error "Unknown core"

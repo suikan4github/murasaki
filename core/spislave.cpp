@@ -35,11 +35,15 @@ SpiSlave::SpiSlave(SPI_HandleTypeDef *spi_handle)
     MURASAKI_ASSERT(peripheral_->hdmatx != nullptr)
     MURASAKI_ASSERT(peripheral_->hdmarx != nullptr)
 
+// Cortex M33 MCU ( SMT32H5 ) DMA driver does not have the Init.PeripheralDataAlignment field and 
+// the Init.MemDataAlignment field. 
+#ifndef __CORE_CM33_H_GENERIC
     // For all SPI transfer, the data size have to be byte
     MURASAKI_ASSERT(peripheral_->hdmatx->Init.PeriphDataAlignment == DMA_PDATAALIGN_BYTE)
     MURASAKI_ASSERT(peripheral_->hdmarx->Init.PeriphDataAlignment == DMA_PDATAALIGN_BYTE)
     MURASAKI_ASSERT(peripheral_->hdmatx->Init.MemDataAlignment == DMA_MDATAALIGN_BYTE)
     MURASAKI_ASSERT(peripheral_->hdmarx->Init.MemDataAlignment == DMA_MDATAALIGN_BYTE)
+#endif
 
     // The DMA mode have to be normal
     MURASAKI_ASSERT(peripheral_->hdmatx->Init.Mode == DMA_NORMAL)
