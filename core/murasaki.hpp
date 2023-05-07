@@ -46,10 +46,14 @@
 // Utilities
 #include "murasaki_utility.hpp"
 
+// Third party strategy.
+#include "audiocodecstrategy.hpp"
+
 // Debuggers
 #include "uartlogger.hpp"
 #include "murasaki_assert.hpp"
 #include "murasaki_syslog.hpp"
+
 
 // platforms
 #include "platform_defs.hpp"

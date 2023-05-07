@@ -5,7 +5,7 @@
  *      Author: Seiichi "Suikan" Horie
  */
 
-#include <Thirdparty/adau1361.hpp>
+#include "adau1361.hpp"
 #include "debugger.hpp"
 
 #include "murasaki_assert.hpp"
