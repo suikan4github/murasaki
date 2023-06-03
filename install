@@ -77,37 +77,17 @@ function check_target_string() {
 #    Find the line which has "USER CODE BEGIN Includes", and then
 #    add the following line after that one.
 #    #include "murasaki_platform.hpp"
-# 2. Insert the platform code.
-#    Find the line which has "USER CODE BEGIN 5" and then,
-#    add the following lines after that one.
-#    InitPlatform();
-#    ExecPlatform();
-# 3. Find the line which has "USER CODE END 6" and then,
+# 2. Find the line which has "USER CODE END 6" and then,
 #    add the following line before that one.
 #    CustomAssertFailed(file, line);
 #
-# In the case of the using x-CUBE=FREERTOS package, the 
-# following lines have to be insereted after "USER CODE BEGIN defaultTask"
-# of the app_freertos.c instead of main.c. In this case, main.c 
-# doesn't have "USER CODE BEGIN 5".
 
-
-# Check whether appropriate file and string exist
 TARGET_FILE=${SRCDIR}/main.c
-TARGET_APP_FREERTOS=${SRCDIR}/app_freertos.c
 check_target_string ${TARGET_FILE} "USER CODE BEGIN Includes"
 check_target_string ${TARGET_FILE} "USER CODE END 6"
-# Check the key string of the StartDefaultTask() function. 
-# The location of this function is up to the ST implementaiton. 
-# If app_freertos.c exist in the project, that function must be in it. 
-# If else, that function must be in main.c. 
-if [ -e ${TARGET_APP_FREERTOS} ]; then
-  check_target_string ${TARGET_APP_FREERTOS} "USER CODE BEGIN defaultTask"
-else
-  check_target_string ${TARGET_FILE} "USER CODE BEGIN 5"
-fi
 
-# Is murasaki already isntalled in this file? 
+
+# Is murasaki already isntalled in main.c file? 
 grep "CustomAssertFailed" ${TARGET_FILE} > /dev/null
 if [ $? -ne 0 ]; then 
   cat  ${TARGET_FILE}  | awk -f <(cat - <<- 'EDO'
@@ -120,19 +100,61 @@ EDO
   mv foo.txt ${TARGET_FILE}
   echo ${TARGET_FILE} modified.
 
-  # Does app_freertos.c exist? 
-  if [ -e ${TARGET_APP_FREERTOS} ]; then
-    cat  ${TARGET_APP_FREERTOS}  | awk -f <(cat - <<- 'EDO'
-      {print $0}
-      /USER CODE BEGIN defaultTask/{print "  InitPlatform();"; print "  ExecPlatform();"}
-EDO
-    ) > foo.txt
-    mv foo.txt ${TARGET_APP_FREERTOS}
-    echo ${TARGET_APP_FREERTOS} modified.
-  fi
 else
-  echo ${TARGET_FILE} have been already modified. No change.
+  echo ${TARGET_FILE} have been already modified for CustomAssertFailed\(\). No change.
 fi
+
+# Modify StartDefaultTask() like following
+# 1. Find out the file which has StartDefaultTas()
+# 2. Insert the platform code.
+#    Find the line which has "USER CODE BEGIN 5" and then,
+#    add the following lines after that one.
+#    InitPlatform();
+#    ExecPlatform();
+# 3. Insert the platform code.
+#    Find the line which has "USER CODE BEGIN defaultTask" and then,
+#    add the following lines after that one.
+#    InitPlatform();
+#    ExecPlatform();
+#
+# For the old product STM32F446, CubeIDE generate the StartDEfaultTask()
+# inside main.c with the tag "USER CODE BEGIN 5". 
+# For the new product STM32H506, CubeIDE generate the StartDEfaultTask()
+# inside app_freertos.c with the tag "USER CODE BEGIN defaultTask". 
+#
+# Above algorithm works fine for both cases. 
+
+# Count how many files have "StartDefaullTask"
+FREE_RTOS_STUB_HOOK="StartDefaultTask"
+FREE_RTOS_STUB_NUM=$(grep  ${FREE_RTOS_STUB_HOOK} ${SRCDIR}/*.c -l | wc -l)
+# 0 => error
+if [ ${FREE_RTOS_STUB_NUM} == 0 ]; then
+    echo \"${FREE_RTOS_STUB_HOOK}\" not found in ${SRCDIR} directory.
+    exit 1
+fi
+# >1 => error
+if [ ${FREE_RTOS_STUB_NUM} -gt 1 ]; then
+    echo Too many \"${FREE_RTOS_STUB_HOOK}\" found in ${SRCDIR} directory.
+    exit 1
+fi
+# Obtain the filename which contains "USER CODE BEGIN 5" 
+TARGET_FILE=${SRCDIR}/$(grep  ${FREE_RTOS_STUB_HOOK} ${SRCDIR}/*.c -l )
+
+# Is murasaki already isntalled in FreeRTOS defoult startup function? 
+grep "InitPlatform" ${TARGET_FILE} > /dev/null
+if [ $? -ne 0 ]; then 
+  cat  ${TARGET_FILE}  | awk -f <(cat - <<- 'EDO'
+    {print $0}
+    /USER CODE BEGIN 5/          {print "  InitPlatform();"; print "  ExecPlatform();"}
+    /USER CODE BEGIN defaultTask/{print "  InitPlatform();"; print "  ExecPlatform();"}
+EDO
+  ) > foo.txt
+  mv foo.txt ${TARGET_FILE}
+  echo ${TARGET_FILE} modified.
+else
+  echo ${TARGET_FILE} have been already modified for StartDefaultTask\(\). No change.
+fi
+
 
 # Modify the startup/startup_stm32*.s like following.
 # Find the line which has "Deafult_Handler:" and then,
