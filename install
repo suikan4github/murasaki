@@ -138,7 +138,7 @@ if [ ${FREE_RTOS_STUB_NUM} -gt 1 ]; then
     exit 1
 fi
 # Obtain the filename which contains "USER CODE BEGIN 5" 
-TARGET_FILE=${SRCDIR}/$(grep  ${FREE_RTOS_STUB_HOOK} ${SRCDIR}/*.c -l )
+TARGET_FILE=$(grep  ${FREE_RTOS_STUB_HOOK} ${SRCDIR}/*.c -l )
 
 # Is murasaki already isntalled in FreeRTOS defoult startup function? 
 grep "InitPlatform" ${TARGET_FILE} > /dev/null
