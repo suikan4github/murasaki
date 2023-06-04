@@ -321,7 +321,7 @@ static inline bool IsInsideInterrupt()
 #if defined ( __CORE_CM0_H_GENERIC ) ||defined ( __CORE_CM0PLUS_H_GENERIC ) || defined ( __CORE_CM1_H_GENERIC )
     return __get_IPSR() != 0;
 #else
-    return xPortIsInsideInterrupt()
+    return xPortIsInsideInterrupt();
 #endif
 
 }
