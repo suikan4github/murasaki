@@ -97,7 +97,7 @@ if [ $? -ne 0 ]; then
 EDO
   ) > foo.txt
   mv foo.txt ${TARGET_FILE}
-  echo ${TARGET_FILE} modified.
+  echo ${TARGET_FILE} : Added CustomAssertFailed() calling and include file. 
 
 else
   echo ${TARGET_FILE} have been already modified for CustomAssertFailed\(\). No change.
@@ -149,7 +149,7 @@ if [ $? -ne 0 ]; then
 EDO
   ) > foo.txt
   mv foo.txt ${TARGET_FILE}
-  echo ${TARGET_FILE} modified.
+  echo ${TARGET_FILE} : Added stub calling code.
 else
   echo ${TARGET_FILE} have been already modified for StartDefaultTask\(\). No change.
 fi
@@ -185,7 +185,7 @@ if [ $? -ne 0 ]; then # if not, install
 EDO
   ) > foo.txt
   mv foo.txt ${TARGET_FILE}
-  echo ${TARGET_FILE} modified.
+  echo ${TARGET_FILE} : Added jump code to CustomDefaultHandler.
 else
   echo ${TARGET_FILE} have been already modified. No change.
 fi
@@ -216,7 +216,7 @@ if [ $? -ne 0 ]; then # if not, install
 EDO
   ) > foo.txt
   mv foo.txt `ls ${SRCDIR}/stm32*_it.c`
-  echo ${TARGET_FILE} modified.
+  echo ${TARGET_FILE} : Added jump code to CustomDefaultHandler.
 else
   echo ${TARGET_FILE} have been already modified. No change.
 fi
