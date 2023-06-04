@@ -522,7 +522,7 @@ extern "C" void CustomAssertFailed(uint8_t *file, uint32_t line)
  * Compile the program without debug information and with certain
  * optimization leve, when you investigate the Hard Fault.
  */
-__asm volatile (
+__asm (
         ".global CustomDefaultHandler \n"
         "CustomDefaultHandler: \n"
         " movs r0,#4       \n"
