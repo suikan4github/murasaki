@@ -27,7 +27,7 @@ Synchronizer::~Synchronizer()
 
 bool Synchronizer::Wait(unsigned int timeout_ms)
                         {
-    MURASAKI_ASSERT(! xPortIsInsideInterrupt());
+    MURASAKI_ASSERT(! murasaki::IsInsideInterrupt());
 
     // If the timeout_ms is the kmsIndefinitely, pass portMAX_DELAY to wait indefinitely.
     // If not, pass the timeout_ms after converting to tick to wait desired duration.
@@ -42,7 +42,7 @@ void Synchronizer::Release()
 {
     // The FreeRTOS API is context dependent.
     // To work correctly, we have to refer the context informaiton.
-    if (! xPortIsInsideInterrupt())
+    if (! murasaki::IsInsideInterrupt())
         ::xSemaphoreGive(semaphore_ );
     else {
         ::xSemaphoreGiveFromISR(semaphore_, nullptr);

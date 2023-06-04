@@ -48,7 +48,7 @@ unsigned int DebuggerFifo::Get(uint8_t data[], unsigned int size)
     unsigned int ret_val;
 
     if (!post_mortem_) {  // if normal condition
-        MURASAKI_ASSERT(! xPortIsInsideInterrupt())
+        MURASAKI_ASSERT(! murasaki::IsInsideInterrupt())
 
         taskENTER_CRITICAL();
         {
