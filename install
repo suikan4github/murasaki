@@ -97,7 +97,7 @@ if [ $? -ne 0 ]; then
 EDO
   ) > foo.txt
   mv foo.txt ${TARGET_FILE}
-  echo ${TARGET_FILE} : Added CustomAssertFailed() calling and include file. 
+  echo ${TARGET_FILE} : Added CustomAssertFailed\(\) calling and include file. 
 
 else
   echo ${TARGET_FILE} have been already modified for CustomAssertFailed\(\). No change.
@@ -149,7 +149,7 @@ if [ $? -ne 0 ]; then
 EDO
   ) > foo.txt
   mv foo.txt ${TARGET_FILE}
-  echo ${TARGET_FILE} : Added stub calling code.
+  echo ${TARGET_FILE} : Added InitPlatform\(\)/ExecPlatform\(\) calling code.
 else
   echo ${TARGET_FILE} have been already modified for StartDefaultTask\(\). No change.
 fi
