@@ -27,6 +27,7 @@ Record of the modification in project development.
 - [Issue 133 : Removing the L1/F0 I2C workaround](https://github.com/suikan4github/murasaki/issues/133)
 - [Issue 141 : Cycle counter works only when a program is loaded by debugger.](https://github.com/suikan4github/murasaki/issues/141)
 - [Issue 151 : Installer is searching for StartDefaultTask() imprecisely.](https://github.com/suikan4github/murasaki/issues/151)
+- [Issue 152 : xPortIsInsideInterrupt() is not provided for ARMv6-M ](https://github.com/suikan4github/murasaki/issues/152)
 
 ### Security
 ### Known Issue
