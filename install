@@ -94,7 +94,6 @@ if [ $? -ne 0 ]; then
     /USER CODE END 6/{print "    CustomAssertFailed(file, line);"}
     {print $0}
     /USER CODE BEGIN Includes/{print "#include \"murasaki_platform.hpp\""}
-    /USER CODE BEGIN 5/{print "  InitPlatform();"; print "  ExecPlatform();"}
 EDO
   ) > foo.txt
   mv foo.txt ${TARGET_FILE}
