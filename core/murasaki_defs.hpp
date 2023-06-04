@@ -303,6 +303,29 @@ enum TaskPriority {
  * \{
  */
 
+/**
+ * \brief determine task or ISR context
+ * \returns true if in the ISR context, false if int the task context.
+ */
+static inline bool IsInsideInterrupt()
+{
+// To check the task/interrupt context is done by ISPR.
+// The ISPR has ISR number, which is ongoing.
+// If this field is zero, CPU is in the threaded mode, which is task context.
+// If this field is non-zero, CPU is in the handler mode, which is interrupted context.
+// The field length depends on the CORE type.
+// For the detail of the ISPR, see the "Cortex-Mx Devices Generic User Guide," where Mx is one of M0, M0+, M1, M3, M4, M7
+// CubeHAL provide the xPortIsInsideInterrupt() function to detect this context for ARMv7-M CPU. 
+// Thus, we implement similar algorithm for ARMv6-M CPU
+
+#if defined ( __CORE_CM0_H_GENERIC ) ||defined ( __CORE_CM0PLUS_H_GENERIC ) || defined ( __CORE_CM1_H_GENERIC )
+    return __get_IPSR() != 0;
+#else
+    return xPortIsInsideInterrupt()
+#endif
+
+}
+
 
 /**
  * @brief Clean and Flush the specific region of the data cache.
