@@ -29,6 +29,7 @@ Record of the modification in project development.
 - [Issue 150 : Unnessary "volatile" causes warning at build time. ](https://github.com/suikan4github/murasaki/issues/150)
 - [Issue 151 : Installer is searching for StartDefaultTask() imprecisely.](https://github.com/suikan4github/murasaki/issues/151)
 - [Issue 152 : xPortIsInsideInterrupt() is not provided for ARMv6-M ](https://github.com/suikan4github/murasaki/issues/152)
+- [Issue 153 : STM32H5 target has warning of the implicit declaration. ](https://github.com/suikan4github/murasaki/issues/153)
 
 ### Security
 ### Known Issue
