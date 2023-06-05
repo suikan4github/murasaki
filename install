@@ -144,6 +144,7 @@ grep "InitPlatform" ${TARGET_FILE} > /dev/null
 if [ $? -ne 0 ]; then 
   cat  ${TARGET_FILE}  | awk -f <(cat - <<- 'EDO'
     {print $0}
+    /USER CODE BEGIN Includes/{print "#include \"murasaki_platform.hpp\""}
     /USER CODE BEGIN 5/          {print "  InitPlatform();"; print "  ExecPlatform();"}
     /USER CODE BEGIN defaultTask/{print "  InitPlatform();"; print "  ExecPlatform();"}
 EDO
