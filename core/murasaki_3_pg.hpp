@@ -44,7 +44,7 @@
  * This page describes these directories and files.
  *
  * \section sec_ds_1 core directory
- * Almost files of the Murasaki source code files and header files are stored in this directory. 
+ * Almost all of the Murasaki source code files and header files are stored in this directory. 
  * Basically, there is no need to edit the files inside this directory, except the development of
  * Murasaki itself. 
  * 
