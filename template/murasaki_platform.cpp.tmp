@@ -101,7 +101,7 @@ extern UART_HandleTypeDef UART_PORT;
 
 #elif defined(STM32L152xE)
 // For Nucleo L152RE (48pin)
-#define UART_PORT hlpuart2
+#define UART_PORT huart2
 #define LED_PORT LD2_GPIO_Port
 #define LED_PIN LD2_Pin
 extern UART_HandleTypeDef UART_PORT;
