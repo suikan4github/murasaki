@@ -219,7 +219,7 @@ murasaki::I2cStatus I2cMaster::TransmitThenReceive(
         interrupt_status_ = murasaki::ki2csTimeOut;
 
 
-        status = HAL_I2C_Master_Sequential_Transmit_IT(
+        status = HAL_I2C_Master_Seq_Transmit_IT(
                                                        peripheral_,
                                                        addrs << 1,
                                                        const_cast<uint8_t*>(tx_data),
@@ -253,7 +253,7 @@ murasaki::I2cStatus I2cMaster::TransmitThenReceive(
 
                 // receive with restart condition. Address shift is required by HAL specification.
 
-                status = HAL_I2C_Master_Sequential_Receive_IT(
+                status = HAL_I2C_Master_Seq_Receive_IT(
                                                               peripheral_,
                                                               addrs << 1,
                                                               rx_data,
