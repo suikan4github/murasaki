@@ -5,7 +5,7 @@
  *      Author: takemasa
  */
 
-#include "Thirdparty/si5351.hpp"
+#include "si5351.hpp"
 
 #include "murasaki_assert.hpp"
 #include "murasaki_syslog.hpp"
