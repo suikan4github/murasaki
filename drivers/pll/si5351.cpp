@@ -320,6 +320,8 @@ Si5351Status Si5351::SetFrequency(murasaki::Si5351Pll pll, unsigned int div_ch, 
 
     // Reset the PLL to make phase offset correct. This is required by specification.
     ResetPLL(pll);
+
+    return ( Si5351Status::ks5351Ok);
 }
 
 Si5351Status Si5351::SetQuadratureFrequency(murasaki::Si5351Pll pll, unsigned int divI_ch, unsigned int divQ_ch, uint32_t frequency) {
@@ -421,6 +423,8 @@ Si5351Status Si5351::SetQuadratureFrequency(murasaki::Si5351Pll pll, unsigned in
 
     // Reset the PLL to make phase offset correct. This is required by specification.
     ResetPLL(pll);
+
+    return( Si5351Status::ks5351Ok);
 }
 
 //@formatter:off

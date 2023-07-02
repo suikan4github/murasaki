@@ -31,6 +31,7 @@ Record of the modification in project development.
 - [Issue 153 : STM32H5 target has warning of the implicit declaration. ](https://github.com/suikan4github/murasaki/issues/153)
 - [Issue 154 : Template for STM32L152 has wrong UART_PORT define. ](https://github.com/suikan4github/murasaki/issues/154)
 - [Issue 155 : I2C legacy API of CubeHAL causes compile error on STM32H5 ](https://github.com/suikan4github/murasaki/issues/155)
+- [Issue 156 : Cache handling API should not call when the D Cache is disabled. ](https://github.com/suikan4github/murasaki/issues/156)
 
 ### Security
 ### Known Issue
