@@ -12,7 +12,6 @@
 #include "murasaki_include_stub.h"
 
 #include <FreeRTOS.h>
-#include <cmsis_os.h>
 #include <task.h>
 
 /**
@@ -52,6 +51,7 @@ enum SyslogFacility {
     kfaEncoder = 1 << 11,  //!< kfaEncoder is specified when the message is from the Encoder module.
     kfaAdc = 1 << 12,   //!< kfaAdc is specified when the message is from the Adc module.
     kfaExti = 1 << 13,  //!< kfaExti is specified when the message is from the Exti module.
+    kfaPll = 1 << 14,    //!< kfaPll is specified when the message is from the PLL module.
     kfaUser0 = 1 << 24,  //!< User defined facility
     kfaUser1 = 1 << 25,  //!< User defined facility
     kfaUser2 = 1 << 26,  //!< User defined facility
@@ -247,7 +247,7 @@ enum AdcStatus
 };
 
 /**
- * @brief Codec channel specifiler
+ * @brief Codec channel specifier
  * @details
  * Codec channels are codec dependent.
  * Thus, channels are not hard coded as member function, but coded as parameter of the member function.
@@ -260,6 +260,7 @@ enum CodecChannel {
     kccHeadphoneOutput   //!< kccHpOutput Headphone Output
 
 };
+
 /**
  * @brief Status return by InterruptStartegy type
  */
@@ -304,9 +305,9 @@ enum TaskPriority {
 
 /**
  * \brief determine task or ISR context
- * \returns true if task context, false if ISR context.
+ * \returns true if in the ISR context, false if int the task context.
  */
-static inline bool IsTaskContext()
+static inline bool IsInsideInterrupt()
 {
 // To check the task/interrupt context is done by ISPR.
 // The ISPR has ISR number, which is ongoing.
@@ -314,18 +315,17 @@ static inline bool IsTaskContext()
 // If this field is non-zero, CPU is in the handler mode, which is interrupted context.
 // The field length depends on the CORE type.
 // For the detail of the ISPR, see the "Cortex-Mx Devices Generic User Guide," where Mx is one of M0, M0+, M1, M3, M4, M7
+// CubeHAL provide the xPortIsInsideInterrupt() function to detect this context for ARMv7-M CPU. 
+// Thus, we implement similar algorithm for ARMv6-M CPU
 
-#if defined( __CORE_CM7_H_GENERIC ) ||defined ( __CORE_CM3_H_GENERIC ) ||defined ( __CORE_CM4_H_GENERIC )
-    const unsigned int active_interrupt_mask = 0x1FF; /* bit 8:0 */
-#elif defined ( __CORE_CM0_H_GENERIC ) ||defined ( __CORE_CM0PLUS_H_GENERIC ) || defined ( __CORE_CM1_H_GENERIC )
-const unsigned int active_interrupt_mask = 0x03F; /* bit 5:0 */
+#if defined ( __CORE_CM0_H_GENERIC ) ||defined ( __CORE_CM0PLUS_H_GENERIC ) || defined ( __CORE_CM1_H_GENERIC )
+    return __get_IPSR() != 0;
 #else
-#error "Unknown core"
+    return xPortIsInsideInterrupt();
 #endif
 
-    return !(__get_IPSR() && active_interrupt_mask);
-
 }
+
 
 /**
  * @brief Clean and Flush the specific region of the data cache.
@@ -341,20 +341,12 @@ const unsigned int active_interrupt_mask = 0x03F; /* bit 5:0 */
  */
 static inline void CleanAndInvalidateDataCacheByAddress(void *address, size_t size)
                                                         {
-#ifdef __CORE_CM7_H_GENERIC
-    unsigned int aligned_address = reinterpret_cast<unsigned int>(address);
-
-    // extract modulo 32. The address have to be aligned to 32byte.
-    unsigned int adjustment = aligned_address & 0x1F;
-    // Adjust the address and size.
-    aligned_address -= adjustment;  // aligne to 32byte boarder
-    size += adjustment;  // Because the start address is lower, the size is bigger.
-
-    ::SCB_CleanInvalidateDCache_by_Addr(reinterpret_cast<long unsigned int *>(aligned_address), size);
-#elif defined ( __CORE_CM0_H_GENERIC ) ||defined ( __CORE_CM0PLUS_H_GENERIC ) ||defined ( __CORE_CM3_H_GENERIC ) ||defined ( __CORE_CM4_H_GENERIC ) ||defined ( __CORE_CM1_H_GENERIC )
-// Do nothing. These core doesn't have d-cache.
-#else
-#error "Unknown core"
+#if defined (__DCACHE_PRESENT) && (__DCACHE_PRESENT == 1U)
+	// Is data cache enabled? then, invalidate it
+	if (( SCB->CCR & SCB_CCR_DC_Msk ) != 0 )
+	{
+		::SCB_CleanInvalidateDCache_by_Addr(reinterpret_cast<long unsigned int *>(address), size);
+	}
 #endif
 }
 
@@ -372,20 +364,12 @@ static inline void CleanAndInvalidateDataCacheByAddress(void *address, size_t si
  */
 static inline void CleanDataCacheByAddress(void *address, size_t size)
                                            {
-#ifdef __CORE_CM7_H_GENERIC
-    unsigned int aligned_address = reinterpret_cast<unsigned int>(address);
-
-    // extract modulo 32. The address have to be aligned to 32byte.
-    unsigned int adjustment = aligned_address & 0x1F;
-    // Adjust the address and size.
-    aligned_address -= adjustment;  // aligne to 32byte boarder
-    size += adjustment;  // Because the start address is lower, the size is bigger.
-
-    ::SCB_CleanDCache_by_Addr(reinterpret_cast<long unsigned int *>(aligned_address), size);
-#elif defined ( __CORE_CM0_H_GENERIC ) ||defined ( __CORE_CM0PLUS_H_GENERIC ) ||defined ( __CORE_CM3_H_GENERIC ) ||defined ( __CORE_CM4_H_GENERIC ) ||defined ( __CORE_CM1_H_GENERIC )
-// Do nothing. These core doesn't have d-cache.
-#else
-#error "Unknown core"
+#if defined (__DCACHE_PRESENT) && (__DCACHE_PRESENT == 1U)
+	// Is data cache enabled? then, clean the data cache
+	if (( SCB->CCR & SCB_CCR_DC_Msk ) != 0 )
+	{
+		::SCB_CleanDCache_by_Addr(reinterpret_cast<long unsigned int *>(address), size);
+	}
 #endif
 }
 

@@ -3,6 +3,7 @@ Easy to use [STM32Cube HAL](https://www.st.com/content/st_com/en/products/embedd
 
 ## Talbe of Contents
  * [Description](#description)
+ * [What's new in v4.0.0](#whats-new-in-v400)
  * [Sample](#Sample)
  * [VS. Naked STM32Cube HAL](#vs-naked-stm32cube-hal)
  * [Requirement](#requirement)
@@ -54,6 +55,14 @@ In addition to the above peripheral, a set of classes serve the following functi
 You can find a set of the sample in the [murasaki_samples](https://github.com/suikan4github/murasaki_samples) project.
 
 The API documentation can be found in murasaki/doc directory. Also, related documentation can be found in the [project wiki](https://github.com/suikan4github/murasaki/wiki).
+
+## What's new in v4.0.0
+- Directory structure is drastically changed. See [Issue 146](https://github.com/suikan4github/murasaki/issues/146). The existing project which has been build with old version must be re-configured to meet the new directory. 
+- Add Si5351A PLL support. 
+- Add STM32G0B1 support. 
+- Add STM32H503 support. 
+- Other fixes. 
+
 
 ## Sample
 With the Murasaki library, the STM32Cube HAL IO becomes easy to write.
@@ -146,16 +155,18 @@ The Murasaki library is developed with the following environment :
  * [Ubuntu 16.04 LTS](http://releases.ubuntu.com/16.04/), [Ubuntu 18.04 LTS](http://releases.ubuntu.com/18.04/)
  * [STM32CubeIDE](https://www.st.com/ja/development-tools/stm32cubeide.html) 1.3.0
 
-The tested target is following :
+The tested targets are the followings :
  * [Nucleo H743ZI](https://www.st.com/en/evaluation-tools/nucleo-h743zi.html)(Cortex-M7)
  * [Nucleo F746ZG](https://www.st.com/en/evaluation-tools/nucleo-f746zg.html)(Cortex-M7)
  * [Nucleo F722ZE](https://www.st.com/en/evaluation-tools/nucleo-f722ze.html)(Cortex-M7)
+ * [Nucleo H503RB](https://www.st.com/en/evaluation-tools/nucleo-h503rb.html)(Cortex-M33)
  * [Nucleo F446RE](https://www.st.com/en/evaluation-tools/nucleo-f446re.html)(Cortex-M4)
  * [Nucleo G431RB](https://www.st.com/en/evaluation-tools/nucleo-g431rb.html)(Cortex-M4)
  * [Nucleo L412RB-P](https://www.st.com/en/evaluation-tools/nucleo-l412rb-p.html)(Cortex-M4)
  * [Nucleo L152RE](https://www.st.com/en/evaluation-tools/nucleo-l152re.html)(Cortex-M3)
  * [Nucleo F091RC](https://www.st.com/en/evaluation-tools/nucleo-f091rc.html)(Cortex-M0)
  * [Nucleo G070RB](https://www.st.com/en/evaluation-tools/nucleo-g070rb.html)(Cortex-M0+)
+ * [Nucleo G0B1RE](https://www.st.com/en/evaluation-tools/nucleo-g0b1re.html)(Cortex-M0+)
 
 Pins, clocks, peripherals, and FreeRTOS have to be configured by CubeMX.
 
@@ -177,8 +188,8 @@ Once CubeMx generated the code, a programmer can run the install script to set u
  1. Generate the C++ based CubeHAL application script by CubeIDE
  1. Clone Murasaki under the project
  1. Run the murasaki/install script
- 1. Add murasaki/Inc as G++ include path
- 1. Add murasaki/Src as G++ source path
+ 1. Add murasaki/core as G++ include path
+ 1. Add murasaki/core as G++ source path
 
 The detail of the install procedure is described in the
 [doc/refman.pdf](https://github.com/suikan4github/murasaki/blob/master/doc/refman.pdf)

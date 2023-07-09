@@ -43,25 +43,26 @@
  * Murasaki has four main directory and several user-modifiable files.
  * This page describes these directories and files.
  *
- * \section sec_ds_1 Src directory
- * Almost files of the Murasaki source code are stored in this directory. Basically,
- * there is no need to edit the files inside this directory, except the development of
- * Murasaki itself. The CubeIDE project setting must
- * refer this directory as the source directory.
+ * \section sec_ds_1 core directory
+ * Almost all of the Murasaki source code files and header files are stored in this directory. 
+ * Basically, there is no need to edit the files inside this directory, except the development of
+ * Murasaki itself. 
+ * 
+ * The CubeIDE project setting must refer this directory as the source directory and include
+ * directory. 
  *
- * \section sec_ds_1_2 Inc directory
- * This directory contains the include files, the CubeIDE project setting must
- * refer this directory as an include directory.
- *
- * \section sec_ds_1_5 Src/Thirdparty and Inc/Thirdparty directory
+ * \section sec_ds_1_5 drivers directory
  * The class collection of the third party peripherals. The "third party" means
- * outside of the microprocessor.
+ * off-chip. For example, the off-chip CODEC and PLL.  
  *
+ * The CubeIDE project setting must refer this directory as the source directory and include
+ * directory. 
+ * 
  * \section sec_ds_2 murasaki.hpp
  * Usually, the \ref murasaki.hpp include file is the only one to include from an application program.
  * By including this file, an application can refer all the definition of the Murasaki
  *
- * This file is stored in the Inc directory.
+ * This file is stored in the core directory.
  *
  * \section sec_ds_3 template directory
  * \subsection sec_ds_3_1 platform_config.hpp

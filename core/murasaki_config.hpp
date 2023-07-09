@@ -11,7 +11,6 @@
 #ifndef MURASAKI_CONFIG_HPP_
 #define MURASAKI_CONFIG_HPP_
 
-#include <cmsis_os.h>
 
 // Read the overriding definitions by programmer.
 #include <platform_config.hpp>

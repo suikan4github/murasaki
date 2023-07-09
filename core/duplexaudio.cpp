@@ -289,6 +289,7 @@ void DuplexAudio::TransmitAndReceive(
         default:
             MURASAKI_SYSLOG(this, kfaAudio, kseError, "Unknown word size")
             MURASAKI_ASSERT(false)
+            ;
     }
 
     AUDIO_SYSLOG("Return");

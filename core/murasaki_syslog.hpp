@@ -20,7 +20,7 @@ namespace murasaki {
  * @details
  * Set the severity threshold. The message below this levels are ignored.
  */
-void SetSyslogSererityThreshold(murasaki::SyslogSeverity severity);
+void SetSyslogSeverityThreshold(murasaki::SyslogSeverity severity);
 
 /**
  * @brief Set the syslog facility mask

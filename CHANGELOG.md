@@ -4,14 +4,37 @@ Record of the modification in project development.
 ## [Unreleased]
 
 ### Added
+- [Issue 130 : Need description of the Stack headroom.](https://github.com/suikan4github/murasaki/issues/130)
+- [Issue 139 : Add Si5351A Support.](https://github.com/suikan4github/murasaki/issues/139)
+- [Issue 143 : Conditional compile on debug port ](https://github.com/suikan4github/murasaki/issues/143)
+- [Issue 145 : Add Nucleo G0B1RE Support to murasaki_platform.cpp.tmp ](https://github.com/suikan4github/murasaki/issues/145)
+- [Issue 147 : Support new FreeRTOS installation by CubeIDE.](https://github.com/suikan4github/murasaki/issues/147)
+- [Issue 149 : Support STM32H5](https://github.com/suikan4github/murasaki/issues/149)
+
 ### Changed
+- [Issue 142 : Split the thirdparty module as separate project.](https://github.com/suikan4github/murasaki/issues/142)
+- [Issue 144 : Change extensions of templates.](https://github.com/suikan4github/murasaki/issues/144)
+- [Issue 146 : Re-struct the directories](https://github.com/suikan4github/murasaki/issues/146)
+- [Issue 148 : Use xPortIsInsideInterrupt() rather than original function. ](https://github.com/suikan4github/murasaki/issues/148)
+
 ### Deprecated
 ### Removed
 ### Fixed
+- [Issue 117 : STM32G0 misses EXTI because of HAL incompatibility.](https://github.com/suikan4github/murasaki/issues/117)
+- [Issue 129 : SetSyslogSeverityLevel() is misspelled.](https://github.com/suikan4github/murasaki/issues/129)
+- [Issue 132 : Compile failure of adau1361.cpp when No debug, No syslog option](https://github.com/suikan4github/murasaki/issues/132)
+- [Issue 133 : Removing the L1/F0 I2C workaround](https://github.com/suikan4github/murasaki/issues/133)
+- [Issue 141 : Cycle counter works only when a program is loaded by debugger.](https://github.com/suikan4github/murasaki/issues/141)
+- [Issue 150 : Unnessary "volatile" causes warning at build time. ](https://github.com/suikan4github/murasaki/issues/150)
+- [Issue 151 : Installer is searching for StartDefaultTask() imprecisely.](https://github.com/suikan4github/murasaki/issues/151)
+- [Issue 152 : xPortIsInsideInterrupt() is not provided for ARMv6-M ](https://github.com/suikan4github/murasaki/issues/152)
+- [Issue 153 : STM32H5 target has warning of the implicit declaration. ](https://github.com/suikan4github/murasaki/issues/153)
+- [Issue 154 : Template for STM32L152 has wrong UART_PORT define. ](https://github.com/suikan4github/murasaki/issues/154)
+- [Issue 155 : I2C legacy API of CubeHAL causes compile error on STM32H5 ](https://github.com/suikan4github/murasaki/issues/155)
+- [Issue 156 : Cache handling API should not call when the D Cache is disabled. ](https://github.com/suikan4github/murasaki/issues/156)
+
 ### Security
 ### Known Issue
-- [Issue 117 : STM32G0 misses EXTI because of HAL incompatibility.](https://github.com/suikan4github/murasaki/issues/117)
-- [Issue 126 : STM32L1 fails to compile the Exti class.](https://github.com/suikan4github/murasaki/issues/126)
 
 
 ## [3.0.0] - 2020-04-24

@@ -60,6 +60,7 @@ SaiPortAdapter::SaiPortAdapter(
             default:
                 MURASAKI_SYSLOG(this, kfaSai, kseError, "Unexpected data size")
                 MURASAKI_ASSERT(false)
+                ;
                 // force assertion.
         }
     }
@@ -96,6 +97,7 @@ SaiPortAdapter::SaiPortAdapter(
             default:
                 MURASAKI_SYSLOG(this, kfaSai, kseError, "Unexpected data size")
                 MURASAKI_ASSERT(false)
+                ;
                 // force assertion.
         }
     }

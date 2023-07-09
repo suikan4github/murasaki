@@ -15,8 +15,9 @@ __attribute__((weak)) void murasaki::InitCycleCounter()
 // Application developer can override this function by defining murasaki::InitCycleCounter().
 // This function is discarded at link phase, if developer has his/her own InitCycleCounter().
 #else
-    DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
-    DWT->CYCCNT = 0;
+    CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;     // Enable trace and debug block.
+    DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;                // Enable cycle count.
+    DWT->CYCCNT = 0;                                    // Initialize counter.
 #endif
 }
 

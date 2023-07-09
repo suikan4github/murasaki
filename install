@@ -38,7 +38,7 @@ if [ $SUPDIRNUM -gt "1" ] ; then
   exit
 fi
 
-# Variables to poin the source, include and startup directories. 
+# Variables to point the source, include and startup directories. 
 SRCDIR=$(dirname `find .. -name main.c`)
 INCDIR=$(dirname `find .. -name main.h`)
 SUPDIR=$(dirname `find .. -name startup_stm32*.s`)
@@ -47,9 +47,14 @@ echo Found $SRCDIR as the source directory.
 echo Found $INCDIR as the include directory.
 echo Found $SUPDIR as the startup directory.
 
+# Copy the template files. Deleting ".tmp" extention by basename command. 
 if [ ! -f ${SRCDIR}/murasaki_platform.cpp ]; then
-  cp template/*.hpp ${INCDIR}
-  cp template/*.cpp ${SRCDIR}
+  for filename in template/*.hpp.tmp; do
+    cp $filename ${INCDIR}/`basename $filename .tmp`
+  done
+  for filename in template/*.cpp.tmp; do
+    cp $filename ${SRCDIR}/`basename $filename .tmp`
+  done
   echo template files copied
 else
   echo template files exist. No change.
@@ -72,37 +77,84 @@ function check_target_string() {
 #    Find the line which has "USER CODE BEGIN Includes", and then
 #    add the following line after that one.
 #    #include "murasaki_platform.hpp"
+# 2. Find the line which has "USER CODE END 6" and then,
+#    add the following line before that one.
+#    CustomAssertFailed(file, line);
+#
+
+TARGET_FILE=${SRCDIR}/main.c
+check_target_string ${TARGET_FILE} "USER CODE BEGIN Includes"
+check_target_string ${TARGET_FILE} "USER CODE END 6"
+
+
+# Is murasaki already isntalled in main.c file? 
+grep "CustomAssertFailed" ${TARGET_FILE} > /dev/null
+if [ $? -ne 0 ]; then 
+  cat  ${TARGET_FILE}  | awk -f <(cat - <<- 'EDO'
+    /USER CODE END 6/{print "    CustomAssertFailed(file, line);"}
+    {print $0}
+    /USER CODE BEGIN Includes/{print "#include \"murasaki_platform.hpp\""}
+EDO
+  ) > foo.txt
+  mv foo.txt ${TARGET_FILE}
+  echo ${TARGET_FILE} : Added CustomAssertFailed\(\) calling and include file. 
+
+else
+  echo ${TARGET_FILE} have been already modified for CustomAssertFailed\(\). No change.
+fi
+
+# Modify StartDefaultTask() like following
+# 1. Find out the file which has StartDefaultTas()
 # 2. Insert the platform code.
 #    Find the line which has "USER CODE BEGIN 5" and then,
 #    add the following lines after that one.
 #    InitPlatform();
 #    ExecPlatform();
-# 3. Find the line which has "USER CODE END 6" and then,
-#    add the following line before that one.
-#    CustomAssertFailed(file, line);
+# 3. Insert the platform code.
+#    Find the line which has "USER CODE BEGIN defaultTask" and then,
+#    add the following lines after that one.
+#    InitPlatform();
+#    ExecPlatform();
 #
+# For the old product STM32F446, CubeIDE generate the StartDEfaultTask()
+# inside main.c with the tag "USER CODE BEGIN 5". 
+# For the new product STM32H506, CubeIDE generate the StartDEfaultTask()
+# inside app_freertos.c with the tag "USER CODE BEGIN defaultTask". 
+#
+# Above algorithm works fine for both cases. 
 
-# Check whether appropriate file and string exist
-TARGET_FILE=${SRCDIR}/main.c
-check_target_string ${TARGET_FILE} "USER CODE BEGIN Includes"
-check_target_string ${TARGET_FILE} "USER CODE END 6"
-check_target_string ${TARGET_FILE} "USER CODE BEGIN 5"
+# Count how many files have "StartDefaullTask"
+FREE_RTOS_STUB_HOOK="StartDefaultTask"
+FREE_RTOS_STUB_NUM=$(grep  ${FREE_RTOS_STUB_HOOK} ${SRCDIR}/*.c -l | wc -l)
+# 0 => error
+if [ ${FREE_RTOS_STUB_NUM} == 0 ]; then
+    echo \"${FREE_RTOS_STUB_HOOK}\" not found in ${SRCDIR} directory.
+    exit 1
+fi
+# >1 => error
+if [ ${FREE_RTOS_STUB_NUM} -gt 1 ]; then
+    echo Too many \"${FREE_RTOS_STUB_HOOK}\" found in ${SRCDIR} directory.
+    exit 1
+fi
+# Obtain the filename which contains "USER CODE BEGIN 5" 
+TARGET_FILE=$(grep  ${FREE_RTOS_STUB_HOOK} ${SRCDIR}/*.c -l )
 
-# Is murasaki already isntalled in this file? 
-grep "CustomAssertFailed" ${TARGET_FILE} > /dev/null
+# Is murasaki already isntalled in FreeRTOS defoult startup function? 
+grep "InitPlatform" ${TARGET_FILE} > /dev/null
 if [ $? -ne 0 ]; then 
-  cat  ${SRCDIR}/main.c  | awk -f <(cat - <<- 'EDO'
-    /USER CODE END 6/{print "    CustomAssertFailed(file, line);"}
+  cat  ${TARGET_FILE}  | awk -f <(cat - <<- 'EDO'
     {print $0}
     /USER CODE BEGIN Includes/{print "#include \"murasaki_platform.hpp\""}
-    /USER CODE BEGIN 5/{print "  InitPlatform();"; print "  ExecPlatform();"}
+    /USER CODE BEGIN 5/          {print "  InitPlatform();"; print "  ExecPlatform();"}
+    /USER CODE BEGIN defaultTask/{print "  InitPlatform();"; print "  ExecPlatform();"}
 EDO
   ) > foo.txt
-  mv foo.txt ${SRCDIR}/main.c
-  echo ${TARGET_FILE} modified.
+  mv foo.txt ${TARGET_FILE}
+  echo ${TARGET_FILE} : Added InitPlatform\(\)/ExecPlatform\(\) calling code.
 else
-  echo ${TARGET_FILE} have been already modified. No change.
+  echo ${TARGET_FILE} have been already modified for StartDefaultTask\(\). No change.
 fi
+
 
 # Modify the startup/startup_stm32*.s like following.
 # Find the line which has "Deafult_Handler:" and then,
@@ -134,7 +186,7 @@ if [ $? -ne 0 ]; then # if not, install
 EDO
   ) > foo.txt
   mv foo.txt ${TARGET_FILE}
-  echo ${TARGET_FILE} modified.
+  echo ${TARGET_FILE} : Added jump code to CustomDefaultHandler.
 else
   echo ${TARGET_FILE} have been already modified. No change.
 fi
@@ -165,7 +217,7 @@ if [ $? -ne 0 ]; then # if not, install
 EDO
   ) > foo.txt
   mv foo.txt `ls ${SRCDIR}/stm32*_it.c`
-  echo ${TARGET_FILE} modified.
+  echo ${TARGET_FILE} : Added jump code to CustomDefaultHandler.
 else
   echo ${TARGET_FILE} have been already modified. No change.
 fi
@@ -186,7 +238,7 @@ fi
 #    Surround the given string by the #include statement. 
 #    Now, the string is #include<stm32?????_hal.h>
 #    This is the include statement to include the appropriate HAL file. 
-# Is murasaki already isntalled in this file? 
+
 cat > ${INCDIR}/murasaki_include_stub.h <<EOF
 /**
 * @file murasaki_include_stub.h
@@ -201,7 +253,7 @@ cat > ${INCDIR}/murasaki_include_stub.h <<EOF
 * On the other hand, this is not enough to determine the appropriate include file inside murasaki_defs.hpp. 
 * As a result, there are difficulties to include the appropriate file. 
 * 
-* One of the naive appropach is to enumulate all possible pre-defined macro to determine the filename as following.
+* One of the naive approach is to emulate all possible pre-defined macro to determine the filename as following.
 * 
 * @code
 * #elif defined (STM32F405xx) || defined (STM32F415xx) || defined (STM32F407xx) || defined (STM32F417xx) || \
@@ -219,7 +271,46 @@ cat > ${INCDIR}/murasaki_include_stub.h <<EOF
 * And this stub file include the appropriate HAL header file. 
 * This stub file is generated by murasaki/install script. 
 * Thus, user doesn't need to maintain this file. 
+*
 */
 EOF
 ls ${INCDIR}/stm32*it.h  | xargs  basename  | sed s/it/hal/ - | awk '{print("#include<" $0 ">")}' >> ${INCDIR}/murasaki_include_stub.h
+
+# In addition stm32?????_hal.h, the cmsis_os[?].h is target dependent. 
+# Some targets use cmsis_os.h, some targets use cmsis_os2.h.
+# To solve this problem, we will check main.c and investigate which cmsis_os.h or cmsis_os2.h is used. 
+# And include it in murasaki_include_stub.h.
+
+cat >> ${INCDIR}/murasaki_include_stub.h <<EOF
+/**
+* @brief Stub to include cmsis_os header file. 
+* @details
+* The CubeIDE was using cmsis_os.h as the header file fo the CMSIS OS. Recently, 
+* x-CUBE-FREERTOS started to use the cmsis_os2.h as header, for STM32H5 series. 
+* 
+* Murasaki is not using the functionality of the CMSIS OS. But it is referring the 
+* definition of the task priority. For example, we refer osPriorityAboveNormal.
+* This is essential because of the wired relation 
+* between the CORTEX-M architecture and FREERTOS task priority. 
+*
+* On the other hand, there is no way to determine which cmsis_os.h or cmsis_os2.h is 
+* used. 
+*
+* This is alternate solution. We check which cmsis_os.h or cmsis_os2.h is included in 
+* main.c, and then, place same file as include file in the murasaki_include_stub.h. 
+*/
+EOF
+
+# Is "cmsis_os.h" in the main.c? 
+if  grep "cmsis_os.h" ${SRCDIR}/main.c > /dev/null ; then
+  echo "#include <cmsis_os.h>" >> ${INCDIR}/murasaki_include_stub.h
+# Is "cmsis_os2.h" in the main.c? 
+elif grep "cmsis_os2.h" ${SRCDIR}/main.c > /dev/null ; then
+  echo "#include <cmsis_os2.h>" >> ${INCDIR}/murasaki_include_stub.h
+else
+  echo  Neither "cmsis_os.h" nor "cmsis_os2.h" were found.
+  echo  ${INCDIR}/murasaki_include_stub.h is incmplete.
+  exit 1
+fi
+
 echo  ${INCDIR}/murasaki_include_stub.h created.
