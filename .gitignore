@@ -34,3 +34,7 @@
 # Doxygen output
 html/
 latex/
+
+# CMake output
+build/
+

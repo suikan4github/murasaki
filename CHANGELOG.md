@@ -4,6 +4,16 @@ Record of the modification in project development.
 ## [Unreleased]
 
 ### Added
+- [Issue 158 : Add google test support](https://github.com/suikan4github/murasaki/issues/158)
+
+### Changed
+### Deprecated
+### Removed
+### Fixed
+
+## [4.0.0] - 2023-07-02
+
+### Added
 - [Issue 130 : Need description of the Stack headroom.](https://github.com/suikan4github/murasaki/issues/130)
 - [Issue 139 : Add Si5351A Support.](https://github.com/suikan4github/murasaki/issues/139)
 - [Issue 143 : Conditional compile on debug port ](https://github.com/suikan4github/murasaki/issues/143)
@@ -268,7 +278,8 @@ Major change at the MURASAKI_ASSERTION to enforce the hard fault. This makes deb
 ### Fixed
 ### Security
 
-[Unreleased]: https://github.com/suikan4github/murasaki/compare/v3.0.0...develop
+[Unreleased]: https://github.com/suikan4github/murasaki/compare/v4.0.0...develop
+[4.0.0]: https://github.com/suikan4github/murasaki/compare/v3.0.0...v4.0.0
 [3.0.0]: https://github.com/suikan4github/murasaki/compare/v2.0.0...v3.0.0
 [2.0.0]: https://github.com/suikan4github/murasaki/compare/v1.0.1...v2.0.0
 [1.0.1]: https://github.com/suikan4github/murasaki/compare/v1.0.0...v1.0.1

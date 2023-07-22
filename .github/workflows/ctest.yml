@@ -1,0 +1,66 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CTest_on_push_and_pull_request
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains build matrix
+  CTest:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        build: [Release, Debug]
+
+    # Test on specified OS
+    runs-on: ${{ matrix.os }}
+
+    # Configure - Build - Test
+    steps:
+      # Checks-out repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      # Runs commands using the runners shell
+      - name: Configuration
+        run: |
+          mkdir build
+          cd build
+          cmake .. -DCMAKE_BUILD_TYPE:STRING=${{ matrix.build }}
+
+      # Build for Linux
+      - name: Build for Linux
+        if:  matrix.os == 'ubuntu-latest'
+        run: |
+          cd build
+          cmake --build . --target all --config ${{ matrix.build }} --clean-first -j4
+
+      # Build for Windows
+      - name: Build for Windows
+        if:  matrix.os == 'windows-latest' 
+        run: |
+          cd build
+          cmake --build . --target all_build --config ${{ matrix.build }} --clean-first -j4
+
+      - name: Test
+        run:  |
+          cd build
+          ctest --rerun-failed --output-on-failure -j 4
+
+      # Created report only when Linux and Debug
+      - name: Gcovr ( Linux and Debug only )
+        if:  matrix.os == 'ubuntu-latest'  && matrix.build == 'Debug' 
+        run:  |
+          sudo apt-get install gcovr -y > /dev/null
+          gcovr -r . -e build
+
+
