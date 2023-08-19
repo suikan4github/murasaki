@@ -9,10 +9,14 @@
 #ifndef MURASAKI_DEFS_HPP_
 #define MURASAKI_DEFS_HPP_
 
+// If not in the google test, include the header files for SDTM32.
+#ifndef GTEST_EXPECT_TRUE
 #include "murasaki_include_stub.h"
 
 #include <FreeRTOS.h>
 #include <task.h>
+
+#endif // GTEST_EXPECT_TRUE
 
 /**
  * \brief Personal Platform parts collection
@@ -96,7 +100,13 @@ enum WaitMilliSeconds
 : uint32_t
 {
     kwmsPolling = 0,  ///< Not waiting. Immediate timeout.
+
+// Give explicit value only when not in the google test
+#ifndef GTEST_EXPECT_TRUE
     kwmsIndefinitely = HAL_MAX_DELAY  ///< Wait forever
+#else
+    kwmsIndefinitely  ///< Wait forever
+#endif // GTEST_EXPECT_TRUE
 };
 
 /**
@@ -269,6 +279,8 @@ enum InterruptStatus {
     kisTimeOut   //!< kisTimeOut Time out happen
 };
 
+#ifndef GTEST_EXPECT_TRUE
+
 /**
  * @brief Task class dedicated priority
  * @details
@@ -291,6 +303,7 @@ enum TaskPriority {
 /*
  *  @formatter:on
  */
+#endif // GTEST_EXPECT_TRUE
 
 /**
  * \}
@@ -302,7 +315,6 @@ enum TaskPriority {
  * @ingroup MURASAKI_FUNCTION_GROUP
  * \{
  */
-
 /**
  * \brief determine task or ISR context
  * \returns true if in the ISR context, false if int the task context.
@@ -318,11 +330,16 @@ static inline bool IsInsideInterrupt()
 // CubeHAL provide the xPortIsInsideInterrupt() function to detect this context for ARMv7-M CPU. 
 // Thus, we implement similar algorithm for ARMv6-M CPU
 
+#ifndef GTEST_EXPECT_TRUE
 #if defined ( __CORE_CM0_H_GENERIC ) ||defined ( __CORE_CM0PLUS_H_GENERIC ) || defined ( __CORE_CM1_H_GENERIC )
     return __get_IPSR() != 0;
 #else
     return xPortIsInsideInterrupt();
 #endif
+#else
+    return 0;
+#endif // GTEST_EXPECT_TRUE
+
 
 }
 
@@ -341,6 +358,7 @@ static inline bool IsInsideInterrupt()
  */
 static inline void CleanAndInvalidateDataCacheByAddress(void *address, size_t size)
                                                         {
+#ifndef GTEST_EXPECT_TRUE
 #if defined (__DCACHE_PRESENT) && (__DCACHE_PRESENT == 1U)
 	// Is data cache enabled? then, invalidate it
 	if (( SCB->CCR & SCB_CCR_DC_Msk ) != 0 )
@@ -348,6 +366,7 @@ static inline void CleanAndInvalidateDataCacheByAddress(void *address, size_t si
 		::SCB_CleanInvalidateDCache_by_Addr(reinterpret_cast<long unsigned int *>(address), size);
 	}
 #endif
+#endif // GTEST_EXPECT_TRUE
 }
 
 /**
@@ -364,6 +383,7 @@ static inline void CleanAndInvalidateDataCacheByAddress(void *address, size_t si
  */
 static inline void CleanDataCacheByAddress(void *address, size_t size)
                                            {
+#ifndef GTEST_EXPECT_TRUE
 #if defined (__DCACHE_PRESENT) && (__DCACHE_PRESENT == 1U)
 	// Is data cache enabled? then, clean the data cache
 	if (( SCB->CCR & SCB_CCR_DC_Msk ) != 0 )
@@ -371,6 +391,7 @@ static inline void CleanDataCacheByAddress(void *address, size_t size)
 		::SCB_CleanDCache_by_Addr(reinterpret_cast<long unsigned int *>(address), size);
 	}
 #endif
+#endif // GTEST_EXPECT_TRUE
 }
 
 /**
@@ -411,11 +432,13 @@ extern unsigned int GetCycleCounter();
  * For example, if the tick period is 10mS, the worst error is 10mS.
  */
 static inline void Sleep(unsigned int duration_ms) {
+#ifndef GTEST_EXPECT_TRUE
 // if the parameter is Indefinite, pass it through. If not, convert to the millisecond.
     if (duration_ms == murasaki::kwmsIndefinitely)
         ::vTaskDelay(duration_ms);
     else
         ::vTaskDelay(pdMS_TO_TICKS(duration_ms));
+#endif // GTEST_EXPECT_TRUE
 }
 
 /**

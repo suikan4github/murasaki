@@ -9,9 +9,14 @@
 #ifndef MURASAKI_ASSERT_HPP_
 #define MURASAKI_ASSERT_HPP_
 
+// include murasaki headers if not in google test
+#ifndef GTEST_EXPECT_TRUE
 #include <debugger.hpp>
 #include "murasaki_config.hpp"
 #include "murasaki_defs.hpp"
+#endif // GTEST_EXPECT_TRUE
+
+
 #include <string.h>
 
 #define MURASAKI_ASSERT_MSG "!! Assertion failure in function %s(), at line %d of file %s !!\n"
@@ -43,6 +48,7 @@
  *
  * \ingroup MURASAKI_GROUP
  */
+#ifndef GTEST_EXPECT_TRUE
 #if MURASAKI_CONFIG_NODEBUG
 #define MURASAKI_ASSERT( COND )
 #else
@@ -54,6 +60,10 @@
         murasaki::debugger->Printf("Fail expression : %s\n", #COND);\
         { void (*foo)(void) = (void (*)())1; foo();}\
     }
+#endif
+#else
+#include <assert.h>
+#define MURASAKI_ASSERT( COND ) ASSER(COND)
 #endif
 
 /**
@@ -90,7 +100,7 @@
  *
  * \ingroup MURASAKI_GROUP
  */
-#if MURASAKI_CONFIG_NODEBUG
+#if MURASAKI_CONFIG_NODEBUG || defined(GTEST_EXPECT_TRUE)
 #define MURASAKI_PRINT_ERROR( ERR )
 #else
 #define MURASAKI_PRINT_ERROR( ERR )\

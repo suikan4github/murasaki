@@ -28,7 +28,8 @@ add_executable(${TEST_EXECUTABLE_NAME} ${TEST_SRC} ${LIB_SRC})
     # Add the include directory for test executable.
     target_include_directories(${TEST_EXECUTABLE_NAME}
                                 PUBLIC
-                                "${CMAKE_CURRENT_SOURCE_DIR}/../src"
+                                "${CMAKE_CURRENT_SOURCE_DIR}/../core"
+                                "${CMAKE_CURRENT_SOURCE_DIR}/../drivers/codec"
                                 )
     if(MSVC)
         target_compile_options(${TEST_EXECUTABLE_NAME} PRIVATE /W4 )
