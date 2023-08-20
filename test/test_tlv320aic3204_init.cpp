@@ -3,11 +3,14 @@
 #include "tlv320aic3204_mock.hpp"
 
 using ::testing::AtLeast;
+using ::testing::_;
 
 
 TEST(Tlv320aic3204, init)
 {
     MockI2c i2c;
+    const uint8_t table[] = {1,2,3,4};
+
 
     murasaki::Tlv320aic3204 codec(
         48000,      // 48kHz.
@@ -16,6 +19,13 @@ TEST(Tlv320aic3204, init)
         0x12        // At I2C address. 
     );
 
-    EXPECT_EQ(1.0, 1.0);
+    EXPECT_CALL(i2c, Transmit(0x12,
+                                table, 
+                                sizeof(table),
+                                NULL,
+                                murasaki::kwmsIndefinitely)).Times(1);
+
+    codec.SendCommand(table, sizeof(table));
+
 }
 
