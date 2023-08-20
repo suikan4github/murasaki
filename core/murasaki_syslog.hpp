@@ -9,11 +9,11 @@
 #define MURASAKI_SYSLOG_HPP_
 
 // Include murasaki related headers if not google test.
-#ifndef GTEST_EXPECT_TRUE
+#ifndef __MURASAKI_GOOGLE_TEST__
 #include <debugger.hpp>
 #include "murasaki_config.hpp"
 #include "murasaki_defs.hpp"
-#endif // GTEST_EXPECT_TRUE
+#endif // __MURASAKI_GOOGLE_TEST__
 
 
 #include "string.h"
@@ -112,7 +112,7 @@ bool AllowedSyslogOut(murasaki::SyslogFacility facility,
  */
 
 // Output only when SYSLOG is not true and GTEST_EXCEPT_TREE is not defined.
-#if MURASAKI_CONFIG_NOSYSLOG || defined(GTEST_EXPECT_TRUE)
+#if MURASAKI_CONFIG_NOSYSLOG || defined(__MURASAKI_GOOGLE_TEST__)
 #define MURASAKI_SYSLOG( OBJPTR, FACILITY, SEVERITY, FORMAT, ... )
 #else
 #define MURASAKI_SYSLOG( OBJPTR, FACILITY, SEVERITY, FORMAT, ... )\

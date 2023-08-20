@@ -8,6 +8,7 @@
 #ifndef MURASAKI_TP_TLV320AIC3204_HPP_
 #define MURASAKI_TP_TLV320AIC3204_HPP_
 
+
 #include <audiocodecstrategy.hpp>
 #include "i2cmasterstrategy.hpp"
 

@@ -8,8 +8,8 @@
 #ifndef MURASAKI_TP_ADAU1361_HPP_
 #define MURASAKI_TP_ADAU1361_HPP_
 
-#include <audiocodecstrategy.hpp>
-#include "i2cmaster.hpp"
+#include "audiocodecstrategy.hpp"
+#include "i2cmasterstrategy.hpp"
 
 #ifdef HAL_I2C_MODULE_ENABLED
 

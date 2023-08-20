@@ -6,7 +6,6 @@
  */
 
 #include "adau1361.hpp"
-#include "debugger.hpp"
 
 #include "murasaki_assert.hpp"
 #include "murasaki_syslog.hpp"

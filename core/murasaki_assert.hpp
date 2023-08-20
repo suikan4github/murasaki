@@ -10,11 +10,13 @@
 #define MURASAKI_ASSERT_HPP_
 
 // include murasaki headers if not in google test
-#ifndef GTEST_EXPECT_TRUE
+#ifndef __MURASAKI_GOOGLE_TEST__
 #include <debugger.hpp>
 #include "murasaki_config.hpp"
 #include "murasaki_defs.hpp"
-#endif // GTEST_EXPECT_TRUE
+#else
+#include <cassert>
+#endif // __MURASAKI_GOOGLE_TEST__
 
 
 #include <string.h>
@@ -48,7 +50,7 @@
  *
  * \ingroup MURASAKI_GROUP
  */
-#ifndef GTEST_EXPECT_TRUE
+#ifndef __MURASAKI_GOOGLE_TEST__
 #if MURASAKI_CONFIG_NODEBUG
 #define MURASAKI_ASSERT( COND )
 #else
@@ -63,7 +65,7 @@
 #endif
 #else
 #include <assert.h>
-#define MURASAKI_ASSERT( COND ) ASSER(COND)
+#define MURASAKI_ASSERT( COND ) assert(COND);
 #endif
 
 /**
@@ -100,7 +102,7 @@
  *
  * \ingroup MURASAKI_GROUP
  */
-#if MURASAKI_CONFIG_NODEBUG || defined(GTEST_EXPECT_TRUE)
+#if MURASAKI_CONFIG_NODEBUG || defined(__MURASAKI_GOOGLE_TEST__)
 #define MURASAKI_PRINT_ERROR( ERR )
 #else
 #define MURASAKI_PRINT_ERROR( ERR )\
@@ -121,8 +123,9 @@ namespace murasaki {
  * \ingroup MURASAKI_PLATFORM_GROUP
  *
  */
-
+#ifndef __MURASAKI_GOOGLE_TEST__
 extern Debugger *debugger;
+#endif // __MURASAKI_GOOGLE_TEST__
 }
 
 #endif /* MURASAKI_ASSERT_HPP_ */
