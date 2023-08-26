@@ -24,8 +24,8 @@ TEST(Tlv320aic3204, init) {
   EXPECT_CALL(
       i2c,            // Mock
       Transmit(0x12,  // I2C Address
-               _,     // Pointer to the data to send.
-               _,     // Lenght of data in bytes.
+               _,     // Args<1> : Pointer to the data to send.
+               4,     // Args<2> : Lenght of data in bytes.
                NULL,  // no variable to receive the length of transmission
                murasaki::kwmsIndefinitely  // Wait forever
                ))
