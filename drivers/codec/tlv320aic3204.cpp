@@ -723,6 +723,18 @@ void Tlv320aic3204::ConfigurePll(void) {
   CODEC_SYSLOG("Leave.")
 }
 
+void Tlv320aic3204::ShutdownPll(void) {}
+
+void Tlv320aic3204::ConfigurePins(bool master) {}
+
+void Tlv320aic3204::ConfigureCODEC(void) {}
+
+void Tlv320aic3204::ShutdownCODEC(void) {}
+
+void Tlv320aic3204::ConfigureAnalog(void) {}
+
+void Tlv320aic3204::ShutdownAnalog(void) {}
+
 void Tlv320aic3204::Start(void) {
   CODEC_SYSLOG("Enter.")
 #if 0

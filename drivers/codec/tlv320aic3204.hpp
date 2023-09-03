@@ -45,6 +45,8 @@ class Tlv320aic3204 : public AudioCodecStrategy {
    *   @li 22050
    *   @li 44100
    *   @li 88200
+   *   @li 96000
+   *   @li 19200
    *
    *   The master_clock parameter is the MCLK input to the Tlv320aic3204 in Hz.
    *   This parameter must be one of followings :
@@ -167,6 +169,19 @@ class Tlv320aic3204 : public AudioCodecStrategy {
    * Then, setup the Converter sampling rate.
    */
   virtual void ConfigurePll(void);
+
+  virtual void ShutdownPll(void);
+
+  virtual void ConfigurePins(bool master = true);
+
+  virtual void ConfigureCODEC(void);
+
+  virtual void ShutdownCODEC(void);
+
+  virtual void ConfigureAnalog(void);
+
+  virtual void ShutdownAnalog(void);
+
   /**
    * \brief Set the line input gain and enable the relevant mixer.
    * \param left_gain Gain by dB. [6 .. -12],  The gain value outside of the
