@@ -26,44 +26,59 @@ namespace murasaki {
 class Tlv320aic3204 : public AudioCodecStrategy {
  public:
   /**
+   * \brief  Sync signal direction of the I2S interface.
+   */
+  enum I2sRole {
+    kMaster, /**< Sync signals are output*/
+    kSlave   /**< Sync singals are input */
+  };
+
+  /**
+   * @breif specify the reference signal source of the PLL.
+   */
+  enum PllSource {
+    kMclk,  // MCLK pin.
+    kBclk   // BCLK pin.
+  };
+
+  // Surpressing default constructor.
+  Tlv320aic3204() = delete;
+
+  /**
    * \brief constructor.
    * \param fs Sampling frequency[Hz]
    * @param master_clock Input master clock frequency to the MCLK pin[Hz]
    * \param controller Pass the I2C controller object.
-   * \param i2c_device_addr I2C device address. value range is from 0 to 127
-   * \details
-   *   initialize the internal variables.
-   *   This constructor assumes the codec receive a master clock from outside.
-   * And output the I2C clocks as clock master.
+   * \param role Signal direction of the I2s Interface. kMaster : output,
+   * kSlave : input.
+   * \param i2c_device_addr I2C device address. value range is
+   * from 0 to 127
+   * \details initialize the internal variables. This constructor
+   * assumes the codec receive a master clock from outside. And output the
+   * I2C        clocks as clock master.
    *
    *   The fs parameter is the sampling frequency of the CODEC in Hz. This
    * parameter is limited as one of the following :
-   *   @li 24000
-   *   @li 32000
    *   @li 48000
    *   @li 96000
-   *   @li 22050
+   *   @li 192000
    *   @li 44100
    *   @li 88200
-   *   @li 96000
-   *   @li 19200
+   *   @li 176400
    *
-   *   The master_clock parameter is the MCLK input to the Tlv320aic3204 in Hz.
-   *   This parameter must be one of followings :
-   *   @li  8000000
+   *   The master_clock parameter is the MCLK input to the Tlv320aic3204 in
+   * Hz.         This parameter must be one of followings :
+   *   @li  2822400
+   *   @li  3072000
+   *   @li  5644800
+   *   @li  6144000
+   *   @li 11289600
    *   @li 12000000
-   *   @li 13000000
-   *   @li 14400000
-   *   @li 19200000
-   *   @li 19680000
-   *   @li 19800000
-   *   @li 24000000
-   *   @li 26000000
-   *   @li 27000000
    *   @li 12288000
+   *   @li 16000000
+   *   @li 19200000
    *   @li 24576000
    *
-   *   Note : Only 8, 12, 13, 14.4, 12.288MHz are tested.
    *
    *   The analog signals are routed as following :
    *   @li Line In  : LINN/RINN single ended.
@@ -71,9 +86,14 @@ class Tlv320aic3204 : public AudioCodecStrategy {
    *   @li LINE out : LOUTP/ROUTP single ended
    *   @li HP out   : LHP/RHP
    */
-  Tlv320aic3204(unsigned int fs, unsigned int master_clock,
-                murasaki::I2cMasterStrategy *controller,
-                unsigned int i2c_device_addr);
+  Tlv320aic3204(
+      unsigned int fs,               // Sampling frequency[Hz]
+      unsigned int reference_clock,  // Reference signal to the PLL [Hz]
+      PllSource pll_source,          // Where PLL reference comes from.
+      I2sRole role,                  // I2S signal direction
+      murasaki::I2cMasterStrategy *controller,  // I2C master controller
+      unsigned int i2c_device_addr              // 7bit I2C device address
+  );
 
   /**
    * \brief Set up the Tlv320aic3204 codec,  and then, start the codec.
@@ -136,9 +156,11 @@ class Tlv320aic3204 : public AudioCodecStrategy {
   virtual void SendCommand(const uint8_t command[], int size);
 
  protected:
-  const unsigned int master_clock_;
+  const unsigned int reference_clock_;
   murasaki::I2cMasterStrategy *const i2c_;
   const unsigned int device_addr_;
+  const I2sRole role_;
+  const PllSource pll_source_;
 
   float line_input_left_gain_;
   float line_input_right_gain_;
@@ -164,11 +186,28 @@ class Tlv320aic3204 : public AudioCodecStrategy {
   virtual void WaitPllLock(void);
   /**
    * @brief Initialize the PLL with given fs and master clock.
+   * @param r : R in the PLL factor. 1,2,3,4
+   * @param j : J in the PLL factor. 1,2,3,...63
+   * @param d : D in the PLL factor. 0,1,3,...9999
+   * @param p : P in the PLL factor. 1,2,3,4,...8
    * @details
    * At first, initialize the PLL based on the given fs and master clock.
    * Then, setup the Converter sampling rate.
+   * The PLL mutiplification factor f is defined as :
+   * @code
+   *       R * J.D
+   * f = ----------
+   *          P
+   * @endcode
+   *
+   *
    */
-  virtual void ConfigurePll(void);
+  virtual void ConfigurePll(
+      uint32_t r,  // numarator
+      uint32_t j,  // integer part of multiply factor
+      uint32_t d,  // fractional part of the multiply factor
+      uint32_t p   // denominator
+  );
 
   virtual void ShutdownPll(void);
 

@@ -8,10 +8,13 @@ using namespace ::testing;
 TEST(Tlv320aic3204, SetPage) {
   MockI2cMaster i2c;
 
-  murasaki::Tlv320aic3204 codec(48000,     // 48kHz.
-                                12000000,  // 12MHz
-                                &i2c,      // Through I2C master controller
-                                0x18       // At I2C address.
+  murasaki::Tlv320aic3204 codec(
+      48000,                             // 48kHz.
+      12000000,                          // 12MHz
+      murasaki::Tlv320aic3204::kMclk,    // from MCLCK pin
+      murasaki::Tlv320aic3204::kMaster,  // output
+      &i2c,                              // Through I2C mock
+      0x18                               // At I2C address.
   );
 
   EXPECT_CALL(
@@ -45,10 +48,13 @@ TEST(Tlv320aic3204, SetPage) {
 TEST(Tlv320aic3204, Reset) {
   MockI2cMaster i2c;
 
-  murasaki::Tlv320aic3204 codec(48000,     // 48kHz.
-                                12000000,  // 12MHz
-                                &i2c,      // Through I2C master controller
-                                0x18       // At I2C address.
+  murasaki::Tlv320aic3204 codec(
+      48000,                           // 48kHz.
+      12000000,                        // 12MHz
+      murasaki::Tlv320aic3204::kMclk,  // from MCLCK pin
+      murasaki::Tlv320aic3204::kMaster,
+      &i2c,  // Through I2C master controller
+      0x18   // At I2C address.
   );
 
   // Must set page 0
