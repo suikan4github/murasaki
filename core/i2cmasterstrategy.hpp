@@ -99,7 +99,7 @@ class I2cMasterStrategy : public murasaki::I2cCallbackStrategy {
 
 } /* namespace murasaki */
 
-#ifdef __MURASAKI_GOOGLE_TEST__
+#ifdef __MURASAKI_UTEST__
 
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
@@ -110,7 +110,7 @@ class I2cMasterStrategy : public murasaki::I2cCallbackStrategy {
  * Dedicated class for the Google Test / Google Mock. Use this class as stub
  * to test the client class of the Murasaki Library.
  *
- * To use this calss, define __MURASAKI_GOOGLE_TEST__. Usually, this macro
+ * To use this calss, define __MURASAKI_UTEST__. Usually, this macro
  * is defined in CMakeLists.txt as commandline predefined macro.
  */
 class MockI2cMaster : public murasaki::I2cMasterStrategy {
@@ -172,6 +172,6 @@ class MockI2cMaster : public murasaki::I2cMasterStrategy {
   MOCK_METHOD0(GetPeripheralHandle, void *());
 };
 
-#endif  // __MURASAKI_GOOGLE_TEST__
+#endif  // __MURASAKI_UTEST__
 
 #endif /* I2CMASTERSTRATEGY_HPP_ */

@@ -1,10 +1,15 @@
 #----------------------------------------------------------------------------
+# CMake configuration for Google test. 
+# With this configuration, we will build a test program for the 
+# Code under murasaki/drivers/
+#
 # Do not edit lines below
 
-# For the conditional compile, we need tihs macro.
-add_compile_definitions(__MURASAKI_GOOGLE_TEST__)
+# For the conditional compile, we need tihs macro to enabel
+# unit test.
+add_compile_definitions("__MURASAKI_UTEST__")
 # To enable the I2C dependent drivers, we need it. 
-add_compile_definitions(HAL_I2C_MODULE_ENABLED)
+add_compile_definitions("HAL_I2C_MODULE_ENABLED")
 
 # GCOV settings
 set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} --coverage") 
