@@ -16,6 +16,8 @@
 
 namespace murasaki {
 
+class Tlv320aic3204AdaptorStrategy;
+
 /**
  * @ingroup MURASAKI_THIRDPARTY_GROUP
  * \brief Audio Codec LSI class
@@ -66,12 +68,12 @@ class Tlv320aic3204 : public AudioCodecStrategy {
    *   @li 88200
    *   @li 176400
    *
-   *   The master_clock parameter is the MCLK input to the Tlv320aic3204 in
-   * Hz.         This parameter must be one of followings :
-   *   @li  2822400
-   *   @li  3072000
-   *   @li  5644800
-   *   @li  6144000
+   *   The master_clock parameter is the PLL reference input in Hz.
+   * This parameter must be one of followings :
+   *   @li  2822400 // PLL source must be BCLK
+   *   @li  3072000 // PLL source must be BCLK
+   *   @li  5644800 // PLL source must be BCLK
+   *   @li  6144000 // PLL source must be BCLK
    *   @li 11289600
    *   @li 12000000
    *   @li 12288000
@@ -96,6 +98,12 @@ class Tlv320aic3204 : public AudioCodecStrategy {
   );
 
   /**
+   * @brief Destructor
+   * @details
+   * Shutdown the CODEC.
+   */
+  virtual ~Tlv320aic3204();
+  /**
    * \brief Set up the Tlv320aic3204 codec,  and then, start the codec.
    * \details
    *   This method starts the Tlv320aic3204 AD/DA conversion and I2S
@@ -113,16 +121,6 @@ class Tlv320aic3204 : public AudioCodecStrategy {
    */
   virtual void Start(void);
 
-  /**
-   * \brief Set the CODEC register page to page_number
-   * \param page_number 0-255. Selects the Register Page for next read or write.
-   */
-  virtual void SetPage(u_int8_t page_number);
-
-  /**
-   * \brief Reset the entire CODEC by software
-   */
-  virtual void Reset();
   /**
    * @brief Set channel gain
    * @param channel CODEC input output channels like line-in, line-out,
@@ -142,20 +140,7 @@ class Tlv320aic3204 : public AudioCodecStrategy {
    */
   virtual void Mute(murasaki::CodecChannel channel, bool mute = true);
 
-  /**
-   *  Service function for the Tlv320aic3204 board implementer.
-   *
-   * \brief send one command to Tlv320aic3204.
-   * \param command command data array. It have to have register address of
-   * Tlv320aic3204 in first two bytes. \param size number of bytes in the
-   * command, including the register address. \details Send one complete command
-   * to ADAU3161 by I2C. In the typical case, the command length is 3. \li
-   * command[0] : USB of the register address. 0x40. \li command[1] : LSB of the
-   * register address. \li command[2] : Value to right the register.
-   */
-  virtual void SendCommand(const uint8_t command[], int size);
-
- protected:
+ private:
   const unsigned int reference_clock_;
   murasaki::I2cMasterStrategy *const i2c_;
   const unsigned int device_addr_;
@@ -175,6 +160,45 @@ class Tlv320aic3204 : public AudioCodecStrategy {
   bool aux_input_mute_;
   bool line_output_mute_;
   bool hp_output_mute_;  // headphone
+};
+
+class Tlv320aic3204AdaptorStrategy {
+ public:
+  // Disabling default constructor.
+  Tlv320aic3204AdaptorStrategy() = delete;
+
+  /**
+   * @brief Constructor
+   * @param fs Sampling Frequency [Hz]
+   * @param controller I2C master controller
+   */
+  Tlv320aic3204AdaptorStrategy(
+      murasaki::I2cMasterStrategy *controller  // I2C master controller
+  );
+
+  /**
+   * \brief Set the CODEC register page to page_number
+   * \param page_number 0-255. Selects the Register Page for next read or write.
+   */
+  virtual void SetPage(u_int8_t page_number);
+
+  /**
+   *  Service function for the Tlv320aic3204 board implementer.
+   *
+   * \brief send one command to Tlv320aic3204.
+   * \param command command data array. It have to have register address of
+   * Tlv320aic3204 in first two bytes. \param size number of bytes in the
+   * command, including the register address. \details Send one complete command
+   * to ADAU3161 by I2C. In the typical case, the command length is 3. \li
+   * command[0] : USB of the register address. 0x40. \li command[1] : LSB of the
+   * register address. \li command[2] : Value to right the register.
+   */
+  virtual void SendCommand(const uint8_t command[], int size);
+
+  /**
+   * \brief Reset the entire CODEC by software
+   */
+  virtual void Reset();
 
   /**
    * \brief wait until PLL locks.
@@ -209,6 +233,10 @@ class Tlv320aic3204 : public AudioCodecStrategy {
       uint32_t p   // denominator
   );
 
+  virtual void ConfigureRole(murasaki::Tlv320aic3204::I2sRole);
+
+  virtual void ConfigurePllSource(murasaki::Tlv320aic3204::PllSource);
+
   virtual void ShutdownPll(void);
 
   virtual void ConfigurePins(bool master = true);
@@ -217,7 +245,7 @@ class Tlv320aic3204 : public AudioCodecStrategy {
 
   virtual void ShutdownCODEC(void);
 
-  virtual void ConfigureAnalog(void);
+  virtual void ConfigureAnalog(void) = 0;
 
   virtual void ShutdownAnalog(void);
 
@@ -236,7 +264,7 @@ class Tlv320aic3204 : public AudioCodecStrategy {
    * them explicitly.
    */
   virtual void SetLineInputGain(float left_gain, float right_gain,
-                                bool mute = false);
+                                bool mute = false) = 0;
 
   /**
    * \brief Set the aux input gain and enable the relevant mixer.
@@ -249,7 +277,7 @@ class Tlv320aic3204 : public AudioCodecStrategy {
    * explicitly.
    */
   virtual void SetAuxInputGain(float left_gain, float right_gain,
-                               bool mute = false);
+                               bool mute = false) = 0;
 
   /**
    * \brief Set the line output gain and enable the relevant mixer.
@@ -263,7 +291,7 @@ class Tlv320aic3204 : public AudioCodecStrategy {
    *
    */
   virtual void SetLineOutputGain(float left_gain, float right_gain,
-                                 bool mute = false);
+                                 bool mute = false) = 0;
 
   /**
    * \brief Set the headphone output gain and enable the relevant mixer.
@@ -276,20 +304,8 @@ class Tlv320aic3204 : public AudioCodecStrategy {
    * them explicitly.
    */
   virtual void SetHpOutputGain(float left_gain, float right_gain,
-                               bool mute = false);
-  /**
-   * \brief send one command to Tlv320aic3204.
-   * \param table command table. All commands are stored in one row. Each row
-   * has only 1 byte data after reg address. \param rows number of the rows in
-   * the table. \details Service function for the Tlv320aic3204 board
-   * implementer.
-   *
-   *   Send a list of command to Tlv320aic3204. All commands has 3 bytes length.
-   * That mean, after two byte register address, only 1 byte data pay load is
-   * allowed. Commadns are sent by I2C
-   */
-  virtual void SendCommandTable(const uint8_t table[][3], int rows);
-};
+                               bool mute = false) = 0;
+}
 
 } /* namespace murasaki */
 
