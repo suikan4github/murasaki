@@ -25,7 +25,9 @@ class Tlv320aic3204AdaptorStrategy {
    * @param controller I2C master controller
    */
   Tlv320aic3204AdaptorStrategy(
-      murasaki::I2cMasterStrategy *controller  // I2C master controller
+      murasaki::I2cMasterStrategy *controller,  // I2C master controller
+      unsigned int device_addr
+
   );
 
   /**
@@ -157,7 +159,11 @@ class Tlv320aic3204AdaptorStrategy {
    */
   virtual void SetHpOutputGain(float left_gain, float right_gain,
                                bool mute = false) = 0;
-}
+
+ protected:
+  murasaki::I2cMasterStrategy *const i2c_;
+  const unsigned int device_addr_;
+};
 
 } /* namespace murasaki */
 

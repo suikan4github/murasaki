@@ -86,7 +86,7 @@ class Tlv320aic3204DefaultAdaptor {
    */
   virtual void SetHpOutputGain(float left_gain, float right_gain,
                                bool mute = false);
-}
+};
 
 } /* namespace murasaki */
 

@@ -28,19 +28,19 @@ void Tlv320aic3204DefaultAdaptor::ConfigureAnalog(void) {}
 
 void Tlv320aic3204DefaultAdaptor::SetLineInputGain(float left_gain,
                                                    float right_gain,
-                                                   bool mute = false) {}
+                                                   bool mute) {}
 
 void Tlv320aic3204DefaultAdaptor::SetAuxInputGain(float left_gain,
-                                                  float right_gain,
-                                                  bool mute = false) {}
+                                                  float right_gain, bool mute) {
+}
 
 void Tlv320aic3204DefaultAdaptor::SetLineOutputGain(float left_gain,
                                                     float right_gain,
-                                                    bool mute = false) {}
+                                                    bool mute) {}
 
 void Tlv320aic3204DefaultAdaptor::SetHpOutputGain(float left_gain,
-                                                  float right_gain,
-                                                  bool mute = false) {}
+                                                  float right_gain, bool mute) {
+}
 
 } /* namespace murasaki */
 

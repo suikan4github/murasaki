@@ -142,8 +142,6 @@ class Tlv320aic3204 : public AudioCodecStrategy {
 
  private:
   const unsigned int reference_clock_;
-  murasaki::I2cMasterStrategy *const i2c_;
-  const unsigned int device_addr_;
   const I2sRole role_;
   const PllSource pll_source_;
 
@@ -161,6 +159,7 @@ class Tlv320aic3204 : public AudioCodecStrategy {
   bool line_output_mute_;
   bool hp_output_mute_;  // headphone
 };
+}  // namespace murasaki
 
 #endif  //  HAL_I2C_MODULE_ENABLED
 

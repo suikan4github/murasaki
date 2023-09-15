@@ -21,26 +21,65 @@
 namespace murasaki {
 
 Tlv320aic3204AdaptorStrategy::Tlv320aic3204AdaptorStrategy(
-    murasaki::I2cMasterStrategy *controller  // I2C master controller
-) {}
+    murasaki::I2cMasterStrategy *controller,  // I2C master controller
+    unsigned int device_addr)
+    : i2c_(controller), device_addr_(device_addr) {}
 
-void Tlv320aic3204AdaptorStrategy::SetPage(u_int8_t page_number) {}
+void Tlv320aic3204AdaptorStrategy::SetPage(u_int8_t page_number) {
+  CODEC_SYSLOG("Enter. page_number : &d .", page_number)
+
+  uint8_t command[] = {
+      0,           // Regsiter Address => Page number
+      page_number  // value to write
+  };
+
+  SendCommand(command, sizeof(command));
+
+  CODEC_SYSLOG("Leave.")
+}
 
 void Tlv320aic3204AdaptorStrategy::SendCommand(const uint8_t command[],
-                                               int size) {}
+                                               int size) {
+  CODEC_SYSLOG("Enter %p, %d", command, size)
 
-void Tlv320aic3204AdaptorStrategy::Reset() {}
+  /*
+   * Send the given table to the I2C slave device at device_addr
+   */
+  i2c_->Transmit(device_addr_, command, size);
 
-void Tlv320aic3204AdaptorStrategy::WaitPllLock(void) {}
+  CODEC_SYSLOG("Leave.")
+}
 
-void ConfigurePll(uint32_t r,  // numarator
-                  uint32_t j,  // integer part of multiply factor
-                  uint32_t d,  // fractional part of the multiply factor
-                  uint32_t p   // denominator
-);
+void Tlv320aic3204AdaptorStrategy::Reset() {
+  CODEC_SYSLOG("Enter.")
 
-void Tlv320aic3204AdaptorStrategy::ConfigureRole(
-    murasaki::Tlv320aic3204::I2sRole) {}
+  uint8_t command[] = {
+      1,  // Regsiter Address => Software reset
+      1   // Self clearning software reset
+  };
+
+  SetPage(0);                             // Page 0 for softare reset register.
+  SendCommand(command, sizeof(command));  // Write to software reset.
+
+  CODEC_SYSLOG("Leave.")
+}
+
+void Tlv320aic3204AdaptorStrategy::WaitPllLock(void) {
+  uint8_t status[6];
+  CODEC_SYSLOG("Enter.")
+  // Per request of the the TLV320AIC3204 Application Reference Guide ( SLAA557
+  // ), we wait 10msec after PLL set. There is not register to display the lock
+  // status.
+  murasaki::Sleep(10);
+  CODEC_SYSLOG("Leave.")
+}
+
+void Tlv320aic3204AdaptorStrategy::ConfigurePll(
+    uint32_t r,  // numerator
+    uint32_t j,  // integer part of multiply factor
+    uint32_t d,  // fractional part of the multiply factor
+    uint32_t p   // denominator
+) {}
 
 void Tlv320aic3204AdaptorStrategy::ConfigurePllSource(
     murasaki::Tlv320aic3204::PllSource) {}
