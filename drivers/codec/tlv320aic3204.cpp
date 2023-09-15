@@ -36,6 +36,8 @@ Tlv320aic3204::Tlv320aic3204(
       role_(role),
       pll_source_(pll_source) {}
 
+Tlv320aic3204::~Tlv320aic3204() {}
+
 void Tlv320aic3204::Start(void) {
   CODEC_SYSLOG("Enter.")
 #if 0

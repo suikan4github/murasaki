@@ -43,7 +43,7 @@ class Tlv320aic3204 : public AudioCodecStrategy {
     kBclk   // BCLK pin.
   };
 
-  // Surpressing default constructor.
+  // Suppressing default constructor.
   Tlv320aic3204() = delete;
 
   /**

@@ -20,12 +20,12 @@
 
 namespace murasaki {
 
-Tlv320aic3204AdaptorStrategy::Tlv320aic3204AdaptorStrategy(
+Tlv320aic3204AdapterStrategy::Tlv320aic3204AdapterStrategy(
     murasaki::I2cMasterStrategy *controller,  // I2C master controller
     unsigned int device_addr)
     : i2c_(controller), device_addr_(device_addr) {}
 
-void Tlv320aic3204AdaptorStrategy::SetPage(u_int8_t page_number) {
+void Tlv320aic3204AdapterStrategy::SetPage(u_int8_t page_number) {
   CODEC_SYSLOG("Enter. page_number : &d .", page_number)
 
   uint8_t command[] = {
@@ -38,7 +38,7 @@ void Tlv320aic3204AdaptorStrategy::SetPage(u_int8_t page_number) {
   CODEC_SYSLOG("Leave.")
 }
 
-void Tlv320aic3204AdaptorStrategy::SendCommand(const uint8_t command[],
+void Tlv320aic3204AdapterStrategy::SendCommand(const uint8_t command[],
                                                int size) {
   CODEC_SYSLOG("Enter %p, %d", command, size)
 
@@ -50,7 +50,7 @@ void Tlv320aic3204AdaptorStrategy::SendCommand(const uint8_t command[],
   CODEC_SYSLOG("Leave.")
 }
 
-void Tlv320aic3204AdaptorStrategy::Reset() {
+void Tlv320aic3204AdapterStrategy::Reset() {
   CODEC_SYSLOG("Enter.")
 
   uint8_t command[] = {
@@ -64,7 +64,7 @@ void Tlv320aic3204AdaptorStrategy::Reset() {
   CODEC_SYSLOG("Leave.")
 }
 
-void Tlv320aic3204AdaptorStrategy::WaitPllLock(void) {
+void Tlv320aic3204AdapterStrategy::WaitPllLock(void) {
   uint8_t status[6];
   CODEC_SYSLOG("Enter.")
   // Per request of the the TLV320AIC3204 Application Reference Guide ( SLAA557
@@ -74,25 +74,27 @@ void Tlv320aic3204AdaptorStrategy::WaitPllLock(void) {
   CODEC_SYSLOG("Leave.")
 }
 
-void Tlv320aic3204AdaptorStrategy::ConfigurePll(
+void Tlv320aic3204AdapterStrategy::ConfigurePll(
     uint32_t r,  // numerator
     uint32_t j,  // integer part of multiply factor
     uint32_t d,  // fractional part of the multiply factor
     uint32_t p   // denominator
 ) {}
+void Tlv320aic3204AdapterStrategy::ConfigureRole(
+    murasaki::Tlv320aic3204::I2sRole) {}
 
-void Tlv320aic3204AdaptorStrategy::ConfigurePllSource(
+void Tlv320aic3204AdapterStrategy::ConfigurePllSource(
     murasaki::Tlv320aic3204::PllSource) {}
 
-void Tlv320aic3204AdaptorStrategy::ShutdownPll(void) {}
+void Tlv320aic3204AdapterStrategy::ShutdownPll(void) {}
 
-void Tlv320aic3204AdaptorStrategy::ConfigurePins(bool) {}
+void Tlv320aic3204AdapterStrategy::ConfigurePins(bool) {}
 
-void Tlv320aic3204AdaptorStrategy::ConfigureCODEC(void) {}
+void Tlv320aic3204AdapterStrategy::ConfigureCODEC(void) {}
 
-void Tlv320aic3204AdaptorStrategy::ShutdownCODEC(void) {}
+void Tlv320aic3204AdapterStrategy::ShutdownCODEC(void) {}
 
-void Tlv320aic3204AdaptorStrategy::ShutdownAnalog(void) {}
+void Tlv320aic3204AdapterStrategy::ShutdownAnalog(void) {}
 
 } /* namespace murasaki */
 

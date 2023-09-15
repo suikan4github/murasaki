@@ -14,17 +14,17 @@
 
 namespace murasaki {
 
-class Tlv320aic3204AdaptorStrategy {
+class Tlv320aic3204AdapterStrategy {
  public:
   // Disabling default constructor.
-  Tlv320aic3204AdaptorStrategy() = delete;
+  Tlv320aic3204AdapterStrategy() = delete;
 
   /**
    * @brief Constructor
    * @param fs Sampling Frequency [Hz]
    * @param controller I2C master controller
    */
-  Tlv320aic3204AdaptorStrategy(
+  Tlv320aic3204AdapterStrategy(
       murasaki::I2cMasterStrategy *controller,  // I2C master controller
       unsigned int device_addr
 
