@@ -5,7 +5,7 @@
 using namespace ::testing;
 
 // Testing SendCommand .
-TEST(Tlv320aic3204DefaultAdapter, SSendCommand) {
+TEST(Tlv320aic3204DefaultAdapter, SendCommand) {
   const uint8_t device_address = 0x18;
   MockI2cMaster i2c;
   murasaki::Tlv320aic3204DefaultAdapter adapter(&i2c, device_address);
