@@ -26,9 +26,7 @@ class Tlv320aic3204AdapterStrategy {
    */
   Tlv320aic3204AdapterStrategy(
       murasaki::I2cMasterStrategy *controller,  // I2C master controller
-      unsigned int device_addr
-
-  );
+      u_int8_t device_addr);
 
   /**
    * \brief Set the CODEC register page to page_number

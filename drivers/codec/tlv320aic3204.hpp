@@ -16,7 +16,7 @@
 
 namespace murasaki {
 
-class Tlv320aic3204AdaptorStrategy;
+class Tlv320aic3204AdapterStrategy;
 
 /**
  * @ingroup MURASAKI_THIRDPARTY_GROUP

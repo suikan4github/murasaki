@@ -14,18 +14,19 @@
 
 namespace murasaki {
 
-class Tlv320aic3204DefaultAdaptor {
+class Tlv320aic3204DefaultAdapter : public Tlv320aic3204AdapterStrategy {
  public:
   // Disabling default constructor.
-  Tlv320aic3204DefaultAdaptor() = delete;
+  Tlv320aic3204DefaultAdapter() = delete;
 
   /**
    * @brief Constructor
-   * @param fs Sampling Frequency [Hz]
    * @param controller I2C master controller
+   * @param device_address 7bit I2C address of CODEC.
    */
-  Tlv320aic3204DefaultAdaptor(
-      murasaki::I2cMasterStrategy *controller  // I2C master controller
+  Tlv320aic3204DefaultAdapter(
+      murasaki::I2cMasterStrategy *controller,  // I2C master controller
+      u_int8_t device_address                   // 7bit I2C address.
   );
 
   virtual void ConfigureAnalog(void);

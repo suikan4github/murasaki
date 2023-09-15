@@ -22,7 +22,7 @@ namespace murasaki {
 
 Tlv320aic3204AdapterStrategy::Tlv320aic3204AdapterStrategy(
     murasaki::I2cMasterStrategy *controller,  // I2C master controller
-    unsigned int device_addr)
+    uint8_t device_addr)
     : i2c_(controller), device_addr_(device_addr) {}
 
 void Tlv320aic3204AdapterStrategy::SetPage(u_int8_t page_number) {

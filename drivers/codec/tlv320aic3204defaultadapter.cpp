@@ -20,25 +20,27 @@
 
 namespace murasaki {
 
-Tlv320aic3204DefaultAdaptor::Tlv320aic3204DefaultAdaptor(
-    murasaki::I2cMasterStrategy *controller  // I2C master controller
-) {}
+Tlv320aic3204DefaultAdapter::Tlv320aic3204DefaultAdapter(
+    murasaki::I2cMasterStrategy *controller,  // I2C master controller
+    u_int8_t device_address                   // 7bit I2C address.
+    )
+    : Tlv320aic3204AdapterStrategy(controller, device_address) {}
 
-void Tlv320aic3204DefaultAdaptor::ConfigureAnalog(void) {}
+void Tlv320aic3204DefaultAdapter::ConfigureAnalog(void) {}
 
-void Tlv320aic3204DefaultAdaptor::SetLineInputGain(float left_gain,
+void Tlv320aic3204DefaultAdapter::SetLineInputGain(float left_gain,
                                                    float right_gain,
                                                    bool mute) {}
 
-void Tlv320aic3204DefaultAdaptor::SetAuxInputGain(float left_gain,
+void Tlv320aic3204DefaultAdapter::SetAuxInputGain(float left_gain,
                                                   float right_gain, bool mute) {
 }
 
-void Tlv320aic3204DefaultAdaptor::SetLineOutputGain(float left_gain,
+void Tlv320aic3204DefaultAdapter::SetLineOutputGain(float left_gain,
                                                     float right_gain,
                                                     bool mute) {}
 
-void Tlv320aic3204DefaultAdaptor::SetHpOutputGain(float left_gain,
+void Tlv320aic3204DefaultAdapter::SetHpOutputGain(float left_gain,
                                                   float right_gain, bool mute) {
 }
 
