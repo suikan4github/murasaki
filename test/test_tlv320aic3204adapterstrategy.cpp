@@ -1,11 +1,13 @@
-// Test cases for the calc class
+// Test cases for Tlv320aic3204AdapterStrategy.
 
+// We use Tlv320aic320DefaultAdapter class to test Tlv320aic3204AdapterStrategy,
+// Because we can not create instance of the Tlv320aic3204AdapterStrategy
 #include "tlv320aic3204defaultadapter.hpp"
 
 using namespace ::testing;
 
 // Testing SendCommand .
-TEST(Tlv320aic3204DefaultAdapter, SendCommand) {
+TEST(Tlv320aic3204AdapterStrategy, SendCommand) {
   const uint8_t device_address = 0x18;
   MockI2cMaster i2c;
   murasaki::Tlv320aic3204DefaultAdapter adapter(&i2c, device_address);
@@ -44,7 +46,7 @@ TEST(Tlv320aic3204DefaultAdapter, SendCommand) {
 }
 
 // Testing SetPage command .
-TEST(Tlv320aic3204DefaultAdapter, SetPage) {
+TEST(Tlv320aic3204AdapterStrategy, SetPage) {
   MockI2cMaster i2c;
   const uint8_t device_address = 0x19;
 
@@ -79,7 +81,7 @@ TEST(Tlv320aic3204DefaultAdapter, SetPage) {
 }
 
 // Testing Reset command .
-TEST(Tlv320aic3204DefaultAdapter, Reset) {
+TEST(Tlv320aic3204AdapterStrategy, Reset) {
   MockI2cMaster i2c;
   const uint8_t device_address = 0x20;
 
