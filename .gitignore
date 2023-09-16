@@ -38,3 +38,5 @@ latex/
 # CMake output
 build/
 
+# VS code
+.vscode/
