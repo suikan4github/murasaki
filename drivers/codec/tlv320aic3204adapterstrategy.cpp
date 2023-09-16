@@ -79,18 +79,38 @@ void Tlv320aic3204AdapterStrategy::ConfigurePll(
     uint32_t j,  // integer part of multiply factor
     uint32_t d,  // fractional part of the multiply factor
     uint32_t p   // denominator
-) {}
-void Tlv320aic3204AdapterStrategy::ConfigureRole(
-    murasaki::Tlv320aic3204::I2sRole) {}
+) {
+  CODEC_SYSLOG("Enter r:%d, j:%d, d:%d, p:%d.", r, j, d, p)
+  // parameter validation
+  MURASAKI_ASSERT(1 <= r && r <= 4)
+  MURASAKI_ASSERT(1 <= j && j <= 63)
+  MURASAKI_ASSERT(d <= 9999)
+  MURASAKI_ASSERT(1 <= p && p <= 8)
+  CODEC_SYSLOG("Leave.")
+}
 
-void Tlv320aic3204AdapterStrategy::ConfigurePllSource(
-    murasaki::Tlv320aic3204::PllSource) {}
+void Tlv320aic3204AdapterStrategy::ConfigureRoleAndSource(
+    murasaki::Tlv320aic3204::I2sRole role,
+    murasaki::Tlv320aic3204::PllSource pll_source) {
+  CODEC_SYSLOG("Enter.")
+  // Parameter varidation.
+  // pll_source == BCLK and role == master is not allowed.
+  MURASAKI_ASSERT(
+      !(pll_source == Tlv320aic3204::kBclk && role == Tlv320aic3204::kMaster))
+  CODEC_SYSLOG("Leave.")
+}
 
 void Tlv320aic3204AdapterStrategy::ShutdownPll(void) {}
 
-void Tlv320aic3204AdapterStrategy::ConfigurePins(bool) {}
+void Tlv320aic3204AdapterStrategy::ConfigureCODEC(uint32_t fs) {
+  CODEC_SYSLOG("Enter fs : %d.", fs)
+  // Parameter varidation.
+  MURASAKI_ASSERT(fs == 44100 || fs == 88200 || fs == 176400 || fs == 48000 ||
+                  fs == 96000 || fs == 192000
 
-void Tlv320aic3204AdapterStrategy::ConfigureCODEC(void) {}
+  )
+  CODEC_SYSLOG("Leave.")
+}
 
 void Tlv320aic3204AdapterStrategy::ShutdownCODEC(void) {}
 

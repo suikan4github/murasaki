@@ -1,12 +1,12 @@
 /**
- * @file tlv320aic3204.hpp
+ * @file tlv320aic3204adapterstrategy.hpp
  *
  * @date 2023/08/11
  * @author: Seiichi "Suikan" Horie
  */
 
-#ifndef MURASAKI_TLV320AIC3204_ADAPTER_STRATEGY_HPP_
-#define MURASAKI_TLV320AIC3204_ADAPTER_STRATEGY_HPP_
+#ifndef _MURASAKI_TLV320AIC3204_ADAPTER_STRATEGY_HPP_
+#define _MURASAKI_TLV320AIC3204_ADAPTER_STRATEGY_HPP_
 
 #include "tlv320aic3204.hpp"
 
@@ -14,6 +14,43 @@
 
 namespace murasaki {
 
+/**
+ * \brief AdapterStrategy pattern for the CODEC implementation test.
+ * \details
+ * This class is a specific strategy for the CODEC implemenation.
+ * The internal implementation of the Tlv320aic3204 class is done
+ * here instead of that class.
+ *
+ * Usually, the internal implementaiton is done in the private or
+ * protected method. But such the implementation is difficul for the
+ * unit test in C++.
+ *
+ * We use adapter pattern for the internal implementation. There are
+ * several advantage compare to the private/protected method.
+ * \li Easy to test : The internal implemenations are implemented
+ * as publice member functions. Thus, they are easy to test from the
+ * unit test tool.
+ * \li Internal implementaion is still hidden. While the implementations
+ * are public in the adapters, the adapter object is a private variable
+ * in the Tlv320aic3204 class. Thus, the implementation is hidden from
+ * the Tlv320aic3204 class user.
+ *
+ * Some of the people will dislike this approach, becuase it is less
+ * flexible to the refactoring, compared to the protect/private member
+ * functions.
+ *
+ * We think this is a sense of value. We decided the unit test is much
+ * more important than refactoring flexibility. So, the adapter is
+ * benefitable.
+ *
+ * In this class, we implement certain member classes which are commont
+ * to the all adapter.
+ *
+ * For the dtails of the programming, refer following documentation
+ * from TI :
+ * \li TLV320AIC3204 datasheet
+ * \li TLV320AIC3204 Application Refernce Guide (SLA557)
+ */
 class Tlv320aic3204AdapterStrategy {
  public:
   // Disabling default constructor.
@@ -21,8 +58,15 @@ class Tlv320aic3204AdapterStrategy {
 
   /**
    * @brief Constructor
-   * @param fs Sampling Frequency [Hz]
-   * @param controller I2C master controller
+   * @param controller I2C master controller object.
+   * @param device_addr 7bit I2C address of the TLV320AIC3204.
+   * @details
+   * Declare the I2C controller class and I2C device address.
+   * The controller is the C++ class in Murasaki library.
+   * The I2C address is the one from the TLV320AIC3204 datasheet.
+   *
+   * Given two parameters are stored in the protected variables
+   * for the consequtive member function call.
    */
   Tlv320aic3204AdapterStrategy(
       murasaki::I2cMasterStrategy *controller,  // I2C master controller
@@ -31,35 +75,38 @@ class Tlv320aic3204AdapterStrategy {
   /**
    * \brief Set the CODEC register page to page_number
    * \param page_number 0-255. Selects the Register Page for next read or write.
+   * \details
+   * The TLV320AIC3204 register has page. Programmer have to set correct page
+   * number fore accessing each register.  Refere the CODEC documenation from
+   * TI.
    */
   virtual void SetPage(u_int8_t page_number);
 
   /**
-   *  Service function for the Tlv320aic3204 board implementer.
    *
    * \brief send one command to Tlv320aic3204.
    * \param command command data array. It have to have register address of
-   * Tlv320aic3204 in first two bytes. \param size number of bytes in the
-   * command, including the register address. \details Send one complete command
-   * to ADAU3161 by I2C. In the typical case, the command length is 3. \li
-   * command[0] : USB of the register address. 0x40. \li command[1] : LSB of the
-   * register address. \li command[2] : Value to right the register.
+   * Tlv320aic3204 in first two bytes.
+   * \param size number of bytes in the command, including the register address.
+   * \details Send one complete command to TLV320AIC3204 by I2C.
+   * In the typical case, the command length is 2.
+   * \li command[0] : register address.
+   * \li command[1] : Value to Wright the register.
    */
   virtual void SendCommand(const uint8_t command[], int size);
 
   /**
-   * \brief Reset the entire CODEC by software
+   * \brief Reset the entire TLV320AIC3204 CODEC by software
    */
   virtual void Reset();
 
   /**
    * \brief wait until PLL locks.
    * \details
-   *   Service function for the Tlv320aic3204 board implementer.
-   *
-   *   Read the PLL status and repeat it until the PLL locks.
+   *  Just waiting 10mS. See the TLV320AIC3204 application reference guide.
    */
   virtual void WaitPllLock(void);
+
   /**
    * @brief Initialize the PLL with given fs and master clock.
    * @param r : R in the PLL factor. 1,2,3,4
@@ -85,18 +132,56 @@ class Tlv320aic3204AdapterStrategy {
       uint32_t p   // denominator
   );
 
-  virtual void ConfigureRole(murasaki::Tlv320aic3204::I2sRole);
+  /**
+   * \brief Set up the digital interface pins.
+   * \param role
+   * \li kMaster : I2S pins are output
+   * \li kSlave : I2S pins are input
+   *
+   * \param pll_source
+   * \li kMCLK : PLL source is set to MCLK input.
+   * \li kBCLK : PLL source is set to BCLK input.
+   *
+   * \details
+   * If the plls_source is kBCLK, the role must be kSlave. Otherwise,
+   * assertion is triggered.
+   *
+   * In the case of the pll_source == kBCLK, the kMCLK must be tied to GND
+   * because it is left as input.
+   */
+  virtual void ConfigureRoleAndSource(
+      murasaki::Tlv320aic3204::I2sRole role,         // Digital Pin direction
+      murasaki::Tlv320aic3204::PllSource pll_source  // Source of PLL
+  );
 
-  virtual void ConfigurePllSource(murasaki::Tlv320aic3204::PllSource);
-
+  /**
+   * \brief Stop the PLL and set it to low per mode.
+   */
   virtual void ShutdownPll(void);
 
-  virtual void ConfigurePins(bool master = true);
+  /**
+   * \brief Configure CODEC to the given Fs.
+   * \param fs Sampling frequency[Hz]. Only following values are allowed :
+   * \li 44100
+   * \li 48000
+   * \li 88200
+   * \li 96000
+   * \li 176400
+   * \li 192000
+   *
+   */
+  virtual void ConfigureCODEC(uint32_t fs);
 
-  virtual void ConfigureCODEC(void);
-
+  /**
+   * \brief Stop the codec and set to low poower mode.
+   */
   virtual void ShutdownCODEC(void);
 
+  /**
+   * \brief Set up analog path of the codec.
+   * \details
+   * This is board dependent function.
+   */
   virtual void ConfigureAnalog(void) = 0;
 
   virtual void ShutdownAnalog(void);
@@ -104,7 +189,8 @@ class Tlv320aic3204AdapterStrategy {
   /**
    * \brief Set the line input gain and enable the relevant mixer.
    * \param left_gain Gain by dB. [6 .. -12],  The gain value outside of the
-   * acceptable range will be saturated. \param right_gain Gain by dB. [6 ..
+   * acceptable range will be saturated.
+   * \param right_gain Gain by dB. [6 ..
    * -12], The gain value outside of the acceptable range will be saturated.
    * \param mute set true to mute
    * \details
@@ -121,7 +207,8 @@ class Tlv320aic3204AdapterStrategy {
   /**
    * \brief Set the aux input gain and enable the relevant mixer.
    * \param left_gain Gain by dB. [6 .. -12], The gain value outside of the
-   * acceptable range will be saturated. \param right_gain Gain by dB. [6 ..
+   * acceptable range will be saturated.
+   * \param right_gain Gain by dB. [6 ..
    * -12], The gain value outside of the acceptable range will be saturated.
    * \param mute set true to mute
    * \details
@@ -134,7 +221,8 @@ class Tlv320aic3204AdapterStrategy {
   /**
    * \brief Set the line output gain and enable the relevant mixer.
    * \param left_gain Gain by dB. [6 .. -12], The gain value outside of the
-   * acceptable range will be saturated. \param right_gain Gain by dB. [6 ..
+   * acceptable range will be saturated.
+   *  \param right_gain Gain by dB. [6 ..
    * -12], The gain value outside of the acceptable range will be saturated.
    * \param mute set true to mute
    * \details
@@ -148,7 +236,8 @@ class Tlv320aic3204AdapterStrategy {
   /**
    * \brief Set the headphone output gain and enable the relevant mixer.
    * \param left_gain Gain by dB. [6 .. -12], The gain value outside of the
-   * acceptable range will be saturated. \param right_gain Gain by dB. [6 ..
+   * acceptable range will be saturated.
+   * \param right_gain Gain by dB. [6 ..
    * -12], The gain value outside of the acceptable range will be saturated.
    * \param mute set true to mute
    * \details
@@ -167,4 +256,4 @@ class Tlv320aic3204AdapterStrategy {
 
 #endif  //  HAL_I2C_MODULE_ENABLED
 
-#endif /* MURASAKI_TLV320AIC3204_ADAPTER_STRATEGY_HPP_ */
+#endif /* _MURASAKI_TLV320AIC3204_ADAPTER_STRATEGY_HPP_ */
