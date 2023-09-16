@@ -108,10 +108,6 @@ class Tlv320aic3204AdapterStrategy {
 
   /**
    * @brief Initialize the PLL with given fs and master clock.
-   * @param r : R in the PLL factor. 1,2,3,4
-   * @param j : J in the PLL factor. 1,2,3,...63
-   * @param d : D in the PLL factor. 0,1,3,...9999
-   * @param p : P in the PLL factor. 1,2,3,4,...8
    * \param role
    * \li kMaster : I2S pins are output
    * \li kSlave : I2S pins are input
@@ -120,15 +116,6 @@ class Tlv320aic3204AdapterStrategy {
    * \li kMCLK : PLL source is set to MCLK input.
    * \li kBCLK : PLL source is set to BCLK input.
    * @details
-   * At first, initialize the PLL based on the given fs and master clock.
-   * Then, setup the Converter sampling rate.
-   * The PLL multiplication factor f is defined as :
-   * @code
-   *       R * J.D
-   * f = ----------
-   *          P
-   * @endcode
-   *
    * If the plls_source is kBCLK, the role must be kSlave. Otherwise,
    * assertion is triggered.
    *
@@ -139,13 +126,37 @@ class Tlv320aic3204AdapterStrategy {
    * \li 86.016 MHz for Fs==48kHz ( Fs*128*2*7)
    * \li 84.672 MHz for Fs==44.1kHz (Fs*128*3*5)
    */
+  virtual void ConfigureClock(
+      murasaki::Tlv320aic3204::I2sRole const role,  // Digital Pin direction
+      murasaki::Tlv320aic3204::PllSource const pll_source  // Source of PLL
+  );
+
+  /**
+   * @brief Initialize the PLL with given fs and master clock.
+   * @param r : R in the PLL factor. 1,2,3,4
+   * @param j : J in the PLL factor. 1,2,3,...63
+   * @param d : D in the PLL factor. 0,1,3,...9999
+   * @param p : P in the PLL factor. 1,2,3,4,...8
+   * @details
+   * At first, initialize the PLL based on the given fs and master clock.
+   * Then, setup the Converter sampling rate.
+   * The PLL multiplication factor f is defined as :
+   * @code
+   *       R * J.D
+   * f = ----------
+   *          P
+   * @endcode
+   *
+   *
+   * We assume the internal PLL clock as :
+   * \li 86.016 MHz for Fs==48kHz ( Fs*128*2*7)
+   * \li 84.672 MHz for Fs==44.1kHz (Fs*128*3*5)
+   */
   virtual void ConfigurePll(
-      uint32_t r,  // numerator
-      uint32_t j,  // integer part of multiply factor
-      uint32_t d,  // fractional part of the multiply factor
-      uint32_t p,  // denominator
-      murasaki::Tlv320aic3204::I2sRole role,         // Digital Pin direction
-      murasaki::Tlv320aic3204::PllSource pll_source  // Source of PLL
+      uint32_t const r,  // numerator
+      uint32_t const j,  // integer part of multiply factor
+      uint32_t const d,  // fractional part of the multiply factor
+      uint32_t const p   // denominator
   );
 
   /**
@@ -164,7 +175,7 @@ class Tlv320aic3204AdapterStrategy {
    * \li 192000
    *
    */
-  virtual void ConfigureCODEC(uint32_t fs);
+  virtual void ConfigureCODEC(uint32_t const fs);
 
   /**
    * \brief Stop the codec and set to low power mode.

@@ -74,29 +74,73 @@ void Tlv320aic3204AdapterStrategy::WaitPllLock(void) {
   CODEC_SYSLOG("Leave.")
 }
 
+void Tlv320aic3204AdapterStrategy::ConfigureClock(
+    murasaki::Tlv320aic3204::I2sRole const role,
+    murasaki::Tlv320aic3204::PllSource const pll_source) {
+  CODEC_SYSLOG("Enter r:")
+  // parameter validation
+  // pll_source == BCLK and role == master is not allowed.
+  MURASAKI_ASSERT(
+      !(pll_source == Tlv320aic3204::kBclk && role == Tlv320aic3204::kMaster))
+
+  // CODEC registers.
+  u_int8_t r4 = 0;   // Clock setting register 1
+  u_int8_t r27 = 0;  // Register 27: Audio Interface Setting Register 1
+
+  // PLL input
+  if (pll_source == Tlv320aic3204::kBclk) r4 |= 1 << 2;  // D3:2
+
+  // CODEC_CLLKIN is connected to PLL output
+  r4 |= 3;  // D1:0 CODECK CLock In. 3 => PLL Clock.
+
+  // BCLK AND WCLK pin
+  if (role == Tlv320aic3204::kMaster) {
+    r27 |= 1 << 2;  // D2 : WCLK
+    r27 |= 1 << 3;  // D3 : BCLK
+  }
+
+  // By reset, DIN and DOUT are connected to ADC and DAC, respectively.
+
+  // Audio Data Word Length
+  r27 |= 3 << 4;  // D5:3 : Audio Data Word Length. 03 => 32bit.
+
+  // Write to registers.
+  u_int8_t table[2];
+
+  // Set PLL source, CODEC source.
+  table[0] = 4;  // Clock setting register 1
+  table[1] = r4;
+
+  SetPage(0);
+  SendCommand(table, sizeof(table));
+
+  // Set BCLK, WCLK,  and data word length.
+  table[0] = 27;  // Clock setting register 1
+  table[1] = r27;
+  SendCommand(table, sizeof(table));
+
+  CODEC_SYSLOG("Leave.")
+}
+
 void Tlv320aic3204AdapterStrategy::ConfigurePll(
-    uint32_t r,  // numerator
-    uint32_t j,  // integer part of multiply factor
-    uint32_t d,  // fractional part of the multiply factor
-    uint32_t p,  // denominator
-    murasaki::Tlv320aic3204::I2sRole role,
-    murasaki::Tlv320aic3204::PllSource pll_source) {
+    uint32_t const r,  // numerator
+    uint32_t const j,  // integer part of multiply factor
+    uint32_t const d,  // fractional part of the multiply factor
+    uint32_t const p)  // denominator
+{
   CODEC_SYSLOG("Enter r:%d, j:%d, d:%d, p:%d.", r, j, d, p)
   // parameter validation
   MURASAKI_ASSERT(1 <= r && r <= 4)
   MURASAKI_ASSERT(1 <= j && j <= 63)
   MURASAKI_ASSERT(d <= 9999)
   MURASAKI_ASSERT(1 <= p && p <= 8)
-  // pll_source == BCLK and role == master is not allowed.
-  MURASAKI_ASSERT(
-      !(pll_source == Tlv320aic3204::kBclk && role == Tlv320aic3204::kMaster))
 
   CODEC_SYSLOG("Leave.")
 }
 
 void Tlv320aic3204AdapterStrategy::ShutdownPll(void) {}
 
-void Tlv320aic3204AdapterStrategy::ConfigureCODEC(uint32_t fs) {
+void Tlv320aic3204AdapterStrategy::ConfigureCODEC(uint32_t const fs) {
   CODEC_SYSLOG("Enter fs : %d.", fs)
   // Parameter validation.
   MURASAKI_ASSERT(fs == 44100 || fs == 88200 || fs == 176400 || fs == 48000 ||
