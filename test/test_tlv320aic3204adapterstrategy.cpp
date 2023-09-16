@@ -117,6 +117,8 @@ TEST(Tlv320aic3204AdapterStrategy, Reset) {
 }
 
 // Testing ConfigureClock() .
+// Checking all convination of the role and PLL input,
+// except the forbidden case.
 TEST(Tlv320aic3204AdapterStrategy, ConfigureClock) {
   MockI2cMaster i2c;
   const uint8_t device_address = 0x21;
@@ -250,6 +252,9 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigureClock) {
 }
 
 // Testing assertion of ConfigureClock() .
+// The convination of the I2S master mode and the PLL input from
+// BCLK is not allowed, because BCLK is output in the master mode.
+// In this test, we check whether assertion works correctly or not.
 TEST(Tlv320aic3204AdapterStrategyDeathTest, ConfigureClock) {
   MockI2cMaster i2c;
   const uint8_t device_address = 0x22;
