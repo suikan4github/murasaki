@@ -29,7 +29,7 @@ void Tlv320aic3204AdapterStrategy::SetPage(u_int8_t page_number) {
   CODEC_SYSLOG("Enter. page_number : &d .", page_number)
 
   uint8_t command[] = {
-      0,           // Regsiter Address => Page number
+      0,           // Register Address => Page number
       page_number  // value to write
   };
 
@@ -54,11 +54,11 @@ void Tlv320aic3204AdapterStrategy::Reset() {
   CODEC_SYSLOG("Enter.")
 
   uint8_t command[] = {
-      1,  // Regsiter Address => Software reset
-      1   // Self clearning software reset
+      1,  // Register Address => Software reset
+      1   // Self cleaning software reset
   };
 
-  SetPage(0);                             // Page 0 for softare reset register.
+  SetPage(0);                             // Page 0 for software reset register.
   SendCommand(command, sizeof(command));  // Write to software reset.
 
   CODEC_SYSLOG("Leave.")
@@ -78,25 +78,19 @@ void Tlv320aic3204AdapterStrategy::ConfigurePll(
     uint32_t r,  // numerator
     uint32_t j,  // integer part of multiply factor
     uint32_t d,  // fractional part of the multiply factor
-    uint32_t p   // denominator
-) {
+    uint32_t p,  // denominator
+    murasaki::Tlv320aic3204::I2sRole role,
+    murasaki::Tlv320aic3204::PllSource pll_source) {
   CODEC_SYSLOG("Enter r:%d, j:%d, d:%d, p:%d.", r, j, d, p)
   // parameter validation
   MURASAKI_ASSERT(1 <= r && r <= 4)
   MURASAKI_ASSERT(1 <= j && j <= 63)
   MURASAKI_ASSERT(d <= 9999)
   MURASAKI_ASSERT(1 <= p && p <= 8)
-  CODEC_SYSLOG("Leave.")
-}
-
-void Tlv320aic3204AdapterStrategy::ConfigureRoleAndSource(
-    murasaki::Tlv320aic3204::I2sRole role,
-    murasaki::Tlv320aic3204::PllSource pll_source) {
-  CODEC_SYSLOG("Enter.")
-  // Parameter varidation.
   // pll_source == BCLK and role == master is not allowed.
   MURASAKI_ASSERT(
       !(pll_source == Tlv320aic3204::kBclk && role == Tlv320aic3204::kMaster))
+
   CODEC_SYSLOG("Leave.")
 }
 
@@ -104,7 +98,7 @@ void Tlv320aic3204AdapterStrategy::ShutdownPll(void) {}
 
 void Tlv320aic3204AdapterStrategy::ConfigureCODEC(uint32_t fs) {
   CODEC_SYSLOG("Enter fs : %d.", fs)
-  // Parameter varidation.
+  // Parameter validation.
   MURASAKI_ASSERT(fs == 44100 || fs == 88200 || fs == 176400 || fs == 48000 ||
                   fs == 96000 || fs == 192000
 

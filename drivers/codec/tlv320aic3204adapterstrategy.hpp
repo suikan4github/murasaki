@@ -17,39 +17,38 @@ namespace murasaki {
 /**
  * \brief AdapterStrategy pattern for the CODEC implementation test.
  * \details
- * This class is a specific strategy for the CODEC implemenation.
+ * This class is a specific strategy for the CODEC implementation.
  * The internal implementation of the Tlv320aic3204 class is done
  * here instead of that class.
  *
- * Usually, the internal implementaiton is done in the private or
- * protected method. But such the implementation is difficul for the
+ * Usually, the internal implementation is done in the private or
+ * protected method. But such the implementation is difficult for the
  * unit test in C++.
  *
  * We use adapter pattern for the internal implementation. There are
  * several advantage compare to the private/protected method.
- * \li Easy to test : The internal implemenations are implemented
- * as publice member functions. Thus, they are easy to test from the
+ * \li Easy to test : The internal implementations are implemented
+ * as public member functions. Thus, they are easy to test from the
  * unit test tool.
- * \li Internal implementaion is still hidden. While the implementations
+ * \li Internal implementation is still hidden. While the implementations
  * are public in the adapters, the adapter object is a private variable
  * in the Tlv320aic3204 class. Thus, the implementation is hidden from
  * the Tlv320aic3204 class user.
  *
- * Some of the people will dislike this approach, becuase it is less
+ * Some of the people will dislike this approach, because it is less
  * flexible to the refactoring, compared to the protect/private member
  * functions.
  *
  * We think this is a sense of value. We decided the unit test is much
- * more important than refactoring flexibility. So, the adapter is
- * benefitable.
+ * more important than refactoring flexibility. So, the adapter is the better..
  *
- * In this class, we implement certain member classes which are commont
+ * In this class, we implement certain member classes which are common
  * to the all adapter.
  *
- * For the dtails of the programming, refer following documentation
+ * For the details of the programming, refer following documentation
  * from TI :
- * \li TLV320AIC3204 datasheet
- * \li TLV320AIC3204 Application Refernce Guide (SLA557)
+ * \li TLV320AIC3204 data sheet
+ * \li TLV320AIC3204 Application Reference Guide (SLA557)
  */
 class Tlv320aic3204AdapterStrategy {
  public:
@@ -63,10 +62,10 @@ class Tlv320aic3204AdapterStrategy {
    * @details
    * Declare the I2C controller class and I2C device address.
    * The controller is the C++ class in Murasaki library.
-   * The I2C address is the one from the TLV320AIC3204 datasheet.
+   * The I2C address is the one from the TLV320AIC3204 data sheet.
    *
    * Given two parameters are stored in the protected variables
-   * for the consequtive member function call.
+   * for the consecutive member function call.
    */
   Tlv320aic3204AdapterStrategy(
       murasaki::I2cMasterStrategy *controller,  // I2C master controller
@@ -77,7 +76,7 @@ class Tlv320aic3204AdapterStrategy {
    * \param page_number 0-255. Selects the Register Page for next read or write.
    * \details
    * The TLV320AIC3204 register has page. Programmer have to set correct page
-   * number fore accessing each register.  Refere the CODEC documenation from
+   * number fore accessing each register.  Refer the CODEC documentation from
    * TI.
    */
   virtual void SetPage(u_int8_t page_number);
@@ -113,6 +112,13 @@ class Tlv320aic3204AdapterStrategy {
    * @param j : J in the PLL factor. 1,2,3,...63
    * @param d : D in the PLL factor. 0,1,3,...9999
    * @param p : P in the PLL factor. 1,2,3,4,...8
+   * \param role
+   * \li kMaster : I2S pins are output
+   * \li kSlave : I2S pins are input
+   *
+   * \param pll_source
+   * \li kMCLK : PLL source is set to MCLK input.
+   * \li kBCLK : PLL source is set to BCLK input.
    * @details
    * At first, initialize the PLL based on the given fs and master clock.
    * Then, setup the Converter sampling rate.
@@ -123,33 +129,21 @@ class Tlv320aic3204AdapterStrategy {
    *          P
    * @endcode
    *
-   *
-   */
-  virtual void ConfigurePll(
-      uint32_t r,  // numarator
-      uint32_t j,  // integer part of multiply factor
-      uint32_t d,  // fractional part of the multiply factor
-      uint32_t p   // denominator
-  );
-
-  /**
-   * \brief Set up the digital interface pins.
-   * \param role
-   * \li kMaster : I2S pins are output
-   * \li kSlave : I2S pins are input
-   *
-   * \param pll_source
-   * \li kMCLK : PLL source is set to MCLK input.
-   * \li kBCLK : PLL source is set to BCLK input.
-   *
-   * \details
    * If the plls_source is kBCLK, the role must be kSlave. Otherwise,
    * assertion is triggered.
    *
    * In the case of the pll_source == kBCLK, the kMCLK must be tied to GND
    * because it is left as input.
+   *
+   * We assume the internal PLL clock as :
+   * \li 86.016 MHz for Fs==48kHz ( Fs*128*2*7)
+   * \li 84.672 MHz for Fs==44.1kHz (Fs*128*3*5)
    */
-  virtual void ConfigureRoleAndSource(
+  virtual void ConfigurePll(
+      uint32_t r,  // numerator
+      uint32_t j,  // integer part of multiply factor
+      uint32_t d,  // fractional part of the multiply factor
+      uint32_t p,  // denominator
       murasaki::Tlv320aic3204::I2sRole role,         // Digital Pin direction
       murasaki::Tlv320aic3204::PllSource pll_source  // Source of PLL
   );
@@ -173,7 +167,7 @@ class Tlv320aic3204AdapterStrategy {
   virtual void ConfigureCODEC(uint32_t fs);
 
   /**
-   * \brief Stop the codec and set to low poower mode.
+   * \brief Stop the codec and set to low power mode.
    */
   virtual void ShutdownCODEC(void);
 
