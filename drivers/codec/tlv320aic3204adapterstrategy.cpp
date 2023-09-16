@@ -93,16 +93,16 @@ void Tlv320aic3204AdapterStrategy::ConfigureClock(
   // CODEC_CLLKIN is connected to PLL output
   r4 |= 3;  // D1:0 CODECK CLock In. 3 => PLL Clock.
 
+  // By reset, DIN and DOUT are connected to ADC and DAC, respectively.
+
   // BCLK AND WCLK pin
   if (role == Tlv320aic3204::kMaster) {
     r27 |= 1 << 2;  // D2 : WCLK
     r27 |= 1 << 3;  // D3 : BCLK
   }
 
-  // By reset, DIN and DOUT are connected to ADC and DAC, respectively.
-
   // Audio Data Word Length
-  r27 |= 3 << 4;  // D5:3 : Audio Data Word Length. 03 => 32bit.
+  r27 |= 3 << 4;  // D5:4 : Audio Data Word Length. 03 => 32bit.
 
   // Write to registers.
   u_int8_t table[2];

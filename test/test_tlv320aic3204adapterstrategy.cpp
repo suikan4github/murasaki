@@ -137,6 +137,7 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigureClock) {
                  murasaki::kwmsIndefinitely  // Wait forever
                  ))
         .With(Args<1, 2>(ElementsAreArray({0, 0})));
+
     // Write to page 4, MCLCK input.
 
     EXPECT_CALL(
@@ -158,7 +159,7 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigureClock) {
                  NULL,  // no variable to receive the length of transmission
                  murasaki::kwmsIndefinitely  // Wait forever
                  ))
-        .With(Args<1, 2>(ElementsAreArray({27, 0x10})));
+        .With(Args<1, 2>(ElementsAreArray({27, 0x3c})));
   }
   adapter.ConfigureClock(murasaki::Tlv320aic3204::kMaster,
                          murasaki::Tlv320aic3204::kMclk);
