@@ -277,7 +277,7 @@ TEST(Tlv320aic3204AdapterStrategyDeathTest, ConfigurePll_r_0) {
                                     1,  // d
                                     1   // p
                                     ),
-               "");
+               "1 <= r && r <= 4");
 }
 
 // Assertion test when r == 5
@@ -291,7 +291,7 @@ TEST(Tlv320aic3204AdapterStrategyDeathTest, ConfigurePll_r_5) {
                                     1,  // d
                                     1   // p
                                     ),
-               "");
+               "1 <= r && r <= 4");
 }
 
 // Assertion test when j == 0
@@ -305,7 +305,7 @@ TEST(Tlv320aic3204AdapterStrategyDeathTest, ConfigurePll_j_0) {
                                     1,  // d
                                     1   // p
                                     ),
-               "");
+               "1 <= j && j <= 63");
 }
 
 // Assertion test when j == 64
@@ -319,7 +319,7 @@ TEST(Tlv320aic3204AdapterStrategyDeathTest, ConfigurePll_j_64) {
                                     1,   // d
                                     1    // p
                                     ),
-               "");
+               "1 <= j && j <= 63");
 }
 
 // Assertion test when d == 10000
@@ -333,7 +333,7 @@ TEST(Tlv320aic3204AdapterStrategyDeathTest, ConfigurePll_d_10000) {
                                     10000,  // d
                                     1       // p
                                     ),
-               "");
+               "d <= 9999");
 }
 
 // Assertion test when p == 0
@@ -347,7 +347,7 @@ TEST(Tlv320aic3204AdapterStrategyDeathTest, ConfigurePll_p_0) {
                                     1,  // d
                                     0   // p
                                     ),
-               "");
+               "1 <= p && p <= 8");
 }
 
 // Assertion test when p == 9
@@ -356,10 +356,10 @@ TEST(Tlv320aic3204AdapterStrategyDeathTest, ConfigurePll_p_9) {
   const uint8_t device_address = 0x22;
   murasaki::Tlv320aic3204DefaultAdapter adapter(&i2c, device_address);
 
-  ASSERT_DEATH(adapter.ConfigurePll(8,  // r
+  ASSERT_DEATH(adapter.ConfigurePll(1,  // r
                                     1,  // j
                                     1,  // d
                                     9   // p
                                     ),
-               "");
+               "1 <= p && p <= 8");
 }
