@@ -265,3 +265,101 @@ TEST(Tlv320aic3204AdapterStrategyDeathTest, ConfigureClock) {
                "pll_source == Tlv320aic3204::kBclk && role == "
                "Tlv320aic3204::kMaster");
 }
+
+// Assertion test when r == 0
+TEST(Tlv320aic3204AdapterStrategyDeathTest, ConfigurePll_r_0) {
+  MockI2cMaster i2c;
+  const uint8_t device_address = 0x22;
+  murasaki::Tlv320aic3204DefaultAdapter adapter(&i2c, device_address);
+
+  ASSERT_DEATH(adapter.ConfigurePll(0,  // r
+                                    1,  // j
+                                    1,  // d
+                                    1   // p
+                                    ),
+               "");
+}
+
+// Assertion test when r == 5
+TEST(Tlv320aic3204AdapterStrategyDeathTest, ConfigurePll_r_5) {
+  MockI2cMaster i2c;
+  const uint8_t device_address = 0x22;
+  murasaki::Tlv320aic3204DefaultAdapter adapter(&i2c, device_address);
+
+  ASSERT_DEATH(adapter.ConfigurePll(5,  // r
+                                    1,  // j
+                                    1,  // d
+                                    1   // p
+                                    ),
+               "");
+}
+
+// Assertion test when j == 0
+TEST(Tlv320aic3204AdapterStrategyDeathTest, ConfigurePll_j_0) {
+  MockI2cMaster i2c;
+  const uint8_t device_address = 0x22;
+  murasaki::Tlv320aic3204DefaultAdapter adapter(&i2c, device_address);
+
+  ASSERT_DEATH(adapter.ConfigurePll(1,  // r
+                                    0,  // j
+                                    1,  // d
+                                    1   // p
+                                    ),
+               "");
+}
+
+// Assertion test when j == 64
+TEST(Tlv320aic3204AdapterStrategyDeathTest, ConfigurePll_j_64) {
+  MockI2cMaster i2c;
+  const uint8_t device_address = 0x22;
+  murasaki::Tlv320aic3204DefaultAdapter adapter(&i2c, device_address);
+
+  ASSERT_DEATH(adapter.ConfigurePll(1,   // r
+                                    64,  // j
+                                    1,   // d
+                                    1    // p
+                                    ),
+               "");
+}
+
+// Assertion test when d == 10000
+TEST(Tlv320aic3204AdapterStrategyDeathTest, ConfigurePll_d_10000) {
+  MockI2cMaster i2c;
+  const uint8_t device_address = 0x22;
+  murasaki::Tlv320aic3204DefaultAdapter adapter(&i2c, device_address);
+
+  ASSERT_DEATH(adapter.ConfigurePll(1,      // r
+                                    1,      // j
+                                    10000,  // d
+                                    1       // p
+                                    ),
+               "");
+}
+
+// Assertion test when p == 0
+TEST(Tlv320aic3204AdapterStrategyDeathTest, ConfigurePll_p_0) {
+  MockI2cMaster i2c;
+  const uint8_t device_address = 0x22;
+  murasaki::Tlv320aic3204DefaultAdapter adapter(&i2c, device_address);
+
+  ASSERT_DEATH(adapter.ConfigurePll(1,  // r
+                                    1,  // j
+                                    1,  // d
+                                    0   // p
+                                    ),
+               "");
+}
+
+// Assertion test when p == 9
+TEST(Tlv320aic3204AdapterStrategyDeathTest, ConfigurePll_p_9) {
+  MockI2cMaster i2c;
+  const uint8_t device_address = 0x22;
+  murasaki::Tlv320aic3204DefaultAdapter adapter(&i2c, device_address);
+
+  ASSERT_DEATH(adapter.ConfigurePll(8,  // r
+                                    1,  // j
+                                    1,  // d
+                                    9   // p
+                                    ),
+               "");
+}
