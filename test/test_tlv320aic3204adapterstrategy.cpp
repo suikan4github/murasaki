@@ -363,3 +363,14 @@ TEST(Tlv320aic3204AdapterStrategyDeathTest, ConfigurePll_p_9) {
                                     ),
                "1 <= p && p <= 8");
 }
+
+// Assertion test when fs is wrong.
+TEST(Tlv320aic3204AdapterStrategyDeathTest, ConfigureCODEC) {
+  MockI2cMaster i2c;
+  const uint8_t device_address = 0x23;
+  murasaki::Tlv320aic3204DefaultAdapter adapter(&i2c, device_address);
+
+  ASSERT_DEATH(adapter.ConfigureCODEC(32000),
+               "fs == 44100 || fs == 88200 || fs == 176400 || fs == 48000 || "
+               "fs == 96000 || fs == 192000");
+}
