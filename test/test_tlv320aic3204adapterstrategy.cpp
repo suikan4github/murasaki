@@ -116,7 +116,7 @@ TEST(Tlv320aic3204AdapterStrategy, Reset) {
   adapter.Reset();
 }
 
-// Testing Reset command .
+// Testing ConfigureClock() .
 TEST(Tlv320aic3204AdapterStrategy, ConfigureClock) {
   MockI2cMaster i2c;
   const uint8_t device_address = 0x21;
@@ -247,4 +247,16 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigureClock) {
   }
   adapter.ConfigureClock(murasaki::Tlv320aic3204::kSlave,
                          murasaki::Tlv320aic3204::kBclk);
+}
+
+// Testing assertion of ConfigureClock() .
+TEST(Tlv320aic3204AdapterStrategyDeathTest, ConfigureClock) {
+  MockI2cMaster i2c;
+  const uint8_t device_address = 0x22;
+  murasaki::Tlv320aic3204DefaultAdapter adapter(&i2c, device_address);
+
+  ASSERT_DEATH(adapter.ConfigureClock(murasaki::Tlv320aic3204::kMaster,
+                                      murasaki::Tlv320aic3204::kBclk),
+               "pll_source == Tlv320aic3204::kBclk && role == "
+               "Tlv320aic3204::kMaster");
 }
