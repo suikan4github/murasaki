@@ -135,6 +135,33 @@ void Tlv320aic3204AdapterStrategy::ConfigurePll(
   MURASAKI_ASSERT(d <= 9999)
   MURASAKI_ASSERT(1 <= p && p <= 8)
 
+  u_int8_t reg5 = 0;  // Clock Setting Register 2, PLL P and R Values
+  u_int8_t reg6 = 0;  // Clock Setting Register 3, PLL J Values
+  u_int8_t reg7 = 0;  // Clock Setting Register 4, PLL D Values (MSB)
+  u_int8_t reg8 = 0;  // Clock Setting Register 5, PLL D Values (LSB)
+
+  // Reg5 Clock Setting Register 2, PLL P and R Values
+  reg5 |= 1 << 7;  // D7 : PLL Power. 1=> Up.
+  reg5 |= p << 4;  // D6:4 : PLL P value.
+  reg5 |= r << 0;  // D3:0 : PLL R value;
+
+  // Reg 6 Clock Setting Register 3, PLL J Values
+  reg6 |= j << 0;  // D5:0 : PLL J value;
+
+  // Reg 7 Clock Setting Register 4, PLL D Values (MSB)
+  reg7 |= d >> 8;  // PLL divider D value (MSB)
+
+  // Reg 8 Clock Setting Register 5, PLL D Values(LSB)
+  reg8 |= d & 0xFF;  // PLL divider D value (LSB)
+
+  // Command table for PLL configuration.
+  uint8_t pll_table[] = {5,  // First address ( reg 5)
+                         reg5, reg6, reg7, reg8};
+
+  // Sending command to configure PLL
+  SetPage(0);  // Page 0 for PLL registers.
+  SendCommand(pll_table, sizeof(pll_table));
+
   CODEC_SYSLOG("Leave.")
 }
 
