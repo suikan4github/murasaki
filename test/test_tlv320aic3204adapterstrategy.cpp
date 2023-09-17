@@ -251,6 +251,58 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigureClock) {
                          murasaki::Tlv320aic3204::kBclk);
 }
 
+// Testing ConfigureClock() .
+// Checking all convination of the role and PLL input,
+// except the forbidden case.
+TEST(Tlv320aic3204AdapterStrategy, ConfigurePll) {
+  MockI2cMaster i2c;
+  const uint8_t device_address = 0x23;
+
+  murasaki::Tlv320aic3204DefaultAdapter adapter(&i2c, device_address);
+
+  // Test all combination of the PLL parameters except D paraemter.
+  // D parameter is too heavy to check all.
+  for (uint8_t r = 1; r < 5; r++)
+    for (uint8_t j = 4; j < 64; j++)
+      for (uint32_t d = 0; d < 10000; d += 99)
+        for (uint8_t p = 1; p < 9; p++) {
+          {
+            InSequence dummy;
+
+            // Must set page 0
+            EXPECT_CALL(
+                i2c,  // Mock
+                Transmit(
+                    device_address,  // I2C Address
+                    _,               // Args<1> : Pointer to the data to send.
+                    2,               // Args<2> : Lenght of data in bytes.
+                    NULL,  // no variable to receive the length of transmission
+                    murasaki::kwmsIndefinitely  // Wait forever
+                    ))
+                .With(Args<1, 2>(ElementsAreArray({0, 0})));
+
+            // Write to page 5,6,7 and 8.
+            EXPECT_CALL(
+                i2c,  // Mock
+                Transmit(
+                    device_address,  // I2C Address
+                    _,               // Args<1> : Pointer to the data to send.
+                    5,               // Args<2> : Lenght of data in bytes.
+                    NULL,  // no variable to receive the length of transmission
+                    murasaki::kwmsIndefinitely  // Wait forever
+                    ))
+                .With(Args<1, 2>(ElementsAreArray({
+                    (uint8_t)5,                      // reg number.
+                    (uint8_t)(0x80 | (p << 4) | r),  // reg5
+                    j,                               // reg6
+                    (uint8_t)(d >> 8),               // reg7
+                    (uint8_t)(d & 0xff)              // reg8
+                })));
+          }
+          adapter.ConfigurePll(r, j, d, p);
+        }
+}
+
 // Testing assertion of ConfigureClock() .
 // The convination of the I2S master mode and the PLL input from
 // BCLK is not allowed, because BCLK is output in the master mode.
@@ -305,7 +357,7 @@ TEST(Tlv320aic3204AdapterStrategyDeathTest, ConfigurePll_j_0) {
                                     1,  // d
                                     1   // p
                                     ),
-               "1 <= j && j <= 63");
+               "4 <= j && j <= 63");
 }
 
 // Assertion test when j == 64
@@ -319,7 +371,7 @@ TEST(Tlv320aic3204AdapterStrategyDeathTest, ConfigurePll_j_64) {
                                     1,   // d
                                     1    // p
                                     ),
-               "1 <= j && j <= 63");
+               "4 <= j && j <= 63");
 }
 
 // Assertion test when d == 10000
@@ -329,7 +381,7 @@ TEST(Tlv320aic3204AdapterStrategyDeathTest, ConfigurePll_d_10000) {
   murasaki::Tlv320aic3204DefaultAdapter adapter(&i2c, device_address);
 
   ASSERT_DEATH(adapter.ConfigurePll(1,      // r
-                                    1,      // j
+                                    4,      // j
                                     10000,  // d
                                     1       // p
                                     ),
@@ -343,7 +395,7 @@ TEST(Tlv320aic3204AdapterStrategyDeathTest, ConfigurePll_p_0) {
   murasaki::Tlv320aic3204DefaultAdapter adapter(&i2c, device_address);
 
   ASSERT_DEATH(adapter.ConfigurePll(1,  // r
-                                    1,  // j
+                                    4,  // j
                                     1,  // d
                                     0   // p
                                     ),
@@ -357,7 +409,7 @@ TEST(Tlv320aic3204AdapterStrategyDeathTest, ConfigurePll_p_9) {
   murasaki::Tlv320aic3204DefaultAdapter adapter(&i2c, device_address);
 
   ASSERT_DEATH(adapter.ConfigurePll(1,  // r
-                                    1,  // j
+                                    4,  // j
                                     1,  // d
                                     9   // p
                                     ),

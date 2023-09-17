@@ -131,7 +131,7 @@ void Tlv320aic3204AdapterStrategy::ConfigurePll(
   CODEC_SYSLOG("Enter r:%d, j:%d, d:%d, p:%d.", r, j, d, p)
   // parameter validation
   MURASAKI_ASSERT(1 <= r && r <= 4)
-  MURASAKI_ASSERT(1 <= j && j <= 63)
+  MURASAKI_ASSERT(4 <= j && j <= 63)
   MURASAKI_ASSERT(d <= 9999)
   MURASAKI_ASSERT(1 <= p && p <= 8)
 
