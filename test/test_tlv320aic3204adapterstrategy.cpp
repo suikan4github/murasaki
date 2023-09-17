@@ -382,14 +382,14 @@ TEST(Tlv320aic3204AdapterStrategyDeathTest, ConfigurePll_r_5) {
                "1 <= r && r <= 4");
 }
 
-// Assertion test when j == 0
-TEST(Tlv320aic3204AdapterStrategyDeathTest, ConfigurePll_j_0) {
+// Assertion test when j == 3
+TEST(Tlv320aic3204AdapterStrategyDeathTest, ConfigurePll_j_3) {
   MockI2cMaster i2c;
   const uint8_t device_address = 0x22;
   murasaki::Tlv320aic3204DefaultAdapter adapter(&i2c, device_address);
 
   ASSERT_DEATH(adapter.ConfigurePll(1,  // r
-                                    0,  // j
+                                    3,  // j
                                     1,  // d
                                     1   // p
                                     ),
