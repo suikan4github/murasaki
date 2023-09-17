@@ -189,6 +189,9 @@ class Tlv320aic3204AdapterStrategy {
    */
   virtual void ConfigureAnalog(void) = 0;
 
+  /**
+   * \brief Set analog path to low power mode.
+   */
   virtual void ShutdownAnalog(void);
 
   /**

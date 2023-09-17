@@ -165,7 +165,18 @@ void Tlv320aic3204AdapterStrategy::ConfigurePll(
   CODEC_SYSLOG("Leave.")
 }
 
-void Tlv320aic3204AdapterStrategy::ShutdownPll(void) {}
+void Tlv320aic3204AdapterStrategy::ShutdownPll(void) {
+  CODEC_SYSLOG("Enter.")
+  uint8_t command[] = {
+      4,  // Register Address => Clock Setting Register
+      0   // PLL Power Down
+  };
+
+  SetPage(0);                             // Page 0 for software reset register.
+  SendCommand(command, sizeof(command));  // Write to software reset.
+
+  CODEC_SYSLOG("Leave.")
+}
 
 void Tlv320aic3204AdapterStrategy::ConfigureCODEC(uint32_t const fs) {
   CODEC_SYSLOG("Enter fs : %d.", fs)
