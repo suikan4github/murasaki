@@ -141,9 +141,9 @@ void Tlv320aic3204AdapterStrategy::ConfigurePll(
   u_int8_t reg8 = 0;  // Clock Setting Register 5, PLL D Values (LSB)
 
   // Reg5 Clock Setting Register 2, PLL P and R Values
-  reg5 |= 1 << 7;  // D7 : PLL Power. 1=> Up.
-  reg5 |= p << 4;  // D6:4 : PLL P value.
-  reg5 |= r << 0;  // D3:0 : PLL R value;
+  reg5 |= 1 << 7;           // D7 : PLL Power. 1=> Up.
+  reg5 |= (p & 0x07) << 4;  // D6:4 : PLL P value. Caution : 8 must be set as 0
+  reg5 |= r << 0;           // D3:0 : PLL R value;
 
   // Reg 6 Clock Setting Register 3, PLL J Values
   reg6 |= j << 0;  // D5:0 : PLL J value;

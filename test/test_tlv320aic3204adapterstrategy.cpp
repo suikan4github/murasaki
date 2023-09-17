@@ -253,7 +253,7 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigureClock) {
 }
 
 // Testing ConfigureClock() .
-// Checking all convination of the role and PLL input,
+// Checking all combination of the role and PLL input,
 // except the forbidden case.
 TEST(Tlv320aic3204AdapterStrategy, ConfigurePll) {
   MockI2cMaster i2c;
@@ -293,11 +293,11 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigurePll) {
                     murasaki::kwmsIndefinitely  // Wait forever
                     ))
                 .With(Args<1, 2>(ElementsAreArray({
-                    (uint8_t)5,                      // reg number.
-                    (uint8_t)(0x80 | (p << 4) | r),  // reg5
-                    j,                               // reg6
-                    (uint8_t)(d >> 8),               // reg7
-                    (uint8_t)(d & 0xff)              // reg8
+                    (uint8_t)5,  // reg number.
+                    (uint8_t)(0x80 | ((p & 0x07) << 4) | (r & 0x0f)),  // reg5
+                    j,                                                 // reg6
+                    (uint8_t)(d >> 8),                                 // reg7
+                    (uint8_t)(d & 0xff)                                // reg8
                 })));
           }
           adapter.ConfigurePll(r, j, d, p);
