@@ -40,3 +40,6 @@ build/
 
 # VS code
 .vscode/
+
+# Test
+Testing/

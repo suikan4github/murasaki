@@ -255,7 +255,7 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigureClock) {
 // Testing ConfigureClock() .
 // Checking all combination of the role and PLL input,
 // except the forbidden case.
-TEST(Tlv320aic3204AdapterStrategy, ConfigurePll) {
+TEST(Tlv320aic3204AdapterStrategy, ConfigurePll_r1) {
   MockI2cMaster i2c;
   const uint8_t device_address = 0x23;
 
@@ -263,45 +263,199 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigurePll) {
 
   // Test all combination of the PLL parameters except D paraemter.
   // D parameter is too heavy to check all.
-  for (uint8_t r = 1; r < 5; r++)
-    for (uint8_t j = 4; j < 64; j++)
-      for (uint32_t d = 0; d < 10000; d += 99)
-        for (uint8_t p = 1; p < 9; p++) {
-          {
-            InSequence dummy;
+  uint8_t r = 1;
+  for (uint8_t j = 4; j < 64; j++)
+    for (uint32_t d = 0; d < 10000; d += 99)
+      for (uint8_t p = 1; p < 9; p++) {
+        {
+          InSequence dummy;
 
-            // Must set page 0
-            EXPECT_CALL(
-                i2c,  // Mock
-                Transmit(
-                    device_address,  // I2C Address
-                    _,               // Args<1> : Pointer to the data to send.
-                    2,               // Args<2> : Lenght of data in bytes.
-                    NULL,  // no variable to receive the length of transmission
-                    murasaki::kwmsIndefinitely  // Wait forever
-                    ))
-                .With(Args<1, 2>(ElementsAreArray({0, 0})));
+          // Must set page 0
+          EXPECT_CALL(
+              i2c,  // Mock
+              Transmit(
+                  device_address,  // I2C Address
+                  _,               // Args<1> : Pointer to the data to send.
+                  2,               // Args<2> : Lenght of data in bytes.
+                  NULL,  // no variable to receive the length of transmission
+                  murasaki::kwmsIndefinitely  // Wait forever
+                  ))
+              .With(Args<1, 2>(ElementsAreArray({0, 0})));
 
-            // Write to page 5,6,7 and 8.
-            EXPECT_CALL(
-                i2c,  // Mock
-                Transmit(
-                    device_address,  // I2C Address
-                    _,               // Args<1> : Pointer to the data to send.
-                    5,               // Args<2> : Lenght of data in bytes.
-                    NULL,  // no variable to receive the length of transmission
-                    murasaki::kwmsIndefinitely  // Wait forever
-                    ))
-                .With(Args<1, 2>(ElementsAreArray({
-                    (uint8_t)5,  // reg number.
-                    (uint8_t)(0x80 | ((p & 0x07) << 4) | (r & 0x0f)),  // reg5
-                    j,                                                 // reg6
-                    (uint8_t)(d >> 8),                                 // reg7
-                    (uint8_t)(d & 0xff)                                // reg8
-                })));
-          }
-          adapter.ConfigurePll(r, j, d, p);
+          // Write to page 5,6,7 and 8.
+          EXPECT_CALL(
+              i2c,  // Mock
+              Transmit(
+                  device_address,  // I2C Address
+                  _,               // Args<1> : Pointer to the data to send.
+                  5,               // Args<2> : Lenght of data in bytes.
+                  NULL,  // no variable to receive the length of transmission
+                  murasaki::kwmsIndefinitely  // Wait forever
+                  ))
+              .With(Args<1, 2>(ElementsAreArray({
+                  (uint8_t)5,  // reg number.
+                  (uint8_t)(0x80 | ((p & 0x07) << 4) | (r & 0x0f)),  // reg5
+                  j,                                                 // reg6
+                  (uint8_t)(d >> 8),                                 // reg7
+                  (uint8_t)(d & 0xff)                                // reg8
+              })));
         }
+        adapter.ConfigurePll(r, j, d, p);
+      }
+}
+
+// Testing ConfigureClock() .
+// Checking all combination of the role and PLL input,
+// except the forbidden case.
+TEST(Tlv320aic3204AdapterStrategy, ConfigurePll_r2) {
+  MockI2cMaster i2c;
+  const uint8_t device_address = 0x23;
+
+  murasaki::Tlv320aic3204DefaultAdapter adapter(&i2c, device_address);
+
+  // Test all combination of the PLL parameters except D paraemter.
+  // D parameter is too heavy to check all.
+  uint8_t r = 2;
+  for (uint8_t j = 4; j < 64; j++)
+    for (uint32_t d = 0; d < 10000; d += 99)
+      for (uint8_t p = 1; p < 9; p++) {
+        {
+          InSequence dummy;
+
+          // Must set page 0
+          EXPECT_CALL(
+              i2c,  // Mock
+              Transmit(
+                  device_address,  // I2C Address
+                  _,               // Args<1> : Pointer to the data to send.
+                  2,               // Args<2> : Lenght of data in bytes.
+                  NULL,  // no variable to receive the length of transmission
+                  murasaki::kwmsIndefinitely  // Wait forever
+                  ))
+              .With(Args<1, 2>(ElementsAreArray({0, 0})));
+
+          // Write to page 5,6,7 and 8.
+          EXPECT_CALL(
+              i2c,  // Mock
+              Transmit(
+                  device_address,  // I2C Address
+                  _,               // Args<1> : Pointer to the data to send.
+                  5,               // Args<2> : Lenght of data in bytes.
+                  NULL,  // no variable to receive the length of transmission
+                  murasaki::kwmsIndefinitely  // Wait forever
+                  ))
+              .With(Args<1, 2>(ElementsAreArray({
+                  (uint8_t)5,  // reg number.
+                  (uint8_t)(0x80 | ((p & 0x07) << 4) | (r & 0x0f)),  // reg5
+                  j,                                                 // reg6
+                  (uint8_t)(d >> 8),                                 // reg7
+                  (uint8_t)(d & 0xff)                                // reg8
+              })));
+        }
+        adapter.ConfigurePll(r, j, d, p);
+      }
+}
+// Testing ConfigureClock() .
+// Checking all combination of the role and PLL input,
+// except the forbidden case.
+TEST(Tlv320aic3204AdapterStrategy, ConfigurePll_r3) {
+  MockI2cMaster i2c;
+  const uint8_t device_address = 0x23;
+
+  murasaki::Tlv320aic3204DefaultAdapter adapter(&i2c, device_address);
+
+  // Test all combination of the PLL parameters except D paraemter.
+  // D parameter is too heavy to check all.
+  uint8_t r = 3;
+  for (uint8_t j = 4; j < 64; j++)
+    for (uint32_t d = 0; d < 10000; d += 99)
+      for (uint8_t p = 1; p < 9; p++) {
+        {
+          InSequence dummy;
+
+          // Must set page 0
+          EXPECT_CALL(
+              i2c,  // Mock
+              Transmit(
+                  device_address,  // I2C Address
+                  _,               // Args<1> : Pointer to the data to send.
+                  2,               // Args<2> : Lenght of data in bytes.
+                  NULL,  // no variable to receive the length of transmission
+                  murasaki::kwmsIndefinitely  // Wait forever
+                  ))
+              .With(Args<1, 2>(ElementsAreArray({0, 0})));
+
+          // Write to page 5,6,7 and 8.
+          EXPECT_CALL(
+              i2c,  // Mock
+              Transmit(
+                  device_address,  // I2C Address
+                  _,               // Args<1> : Pointer to the data to send.
+                  5,               // Args<2> : Lenght of data in bytes.
+                  NULL,  // no variable to receive the length of transmission
+                  murasaki::kwmsIndefinitely  // Wait forever
+                  ))
+              .With(Args<1, 2>(ElementsAreArray({
+                  (uint8_t)5,  // reg number.
+                  (uint8_t)(0x80 | ((p & 0x07) << 4) | (r & 0x0f)),  // reg5
+                  j,                                                 // reg6
+                  (uint8_t)(d >> 8),                                 // reg7
+                  (uint8_t)(d & 0xff)                                // reg8
+              })));
+        }
+        adapter.ConfigurePll(r, j, d, p);
+      }
+}
+// Testing ConfigureClock() .
+// Checking all combination of the role and PLL input,
+// except the forbidden case.
+TEST(Tlv320aic3204AdapterStrategy, ConfigurePll_r4) {
+  MockI2cMaster i2c;
+  const uint8_t device_address = 0x23;
+
+  murasaki::Tlv320aic3204DefaultAdapter adapter(&i2c, device_address);
+
+  // Test all combination of the PLL parameters except D paraemter.
+  // D parameter is too heavy to check all.
+  uint8_t r = 4;
+  for (uint8_t j = 4; j < 64; j++)
+    for (uint32_t d = 0; d < 10000; d += 99)
+      for (uint8_t p = 1; p < 9; p++) {
+        {
+          InSequence dummy;
+
+          // Must set page 0
+          EXPECT_CALL(
+              i2c,  // Mock
+              Transmit(
+                  device_address,  // I2C Address
+                  _,               // Args<1> : Pointer to the data to send.
+                  2,               // Args<2> : Lenght of data in bytes.
+                  NULL,  // no variable to receive the length of transmission
+                  murasaki::kwmsIndefinitely  // Wait forever
+                  ))
+              .With(Args<1, 2>(ElementsAreArray({0, 0})));
+
+          // Write to page 5,6,7 and 8.
+          EXPECT_CALL(
+              i2c,  // Mock
+              Transmit(
+                  device_address,  // I2C Address
+                  _,               // Args<1> : Pointer to the data to send.
+                  5,               // Args<2> : Lenght of data in bytes.
+                  NULL,  // no variable to receive the length of transmission
+                  murasaki::kwmsIndefinitely  // Wait forever
+                  ))
+              .With(Args<1, 2>(ElementsAreArray({
+                  (uint8_t)5,  // reg number.
+                  (uint8_t)(0x80 | ((p & 0x07) << 4) | (r & 0x0f)),  // reg5
+                  j,                                                 // reg6
+                  (uint8_t)(d >> 8),                                 // reg7
+                  (uint8_t)(d & 0xff)                                // reg8
+              })));
+        }
+        adapter.ConfigurePll(r, j, d, p);
+      }
 }
 
 // Testing Reset command .
