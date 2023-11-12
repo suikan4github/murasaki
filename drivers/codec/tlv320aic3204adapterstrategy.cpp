@@ -173,24 +173,62 @@ void Tlv320aic3204AdapterStrategy::ShutdownPll(void) {
   };
 
   SetPage(0);                             // Page 0 for software reset register.
-  SendCommand(command, sizeof(command));  // Write to software reset.
+  SendCommand(command, sizeof(command));  // Write to PLL power down.
 
   CODEC_SYSLOG("Leave.")
 }
 
+/**
+ * We assume the internal PLL clock as :
+ * \li 86.016 MHz for Fs==48kHz ( Fs*128*2*7)
+ * \li 84.672 MHz for Fs==44.1kHz (Fs*128*3*5)
+ */
 void Tlv320aic3204AdapterStrategy::ConfigureCODEC(uint32_t const fs) {
   CODEC_SYSLOG("Enter fs : %d.", fs)
   // Parameter validation.
   MURASAKI_ASSERT(fs == 44100 || fs == 88200 || fs == 176400 || fs == 48000 ||
-                  fs == 96000 || fs == 192000
+                  fs == 96000 || fs == 192000)
 
-  )
+  switch (fs) {
+    case 44100:
+      /* Assume PLL clock is 84.672 MHz */
+      MURASAKI_ASSERT(false)  // Not implemented yet.
+      break;
+    case 88200:
+      /* Assume PLL clock is 84.672 MHz */
+      MURASAKI_ASSERT(false)  // Not implemented yet.
+      break;
+    case 176400:
+      /* Assume PLL clock is 84.672 MHz */
+      MURASAKI_ASSERT(false)  // Not implemented yet.
+      break;
+    case 48000:
+      /* Assume PLL clock is 86.016 MHz */
+      MURASAKI_ASSERT(false)  // Not implemented yet.
+      break;
+    case 96000:
+      /* Assume PLL clock is 86.016 MHz */
+      MURASAKI_ASSERT(false)  // Not implemented yet.
+      break;
+    case 192000:
+      /* Assume PLL clock is 84.016 MHz */
+      MURASAKI_ASSERT(false)  // Not implemented yet.
+      break;
+
+    default:
+      break;
+  }
+
   CODEC_SYSLOG("Leave.")
 }
 
-void Tlv320aic3204AdapterStrategy::ShutdownCODEC(void) {}
+void Tlv320aic3204AdapterStrategy::ShutdownCODEC(void) {
+  MURASAKI_ASSERT(false)  // Not implemented yet.
+}
 
-void Tlv320aic3204AdapterStrategy::ShutdownAnalog(void) {}
+void Tlv320aic3204AdapterStrategy::ShutdownAnalog(void) {
+  MURASAKI_ASSERT(false)  // Not implemented yet.
+}
 
 } /* namespace murasaki */
 

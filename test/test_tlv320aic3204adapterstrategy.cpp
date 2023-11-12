@@ -612,6 +612,7 @@ TEST(Tlv320aic3204AdapterStrategyDeathTest, ConfigureCODEC) {
   const uint8_t device_address = 0x23;
   murasaki::Tlv320aic3204DefaultAdapter adapter(&i2c, device_address);
 
+  // 32kHz Fs is not supported.
   ASSERT_DEATH(adapter.ConfigureCODEC(32000),
                "fs == 44100 || fs == 88200 || fs == 176400 || fs == 48000 || "
                "fs == 96000 || fs == 192000");
