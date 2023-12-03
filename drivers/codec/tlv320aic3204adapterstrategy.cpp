@@ -188,7 +188,7 @@ void Tlv320aic3204AdapterStrategy::ShutdownPll(void) {
  * And then set the AOSR and DOSR to :
  * \li 128 for Fs=48kHz and 44.1kHz.
  * \li 64 for Fs=96kHz and 88.2kHz.
- * \li 23 for Fs=192kHz and 176.4kHz.
+ * \li 32 for Fs=192kHz and 176.4kHz.
  */
 void Tlv320aic3204AdapterStrategy::ConfigureCODEC(uint32_t const fs) {
   CODEC_SYSLOG("Enter fs : %d.", fs)
@@ -210,41 +210,46 @@ void Tlv320aic3204AdapterStrategy::ConfigureCODEC(uint32_t const fs) {
 
   // We don't set the MADC nor NADC.
   // By leaving MADC power down, ADC_MOD_CLK will use MDAC output.
+  // See section 5.2.18 and 5.2.19 of SLAA577.
 
   switch (fs) {
     case 44100:
       /* Assume PLL clock is 84.672 MHz */
-      reg13 = 0;                    // DOSR MSB
-      reg14 = 128;                  // DOSR LSB
-      SetPage(0);                   // PLL clocks are on the page 0.
-      {                             // Command table for PLL configuration.
-        uint8_t pll_table[] = {11,  // First register number
+      SetPage(0);  // CODEC clocks config are on the page 0.
+      {
+        // ADC configuration.
+        reg13 = 0;                  // DOSR MSB
+        reg14 = 128;                // DOSR LSB
+        uint8_t dac_table[] = {11,  // First register number
                                reg11, reg12, reg13, reg14};
-        SendCommand(pll_table, sizeof(pll_table));  // Write to PLL power down.
+        SendCommand(dac_table, sizeof(dac_table));  // Write to PLL power down.
       }
-      reg20 = 0x80;  // AOSR = 128 ( see section 5.2.20 of SLAA577)
-      {              // Command table for PLL configuration.
-        uint8_t pll_table[] = {20,  // First register number
+      {
+        // ADC configuration.
+        reg20 = 0x80;  // AOSR = 128 ( see section 5.2.20 of SLAA577)
+        uint8_t adc_table[] = {20,  // First register number
                                reg20};
-        SendCommand(pll_table, sizeof(pll_table));  // Write to PLL power down.
+        SendCommand(adc_table, sizeof(adc_table));  // Write to PLL power down.
       }
       break;
 
     case 88200:
       /* Assume PLL clock is 84.672 MHz */
-      reg13 = 0;                    // DOSR MSB
-      reg14 = 64;                   // DOSR LSB
-      SetPage(0);                   // PLL clocks are on the page 0.
-      {                             // Command table for PLL configuration.
-        uint8_t pll_table[] = {11,  // First register number
+      SetPage(0);  // CODEC clocks config are on the page 0.
+      {
+        // DAC configuration.
+        reg13 = 0;                  // DOSR MSB
+        reg14 = 64;                 // DOSR LSB
+        uint8_t dac_table[] = {11,  // First register number
                                reg11, reg12, reg13, reg14};
-        SendCommand(pll_table, sizeof(pll_table));  // Write to PLL power down.
+        SendCommand(dac_table, sizeof(dac_table));  // Write to PLL power down.
       }
-      reg20 = 0x40;  // AOSR = 64 ( see section 5.2.20 of SLAA577)
-      {              // Command table for PLL configuration.
-        uint8_t pll_table[] = {20,  // First register number
+      {
+        // ADC configuration.
+        reg20 = 0x40;  // AOSR = 64 ( see section 5.2.20 of SLAA577)
+        uint8_t adc_table[] = {20,  // First register number
                                reg20};
-        SendCommand(pll_table, sizeof(pll_table));  // Write to PLL power down.
+        SendCommand(adc_table, sizeof(adc_table));  // Write to PLL power down.
       }
       break;
     case 176400:
@@ -253,36 +258,40 @@ void Tlv320aic3204AdapterStrategy::ConfigureCODEC(uint32_t const fs) {
       break;
     case 48000:
       /* Assume PLL clock is 86.016 MHz */
-      reg13 = 0;                    // DOSR MSB
-      reg14 = 128;                  // DOSR LSB
-      SetPage(0);                   // PLL clocks are on the page 0.
-      {                             // Command table for PLL configuration.
-        uint8_t pll_table[] = {11,  // First register number
+      SetPage(0);  // CODEC clocks config are on the page 0.
+      {
+        // DAC configuration.
+        reg13 = 0;                  // DOSR MSB
+        reg14 = 128;                // DOSR LSB
+        uint8_t dac_table[] = {11,  // First register number
                                reg11, reg12, reg13, reg14};
-        SendCommand(pll_table, sizeof(pll_table));  // Write to PLL power down.
+        SendCommand(dac_table, sizeof(dac_table));  // Write to PLL power down.
       }
-      reg20 = 0x80;  // AOSR = 128 ( see section 5.2.20 of SLAA577)
-      {              // Command table for PLL configuration.
-        uint8_t pll_table[] = {20,  // First register number
+      {
+        // ADC configuration.
+        reg20 = 0x80;  // AOSR = 128 ( see section 5.2.20 of SLAA577)
+        uint8_t adc_table[] = {20,  // First register number
                                reg20};
-        SendCommand(pll_table, sizeof(pll_table));  // Write to PLL power down.
+        SendCommand(adc_table, sizeof(adc_table));  // Write to PLL power down.
       }
       break;
     case 96000:
       /* Assume PLL clock is 86.016 MHz */
-      reg13 = 0;                    // DOSR MSB
-      reg14 = 64;                   // DOSR LSB
-      SetPage(0);                   // PLL clocks are on the page 0.
-      {                             // Command table for PLL configuration.
-        uint8_t pll_table[] = {11,  // First register number
+      SetPage(0);  // CODEC clocks config are on the page 0.
+      {
+        // DAC configuration.
+        reg13 = 0;                  // DOSR MSB
+        reg14 = 64;                 // DOSR LSB
+        uint8_t dac_table[] = {11,  // First register number
                                reg11, reg12, reg13, reg14};
-        SendCommand(pll_table, sizeof(pll_table));  // Write to PLL power down.
+        SendCommand(dac_table, sizeof(dac_table));  // Write to PLL power down.
       }
-      reg20 = 0x40;  // AOSR = 64 ( see section 5.2.20 of SLAA577)
-      {              // Command table for PLL configuration.
-        uint8_t pll_table[] = {20,  // First register number
+      {
+        // ADC configuration.
+        reg20 = 0x40;  // AOSR = 64 ( see section 5.2.20 of SLAA577)
+        uint8_t adc_table[] = {20,  // First register number
                                reg20};
-        SendCommand(pll_table, sizeof(pll_table));  // Write to PLL power down.
+        SendCommand(adc_table, sizeof(adc_table));  // Write to PLL power down.
       }
       break;
     case 192000:
