@@ -661,6 +661,214 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigurePll_p8) {
       }
 }
 
+// Testing Codec set to 44.1kHz and 48kHz
+TEST(Tlv320aic3204AdapterStrategy, ConfigureCodec_441_48) {
+  MockI2cMaster i2c;
+  const uint8_t device_address = 0x32;
+
+  murasaki::Tlv320aic3204DefaultAdapter adapter(&i2c, device_address);
+
+  // FS=44.1Khz
+  {
+    InSequence dummy;
+
+    // Must set page 0
+    EXPECT_CALL(
+        i2c,                      // Mock
+        Transmit(device_address,  // I2C Address
+                 _,               // Args<1> : Pointer to the data to send.
+                 2,               // Args<2> : Lenght of data in bytes.
+                 NULL,  // no variable to receive the length of transmission
+                 murasaki::kwmsIndefinitely  // Wait forever
+                 ))
+        .With(Args<1, 2>(ElementsAreArray({0, 0})));
+
+    // Set DAC clock
+    EXPECT_CALL(
+        i2c,                      // Mock
+        Transmit(device_address,  // I2C Address
+                 _,               // Args<1> : Pointer to the data to send.
+                 5,               // Args<2> : Lenght of data in bytes.
+                 NULL,  // no variable to receive the length of transmission
+                 murasaki::kwmsIndefinitely  // Wait forever
+                 ))
+        .With(Args<1, 2>(ElementsAreArray({
+            (uint8_t)11,    // reg number.
+            (uint8_t)0x81,  // reg11, power on and MDIV=1
+            (uint8_t)0x81,  // reg12, power on and NDIV=1
+            (uint8_t)0,     // reg13 : reg13+256+reg14 = 128;
+            (uint8_t)128    // reg14
+        })));
+
+    // Set ADC clock
+    EXPECT_CALL(
+        i2c,                      // Mock
+        Transmit(device_address,  // I2C Address
+                 _,               // Args<1> : Pointer to the data to send.
+                 2,               // Args<2> : Lenght of data in bytes.
+                 NULL,  // no variable to receive the length of transmission
+                 murasaki::kwmsIndefinitely  // Wait forever
+                 ))
+        .With(Args<1, 2>(ElementsAreArray({
+            (uint8_t)20,   // reg number.
+            (uint8_t)0x80  // reg20. 0x80 is OSR=128.
+        })));
+  }
+  adapter.ConfigureCODEC(44100);
+
+  // Fs=48kHz
+  {
+    InSequence dummy;
+
+    // Must set page 0
+    EXPECT_CALL(
+        i2c,                      // Mock
+        Transmit(device_address,  // I2C Address
+                 _,               // Args<1> : Pointer to the data to send.
+                 2,               // Args<2> : Lenght of data in bytes.
+                 NULL,  // no variable to receive the length of transmission
+                 murasaki::kwmsIndefinitely  // Wait forever
+                 ))
+        .With(Args<1, 2>(ElementsAreArray({0, 0})));
+
+    // Set DAC clock
+    EXPECT_CALL(
+        i2c,                      // Mock
+        Transmit(device_address,  // I2C Address
+                 _,               // Args<1> : Pointer to the data to send.
+                 5,               // Args<2> : Lenght of data in bytes.
+                 NULL,  // no variable to receive the length of transmission
+                 murasaki::kwmsIndefinitely  // Wait forever
+                 ))
+        .With(Args<1, 2>(ElementsAreArray({
+            (uint8_t)11,    // reg number.
+            (uint8_t)0x81,  // reg11, power on and MDIV=1
+            (uint8_t)0x81,  // reg12, power on and NDIV=1
+            (uint8_t)0,     // reg13 : reg13+256+reg14 = 128;
+            (uint8_t)128    // reg14
+        })));
+
+    // Set ADC clock
+    EXPECT_CALL(
+        i2c,                      // Mock
+        Transmit(device_address,  // I2C Address
+                 _,               // Args<1> : Pointer to the data to send.
+                 2,               // Args<2> : Lenght of data in bytes.
+                 NULL,  // no variable to receive the length of transmission
+                 murasaki::kwmsIndefinitely  // Wait forever
+                 ))
+        .With(Args<1, 2>(ElementsAreArray({
+            (uint8_t)20,   // reg number.
+            (uint8_t)0x80  // reg20. 0x80 is OSR=128.
+        })));
+  }
+  adapter.ConfigureCODEC(48000);
+}
+
+// Testing Codec set to 44.1kHz and 48kHz
+TEST(Tlv320aic3204AdapterStrategy, ConfigureCodec_882_96) {
+  MockI2cMaster i2c;
+  const uint8_t device_address = 0x32;
+
+  murasaki::Tlv320aic3204DefaultAdapter adapter(&i2c, device_address);
+
+  // FS=88.2kHz
+  {
+    InSequence dummy;
+
+    // Must set page 0
+    EXPECT_CALL(
+        i2c,                      // Mock
+        Transmit(device_address,  // I2C Address
+                 _,               // Args<1> : Pointer to the data to send.
+                 2,               // Args<2> : Lenght of data in bytes.
+                 NULL,  // no variable to receive the length of transmission
+                 murasaki::kwmsIndefinitely  // Wait forever
+                 ))
+        .With(Args<1, 2>(ElementsAreArray({0, 0})));
+
+    // Set DAC clock
+    EXPECT_CALL(
+        i2c,                      // Mock
+        Transmit(device_address,  // I2C Address
+                 _,               // Args<1> : Pointer to the data to send.
+                 5,               // Args<2> : Lenght of data in bytes.
+                 NULL,  // no variable to receive the length of transmission
+                 murasaki::kwmsIndefinitely  // Wait forever
+                 ))
+        .With(Args<1, 2>(ElementsAreArray({
+            (uint8_t)11,    // reg number.
+            (uint8_t)0x81,  // reg11, power on and MDIV=1
+            (uint8_t)0x81,  // reg12, power on and NDIV=1
+            (uint8_t)0,     // reg13 : reg13+256+reg14 = 64;
+            (uint8_t)64     // reg14
+        })));
+
+    // Set ADC clock
+    EXPECT_CALL(
+        i2c,                      // Mock
+        Transmit(device_address,  // I2C Address
+                 _,               // Args<1> : Pointer to the data to send.
+                 2,               // Args<2> : Lenght of data in bytes.
+                 NULL,  // no variable to receive the length of transmission
+                 murasaki::kwmsIndefinitely  // Wait forever
+                 ))
+        .With(Args<1, 2>(ElementsAreArray({
+            (uint8_t)20,   // reg number.
+            (uint8_t)0x40  // reg20. 0x80 is OSR=64.
+        })));
+  }
+  adapter.ConfigureCODEC(88200);
+
+  // Fs=96kHz
+  {
+    InSequence dummy;
+
+    // Must set page 0
+    EXPECT_CALL(
+        i2c,                      // Mock
+        Transmit(device_address,  // I2C Address
+                 _,               // Args<1> : Pointer to the data to send.
+                 2,               // Args<2> : Lenght of data in bytes.
+                 NULL,  // no variable to receive the length of transmission
+                 murasaki::kwmsIndefinitely  // Wait forever
+                 ))
+        .With(Args<1, 2>(ElementsAreArray({0, 0})));
+
+    // Set DAC clock
+    EXPECT_CALL(
+        i2c,                      // Mock
+        Transmit(device_address,  // I2C Address
+                 _,               // Args<1> : Pointer to the data to send.
+                 5,               // Args<2> : Lenght of data in bytes.
+                 NULL,  // no variable to receive the length of transmission
+                 murasaki::kwmsIndefinitely  // Wait forever
+                 ))
+        .With(Args<1, 2>(ElementsAreArray({
+            (uint8_t)11,    // reg number.
+            (uint8_t)0x81,  // reg11, power on and MDIV=1
+            (uint8_t)0x81,  // reg12, power on and NDIV=1
+            (uint8_t)0,     // reg13 : reg13+256+reg14 = 64;
+            (uint8_t)64     // reg14
+        })));
+
+    // Set ADC clock
+    EXPECT_CALL(
+        i2c,                      // Mock
+        Transmit(device_address,  // I2C Address
+                 _,               // Args<1> : Pointer to the data to send.
+                 2,               // Args<2> : Lenght of data in bytes.
+                 NULL,  // no variable to receive the length of transmission
+                 murasaki::kwmsIndefinitely  // Wait forever
+                 ))
+        .With(Args<1, 2>(ElementsAreArray({
+            (uint8_t)20,   // reg number.
+            (uint8_t)0x40  // reg20. 0x80 is OSR=64.
+        })));
+  }
+  adapter.ConfigureCODEC(96000);
+}
+
 // Testing Reset command .
 TEST(Tlv320aic3204AdapterStrategy, ShutdownPll) {
   MockI2cMaster i2c;

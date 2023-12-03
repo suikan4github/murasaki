@@ -182,6 +182,13 @@ void Tlv320aic3204AdapterStrategy::ShutdownPll(void) {
  * We assume the internal PLL clock as :
  * \li 86.016 MHz for Fs==48kHz ( Fs*128*2*7)
  * \li 84.672 MHz for Fs==44.1kHz (Fs*128*3*5)
+ *
+ * In this function, we set the NDAC,MDAC, to 1, always.
+ * The NADC and MADC is left untouchged, and ADC_MOD_CLK is from DAC.
+ * And then set the AOSR and DOSR to :
+ * \li 128 for Fs=48kHz and 44.1kHz.
+ * \li 64 for Fs=96kHz and 88.2kHz.
+ * \li 23 for Fs=192kHz and 176.4kHz.
  */
 void Tlv320aic3204AdapterStrategy::ConfigureCODEC(uint32_t const fs) {
   CODEC_SYSLOG("Enter fs : %d.", fs)
@@ -189,14 +196,56 @@ void Tlv320aic3204AdapterStrategy::ConfigureCODEC(uint32_t const fs) {
   MURASAKI_ASSERT(fs == 44100 || fs == 88200 || fs == 176400 || fs == 48000 ||
                   fs == 96000 || fs == 192000)
 
+  u_int8_t reg11 = 0;  // Clock Setting Register 6, NDAC Values
+  u_int8_t reg12 = 0;  // Clock Setting Register 7, MDAC Values
+  u_int8_t reg13 = 0;  // Clock Setting Register 4, DOSR (MSB)
+  u_int8_t reg14 = 0;  // Clock Setting Register 5, DOSR (LSB)
+  u_int8_t reg20 = 0;  // Clock Setting Register 4, AOSR (MSB)
+
+  // Set the MDAC and NDAC divider
+  reg11 = 1 << 7 |  // NDAC Divider power up.
+          1;        // DNAC = 1;
+  reg12 = 1 << 7 |  // MDAC Divider power up.
+          1;        // MNAC = 1;
+
+  // We don't set the MADC nor NADC.
+  // By leaving MADC power down, ADC_MOD_CLK will use MDAC output.
+
   switch (fs) {
     case 44100:
       /* Assume PLL clock is 84.672 MHz */
-      MURASAKI_ASSERT(false)  // Not implemented yet.
+      reg13 = 0;                    // DOSR MSB
+      reg14 = 128;                  // DOSR LSB
+      SetPage(0);                   // PLL clocks are on the page 0.
+      {                             // Command table for PLL configuration.
+        uint8_t pll_table[] = {11,  // First register number
+                               reg11, reg12, reg13, reg14};
+        SendCommand(pll_table, sizeof(pll_table));  // Write to PLL power down.
+      }
+      reg20 = 0x80;  // AOSR = 128 ( see section 5.2.20 of SLAA577)
+      {              // Command table for PLL configuration.
+        uint8_t pll_table[] = {20,  // First register number
+                               reg20};
+        SendCommand(pll_table, sizeof(pll_table));  // Write to PLL power down.
+      }
       break;
+
     case 88200:
       /* Assume PLL clock is 84.672 MHz */
-      MURASAKI_ASSERT(false)  // Not implemented yet.
+      reg13 = 0;                    // DOSR MSB
+      reg14 = 64;                   // DOSR LSB
+      SetPage(0);                   // PLL clocks are on the page 0.
+      {                             // Command table for PLL configuration.
+        uint8_t pll_table[] = {11,  // First register number
+                               reg11, reg12, reg13, reg14};
+        SendCommand(pll_table, sizeof(pll_table));  // Write to PLL power down.
+      }
+      reg20 = 0x40;  // AOSR = 64 ( see section 5.2.20 of SLAA577)
+      {              // Command table for PLL configuration.
+        uint8_t pll_table[] = {20,  // First register number
+                               reg20};
+        SendCommand(pll_table, sizeof(pll_table));  // Write to PLL power down.
+      }
       break;
     case 176400:
       /* Assume PLL clock is 84.672 MHz */
@@ -204,11 +253,37 @@ void Tlv320aic3204AdapterStrategy::ConfigureCODEC(uint32_t const fs) {
       break;
     case 48000:
       /* Assume PLL clock is 86.016 MHz */
-      MURASAKI_ASSERT(false)  // Not implemented yet.
+      reg13 = 0;                    // DOSR MSB
+      reg14 = 128;                  // DOSR LSB
+      SetPage(0);                   // PLL clocks are on the page 0.
+      {                             // Command table for PLL configuration.
+        uint8_t pll_table[] = {11,  // First register number
+                               reg11, reg12, reg13, reg14};
+        SendCommand(pll_table, sizeof(pll_table));  // Write to PLL power down.
+      }
+      reg20 = 0x80;  // AOSR = 128 ( see section 5.2.20 of SLAA577)
+      {              // Command table for PLL configuration.
+        uint8_t pll_table[] = {20,  // First register number
+                               reg20};
+        SendCommand(pll_table, sizeof(pll_table));  // Write to PLL power down.
+      }
       break;
     case 96000:
       /* Assume PLL clock is 86.016 MHz */
-      MURASAKI_ASSERT(false)  // Not implemented yet.
+      reg13 = 0;                    // DOSR MSB
+      reg14 = 64;                   // DOSR LSB
+      SetPage(0);                   // PLL clocks are on the page 0.
+      {                             // Command table for PLL configuration.
+        uint8_t pll_table[] = {11,  // First register number
+                               reg11, reg12, reg13, reg14};
+        SendCommand(pll_table, sizeof(pll_table));  // Write to PLL power down.
+      }
+      reg20 = 0x40;  // AOSR = 64 ( see section 5.2.20 of SLAA577)
+      {              // Command table for PLL configuration.
+        uint8_t pll_table[] = {20,  // First register number
+                               reg20};
+        SendCommand(pll_table, sizeof(pll_table));  // Write to PLL power down.
+      }
       break;
     case 192000:
       /* Assume PLL clock is 84.016 MHz */
