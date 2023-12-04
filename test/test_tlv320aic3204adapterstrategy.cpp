@@ -294,7 +294,7 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigureClock) {
                          murasaki::Tlv320aic3204::kBclk);
 }
 
-// Testing ConfigureClock() .
+// Testing ConfigurePLL() .
 // Checking all combination of the role and PLL input,
 // except the forbidden case.
 TEST(Tlv320aic3204AdapterStrategy, ConfigurePll_p1) {
@@ -345,7 +345,8 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigurePll_p1) {
         adapter.ConfigurePll(r, j, d, p);
       }
 }
-// Testing ConfigureClock() .
+
+// Testing ConfigurePLL() .
 // Checking all combination of the role and PLL input,
 // except the forbidden case.
 TEST(Tlv320aic3204AdapterStrategy, ConfigurePll_p2) {
@@ -396,7 +397,8 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigurePll_p2) {
         adapter.ConfigurePll(r, j, d, p);
       }
 }
-// Testing ConfigureClock() .
+
+// Testing ConfigurePLL() .
 // Checking all combination of the role and PLL input,
 // except the forbidden case.
 TEST(Tlv320aic3204AdapterStrategy, ConfigurePll_p3) {
@@ -447,7 +449,8 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigurePll_p3) {
         adapter.ConfigurePll(r, j, d, p);
       }
 }
-// Testing ConfigureClock() .
+
+// Testing ConfigurePLL() .
 // Checking all combination of the role and PLL input,
 // except the forbidden case.
 TEST(Tlv320aic3204AdapterStrategy, ConfigurePll_p4) {
@@ -498,7 +501,8 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigurePll_p4) {
         adapter.ConfigurePll(r, j, d, p);
       }
 }
-// Testing ConfigureClock() .
+
+// Testing ConfigurePLL() .
 // Checking all combination of the role and PLL input,
 // except the forbidden case.
 TEST(Tlv320aic3204AdapterStrategy, ConfigurePll_p5) {
@@ -549,7 +553,8 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigurePll_p5) {
         adapter.ConfigurePll(r, j, d, p);
       }
 }
-// Testing ConfigureClock() .
+
+// Testing ConfigurePLL() .
 // Checking all combination of the role and PLL input,
 // except the forbidden case.
 TEST(Tlv320aic3204AdapterStrategy, ConfigurePll_p6) {
@@ -600,7 +605,8 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigurePll_p6) {
         adapter.ConfigurePll(r, j, d, p);
       }
 }
-// Testing ConfigureClock() .
+
+// Testing ConfigurePLL() .
 // Checking all combination of the role and PLL input,
 // except the forbidden case.
 TEST(Tlv320aic3204AdapterStrategy, ConfigurePll_p7) {
@@ -651,7 +657,8 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigurePll_p7) {
         adapter.ConfigurePll(r, j, d, p);
       }
 }
-// Testing ConfigureClock() .
+
+// Testing ConfigurePLL() .
 // Checking all combination of the role and PLL input,
 // except the forbidden case.
 TEST(Tlv320aic3204AdapterStrategy, ConfigurePll_p8) {
