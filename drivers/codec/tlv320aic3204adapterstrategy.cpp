@@ -215,93 +215,49 @@ void Tlv320aic3204AdapterStrategy::ConfigureCODEC(uint32_t const fs) {
   switch (fs) {
     case 44100:
       /* Assume PLL clock is 84.672 MHz */
-      SetPage(0);  // CODEC clocks config are on the page 0.
-      {
-        // ADC configuration.
-        reg13 = 0;                  // DOSR MSB
-        reg14 = 128;                // DOSR LSB
-        uint8_t dac_table[] = {11,  // First register number
-                               reg11, reg12, reg13, reg14};
-        SendCommand(dac_table, sizeof(dac_table));  // Write to PLL power down.
-      }
-      {
-        // ADC configuration.
-        reg20 = 0x80;  // AOSR = 128 ( see section 5.2.20 of SLAA577)
-        uint8_t adc_table[] = {20,  // First register number
-                               reg20};
-        SendCommand(adc_table, sizeof(adc_table));  // Write to PLL power down.
-      }
+    case 48000:
+      /* Assume PLL clock is 86.016 MHz */
+      reg13 = 0;     // DOSR MSB (DOSR=128)
+      reg14 = 128;   // DOSR LSB
+      reg20 = 0x80;  // AOSR = 128 ( see section 5.2.20 of SLAA577)
       break;
 
     case 88200:
       /* Assume PLL clock is 84.672 MHz */
-      SetPage(0);  // CODEC clocks config are on the page 0.
-      {
-        // DAC configuration.
-        reg13 = 0;                  // DOSR MSB
-        reg14 = 64;                 // DOSR LSB
-        uint8_t dac_table[] = {11,  // First register number
-                               reg11, reg12, reg13, reg14};
-        SendCommand(dac_table, sizeof(dac_table));  // Write to PLL power down.
-      }
-      {
-        // ADC configuration.
-        reg20 = 0x40;  // AOSR = 64 ( see section 5.2.20 of SLAA577)
-        uint8_t adc_table[] = {20,  // First register number
-                               reg20};
-        SendCommand(adc_table, sizeof(adc_table));  // Write to PLL power down.
-      }
+    case 96000:
+      /* Assume PLL clock is 86.016 MHz */
+      reg13 = 0;     // DOSR MSB (DOSR=64)
+      reg14 = 64;    // DOSR LSB
+      reg20 = 0x40;  // AOSR = 64 ( see section 5.2.20 of SLAA577)
       break;
     case 176400:
       /* Assume PLL clock is 84.672 MHz */
-      MURASAKI_ASSERT(false)  // Not implemented yet.
-      break;
-    case 48000:
-      /* Assume PLL clock is 86.016 MHz */
-      SetPage(0);  // CODEC clocks config are on the page 0.
-      {
-        // DAC configuration.
-        reg13 = 0;                  // DOSR MSB
-        reg14 = 128;                // DOSR LSB
-        uint8_t dac_table[] = {11,  // First register number
-                               reg11, reg12, reg13, reg14};
-        SendCommand(dac_table, sizeof(dac_table));  // Write to PLL power down.
-      }
-      {
-        // ADC configuration.
-        reg20 = 0x80;  // AOSR = 128 ( see section 5.2.20 of SLAA577)
-        uint8_t adc_table[] = {20,  // First register number
-                               reg20};
-        SendCommand(adc_table, sizeof(adc_table));  // Write to PLL power down.
-      }
-      break;
-    case 96000:
-      /* Assume PLL clock is 86.016 MHz */
-      SetPage(0);  // CODEC clocks config are on the page 0.
-      {
-        // DAC configuration.
-        reg13 = 0;                  // DOSR MSB
-        reg14 = 64;                 // DOSR LSB
-        uint8_t dac_table[] = {11,  // First register number
-                               reg11, reg12, reg13, reg14};
-        SendCommand(dac_table, sizeof(dac_table));  // Write to PLL power down.
-      }
-      {
-        // ADC configuration.
-        reg20 = 0x40;  // AOSR = 64 ( see section 5.2.20 of SLAA577)
-        uint8_t adc_table[] = {20,  // First register number
-                               reg20};
-        SendCommand(adc_table, sizeof(adc_table));  // Write to PLL power down.
-      }
-      break;
     case 192000:
       /* Assume PLL clock is 84.016 MHz */
-      MURASAKI_ASSERT(false)  // Not implemented yet.
+      reg13 = 0;     // DOSR MSB (DOSR=32)
+      reg14 = 32;    // DOSR LSB
+      reg20 = 0x20;  // AOSR = 32 ( see section 5.2.20 of SLAA577)
       break;
 
     default:
       break;
   }
+
+  SetPage(0);  // CODEC clocks config are on the page 0.
+  {
+    // ADC configuration.
+    uint8_t dac_table[] = {11,  // First register number
+                           reg11, reg12, reg13, reg14};
+    SendCommand(dac_table, sizeof(dac_table));  // Write to PLL power down.
+  }
+  {
+    // ADC configuration.
+    uint8_t adc_table[] = {20,  // First register number
+                           reg20};
+    SendCommand(adc_table, sizeof(adc_table));  // Write to PLL power down.
+  }
+
+  MURASAKI_ASSERT(false)  // Need to implement the filter choice
 
   CODEC_SYSLOG("Leave.")
 }
