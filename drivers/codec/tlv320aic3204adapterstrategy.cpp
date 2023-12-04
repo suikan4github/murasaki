@@ -259,7 +259,7 @@ void Tlv320aic3204AdapterStrategy::ConfigureCODEC(uint32_t const fs) {
     SendCommand(adc_table, sizeof(adc_table));  // Write to PLL power down.
   }
 
-  //   MURASAKI_ASSERT(false)  // Need to implement the filter choice
+  MURASAKI_ASSERT(false)  // Need to implement the filter choice
 
   CODEC_SYSLOG("Leave.")
 }
