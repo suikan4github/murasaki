@@ -90,6 +90,28 @@ TEST(Tlv320aic3204AdapterStrategy, Reset) {
   {
     InSequence dummy;
 
+    // Set page 1
+    EXPECT_CALL(
+        i2c,                      // Mock
+        Transmit(device_address,  // I2C Address
+                 _,               // Args<1> : Pointer to the data to send.
+                 2,               // Args<2> : Lenght of data in bytes.
+                 NULL,  // no variable to receive the length of transmission
+                 murasaki::kwmsIndefinitely  // Wait forever
+                 ))
+        .With(Args<1, 2>(ElementsAreArray({0, 1})));
+
+    // Then write 0 to register 9 to mute analog output.
+    EXPECT_CALL(
+        i2c,                      // Mock
+        Transmit(device_address,  // I2C Address
+                 _,               // Args<1> : Pointer to the data to send.
+                 2,               // Args<2> : Lenght of data in bytes.
+                 NULL,  // no variable to receive the length of transmission
+                 murasaki::kwmsIndefinitely  // Wait forever
+                 ))
+        .With(Args<1, 2>(ElementsAreArray({9, 0})));
+
     // Must set page 0
     EXPECT_CALL(
         i2c,                      // Mock
@@ -99,10 +121,20 @@ TEST(Tlv320aic3204AdapterStrategy, Reset) {
                  NULL,  // no variable to receive the length of transmission
                  murasaki::kwmsIndefinitely  // Wait forever
                  ))
-        .With(Args<1, 2>(ElementsAreArray({0, 0})))
-        .Times(1);
+        .With(Args<1, 2>(ElementsAreArray({0, 0})));
 
-    // Then write 1 to register 1.
+    // wite 0x14, 0x0c to register 3F to power down DAC
+    EXPECT_CALL(
+        i2c,                      // Mock
+        Transmit(device_address,  // I2C Address
+                 _,               // Args<1> : Pointer to the data to send.
+                 3,               // Args<2> : Lenght of data in bytes.
+                 NULL,  // no variable to receive the length of transmission
+                 murasaki::kwmsIndefinitely  // Wait forever
+                 ))
+        .With(Args<1, 2>(ElementsAreArray({0x3F, 0x14, 0x0c})));
+
+    // write 0 to register 0x51 to power down ADC.
     EXPECT_CALL(
         i2c,                      // Mock
         Transmit(device_address,  // I2C Address
@@ -111,8 +143,18 @@ TEST(Tlv320aic3204AdapterStrategy, Reset) {
                  NULL,  // no variable to receive the length of transmission
                  murasaki::kwmsIndefinitely  // Wait forever
                  ))
-        .With(Args<1, 2>(ElementsAreArray({1, 1})))
-        .Times(1);
+        .With(Args<1, 2>(ElementsAreArray({0x51, 0})));
+
+    // Then write 1 to register 1 to reset entire CODEC.
+    EXPECT_CALL(
+        i2c,                      // Mock
+        Transmit(device_address,  // I2C Address
+                 _,               // Args<1> : Pointer to the data to send.
+                 2,               // Args<2> : Lenght of data in bytes.
+                 NULL,  // no variable to receive the length of transmission
+                 murasaki::kwmsIndefinitely  // Wait forever
+                 ))
+        .With(Args<1, 2>(ElementsAreArray({1, 1})));
   }
   adapter.Reset();
 }
@@ -717,6 +759,21 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigureCodec_441_480) {
               (uint8_t)0,    // reg 19. NADC is disable.
               (uint8_t)0x80  // reg20. 0x80 is OSR=128.
           })));
+
+      // Set Signal Processing Block
+      EXPECT_CALL(
+          i2c,                      // Mock
+          Transmit(device_address,  // I2C Address
+                   _,               // Args<1> : Pointer to the data to send.
+                   3,               // Args<2> : Lenght of data in bytes.
+                   NULL,  // no variable to receive the length of transmission
+                   murasaki::kwmsIndefinitely  // Wait forever
+                   ))
+          .With(Args<1, 2>(ElementsAreArray({
+              (uint8_t)60,  // reg number.
+              (uint8_t)1,   // reg 60. PRB_P1.
+              (uint8_t)1    // reg 61. PRB_R1.
+          })));
     }
     adapter.ConfigureCODEC(fs);
   }
@@ -778,6 +835,21 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigureCodec_882_960) {
               (uint8_t)0,    // reg 19. NADC is disable.
               (uint8_t)0x40  // reg20. 0x80 is OSR=64.
           })));
+
+      // Set Signal Processing Block
+      EXPECT_CALL(
+          i2c,                      // Mock
+          Transmit(device_address,  // I2C Address
+                   _,               // Args<1> : Pointer to the data to send.
+                   3,               // Args<2> : Lenght of data in bytes.
+                   NULL,  // no variable to receive the length of transmission
+                   murasaki::kwmsIndefinitely  // Wait forever
+                   ))
+          .With(Args<1, 2>(ElementsAreArray({
+              (uint8_t)60,  // reg number.
+              (uint8_t)7,   // reg 60. PRB_P1.
+              (uint8_t)7    // reg 61. PRB_R1.
+          })));
     }
     adapter.ConfigureCODEC(fs);
   }
@@ -838,6 +910,21 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigureCodec_1764_1920) {
               (uint8_t)0,    // reg 18. MADC is disable.
               (uint8_t)0,    // reg 19. NADC is disable.
               (uint8_t)0x20  // reg20. 0x20 is OSR=32.
+          })));
+
+      // Set Signal Processing Block
+      EXPECT_CALL(
+          i2c,                      // Mock
+          Transmit(device_address,  // I2C Address
+                   _,               // Args<1> : Pointer to the data to send.
+                   3,               // Args<2> : Lenght of data in bytes.
+                   NULL,  // no variable to receive the length of transmission
+                   murasaki::kwmsIndefinitely  // Wait forever
+                   ))
+          .With(Args<1, 2>(ElementsAreArray({
+              (uint8_t)60,  // reg number.
+              (uint8_t)17,  // reg 60. PRB_P1.
+              (uint8_t)7    // reg 61. PRB_R1.
           })));
     }
     adapter.ConfigureCODEC(fs);

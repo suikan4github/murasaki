@@ -53,14 +53,52 @@ void Tlv320aic3204AdapterStrategy::SendCommand(const uint8_t command[],
 void Tlv320aic3204AdapterStrategy::Reset() {
   CODEC_SYSLOG("Enter.")
 
-  uint8_t command[] = {
-      1,  // Register Address => Software reset
-      1   // Self cleaning software reset
-  };
+  /*
+   * First of all, mute and power down the CODEC.
+   * We hope this power down will relax the noise of the CODEC.
+   */
 
-  SetPage(0);                             // Page 0 for software reset register.
-  SendCommand(command, sizeof(command));  // Write to software reset.
+  SetPage(1);  // Page 1 for Output driver register.
+  {
+    uint8_t command[] = {
+        9,  // Register Address => Register 9: Output Driver Power Control
+        0   // Power down all output.
+    };
+    SendCommand(command, sizeof(command));  // Write to software reset.
+  }
 
+  SetPage(0);  // Page 0 for successive action.
+
+  // Page 0, DAC power down.
+  {
+    uint8_t command[] = {
+        0x3F,  // Register Address => DAC register
+        0x14,  // Reg 3f : DAC Power down. Right to Right, Left to Left.
+        0x0c   // Reg 40 : DAC Mute both channel.
+    };
+    SendCommand(command, sizeof(command));  // Write to software reset.
+  }
+
+  // Page 0, ADC power down
+  {
+    uint8_t command[] = {
+        0x51,  // Register Address => Page 0 / Register 81: ADC Channel Setup
+        0x00   // Reg 51 : Power down and Mute ADC.
+    };
+    SendCommand(command, sizeof(command));  // Write to software reset.
+  }
+
+  // to be sure, let's wait 10mS.
+  murasaki::Sleep(10);
+
+  // Page 0, soft reset register.
+  {
+    uint8_t command[] = {
+        1,  // Register Address => Software reset
+        1   // Self cleaning software reset
+    };
+    SendCommand(command, sizeof(command));  // Write to software reset.
+  }
   CODEC_SYSLOG("Leave.")
 }
 
@@ -203,6 +241,8 @@ void Tlv320aic3204AdapterStrategy::ConfigureCODEC(uint32_t const fs) {
   u_int8_t reg18 = 0;  // Clock Setting Register 8, NADC Value
   u_int8_t reg19 = 0;  // Clock Setting Register 9, MADC Value
   u_int8_t reg20 = 0;  // Clock Setting Register 10, AOSR (MSB)
+  u_int8_t reg60 = 0;  // DAC Sig Processing Block Control Register
+  u_int8_t reg61 = 0;  // ADC Sig Processing Block Control Register
 
   // Set the MDAC and NDAC divider
   reg11 = 1 << 7 |  // NDAC Divider power up.
@@ -214,6 +254,9 @@ void Tlv320aic3204AdapterStrategy::ConfigureCODEC(uint32_t const fs) {
   // By leaving MADC power down, ADC_MOD_CLK will use MDAC output.
   // See section 5.2.18 and 5.2.19 of SLAA577.
 
+  // DAC SPRB : 48,96,192 = PRB_P1,7,17
+  // ADC SPRB : 48,96,192 = PRB_R1,7,7 ( SLAA577 specifies PRB_R13 for 192kHz ).
+
   switch (fs) {
     case 44100:
       /* Assume PLL clock is 84.672 MHz */
@@ -222,6 +265,8 @@ void Tlv320aic3204AdapterStrategy::ConfigureCODEC(uint32_t const fs) {
       reg13 = 0;     // DOSR MSB (DOSR=128)
       reg14 = 128;   // DOSR LSB
       reg20 = 0x80;  // AOSR = 128 ( see section 5.2.20 of SLAA577)
+      reg60 = 1;     // PBR_P1
+      reg61 = 1;     // PBR_R1
       break;
 
     case 88200:
@@ -231,6 +276,8 @@ void Tlv320aic3204AdapterStrategy::ConfigureCODEC(uint32_t const fs) {
       reg13 = 0;     // DOSR MSB (DOSR=64)
       reg14 = 64;    // DOSR LSB
       reg20 = 0x40;  // AOSR = 64 ( see section 5.2.20 of SLAA577)
+      reg60 = 7;     // PBR_P7
+      reg61 = 7;     // PBR_R7
       break;
     case 176400:
       /* Assume PLL clock is 84.672 MHz */
@@ -239,6 +286,10 @@ void Tlv320aic3204AdapterStrategy::ConfigureCODEC(uint32_t const fs) {
       reg13 = 0;     // DOSR MSB (DOSR=32)
       reg14 = 32;    // DOSR LSB
       reg20 = 0x20;  // AOSR = 32 ( see section 5.2.20 of SLAA577)
+      reg60 = 17;    // PBR_P17
+      reg61 = 7;     // PBR_R7 ( Spec says to use R13 which is narrower)
+      // With PBR_R7, +24dB compensation is needed, according to :
+      // https://e2e.ti.com/support/audio-group/audio/f/audio-forum/354873/tlv320aic3204-frequency-response-at-192khz-processing-for-adc
       break;
 
     default:
@@ -259,7 +310,12 @@ void Tlv320aic3204AdapterStrategy::ConfigureCODEC(uint32_t const fs) {
     SendCommand(adc_table, sizeof(adc_table));  // Write to PLL power down.
   }
 
-  MURASAKI_ASSERT(false)  // Need to implement the filter choice
+  {
+    // DAC and ADC Signal Processing Block configuration
+    uint8_t prb_table[] = {60,  // First register number
+                           reg60, reg61};
+    SendCommand(prb_table, sizeof(prb_table));  // Write to PLL power down.
+  }
 
   CODEC_SYSLOG("Leave.")
 }
