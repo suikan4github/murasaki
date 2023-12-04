@@ -200,7 +200,9 @@ void Tlv320aic3204AdapterStrategy::ConfigureCODEC(uint32_t const fs) {
   u_int8_t reg12 = 0;  // Clock Setting Register 7, MDAC Values
   u_int8_t reg13 = 0;  // Clock Setting Register 4, DOSR (MSB)
   u_int8_t reg14 = 0;  // Clock Setting Register 5, DOSR (LSB)
-  u_int8_t reg20 = 0;  // Clock Setting Register 4, AOSR (MSB)
+  u_int8_t reg18 = 0;  // Clock Setting Register 8, NADC Value
+  u_int8_t reg19 = 0;  // Clock Setting Register 9, MADC Value
+  u_int8_t reg20 = 0;  // Clock Setting Register 10, AOSR (MSB)
 
   // Set the MDAC and NDAC divider
   reg11 = 1 << 7 |  // NDAC Divider power up.
@@ -208,7 +210,7 @@ void Tlv320aic3204AdapterStrategy::ConfigureCODEC(uint32_t const fs) {
   reg12 = 1 << 7 |  // MDAC Divider power up.
           1;        // MNAC = 1;
 
-  // We don't set the MADC nor NADC.
+  // We disable the NADC and MADC ( = set to zero ).
   // By leaving MADC power down, ADC_MOD_CLK will use MDAC output.
   // See section 5.2.18 and 5.2.19 of SLAA577.
 
@@ -252,12 +254,12 @@ void Tlv320aic3204AdapterStrategy::ConfigureCODEC(uint32_t const fs) {
   }
   {
     // ADC configuration.
-    uint8_t adc_table[] = {20,  // First register number
-                           reg20};
+    uint8_t adc_table[] = {18,  // First register number
+                           reg18, reg19, reg20};
     SendCommand(adc_table, sizeof(adc_table));  // Write to PLL power down.
   }
 
-  MURASAKI_ASSERT(false)  // Need to implement the filter choice
+  //   MURASAKI_ASSERT(false)  // Need to implement the filter choice
 
   CODEC_SYSLOG("Leave.")
 }

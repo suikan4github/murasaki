@@ -698,7 +698,7 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigureCodec_441_480) {
               (uint8_t)11,    // reg number.
               (uint8_t)0x81,  // reg11, power on and MDIV=1
               (uint8_t)0x81,  // reg12, power on and NDIV=1
-              (uint8_t)0,     // reg13 : reg13+256+reg14 = 128;
+              (uint8_t)0,     // reg13 : reg13*256+reg14 = 128;
               (uint8_t)128    // reg14
           })));
 
@@ -707,12 +707,14 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigureCodec_441_480) {
           i2c,                      // Mock
           Transmit(device_address,  // I2C Address
                    _,               // Args<1> : Pointer to the data to send.
-                   2,               // Args<2> : Lenght of data in bytes.
+                   4,               // Args<2> : Lenght of data in bytes.
                    NULL,  // no variable to receive the length of transmission
                    murasaki::kwmsIndefinitely  // Wait forever
                    ))
           .With(Args<1, 2>(ElementsAreArray({
-              (uint8_t)20,   // reg number.
+              (uint8_t)18,   // reg number.
+              (uint8_t)0,    // reg 18. MADC is disable.
+              (uint8_t)0,    // reg 19. NADC is disable.
               (uint8_t)0x80  // reg20. 0x80 is OSR=128.
           })));
     }
@@ -757,7 +759,7 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigureCodec_882_960) {
               (uint8_t)11,    // reg number.
               (uint8_t)0x81,  // reg11, power on and MDIV=1
               (uint8_t)0x81,  // reg12, power on and NDIV=1
-              (uint8_t)0,     // reg13 : reg13+256+reg14 = 64;
+              (uint8_t)0,     // reg13 : reg13*256+reg14 = 64;
               (uint8_t)64     // reg14
           })));
 
@@ -766,12 +768,14 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigureCodec_882_960) {
           i2c,                      // Mock
           Transmit(device_address,  // I2C Address
                    _,               // Args<1> : Pointer to the data to send.
-                   2,               // Args<2> : Lenght of data in bytes.
+                   4,               // Args<2> : Lenght of data in bytes.
                    NULL,  // no variable to receive the length of transmission
                    murasaki::kwmsIndefinitely  // Wait forever
                    ))
           .With(Args<1, 2>(ElementsAreArray({
-              (uint8_t)20,   // reg number.
+              (uint8_t)18,   // reg number.
+              (uint8_t)0,    // reg 18. MADC is disable.
+              (uint8_t)0,    // reg 19. NADC is disable.
               (uint8_t)0x40  // reg20. 0x80 is OSR=64.
           })));
     }
@@ -816,7 +820,7 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigureCodec_1764_1920) {
               (uint8_t)11,    // reg number.
               (uint8_t)0x81,  // reg11, power on and MDIV=1
               (uint8_t)0x81,  // reg12, power on and NDIV=1
-              (uint8_t)0,     // reg13 : reg13+256+reg14 = 128;
+              (uint8_t)0,     // reg13 : reg13*256+reg14 = 32;
               (uint8_t)32     // reg14
           })));
 
@@ -825,13 +829,15 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigureCodec_1764_1920) {
           i2c,                      // Mock
           Transmit(device_address,  // I2C Address
                    _,               // Args<1> : Pointer to the data to send.
-                   2,               // Args<2> : Lenght of data in bytes.
+                   4,               // Args<2> : Lenght of data in bytes.
                    NULL,  // no variable to receive the length of transmission
                    murasaki::kwmsIndefinitely  // Wait forever
                    ))
           .With(Args<1, 2>(ElementsAreArray({
-              (uint8_t)20,   // reg number.
-              (uint8_t)0x20  // reg20. 0x80 is OSR=128.
+              (uint8_t)18,   // reg number.
+              (uint8_t)0,    // reg 18. MADC is disable.
+              (uint8_t)0,    // reg 19. NADC is disable.
+              (uint8_t)0x20  // reg20. 0x20 is OSR=32.
           })));
     }
     adapter.ConfigureCODEC(fs);
