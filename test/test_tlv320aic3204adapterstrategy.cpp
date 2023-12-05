@@ -19,7 +19,7 @@ TEST(Tlv320aic3204AdapterStrategy, SendCommand) {
       i2c,                      // Mock
       Transmit(device_address,  // I2C Address
                _,               // Args<1> : Pointer to the data to send.
-               sizeof(table1),  // Args<2> : Lenght of data in bytes.
+               sizeof(table1),  // Args<2> : Length of data in bytes.
                NULL,  // no variable to receive the length of transmission
                murasaki::kwmsIndefinitely  // Wait forever
                ))
@@ -35,7 +35,7 @@ TEST(Tlv320aic3204AdapterStrategy, SendCommand) {
       i2c,                      // Mock
       Transmit(device_address,  // I2C Address
                _,               // Args<1> : Pointer to the data to send.
-               sizeof(table2),  // Args<2> : Lenght of data in bytes.
+               sizeof(table2),  // Args<2> : Length of data in bytes.
                NULL,  // no variable to receive the length of transmission
                murasaki::kwmsIndefinitely  // Wait forever
                ))
@@ -56,7 +56,7 @@ TEST(Tlv320aic3204AdapterStrategy, SetPage) {
       i2c,                      // Mock
       Transmit(device_address,  // I2C Address
                _,               // Args<1> : Pointer to the data to send.
-               2,               // Args<2> : Lenght of data in bytes.
+               2,               // Args<2> : Length of data in bytes.
                NULL,  // no variable to receive the length of transmission
                murasaki::kwmsIndefinitely  // Wait forever
                ))
@@ -70,7 +70,7 @@ TEST(Tlv320aic3204AdapterStrategy, SetPage) {
       i2c,                      // Mock
       Transmit(device_address,  // I2C Address
                _,               // Args<1> : Pointer to the data to send.
-               2,               // Args<2> : Lenght of data in bytes.
+               2,               // Args<2> : Length of data in bytes.
                NULL,  // no variable to receive the length of transmission
                murasaki::kwmsIndefinitely  // Wait forever
                ))
@@ -95,7 +95,7 @@ TEST(Tlv320aic3204AdapterStrategy, Reset) {
         i2c,                      // Mock
         Transmit(device_address,  // I2C Address
                  _,               // Args<1> : Pointer to the data to send.
-                 2,               // Args<2> : Lenght of data in bytes.
+                 2,               // Args<2> : Length of data in bytes.
                  NULL,  // no variable to receive the length of transmission
                  murasaki::kwmsIndefinitely  // Wait forever
                  ))
@@ -106,7 +106,7 @@ TEST(Tlv320aic3204AdapterStrategy, Reset) {
         i2c,                      // Mock
         Transmit(device_address,  // I2C Address
                  _,               // Args<1> : Pointer to the data to send.
-                 2,               // Args<2> : Lenght of data in bytes.
+                 2,               // Args<2> : Length of data in bytes.
                  NULL,  // no variable to receive the length of transmission
                  murasaki::kwmsIndefinitely  // Wait forever
                  ))
@@ -117,7 +117,7 @@ TEST(Tlv320aic3204AdapterStrategy, Reset) {
         i2c,                      // Mock
         Transmit(device_address,  // I2C Address
                  _,               // Args<1> : Pointer to the data to send.
-                 2,               // Args<2> : Lenght of data in bytes.
+                 2,               // Args<2> : Length of data in bytes.
                  NULL,  // no variable to receive the length of transmission
                  murasaki::kwmsIndefinitely  // Wait forever
                  ))
@@ -128,7 +128,7 @@ TEST(Tlv320aic3204AdapterStrategy, Reset) {
         i2c,                      // Mock
         Transmit(device_address,  // I2C Address
                  _,               // Args<1> : Pointer to the data to send.
-                 3,               // Args<2> : Lenght of data in bytes.
+                 3,               // Args<2> : Length of data in bytes.
                  NULL,  // no variable to receive the length of transmission
                  murasaki::kwmsIndefinitely  // Wait forever
                  ))
@@ -139,7 +139,7 @@ TEST(Tlv320aic3204AdapterStrategy, Reset) {
         i2c,                      // Mock
         Transmit(device_address,  // I2C Address
                  _,               // Args<1> : Pointer to the data to send.
-                 2,               // Args<2> : Lenght of data in bytes.
+                 2,               // Args<2> : Length of data in bytes.
                  NULL,  // no variable to receive the length of transmission
                  murasaki::kwmsIndefinitely  // Wait forever
                  ))
@@ -150,7 +150,7 @@ TEST(Tlv320aic3204AdapterStrategy, Reset) {
         i2c,                      // Mock
         Transmit(device_address,  // I2C Address
                  _,               // Args<1> : Pointer to the data to send.
-                 2,               // Args<2> : Lenght of data in bytes.
+                 2,               // Args<2> : Length of data in bytes.
                  NULL,  // no variable to receive the length of transmission
                  murasaki::kwmsIndefinitely  // Wait forever
                  ))
@@ -160,7 +160,7 @@ TEST(Tlv320aic3204AdapterStrategy, Reset) {
 }
 
 // Testing ConfigureClock() .
-// Checking all convination of the role and PLL input,
+// Checking all combination of the role and PLL input,
 // except the forbidden case.
 TEST(Tlv320aic3204AdapterStrategy, ConfigureClock) {
   MockI2cMaster i2c;
@@ -177,7 +177,7 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigureClock) {
         i2c,                      // Mock
         Transmit(device_address,  // I2C Address
                  _,               // Args<1> : Pointer to the data to send.
-                 2,               // Args<2> : Lenght of data in bytes.
+                 2,               // Args<2> : Length of data in bytes.
                  NULL,  // no variable to receive the length of transmission
                  murasaki::kwmsIndefinitely  // Wait forever
                  ))
@@ -189,7 +189,7 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigureClock) {
         i2c,                      // Mock
         Transmit(device_address,  // I2C Address
                  _,               // Args<1> : Pointer to the data to send.
-                 2,               // Args<2> : Lenght of data in bytes.
+                 2,               // Args<2> : Length of data in bytes.
                  NULL,  // no variable to receive the length of transmission
                  murasaki::kwmsIndefinitely  // Wait forever
                  ))
@@ -200,7 +200,7 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigureClock) {
         i2c,                      // Mock
         Transmit(device_address,  // I2C Address
                  _,               // Args<1> : Pointer to the data to send.
-                 2,               // Args<2> : Lenght of data in bytes.
+                 2,               // Args<2> : Length of data in bytes.
                  NULL,  // no variable to receive the length of transmission
                  murasaki::kwmsIndefinitely  // Wait forever
                  ))
@@ -219,7 +219,7 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigureClock) {
         i2c,                      // Mock
         Transmit(device_address,  // I2C Address
                  _,               // Args<1> : Pointer to the data to send.
-                 2,               // Args<2> : Lenght of data in bytes.
+                 2,               // Args<2> : Length of data in bytes.
                  NULL,  // no variable to receive the length of transmission
                  murasaki::kwmsIndefinitely  // Wait forever
                  ))
@@ -231,7 +231,7 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigureClock) {
         i2c,                      // Mock
         Transmit(device_address,  // I2C Address
                  _,               // Args<1> : Pointer to the data to send.
-                 2,               // Args<2> : Lenght of data in bytes.
+                 2,               // Args<2> : Length of data in bytes.
                  NULL,  // no variable to receive the length of transmission
                  murasaki::kwmsIndefinitely  // Wait forever
                  ))
@@ -242,7 +242,7 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigureClock) {
         i2c,                      // Mock
         Transmit(device_address,  // I2C Address
                  _,               // Args<1> : Pointer to the data to send.
-                 2,               // Args<2> : Lenght of data in bytes.
+                 2,               // Args<2> : Length of data in bytes.
                  NULL,  // no variable to receive the length of transmission
                  murasaki::kwmsIndefinitely  // Wait forever
                  ))
@@ -261,7 +261,7 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigureClock) {
         i2c,                      // Mock
         Transmit(device_address,  // I2C Address
                  _,               // Args<1> : Pointer to the data to send.
-                 2,               // Args<2> : Lenght of data in bytes.
+                 2,               // Args<2> : Length of data in bytes.
                  NULL,  // no variable to receive the length of transmission
                  murasaki::kwmsIndefinitely  // Wait forever
                  ))
@@ -273,7 +273,7 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigureClock) {
         i2c,                      // Mock
         Transmit(device_address,  // I2C Address
                  _,               // Args<1> : Pointer to the data to send.
-                 2,               // Args<2> : Lenght of data in bytes.
+                 2,               // Args<2> : Length of data in bytes.
                  NULL,  // no variable to receive the length of transmission
                  murasaki::kwmsIndefinitely  // Wait forever
                  ))
@@ -284,7 +284,7 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigureClock) {
         i2c,                      // Mock
         Transmit(device_address,  // I2C Address
                  _,               // Args<1> : Pointer to the data to send.
-                 2,               // Args<2> : Lenght of data in bytes.
+                 2,               // Args<2> : Length of data in bytes.
                  NULL,  // no variable to receive the length of transmission
                  murasaki::kwmsIndefinitely  // Wait forever
                  ))
@@ -318,7 +318,7 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigurePll_p1) {
               Transmit(
                   device_address,  // I2C Address
                   _,               // Args<1> : Pointer to the data to send.
-                  2,               // Args<2> : Lenght of data in bytes.
+                  2,               // Args<2> : Length of data in bytes.
                   NULL,  // no variable to receive the length of transmission
                   murasaki::kwmsIndefinitely  // Wait forever
                   ))
@@ -330,7 +330,7 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigurePll_p1) {
               Transmit(
                   device_address,  // I2C Address
                   _,               // Args<1> : Pointer to the data to send.
-                  5,               // Args<2> : Lenght of data in bytes.
+                  5,               // Args<2> : Length of data in bytes.
                   NULL,  // no variable to receive the length of transmission
                   murasaki::kwmsIndefinitely  // Wait forever
                   ))
@@ -370,7 +370,7 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigurePll_p2) {
               Transmit(
                   device_address,  // I2C Address
                   _,               // Args<1> : Pointer to the data to send.
-                  2,               // Args<2> : Lenght of data in bytes.
+                  2,               // Args<2> : Length of data in bytes.
                   NULL,  // no variable to receive the length of transmission
                   murasaki::kwmsIndefinitely  // Wait forever
                   ))
@@ -382,7 +382,7 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigurePll_p2) {
               Transmit(
                   device_address,  // I2C Address
                   _,               // Args<1> : Pointer to the data to send.
-                  5,               // Args<2> : Lenght of data in bytes.
+                  5,               // Args<2> : Length of data in bytes.
                   NULL,  // no variable to receive the length of transmission
                   murasaki::kwmsIndefinitely  // Wait forever
                   ))
@@ -422,7 +422,7 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigurePll_p3) {
               Transmit(
                   device_address,  // I2C Address
                   _,               // Args<1> : Pointer to the data to send.
-                  2,               // Args<2> : Lenght of data in bytes.
+                  2,               // Args<2> : Length of data in bytes.
                   NULL,  // no variable to receive the length of transmission
                   murasaki::kwmsIndefinitely  // Wait forever
                   ))
@@ -434,7 +434,7 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigurePll_p3) {
               Transmit(
                   device_address,  // I2C Address
                   _,               // Args<1> : Pointer to the data to send.
-                  5,               // Args<2> : Lenght of data in bytes.
+                  5,               // Args<2> : Length of data in bytes.
                   NULL,  // no variable to receive the length of transmission
                   murasaki::kwmsIndefinitely  // Wait forever
                   ))
@@ -474,7 +474,7 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigurePll_p4) {
               Transmit(
                   device_address,  // I2C Address
                   _,               // Args<1> : Pointer to the data to send.
-                  2,               // Args<2> : Lenght of data in bytes.
+                  2,               // Args<2> : Length of data in bytes.
                   NULL,  // no variable to receive the length of transmission
                   murasaki::kwmsIndefinitely  // Wait forever
                   ))
@@ -486,7 +486,7 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigurePll_p4) {
               Transmit(
                   device_address,  // I2C Address
                   _,               // Args<1> : Pointer to the data to send.
-                  5,               // Args<2> : Lenght of data in bytes.
+                  5,               // Args<2> : Length of data in bytes.
                   NULL,  // no variable to receive the length of transmission
                   murasaki::kwmsIndefinitely  // Wait forever
                   ))
@@ -526,7 +526,7 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigurePll_p5) {
               Transmit(
                   device_address,  // I2C Address
                   _,               // Args<1> : Pointer to the data to send.
-                  2,               // Args<2> : Lenght of data in bytes.
+                  2,               // Args<2> : Length of data in bytes.
                   NULL,  // no variable to receive the length of transmission
                   murasaki::kwmsIndefinitely  // Wait forever
                   ))
@@ -538,7 +538,7 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigurePll_p5) {
               Transmit(
                   device_address,  // I2C Address
                   _,               // Args<1> : Pointer to the data to send.
-                  5,               // Args<2> : Lenght of data in bytes.
+                  5,               // Args<2> : Length of data in bytes.
                   NULL,  // no variable to receive the length of transmission
                   murasaki::kwmsIndefinitely  // Wait forever
                   ))
@@ -578,7 +578,7 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigurePll_p6) {
               Transmit(
                   device_address,  // I2C Address
                   _,               // Args<1> : Pointer to the data to send.
-                  2,               // Args<2> : Lenght of data in bytes.
+                  2,               // Args<2> : Length of data in bytes.
                   NULL,  // no variable to receive the length of transmission
                   murasaki::kwmsIndefinitely  // Wait forever
                   ))
@@ -590,7 +590,7 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigurePll_p6) {
               Transmit(
                   device_address,  // I2C Address
                   _,               // Args<1> : Pointer to the data to send.
-                  5,               // Args<2> : Lenght of data in bytes.
+                  5,               // Args<2> : Length of data in bytes.
                   NULL,  // no variable to receive the length of transmission
                   murasaki::kwmsIndefinitely  // Wait forever
                   ))
@@ -630,7 +630,7 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigurePll_p7) {
               Transmit(
                   device_address,  // I2C Address
                   _,               // Args<1> : Pointer to the data to send.
-                  2,               // Args<2> : Lenght of data in bytes.
+                  2,               // Args<2> : Length of data in bytes.
                   NULL,  // no variable to receive the length of transmission
                   murasaki::kwmsIndefinitely  // Wait forever
                   ))
@@ -642,7 +642,7 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigurePll_p7) {
               Transmit(
                   device_address,  // I2C Address
                   _,               // Args<1> : Pointer to the data to send.
-                  5,               // Args<2> : Lenght of data in bytes.
+                  5,               // Args<2> : Length of data in bytes.
                   NULL,  // no variable to receive the length of transmission
                   murasaki::kwmsIndefinitely  // Wait forever
                   ))
@@ -682,7 +682,7 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigurePll_p8) {
               Transmit(
                   device_address,  // I2C Address
                   _,               // Args<1> : Pointer to the data to send.
-                  2,               // Args<2> : Lenght of data in bytes.
+                  2,               // Args<2> : Length of data in bytes.
                   NULL,  // no variable to receive the length of transmission
                   murasaki::kwmsIndefinitely  // Wait forever
                   ))
@@ -694,7 +694,7 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigurePll_p8) {
               Transmit(
                   device_address,  // I2C Address
                   _,               // Args<1> : Pointer to the data to send.
-                  5,               // Args<2> : Lenght of data in bytes.
+                  5,               // Args<2> : Length of data in bytes.
                   NULL,  // no variable to receive the length of transmission
                   murasaki::kwmsIndefinitely  // Wait forever
                   ))
@@ -728,7 +728,7 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigureCodec_441_480) {
           i2c,                      // Mock
           Transmit(device_address,  // I2C Address
                    _,               // Args<1> : Pointer to the data to send.
-                   2,               // Args<2> : Lenght of data in bytes.
+                   2,               // Args<2> : Length of data in bytes.
                    NULL,  // no variable to receive the length of transmission
                    murasaki::kwmsIndefinitely  // Wait forever
                    ))
@@ -739,7 +739,7 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigureCodec_441_480) {
           i2c,                      // Mock
           Transmit(device_address,  // I2C Address
                    _,               // Args<1> : Pointer to the data to send.
-                   5,               // Args<2> : Lenght of data in bytes.
+                   5,               // Args<2> : Length of data in bytes.
                    NULL,  // no variable to receive the length of transmission
                    murasaki::kwmsIndefinitely  // Wait forever
                    ))
@@ -756,7 +756,7 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigureCodec_441_480) {
           i2c,                      // Mock
           Transmit(device_address,  // I2C Address
                    _,               // Args<1> : Pointer to the data to send.
-                   4,               // Args<2> : Lenght of data in bytes.
+                   4,               // Args<2> : Length of data in bytes.
                    NULL,  // no variable to receive the length of transmission
                    murasaki::kwmsIndefinitely  // Wait forever
                    ))
@@ -772,7 +772,7 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigureCodec_441_480) {
           i2c,                      // Mock
           Transmit(device_address,  // I2C Address
                    _,               // Args<1> : Pointer to the data to send.
-                   3,               // Args<2> : Lenght of data in bytes.
+                   3,               // Args<2> : Length of data in bytes.
                    NULL,  // no variable to receive the length of transmission
                    murasaki::kwmsIndefinitely  // Wait forever
                    ))
@@ -804,7 +804,7 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigureCodec_882_960) {
           i2c,                      // Mock
           Transmit(device_address,  // I2C Address
                    _,               // Args<1> : Pointer to the data to send.
-                   2,               // Args<2> : Lenght of data in bytes.
+                   2,               // Args<2> : Length of data in bytes.
                    NULL,  // no variable to receive the length of transmission
                    murasaki::kwmsIndefinitely  // Wait forever
                    ))
@@ -815,7 +815,7 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigureCodec_882_960) {
           i2c,                      // Mock
           Transmit(device_address,  // I2C Address
                    _,               // Args<1> : Pointer to the data to send.
-                   5,               // Args<2> : Lenght of data in bytes.
+                   5,               // Args<2> : Length of data in bytes.
                    NULL,  // no variable to receive the length of transmission
                    murasaki::kwmsIndefinitely  // Wait forever
                    ))
@@ -832,7 +832,7 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigureCodec_882_960) {
           i2c,                      // Mock
           Transmit(device_address,  // I2C Address
                    _,               // Args<1> : Pointer to the data to send.
-                   4,               // Args<2> : Lenght of data in bytes.
+                   4,               // Args<2> : Length of data in bytes.
                    NULL,  // no variable to receive the length of transmission
                    murasaki::kwmsIndefinitely  // Wait forever
                    ))
@@ -848,7 +848,7 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigureCodec_882_960) {
           i2c,                      // Mock
           Transmit(device_address,  // I2C Address
                    _,               // Args<1> : Pointer to the data to send.
-                   3,               // Args<2> : Lenght of data in bytes.
+                   3,               // Args<2> : Length of data in bytes.
                    NULL,  // no variable to receive the length of transmission
                    murasaki::kwmsIndefinitely  // Wait forever
                    ))
@@ -880,7 +880,7 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigureCodec_1764_1920) {
           i2c,                      // Mock
           Transmit(device_address,  // I2C Address
                    _,               // Args<1> : Pointer to the data to send.
-                   2,               // Args<2> : Lenght of data in bytes.
+                   2,               // Args<2> : Length of data in bytes.
                    NULL,  // no variable to receive the length of transmission
                    murasaki::kwmsIndefinitely  // Wait forever
                    ))
@@ -891,7 +891,7 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigureCodec_1764_1920) {
           i2c,                      // Mock
           Transmit(device_address,  // I2C Address
                    _,               // Args<1> : Pointer to the data to send.
-                   5,               // Args<2> : Lenght of data in bytes.
+                   5,               // Args<2> : Length of data in bytes.
                    NULL,  // no variable to receive the length of transmission
                    murasaki::kwmsIndefinitely  // Wait forever
                    ))
@@ -908,7 +908,7 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigureCodec_1764_1920) {
           i2c,                      // Mock
           Transmit(device_address,  // I2C Address
                    _,               // Args<1> : Pointer to the data to send.
-                   4,               // Args<2> : Lenght of data in bytes.
+                   4,               // Args<2> : Length of data in bytes.
                    NULL,  // no variable to receive the length of transmission
                    murasaki::kwmsIndefinitely  // Wait forever
                    ))
@@ -924,7 +924,7 @@ TEST(Tlv320aic3204AdapterStrategy, ConfigureCodec_1764_1920) {
           i2c,                      // Mock
           Transmit(device_address,  // I2C Address
                    _,               // Args<1> : Pointer to the data to send.
-                   3,               // Args<2> : Lenght of data in bytes.
+                   3,               // Args<2> : Length of data in bytes.
                    NULL,  // no variable to receive the length of transmission
                    murasaki::kwmsIndefinitely  // Wait forever
                    ))
@@ -953,7 +953,7 @@ TEST(Tlv320aic3204AdapterStrategy, ShutdownPll) {
         i2c,                      // Mock
         Transmit(device_address,  // I2C Address
                  _,               // Args<1> : Pointer to the data to send.
-                 2,               // Args<2> : Lenght of data in bytes.
+                 2,               // Args<2> : Length of data in bytes.
                  NULL,  // no variable to receive the length of transmission
                  murasaki::kwmsIndefinitely  // Wait forever
                  ))
@@ -964,7 +964,7 @@ TEST(Tlv320aic3204AdapterStrategy, ShutdownPll) {
         i2c,                      // Mock
         Transmit(device_address,  // I2C Address
                  _,               // Args<1> : Pointer to the data to send.
-                 2,               // Args<2> : Lenght of data in bytes.
+                 2,               // Args<2> : Length of data in bytes.
                  NULL,  // no variable to receive the length of transmission
                  murasaki::kwmsIndefinitely  // Wait forever
                  ))
@@ -974,7 +974,7 @@ TEST(Tlv320aic3204AdapterStrategy, ShutdownPll) {
 }
 
 // Testing assertion of ConfigureClock() .
-// The convination of the I2S master mode and the PLL input from
+// The combination of the I2S master mode and the PLL input from
 // BCLK is not allowed, because BCLK is output in the master mode.
 // In this test, we check whether assertion works correctly or not.
 TEST(Tlv320aic3204AdapterStrategyDeathTest, ConfigureClock) {
