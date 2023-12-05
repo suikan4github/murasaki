@@ -58,39 +58,14 @@ void Tlv320aic3204AdapterStrategy::Reset() {
    * We hope this power down will relax the noise of the CODEC.
    */
 
-  SetPage(1);  // Page 1 for Output driver register.
-  {
-    uint8_t command[] = {
-        9,  // Register Address => Register 9: Output Driver Power Control
-        0   // Power down all output.
-    };
-    SendCommand(command, sizeof(command));  // Write to software reset.
-  }
-
-  SetPage(0);  // Page 0 for successive action.
-
-  // Page 0, DAC power down.
-  {
-    uint8_t command[] = {
-        0x3F,  // Register Address => DAC register
-        0x14,  // Reg 3f : DAC Power down. Right to Right, Left to Left.
-        0x0c   // Reg 40 : DAC Mute both channel.
-    };
-    SendCommand(command, sizeof(command));  // Write to software reset.
-  }
-
-  // Page 0, ADC power down
-  {
-    uint8_t command[] = {
-        0x51,  // Register Address => Page 0 / Register 81: ADC Channel Setup
-        0x00   // Reg 51 : Power down and Mute ADC.
-    };
-    SendCommand(command, sizeof(command));  // Write to software reset.
-  }
+  ShutdownAnalog();
 
   // to be sure, let's wait 10mS.
   murasaki::Sleep(10);
 
+  ShutdownCODEC();
+
+  SetPage(0);
   // Page 0, soft reset register.
   {
     uint8_t command[] = {
@@ -298,34 +273,75 @@ void Tlv320aic3204AdapterStrategy::ConfigureCODEC(uint32_t const fs) {
 
   SetPage(0);  // CODEC clocks config are on the page 0.
   {
-    // ADC configuration.
+    // DAC configuration.
     uint8_t dac_table[] = {11,  // First register number
                            reg11, reg12, reg13, reg14};
-    SendCommand(dac_table, sizeof(dac_table));  // Write to PLL power down.
+    SendCommand(dac_table, sizeof(dac_table));  // Write to DAC configuration
   }
   {
     // ADC configuration.
     uint8_t adc_table[] = {18,  // First register number
                            reg18, reg19, reg20};
-    SendCommand(adc_table, sizeof(adc_table));  // Write to PLL power down.
+    SendCommand(adc_table, sizeof(adc_table));  // Write to ADC Configuration
   }
 
   {
     // DAC and ADC Signal Processing Block configuration
     uint8_t prb_table[] = {60,  // First register number
                            reg60, reg61};
-    SendCommand(prb_table, sizeof(prb_table));  // Write to PLL power down.
+    SendCommand(
+        prb_table,
+        sizeof(prb_table));  // Write to select the Signal Processing Blocks
   }
 
   CODEC_SYSLOG("Leave.")
 }
 
-void Tlv320aic3204AdapterStrategy::ShutdownCODEC(void) {
+void Tlv320aic3204AdapterStrategy::StartCODEC(void) {
+  CODEC_SYSLOG("Enter.")
   MURASAKI_ASSERT(false)  // Not implemented yet.
+  CODEC_SYSLOG("Leave.")
+}
+
+void Tlv320aic3204AdapterStrategy::ShutdownCODEC(void) {
+  CODEC_SYSLOG("Enter.")
+
+  SetPage(0);  // Page 0 for CODEC control.
+
+  // Page 0, DAC power down.
+  {
+    uint8_t command[] = {
+        0x3F,  // Register Address => DAC register
+        0x14,  // Reg 3f : DAC Power down. Right to Right, Left to Left.
+        0x0c   // Reg 40 : DAC Mute both channel.
+    };
+    SendCommand(command, sizeof(command));  // Write to software reset.
+  }
+
+  // Page 0, ADC power down
+  {
+    uint8_t command[] = {
+        0x51,  // Register Address => Page 0 / Register 81: ADC Channel Setup
+        0x00   // Reg 51 : Power down and Mute ADC.
+    };
+    SendCommand(command, sizeof(command));  // Write to software reset.
+  }
+  CODEC_SYSLOG("Leave.")
 }
 
 void Tlv320aic3204AdapterStrategy::ShutdownAnalog(void) {
-  MURASAKI_ASSERT(false)  // Not implemented yet.
+  CODEC_SYSLOG("Enter.")
+
+  SetPage(1);  // Page 1 for Output driver register.
+  {
+    uint8_t command[] = {
+        9,  // Register Address => Register 9: Output Driver Power Control
+        0   // Power down all output.
+    };
+    SendCommand(command, sizeof(command));  // Write to software reset.
+  }
+
+  CODEC_SYSLOG("Leave.")
 }
 
 } /* namespace murasaki */

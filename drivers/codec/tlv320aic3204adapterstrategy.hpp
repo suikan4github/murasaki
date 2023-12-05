@@ -122,7 +122,9 @@ class Tlv320aic3204AdapterStrategy {
    * In the case of the pll_source == kBCLK, the kMCLK must be tied to GND
    * because it is left as input.
    *
-   * We assume the internal PLL clock as :
+   * This function set the I2S word length to 32bits.
+   *
+   * We assume the internal PLL output frequency as :
    * \li 86.016 MHz for Fs==48kHz ( Fs*128*2*7)
    * \li 84.672 MHz for Fs==44.1kHz (Fs*128*3*5)
    */
@@ -139,7 +141,6 @@ class Tlv320aic3204AdapterStrategy {
    * @param p : P in the PLL factor. 1,2,3,4,...8
    * @details
    * At first, initialize the PLL based on the given fs and master clock.
-   * Then, setup the Converter sampling rate.
    * The PLL multiplication factor f is defined as :
    * @code
    *       R * J.D
@@ -148,7 +149,7 @@ class Tlv320aic3204AdapterStrategy {
    * @endcode
    *
    *
-   * We assume the internal PLL clock as :
+   * The PLL frequency must be one of :
    * \li 86.016 MHz for Fs==48kHz ( Fs*128*2*7)
    * \li 84.672 MHz for Fs==44.1kHz (Fs*128*3*5)
    */
@@ -174,6 +175,13 @@ class Tlv320aic3204AdapterStrategy {
    * \li 176400
    * \li 192000
    *
+   *
+   * This function set the CODEC based on the assumption of PLL frequency :
+   * \li 86.016 MHz for Fs==48kHz ( Fs*128*2*7)
+   * \li 84.672 MHz for Fs==44.1kHz (Fs*128*3*5)
+   *
+   * This function mut be called after ConfigurePLL()
+   *
    */
   virtual void ConfigureCODEC(uint32_t const fs);
 
@@ -181,6 +189,14 @@ class Tlv320aic3204AdapterStrategy {
    * \brief Stop the codec and set to low power mode.
    */
   virtual void ShutdownCODEC(void);
+
+  /**
+   * \brief Power on the CODEC and run.
+   * \details
+   * This function must call after the all configuration of
+   * clocks, PLLs, CODECs, and Analogs.
+   */
+  virtual void StartCODEC(void);
 
   /**
    * \brief Set up analog path of the codec.
