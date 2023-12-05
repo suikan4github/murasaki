@@ -299,7 +299,34 @@ void Tlv320aic3204AdapterStrategy::ConfigureCODEC(uint32_t const fs) {
 
 void Tlv320aic3204AdapterStrategy::StartCODEC(void) {
   CODEC_SYSLOG("Enter.")
+  /*
+#Select Page 0
+  w 30 00 00
+#
+#Power up LADC / RADC
+      w 30 0x51 c0
+#
+#Unmute LADC / RADC
+w 30 52 00
+
+#Select Page 0
+          w 30 00 00
+#
+#
+#Power up LDAC / RDAC
+      w 30 3f d6
+#
+#Unmute LDAC / RDAC
+          w 30 0x40 00
+          */
   MURASAKI_ASSERT(false)  // Not implemented yet.
+
+  uint8_t reg63 = 0;  // Reg63(0x3F) Power up control of DAC
+  uint8_t reg64 = 0;  // Reg64(0x40) Mute control of DAC
+
+  uint8_t reg81 = 0;  // Reg81(0x51) Power up control of ADC
+  uint8_t reg82 = 0;  // Reg82(0x52) Mute control of ADC
+
   CODEC_SYSLOG("Leave.")
 }
 
