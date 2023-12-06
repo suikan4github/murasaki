@@ -297,35 +297,36 @@ void Tlv320aic3204AdapterStrategy::ConfigureCODEC(uint32_t const fs) {
   CODEC_SYSLOG("Leave.")
 }
 
+// Power Up and Unmute CODEC
 void Tlv320aic3204AdapterStrategy::StartCODEC(void) {
   CODEC_SYSLOG("Enter.")
-  /*
-#Select Page 0
-  w 30 00 00
-#
-#Power up LADC / RADC
-      w 30 0x51 c0
-#
-#Unmute LADC / RADC
-w 30 52 00
-
-#Select Page 0
-          w 30 00 00
-#
-#
-#Power up LDAC / RDAC
-      w 30 3f d6
-#
-#Unmute LDAC / RDAC
-          w 30 0x40 00
-          */
   MURASAKI_ASSERT(false)  // Not implemented yet.
 
-  uint8_t reg63 = 0;  // Reg63(0x3F) Power up control of DAC
-  uint8_t reg64 = 0;  // Reg64(0x40) Mute control of DAC
+  SetPage(0);
 
-  uint8_t reg81 = 0;  // Reg81(0x51) Power up control of ADC
-  uint8_t reg82 = 0;  // Reg82(0x52) Mute control of ADC
+  {
+    // PowerUp ADC
+    uint8_t reg81 =
+        0xD6;           // Reg81(0x51) Power up control of ADC // Power up DAC
+    uint8_t reg82 = 0;  // Reg82(0x52) Mute control of ADC     // Unmute DAC
+
+    uint8_t adc_table[] = {81,  // First register number
+                           reg81, reg82};
+    SendCommand(adc_table,
+                sizeof(adc_table));  // Write to power up and unmute ADC.
+  }
+
+  {
+    // PowerUp DAC
+    uint8_t reg63 =
+        0xC0;           // Reg63(0x3F) Power up control of DAC // Power Up ADC
+    uint8_t reg64 = 0;  // Reg64(0x40) Mute control of DAC     // Unmute ADC
+
+    uint8_t dac_table[] = {63,  // First register number
+                           reg63, reg64};
+    SendCommand(dac_table,
+                sizeof(dac_table));  // Write to power up and unmute DAC.
+  }
 
   CODEC_SYSLOG("Leave.")
 }
@@ -337,19 +338,25 @@ void Tlv320aic3204AdapterStrategy::ShutdownCODEC(void) {
 
   // Page 0, DAC power down.
   {
+    uint8_t reg63 =
+        0x14;  // Reg63(0x3F) Power up control of DAC // Power Up ADC
+    uint8_t reg64 = 0x0c;  // Reg64(0x40) Mute control of DAC // Unmute ADC
+
     uint8_t command[] = {
-        0x3F,  // Register Address => DAC register
-        0x14,  // Reg 3f : DAC Power down. Right to Right, Left to Left.
-        0x0c   // Reg 40 : DAC Mute both channel.
+        63,     // Register Address => DAC register
+        reg63,  // Reg 3f : DAC Power down. Right to Right, Left to Left.
+        reg64   // Reg 40 : DAC Mute both channel.
     };
     SendCommand(command, sizeof(command));  // Write to software reset.
   }
 
   // Page 0, ADC power down
   {
+    uint8_t reg81 = 0;  // Reg81(0x51) Power up control of ADC // Power up DAC
+
     uint8_t command[] = {
-        0x51,  // Register Address => Page 0 / Register 81: ADC Channel Setup
-        0x00   // Reg 51 : Power down and Mute ADC.
+        81,    // Register Address => Page 0 / Register 81: ADC Channel Setup
+        reg81  // Reg 51 : Power down and Mute ADC.
     };
     SendCommand(command, sizeof(command));  // Write to software reset.
   }
