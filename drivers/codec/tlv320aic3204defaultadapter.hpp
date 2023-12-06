@@ -34,7 +34,8 @@ class Tlv320aic3204DefaultAdapter : public Tlv320aic3204AdapterStrategy {
   /**
    * \brief Set the line input gain and enable the relevant mixer.
    * \param left_gain Gain by dB. [6 .. -12],  The gain value outside of the
-   * acceptable range will be saturated. \param right_gain Gain by dB. [6 ..
+   * acceptable range will be saturated.
+   * \param right_gain Gain by dB. [6 ..
    * -12], The gain value outside of the acceptable range will be saturated.
    * \param mute set true to mute
    * \details
@@ -51,7 +52,8 @@ class Tlv320aic3204DefaultAdapter : public Tlv320aic3204AdapterStrategy {
   /**
    * \brief Set the aux input gain and enable the relevant mixer.
    * \param left_gain Gain by dB. [6 .. -12], The gain value outside of the
-   * acceptable range will be saturated. \param right_gain Gain by dB. [6 ..
+   * acceptable range will be saturated.
+   * \param right_gain Gain by dB. [6 ..
    * -12], The gain value outside of the acceptable range will be saturated.
    * \param mute set true to mute
    * \details
@@ -64,7 +66,8 @@ class Tlv320aic3204DefaultAdapter : public Tlv320aic3204AdapterStrategy {
   /**
    * \brief Set the line output gain and enable the relevant mixer.
    * \param left_gain Gain by dB. [6 .. -12], The gain value outside of the
-   * acceptable range will be saturated. \param right_gain Gain by dB. [6 ..
+   * acceptable range will be saturated.
+   * \param right_gain Gain by dB. [6 ..
    * -12], The gain value outside of the acceptable range will be saturated.
    * \param mute set true to mute
    * \details
@@ -78,7 +81,8 @@ class Tlv320aic3204DefaultAdapter : public Tlv320aic3204AdapterStrategy {
   /**
    * \brief Set the headphone output gain and enable the relevant mixer.
    * \param left_gain Gain by dB. [6 .. -12], The gain value outside of the
-   * acceptable range will be saturated. \param right_gain Gain by dB. [6 ..
+   * acceptable range will be saturated.
+   * \param right_gain Gain by dB. [6 ..
    * -12], The gain value outside of the acceptable range will be saturated.
    * \param mute set true to mute
    * \details

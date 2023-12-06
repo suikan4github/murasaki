@@ -197,7 +197,7 @@ void Tlv320aic3204AdapterStrategy::ShutdownPll(void) {
  * \li 84.672 MHz for Fs==44.1kHz (Fs*128*3*5)
  *
  * In this function, we set the NDAC,MDAC, to 1, always.
- * The NADC and MADC is left untouchged, and ADC_MOD_CLK is from DAC.
+ * The NADC and MADC is left untouched, and ADC_MOD_CLK is from DAC.
  * And then set the AOSR and DOSR to :
  * \li 128 for Fs=48kHz and 44.1kHz.
  * \li 64 for Fs=96kHz and 88.2kHz.
