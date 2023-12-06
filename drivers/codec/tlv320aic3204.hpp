@@ -32,7 +32,7 @@ class Tlv320aic3204 : public AudioCodecStrategy {
    */
   enum I2sRole {
     kMaster, /**< Sync signals are output*/
-    kSlave   /**< Sync singals are input */
+    kSlave   /**< Sync signals are input */
   };
 
   /**

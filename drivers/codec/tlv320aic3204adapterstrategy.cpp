@@ -300,14 +300,16 @@ void Tlv320aic3204AdapterStrategy::ConfigureCODEC(uint32_t const fs) {
 // Power Up and Unmute CODEC
 void Tlv320aic3204AdapterStrategy::StartCODEC(void) {
   CODEC_SYSLOG("Enter.")
-  MURASAKI_ASSERT(false)  // Not implemented yet.
 
   SetPage(0);
 
   {
     // PowerUp ADC
-    uint8_t reg81 =
-        0xD6;           // Reg81(0x51) Power up control of ADC // Power up DAC
+    uint8_t reg81 =     // Reg81(0x51) Power up control of ADC // Power up DAC
+        1 << 7 |        // Left ch power up.
+        1 << 6 |        // Right ch power up.
+        1 << 4 |        // Left ADC is assigned to the left audio
+        1 << 2;         // Right ADC is assigned to the right audio.
     uint8_t reg82 = 0;  // Reg82(0x52) Mute control of ADC     // Unmute DAC
 
     uint8_t adc_table[] = {81,  // First register number
@@ -318,8 +320,11 @@ void Tlv320aic3204AdapterStrategy::StartCODEC(void) {
 
   {
     // PowerUp DAC
-    uint8_t reg63 =
-        0xC0;           // Reg63(0x3F) Power up control of DAC // Power Up ADC
+    uint8_t reg63 =     // Reg63(0x3F) Power up control of DAC  // Power Up ADC
+        1 << 7 |        // Left ch power up
+        1 << 6 |        // Right ch power up
+        1 << 4 |        // Left ADC is assigned to the left audio
+        1 << 2;         // Right ADC is assigned to the right audio.
     uint8_t reg64 = 0;  // Reg64(0x40) Mute control of DAC     // Unmute ADC
 
     uint8_t dac_table[] = {63,  // First register number
@@ -338,9 +343,10 @@ void Tlv320aic3204AdapterStrategy::ShutdownCODEC(void) {
 
   // Page 0, DAC power down.
   {
-    uint8_t reg63 =
-        0x14;  // Reg63(0x3F) Power up control of DAC // Power Up ADC
-    uint8_t reg64 = 0x0c;  // Reg64(0x40) Mute control of DAC // Unmute ADC
+    uint8_t reg63 = 0;  // Reg63(0x3F) Power up control of DAC // Power down ADC
+    uint8_t reg64 =     // Reg64(0x40) Mute control of DAC // mute ADC
+        1 << 3 |        // Mute Left ch
+        1 << 2;         // Mute Right ch
 
     uint8_t command[] = {
         63,     // Register Address => DAC register
@@ -352,12 +358,15 @@ void Tlv320aic3204AdapterStrategy::ShutdownCODEC(void) {
 
   // Page 0, ADC power down
   {
-    uint8_t reg81 = 0;  // Reg81(0x51) Power up control of ADC // Power up DAC
+    uint8_t reg81 = 0;  // Reg81(0x51) Power up control of ADC // Power down DAC
+    uint8_t reg82 =     // Reg82(0x52) Mute control of ADC     // mute DAC
+        1 << 7 |        // Mute Left ch
+        1 << 3;         // Mute Right ch
 
     uint8_t command[] = {
-        81,    // Register Address => Page 0 / Register 81: ADC Channel Setup
-        reg81  // Reg 51 : Power down and Mute ADC.
-    };
+        81,     // Register Address => Page 0 / Register 81: ADC Channel Setup
+        reg81,  // Reg 51 : Power down and Mute ADC.
+        reg82};
     SendCommand(command, sizeof(command));  // Write to software reset.
   }
   CODEC_SYSLOG("Leave.")

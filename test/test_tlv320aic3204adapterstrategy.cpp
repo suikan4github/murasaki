@@ -135,18 +135,18 @@ TEST(Tlv320aic3204AdapterStrategy, Reset) {
                    NULL,  // no variable to receive the length of transmission
                    murasaki::kwmsIndefinitely  // Wait forever
                    ))
-          .With(Args<1, 2>(ElementsAreArray({0x3F, 0x14, 0x0c})));
+          .With(Args<1, 2>(ElementsAreArray({63, 0, 0x0c})));
 
       // write 0 to register 0x51 to power down ADC.
       EXPECT_CALL(
           i2c,                      // Mock
           Transmit(device_address,  // I2C Address
                    _,               // Args<1> : Pointer to the data to send.
-                   2,               // Args<2> : Length of data in bytes.
+                   3,               // Args<2> : Length of data in bytes.
                    NULL,  // no variable to receive the length of transmission
                    murasaki::kwmsIndefinitely  // Wait forever
                    ))
-          .With(Args<1, 2>(ElementsAreArray({0x51, 0})));
+          .With(Args<1, 2>(ElementsAreArray({81, 0, 0x88})));
     }
 
     // Must set page 0
@@ -1023,7 +1023,54 @@ TEST(Tlv320aic3204AdapterStrategy, ShutdownAnalog) {
   adapter.ShutdownAnalog();
 }
 
-// Testing Reset Shutdown CODEC .
+// Testing  StartCODEC .
+TEST(Tlv320aic3204AdapterStrategy, StartCODEC) {
+  MockI2cMaster i2c;
+  const uint8_t device_address = 0x32;
+
+  murasaki::Tlv320aic3204DefaultAdapter adapter(&i2c, device_address);
+
+  {
+    InSequence dummy;
+
+    // Must set page 0
+    EXPECT_CALL(
+        i2c,                      // Mock
+        Transmit(device_address,  // I2C Address
+                 _,               // Args<1> : Pointer to the data to send.
+                 2,               // Args<2> : Length of data in bytes.
+                 NULL,  // no variable to receive the length of transmission
+                 murasaki::kwmsIndefinitely  // Wait forever
+                 ))
+        .With(Args<1, 2>(ElementsAreArray({0, 0})));
+
+    // write 0 to register 81 to power up ADC.
+    EXPECT_CALL(
+        i2c,                      // Mock
+        Transmit(device_address,  // I2C Address
+                 _,               // Args<1> : Pointer to the data to send.
+                 3,               // Args<2> : Length of data in bytes.
+                 NULL,  // no variable to receive the length of transmission
+                 murasaki::kwmsIndefinitely  // Wait forever
+                 ))
+        .With(Args<1, 2>(ElementsAreArray({81, 0xd4, 0})));
+  }
+
+  // wite 0x14, 0x0c to register 63 to power up DAC
+  EXPECT_CALL(
+      i2c,                      // Mock
+      Transmit(device_address,  // I2C Address
+               _,               // Args<1> : Pointer to the data to send.
+               3,               // Args<2> : Length of data in bytes.
+               NULL,  // no variable to receive the length of transmission
+               murasaki::kwmsIndefinitely  // Wait forever
+               ))
+      .With(Args<1, 2>(ElementsAreArray({63, 0xd4, 0})));
+
+  adapter.StartCODEC();
+}
+
+// Testing  Shutdown CODEC .
 TEST(Tlv320aic3204AdapterStrategy, ShutdownCODEC) {
   MockI2cMaster i2c;
   const uint8_t device_address = 0x32;
@@ -1053,18 +1100,18 @@ TEST(Tlv320aic3204AdapterStrategy, ShutdownCODEC) {
                  NULL,  // no variable to receive the length of transmission
                  murasaki::kwmsIndefinitely  // Wait forever
                  ))
-        .With(Args<1, 2>(ElementsAreArray({0x3F, 0x14, 0x0c})));
+        .With(Args<1, 2>(ElementsAreArray({63, 0, 0x0c})));
 
     // write 0 to register 0x51 to power down ADC.
     EXPECT_CALL(
         i2c,                      // Mock
         Transmit(device_address,  // I2C Address
                  _,               // Args<1> : Pointer to the data to send.
-                 2,               // Args<2> : Length of data in bytes.
+                 3,               // Args<2> : Length of data in bytes.
                  NULL,  // no variable to receive the length of transmission
                  murasaki::kwmsIndefinitely  // Wait forever
                  ))
-        .With(Args<1, 2>(ElementsAreArray({0x51, 0})));
+        .With(Args<1, 2>(ElementsAreArray({81, 0, 0x88})));
   }
 
   adapter.ShutdownCODEC();
