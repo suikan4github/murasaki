@@ -1130,10 +1130,10 @@ TEST(Tlv320aic3204AdapterStrategy, SetInputGain) {
 
   murasaki::Tlv320aic3204DefaultAdapter adapter(&i2c, device_address);
 
+  // Test the normal parameter.
   {
     InSequence dummy;
 
-    // Test the normal parameter.
     // Must set page 1
     EXPECT_CALL(
         i2c,                      // Mock
@@ -1168,6 +1168,86 @@ TEST(Tlv320aic3204AdapterStrategy, SetInputGain) {
   }
   // Normal parameter. L is 1.0dB, R is 3.0dB.
   adapter.SetInputGain(1.0, 3.0);
+
+  // Test too small parameter.
+  {
+    InSequence dummy;
+
+    // Must set page 1
+    EXPECT_CALL(
+        i2c,                      // Mock
+        Transmit(device_address,  // I2C Address
+                 _,               // Args<1> : Pointer to the data to send.
+                 2,               // Args<2> : Length of data in bytes.
+                 NULL,  // no variable to receive the length of transmission
+                 murasaki::kwmsIndefinitely  // Wait forever
+                 ))
+        .With(Args<1, 2>(ElementsAreArray({0, 1})));
+    // Write to register 59.
+    EXPECT_CALL(
+        i2c,                      // Mock
+        Transmit(device_address,  // I2C Address
+                 _,               // Args<1> : Pointer to the data to send.
+                 2,               // Args<2> : Length of data in bytes.
+                 NULL,  // no variable to receive the length of transmission
+                 murasaki::kwmsIndefinitely  // Wait forever
+                 ))
+        .With(Args<1, 2>(ElementsAreArray({59, 0})));  // 0 for the 0dB
+
+    // write To register 60
+    EXPECT_CALL(
+        i2c,                      // Mock
+        Transmit(device_address,  // I2C Address
+                 _,               // Args<1> : Pointer to the data to send.
+                 2,               // Args<2> : Length of data in bytes.
+                 NULL,  // no variable to receive the length of transmission
+                 murasaki::kwmsIndefinitely  // Wait forever
+                 ))
+        .With(Args<1, 2>(ElementsAreArray({60, 0})));  // 0 for the 0dB
+  }
+  // Too small parameter. L is -1.0dB, R is -3.0dB.
+  // Both must be truncated to 0dB.
+  adapter.SetInputGain(-1.0, -3.0);
+
+  // Test too large parameter.
+  {
+    InSequence dummy;
+
+    // Must set page 1
+    EXPECT_CALL(
+        i2c,                      // Mock
+        Transmit(device_address,  // I2C Address
+                 _,               // Args<1> : Pointer to the data to send.
+                 2,               // Args<2> : Length of data in bytes.
+                 NULL,  // no variable to receive the length of transmission
+                 murasaki::kwmsIndefinitely  // Wait forever
+                 ))
+        .With(Args<1, 2>(ElementsAreArray({0, 1})));
+    // Write to register 59.
+    EXPECT_CALL(
+        i2c,                      // Mock
+        Transmit(device_address,  // I2C Address
+                 _,               // Args<1> : Pointer to the data to send.
+                 2,               // Args<2> : Length of data in bytes.
+                 NULL,  // no variable to receive the length of transmission
+                 murasaki::kwmsIndefinitely  // Wait forever
+                 ))
+        .With(Args<1, 2>(ElementsAreArray({59, 95})));  // 95 for the 47.5dB
+
+    // write To register 60
+    EXPECT_CALL(
+        i2c,                      // Mock
+        Transmit(device_address,  // I2C Address
+                 _,               // Args<1> : Pointer to the data to send.
+                 2,               // Args<2> : Length of data in bytes.
+                 NULL,  // no variable to receive the length of transmission
+                 murasaki::kwmsIndefinitely  // Wait forever
+                 ))
+        .With(Args<1, 2>(ElementsAreArray({60, 95})));  // 95 for the 47.5dB
+  }
+  // Too large parameter. L is 50dB, R is 48dB.
+  // Both must be truncated to 47.5dB.
+  adapter.SetInputGain(50, 48);
 }
 
 // Testing assertion of ConfigureClock() .
