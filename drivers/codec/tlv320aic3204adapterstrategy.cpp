@@ -387,6 +387,66 @@ void Tlv320aic3204AdapterStrategy::ShutdownAnalog(void) {
   CODEC_SYSLOG("Leave.")
 }
 
+//  Set the line input gain and enable the relevant mixer.
+void Tlv320aic3204AdapterStrategy::SetLineInputGain(float left_gain,
+                                                    float right_gain) {
+  CODEC_SYSLOG("Enter. left gain : %f, right gain %f", left_gain, right_gain)
+  MURASAKI_ASSERT(false)  // not yet implemented.
+  CODEC_SYSLOG("Leave.")
+}
+
+//  mute unmute the Line Input.
+void Tlv320aic3204AdapterStrategy::MuteLineInput(bool) {
+  CODEC_SYSLOG("Enter. mute : %s.", mute ? "true" : "false")
+  MURASAKI_ASSERT(false)  // not yet implemented.
+  CODEC_SYSLOG("Leave.")
+}
+
+//  Set the aux input gain and enable the relevant mixer.
+void Tlv320aic3204AdapterStrategy::SetAuxInputGain(float left_gain,
+                                                   float right_gain) {
+  CODEC_SYSLOG("Enter. left gain : %f, right gain %f", left_gain, right_gain)
+  MURASAKI_ASSERT(false)  // not yet implemented.
+  CODEC_SYSLOG("Leave.")
+}
+
+//  mute unmute the Aux Input.
+void Tlv320aic3204AdapterStrategy::MuteAuxInput(bool) {
+  CODEC_SYSLOG("Enter. mute : %s.", mute ? "true" : "false")
+  MURASAKI_ASSERT(false)  // not yet implemented.
+  CODEC_SYSLOG("Leave.")
+}
+
+//  Set the line output gain and enable the relevant mixer.
+void Tlv320aic3204AdapterStrategy::SetLineOutputGain(float left_gain,
+                                                     float right_gain) {
+  CODEC_SYSLOG("Enter. left gain : %f, right gain %f", left_gain, right_gain)
+  MURASAKI_ASSERT(false)  // not yet implemented.
+  CODEC_SYSLOG("Leave.")
+}
+
+//  mute un-mute the Line output.
+void Tlv320aic3204AdapterStrategy::MuteLineOutput(bool) {
+  CODEC_SYSLOG("Enter. mute : %s.", mute ? "true" : "false")
+  MURASAKI_ASSERT(false)  // not yet implemented.
+  CODEC_SYSLOG("Leave.")
+}
+
+//  Set the headphone output gain and enable the relevant mixer.
+void Tlv320aic3204AdapterStrategy::SetHpOutputGain(float left_gain,
+                                                   float right_gain) {
+  CODEC_SYSLOG("Enter. left gain : %f, right gain %f", left_gain, right_gain)
+  MURASAKI_ASSERT(false)  // not yet implemented.
+  CODEC_SYSLOG("Leave.")
+}
+
+//  mute unmute the HP output.
+void Tlv320aic3204AdapterStrategy::MuteHpOutput(bool) {
+  CODEC_SYSLOG("Enter. mute : %s.", mute ? "true" : "false")
+  MURASAKI_ASSERT(false)  // not yet implemented.
+  CODEC_SYSLOG("Leave.")
+}
+
 } /* namespace murasaki */
 
 #endif  //  HAL_I2C_MODULE_ENABLED

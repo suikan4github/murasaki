@@ -216,17 +216,16 @@ class Tlv320aic3204AdapterStrategy {
    * acceptable range will be saturated.
    * \param right_gain Gain by dB. [6 ..
    * -12], The gain value outside of the acceptable range will be saturated.
-   * \param mute set true to mute
    * \details
-   *   As same as start(), this gain control function uses the single-end
-   * negative input only. Other input signal of the line in like positive signal
-   * or diff signal are killed.
-   *
-   *   Other input line like aux are not killed. To kill it, user have to mute
-   * them explicitly.
+   * This function assumes to be called before the CODEC ON.
    */
-  virtual void SetLineInputGain(float left_gain, float right_gain,
-                                bool mute = false) = 0;
+  virtual void SetLineInputGain(float left_gain, float right_gain);
+
+  /**
+   * \brief mute unmute the Line Input.
+   * \param mute set true to mute, false to un-mute.
+   */
+  virtual void MuteLineInput(bool mute = true);
 
   /**
    * \brief Set the aux input gain and enable the relevant mixer.
@@ -234,13 +233,16 @@ class Tlv320aic3204AdapterStrategy {
    * acceptable range will be saturated.
    * \param right_gain Gain by dB. [6 ..
    * -12], The gain value outside of the acceptable range will be saturated.
-   * \param mute set true to mute
    * \details
-   *   Other input lines are not killed. To kill it, user have to mute them
-   * explicitly.
+   * This function assumes to be called before the CODEC ON.
    */
-  virtual void SetAuxInputGain(float left_gain, float right_gain,
-                               bool mute = false) = 0;
+  virtual void SetAuxInputGain(float left_gain, float right_gain);
+
+  /**
+   * \brief mute unmute the Aux Input.
+   * \param mute set true to mute, false to un-mute.
+   */
+  virtual void MuteAuxInput(bool mute = true);
 
   /**
    * \brief Set the line output gain and enable the relevant mixer.
@@ -250,12 +252,15 @@ class Tlv320aic3204AdapterStrategy {
    * -12], The gain value outside of the acceptable range will be saturated.
    * \param mute set true to mute
    * \details
-   *   Other output lines are not killed. To kill it, user have to mute them
-   * explicitly.
+   * This function assumes to be called before the CODEC ON.
    *
    */
-  virtual void SetLineOutputGain(float left_gain, float right_gain,
-                                 bool mute = false) = 0;
+  virtual void SetLineOutputGain(float left_gain, float right_gain);
+  /**
+   * \brief mute un-mute the Line output.
+   * \param mute set true to mute, false to un-mute.
+   */
+  virtual void MuteLineOutput(bool mute = true);
 
   /**
    * \brief Set the headphone output gain and enable the relevant mixer.
@@ -263,13 +268,16 @@ class Tlv320aic3204AdapterStrategy {
    * acceptable range will be saturated.
    * \param right_gain Gain by dB. [6 ..
    * -12], The gain value outside of the acceptable range will be saturated.
-   * \param mute set true to mute
    * \details
-   *   Other out line like line in are not killed. To kill it, user have to mute
-   * them explicitly.
+   * This function assumes to be called before the CODEC ON.
    */
-  virtual void SetHpOutputGain(float left_gain, float right_gain,
-                               bool mute = false) = 0;
+  virtual void SetHpOutputGain(float left_gain, float right_gain);
+
+  /**
+   * \brief mute unmute the HP output.
+   * \param mute set true to mute, false to un-mute.
+   */
+  virtual void MuteHpOutput(bool mute = true);
 
  protected:
   murasaki::I2cMasterStrategy *const i2c_;

@@ -28,22 +28,6 @@ Tlv320aic3204DefaultAdapter::Tlv320aic3204DefaultAdapter(
 
 void Tlv320aic3204DefaultAdapter::ConfigureAnalog(void) {}
 
-void Tlv320aic3204DefaultAdapter::SetLineInputGain(float left_gain,
-                                                   float right_gain,
-                                                   bool mute) {}
-
-void Tlv320aic3204DefaultAdapter::SetAuxInputGain(float left_gain,
-                                                  float right_gain, bool mute) {
-}
-
-void Tlv320aic3204DefaultAdapter::SetLineOutputGain(float left_gain,
-                                                    float right_gain,
-                                                    bool mute) {}
-
-void Tlv320aic3204DefaultAdapter::SetHpOutputGain(float left_gain,
-                                                  float right_gain, bool mute) {
-}
-
 } /* namespace murasaki */
 
 #endif  //  HAL_I2C_MODULE_ENABLED
