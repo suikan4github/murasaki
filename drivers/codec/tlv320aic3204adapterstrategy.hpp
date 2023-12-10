@@ -223,12 +223,6 @@ class Tlv320aic3204AdapterStrategy {
   virtual void SetInputGain(float left_gain, float right_gain);
 
   /**
-   * \brief mute unmute the Line Input.
-   * \param mute set true to mute, false to un-mute.
-   */
-  virtual void MuteInput(bool mute = true);
-
-  /**
    * \brief Set the line output gain and enable the relevant mixer.
    * \param left_gain Gain by dB. [6 .. -12], The gain value outside of the
    * acceptable range will be saturated.
@@ -238,30 +232,24 @@ class Tlv320aic3204AdapterStrategy {
    * \details
    * This function assumes to be called before the CODEC ON.
    *
+   * If muted, the gain setting values are ignored.
    */
-  virtual void SetLineOutputGain(float left_gain, float right_gain);
-  /**
-   * \brief mute un-mute the Line output.
-   * \param mute set true to mute, false to un-mute.
-   */
-  virtual void MuteLineOutput(bool mute = true);
+  virtual void SetLineOutputGain(float left_gain, float right_gain, bool mute);
 
   /**
    * \brief Set the headphone output gain and enable the relevant mixer.
-   * \param left_gain Gain by dB. [6 .. -12], The gain value outside of the
-   * acceptable range will be saturated.
-   * \param right_gain Gain by dB. [6 ..
+   * \param left_gain Gain by dB. [-6 .. 29], The gain value outside of the
+   * acceptable range will be saturated. Gain step is 1dB.
+   * \param right_gain Gain by dB. [-6 ..
    * -12], The gain value outside of the acceptable range will be saturated.
+   * . Gain step is 1dB.
+   * \param mute set true to mute, false to un-mute.
    * \details
    * This function assumes to be called before the CODEC ON.
+   *
+   * If muted, the gain setting values are ignored.
    */
-  virtual void SetHpOutputGain(float left_gain, float right_gain);
-
-  /**
-   * \brief mute unmute the HP output.
-   * \param mute set true to mute, false to un-mute.
-   */
-  virtual void MuteHpOutput(bool mute = true);
+  virtual void SetHpOutputGain(float left_gain, float right_gain, bool mute);
 
  protected:
   murasaki::I2cMasterStrategy *const i2c_;

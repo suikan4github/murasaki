@@ -392,7 +392,7 @@ void Tlv320aic3204AdapterStrategy::SetInputGain(float left_gain,
                                                 float right_gain) {
   CODEC_SYSLOG("Enter. left gain : %f, right gain %f", left_gain, right_gain)
 
-  // The gain is 0 to 47.5 as gain step.
+  // The gain is 0 to 47.5 as 0.5dB gain step.
   // So, we double the gain and truncate to integer.
   // The value range is :
   // from : 0  -> 000_0000
@@ -428,39 +428,64 @@ void Tlv320aic3204AdapterStrategy::SetInputGain(float left_gain,
   CODEC_SYSLOG("Leave.")
 }
 
-//  mute unmute the Line Input.
-void Tlv320aic3204AdapterStrategy::MuteInput(bool) {
-  CODEC_SYSLOG("Enter. mute : %s.", mute ? "true" : "false")
-  MURASAKI_ASSERT(false)  // not yet implemented.
-  CODEC_SYSLOG("Leave.")
-}
-
 //  Set the line output gain and enable the relevant mixer.
 void Tlv320aic3204AdapterStrategy::SetLineOutputGain(float left_gain,
-                                                     float right_gain) {
+                                                     float right_gain,
+                                                     bool mute) {
   CODEC_SYSLOG("Enter. left gain : %f, right gain %f", left_gain, right_gain)
-  MURASAKI_ASSERT(false)  // not yet implemented.
-  CODEC_SYSLOG("Leave.")
-}
 
-//  mute un-mute the Line output.
-void Tlv320aic3204AdapterStrategy::MuteLineOutput(bool) {
-  CODEC_SYSLOG("Enter. mute : %s.", mute ? "true" : "false")
-  MURASAKI_ASSERT(false)  // not yet implemented.
+  // The gain is -6.0 to 29 as 1 dB gain step.
+  // So, we double the gain and truncate to integer.
+  // The value range is :
+  // from : -6dB -> 11_1010
+  // to   : 29dB -> 01_1101
+  // These 2's complemental have to be stored to D5:D0.
+  // The D6 is mute bit. 1 -> Muted. 0-> Unmuted.
+  // D7 is always 0.
+
+  // Clip the gain into the range of [0...45.7]
+  left_gain = std::max(left_gain, -6.0f);
+  left_gain = std::min(left_gain, 29.0f);
+  right_gain = std::max(right_gain, -6.0f);
+  right_gain = std::min(right_gain, 29.0f);
+
+  // If muted, -6dB gain is forbidden. To avoid the violation,
+  // we set gain to 0dB if muted.
+  if (mute) {
+    left_gain = 0;
+    right_gain = 0;
+  }
+
+  SetPage(1);  // Page 1 for analog control.
+  {
+    // Left channel gain. D7:D6 are forced to zero.
+    uint8_t reg18 = static_cast<int8_t>(left_gain) & 0x3F;
+    if (mute) reg18 |= 1 << 6;  // Set 1 to D6 when muted.
+    uint8_t command[] = {
+        18,    // Register Address => 18: Left Output Line gain register.
+        reg18  // Left Output Line gain.
+    };
+    SendCommand(command, sizeof(command));  // Write to set gain
+  }
+  {
+    // Right channel gain. D7:D6 are forced to zero.
+    uint8_t reg19 = static_cast<int8_t>(right_gain) & 0x3F;
+    if (mute) reg19 |= 1 << 6;  // Set 1 to D6 when muted.
+    uint8_t command[] = {
+        19,    // Register Address => 19: Right Output Line Gain register.
+        reg19  // Right Output Line gain.
+    };
+    SendCommand(command, sizeof(command));  // Write to set gain.
+  }
+
   CODEC_SYSLOG("Leave.")
 }
 
 //  Set the headphone output gain and enable the relevant mixer.
 void Tlv320aic3204AdapterStrategy::SetHpOutputGain(float left_gain,
-                                                   float right_gain) {
+                                                   float right_gain,
+                                                   bool mute) {
   CODEC_SYSLOG("Enter. left gain : %f, right gain %f", left_gain, right_gain)
-  MURASAKI_ASSERT(false)  // not yet implemented.
-  CODEC_SYSLOG("Leave.")
-}
-
-//  mute unmute the HP output.
-void Tlv320aic3204AdapterStrategy::MuteHpOutput(bool) {
-  CODEC_SYSLOG("Enter. mute : %s.", mute ? "true" : "false")
   MURASAKI_ASSERT(false)  // not yet implemented.
   CODEC_SYSLOG("Leave.")
 }
