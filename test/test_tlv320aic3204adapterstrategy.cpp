@@ -1070,7 +1070,13 @@ TEST(Tlv320aic3204AdapterStrategy, StartCODEC) {
   adapter.StartCODEC();
 }
 
-// Testing  Shutdown CODEC .
+/*
+ * Testing  Shutdown CODEC.
+ * We test 3 type of test.
+ * The first one will test the normal value is handled correctly.
+ * The second one will test whether the too large value is truncated to 47.5.
+ * The third one will test whether the too small value is truncated to 0.
+ */
 TEST(Tlv320aic3204AdapterStrategy, ShutdownCODEC) {
   MockI2cMaster i2c;
   const uint8_t device_address = 0x32;
@@ -1115,6 +1121,53 @@ TEST(Tlv320aic3204AdapterStrategy, ShutdownCODEC) {
   }
 
   adapter.ShutdownCODEC();
+}
+
+// Testing  SetInputGain()
+TEST(Tlv320aic3204AdapterStrategy, SetInputGain) {
+  MockI2cMaster i2c;
+  const uint8_t device_address = 0x32;
+
+  murasaki::Tlv320aic3204DefaultAdapter adapter(&i2c, device_address);
+
+  {
+    InSequence dummy;
+
+    // Test the normal parameter.
+    // Must set page 1
+    EXPECT_CALL(
+        i2c,                      // Mock
+        Transmit(device_address,  // I2C Address
+                 _,               // Args<1> : Pointer to the data to send.
+                 2,               // Args<2> : Length of data in bytes.
+                 NULL,  // no variable to receive the length of transmission
+                 murasaki::kwmsIndefinitely  // Wait forever
+                 ))
+        .With(Args<1, 2>(ElementsAreArray({0, 1})));
+    // Write to register 59.
+    EXPECT_CALL(
+        i2c,                      // Mock
+        Transmit(device_address,  // I2C Address
+                 _,               // Args<1> : Pointer to the data to send.
+                 2,               // Args<2> : Length of data in bytes.
+                 NULL,  // no variable to receive the length of transmission
+                 murasaki::kwmsIndefinitely  // Wait forever
+                 ))
+        .With(Args<1, 2>(ElementsAreArray({59, 2})));  // 2 for the 1.0dB
+
+    // write To register 60
+    EXPECT_CALL(
+        i2c,                      // Mock
+        Transmit(device_address,  // I2C Address
+                 _,               // Args<1> : Pointer to the data to send.
+                 2,               // Args<2> : Length of data in bytes.
+                 NULL,  // no variable to receive the length of transmission
+                 murasaki::kwmsIndefinitely  // Wait forever
+                 ))
+        .With(Args<1, 2>(ElementsAreArray({60, 6})));  // 6 for the 3.0dB
+  }
+  // Normal parameter. L is 1.0dB, R is 3.0dB.
+  adapter.SetInputGain(1.0, 3.0);
 }
 
 // Testing assertion of ConfigureClock() .

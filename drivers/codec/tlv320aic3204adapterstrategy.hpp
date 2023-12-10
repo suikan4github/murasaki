@@ -211,38 +211,22 @@ class Tlv320aic3204AdapterStrategy {
   virtual void ShutdownAnalog(void);
 
   /**
-   * \brief Set the line input gain and enable the relevant mixer.
-   * \param left_gain Gain by dB. [6 .. -12],  The gain value outside of the
-   * acceptable range will be saturated.
-   * \param right_gain Gain by dB. [6 ..
-   * -12], The gain value outside of the acceptable range will be saturated.
+   * \brief Set the analog input PGA gain.
+   * \param left_gain Gain by dB. [0 ... 47.5],  The gain value outside of the
+   * acceptable range will be saturated. Gain is truncated to 0.5dB step.
+   * \param right_gain Gain by dB. [0 ..
+   * 47.5], The gain value outside of the acceptable range will be saturated.
+   * Gain is truncated to 0.5dB step.
    * \details
-   * This function assumes to be called before the CODEC ON.
+   * Call this function before turning on the CODEC.
    */
-  virtual void SetLineInputGain(float left_gain, float right_gain);
+  virtual void SetInputGain(float left_gain, float right_gain);
 
   /**
    * \brief mute unmute the Line Input.
    * \param mute set true to mute, false to un-mute.
    */
-  virtual void MuteLineInput(bool mute = true);
-
-  /**
-   * \brief Set the aux input gain and enable the relevant mixer.
-   * \param left_gain Gain by dB. [6 .. -12], The gain value outside of the
-   * acceptable range will be saturated.
-   * \param right_gain Gain by dB. [6 ..
-   * -12], The gain value outside of the acceptable range will be saturated.
-   * \details
-   * This function assumes to be called before the CODEC ON.
-   */
-  virtual void SetAuxInputGain(float left_gain, float right_gain);
-
-  /**
-   * \brief mute unmute the Aux Input.
-   * \param mute set true to mute, false to un-mute.
-   */
-  virtual void MuteAuxInput(bool mute = true);
+  virtual void MuteInput(bool mute = true);
 
   /**
    * \brief Set the line output gain and enable the relevant mixer.

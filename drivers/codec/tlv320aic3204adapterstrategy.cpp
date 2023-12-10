@@ -387,31 +387,49 @@ void Tlv320aic3204AdapterStrategy::ShutdownAnalog(void) {
   CODEC_SYSLOG("Leave.")
 }
 
-//  Set the line input gain and enable the relevant mixer.
-void Tlv320aic3204AdapterStrategy::SetLineInputGain(float left_gain,
-                                                    float right_gain) {
+//  Set the Analog PGA input gain.
+void Tlv320aic3204AdapterStrategy::SetInputGain(float left_gain,
+                                                float right_gain) {
   CODEC_SYSLOG("Enter. left gain : %f, right gain %f", left_gain, right_gain)
-  MURASAKI_ASSERT(false)  // not yet implemented.
+
+  // The gain is 0 to 47.5 as gain step.
+  // So, we double the gain and truncate to integer.
+  // The value range is :
+  // from : 0  -> 000_0000
+  // to   : 95 -> 101_1111
+  // This range muches with Page 1 Register 59/60 D6-D7
+
+  // Clip the gain into the range of [0...45.7]
+  left_gain = std::max(left_gain, 0.0f);
+  left_gain = std::min(left_gain, 47.5f);
+  right_gain = std::max(right_gain, 0.0f);
+  right_gain = std::min(right_gain, 47.5f);
+
+  SetPage(1);  // Page 1 for analog control.
+  {
+    // Left channel gain.
+    uint8_t reg59 = static_cast<uint8_t>(left_gain * 2);
+    uint8_t command[] = {
+        59,    // Register Address => 59: Left MICPGA volume control register.
+        reg59  // D7 is forced to 0
+    };
+    SendCommand(command, sizeof(command));  // Write to set gain
+  }
+  {
+    // Right channel gain.
+    uint8_t reg60 = static_cast<uint8_t>(right_gain * 2);
+    uint8_t command[] = {
+        60,    // Register Address => 60: Right MICPGA volume control register.
+        reg60  // D7 is forced to 0
+    };
+    SendCommand(command, sizeof(command));  // Write to set gain.
+  }
+
   CODEC_SYSLOG("Leave.")
 }
 
 //  mute unmute the Line Input.
-void Tlv320aic3204AdapterStrategy::MuteLineInput(bool) {
-  CODEC_SYSLOG("Enter. mute : %s.", mute ? "true" : "false")
-  MURASAKI_ASSERT(false)  // not yet implemented.
-  CODEC_SYSLOG("Leave.")
-}
-
-//  Set the aux input gain and enable the relevant mixer.
-void Tlv320aic3204AdapterStrategy::SetAuxInputGain(float left_gain,
-                                                   float right_gain) {
-  CODEC_SYSLOG("Enter. left gain : %f, right gain %f", left_gain, right_gain)
-  MURASAKI_ASSERT(false)  // not yet implemented.
-  CODEC_SYSLOG("Leave.")
-}
-
-//  mute unmute the Aux Input.
-void Tlv320aic3204AdapterStrategy::MuteAuxInput(bool) {
+void Tlv320aic3204AdapterStrategy::MuteInput(bool) {
   CODEC_SYSLOG("Enter. mute : %s.", mute ? "true" : "false")
   MURASAKI_ASSERT(false)  // not yet implemented.
   CODEC_SYSLOG("Leave.")
