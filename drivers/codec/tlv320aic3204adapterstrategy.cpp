@@ -35,7 +35,7 @@ void Tlv320aic3204AdapterStrategy::SetPage(u_int8_t page_number) {
 
   SendCommand(command, sizeof(command));
 
-  CODEC_SYSLOG("Leave.")
+  CODEC_SYSLOG("Leave.%s", "")
 }
 
 void Tlv320aic3204AdapterStrategy::SendCommand(const uint8_t command[],
@@ -47,11 +47,11 @@ void Tlv320aic3204AdapterStrategy::SendCommand(const uint8_t command[],
    */
   i2c_->Transmit(device_addr_, command, size);
 
-  CODEC_SYSLOG("Leave.")
+  CODEC_SYSLOG("Leave.%s", "")
 }
 
 void Tlv320aic3204AdapterStrategy::Reset() {
-  CODEC_SYSLOG("Enter.")
+  CODEC_SYSLOG("Enter.%s", "")
 
   /*
    * First of all, mute and power down the CODEC.
@@ -74,23 +74,23 @@ void Tlv320aic3204AdapterStrategy::Reset() {
     };
     SendCommand(command, sizeof(command));  // Write to software reset.
   }
-  CODEC_SYSLOG("Leave.")
+  CODEC_SYSLOG("Leave.%s", "")
 }
 
 void Tlv320aic3204AdapterStrategy::WaitPllLock(void) {
-  uint8_t status[6];
-  CODEC_SYSLOG("Enter.")
+  CODEC_SYSLOG("Enter.%s", "")
   // Per request of the the TLV320AIC3204 Application Reference Guide ( SLAA557
   // ), we wait 10msec after PLL set. There is not register to display the lock
   // status.
   murasaki::Sleep(10);
-  CODEC_SYSLOG("Leave.")
+  CODEC_SYSLOG("Leave.%s", "")
 }
 
 void Tlv320aic3204AdapterStrategy::ConfigureClock(
     murasaki::Tlv320aic3204::I2sRole const role,
     murasaki::Tlv320aic3204::PllSource const pll_source) {
-  CODEC_SYSLOG("Enter r:")
+  CODEC_SYSLOG("Enter.%s", "")
+
   // parameter validation
   // pll_source == BCLK and role == master is not allowed.
   MURASAKI_ASSERT(
@@ -132,7 +132,7 @@ void Tlv320aic3204AdapterStrategy::ConfigureClock(
   table[1] = r27;
   SendCommand(table, sizeof(table));
 
-  CODEC_SYSLOG("Leave.")
+  CODEC_SYSLOG("Leave.%s", "")
 }
 
 void Tlv320aic3204AdapterStrategy::ConfigurePll(
@@ -175,11 +175,11 @@ void Tlv320aic3204AdapterStrategy::ConfigurePll(
   SetPage(0);  // Page 0 for PLL registers.
   SendCommand(pll_table, sizeof(pll_table));
 
-  CODEC_SYSLOG("Leave.")
+  CODEC_SYSLOG("Leave.%s", "")
 }
 
 void Tlv320aic3204AdapterStrategy::ShutdownPll(void) {
-  CODEC_SYSLOG("Enter.")
+  CODEC_SYSLOG("Enter.%s", "")
   uint8_t command[] = {
       4,  // Register Address => Clock Setting Register
       0   // PLL Power Down
@@ -188,7 +188,7 @@ void Tlv320aic3204AdapterStrategy::ShutdownPll(void) {
   SetPage(0);                             // Page 0 for software reset register.
   SendCommand(command, sizeof(command));  // Write to PLL power down.
 
-  CODEC_SYSLOG("Leave.")
+  CODEC_SYSLOG("Leave.%s", "")
 }
 
 /**
@@ -294,12 +294,12 @@ void Tlv320aic3204AdapterStrategy::ConfigureCODEC(uint32_t const fs) {
         sizeof(prb_table));  // Write to select the Signal Processing Blocks
   }
 
-  CODEC_SYSLOG("Leave.")
+  CODEC_SYSLOG("Leave.%s", "")
 }
 
 // Power Up and Unmute CODEC
 void Tlv320aic3204AdapterStrategy::StartCODEC(void) {
-  CODEC_SYSLOG("Enter.")
+  CODEC_SYSLOG("Enter.%s", "")
 
   SetPage(0);
 
@@ -333,11 +333,11 @@ void Tlv320aic3204AdapterStrategy::StartCODEC(void) {
                 sizeof(dac_table));  // Write to power up and unmute DAC.
   }
 
-  CODEC_SYSLOG("Leave.")
+  CODEC_SYSLOG("Leave.%s", "")
 }
 
 void Tlv320aic3204AdapterStrategy::ShutdownCODEC(void) {
-  CODEC_SYSLOG("Enter.")
+  CODEC_SYSLOG("Enter.%s", "")
 
   SetPage(0);  // Page 0 for CODEC control.
 
@@ -369,11 +369,11 @@ void Tlv320aic3204AdapterStrategy::ShutdownCODEC(void) {
         reg82};
     SendCommand(command, sizeof(command));  // Write to software reset.
   }
-  CODEC_SYSLOG("Leave.")
+  CODEC_SYSLOG("Leave.%s", "")
 }
 
 void Tlv320aic3204AdapterStrategy::ShutdownAnalog(void) {
-  CODEC_SYSLOG("Enter.")
+  CODEC_SYSLOG("Enter.%s", "")
 
   SetPage(1);  // Page 1 for Output driver register.
   {
@@ -384,7 +384,7 @@ void Tlv320aic3204AdapterStrategy::ShutdownAnalog(void) {
     SendCommand(command, sizeof(command));  // Write to software reset.
   }
 
-  CODEC_SYSLOG("Leave.")
+  CODEC_SYSLOG("Leave.%s", "")
 }
 
 //  Set the Analog PGA input gain.
@@ -425,14 +425,15 @@ void Tlv320aic3204AdapterStrategy::SetInputGain(float left_gain,
     SendCommand(command, sizeof(command));  // Write to set gain.
   }
 
-  CODEC_SYSLOG("Leave.")
+  CODEC_SYSLOG("Leave.%s", "")
 }
 
 //  Set the line output gain and enable the relevant mixer.
 void Tlv320aic3204AdapterStrategy::SetLineOutputGain(float left_gain,
                                                      float right_gain,
                                                      bool mute) {
-  CODEC_SYSLOG("Enter. left gain : %f, right gain %f", left_gain, right_gain)
+  CODEC_SYSLOG("Enter. left gain : %f, right gain %f, mute : %s", left_gain,
+               right_gain, mute ? "true" : "false")
 
   // The gain is -6.0 to 29 as 1 dB gain step.
   // So, we double the gain and truncate to integer.
@@ -478,16 +479,58 @@ void Tlv320aic3204AdapterStrategy::SetLineOutputGain(float left_gain,
     SendCommand(command, sizeof(command));  // Write to set gain.
   }
 
-  CODEC_SYSLOG("Leave.")
+  CODEC_SYSLOG("Leave.%s", "")
 }
 
 //  Set the headphone output gain and enable the relevant mixer.
 void Tlv320aic3204AdapterStrategy::SetHpOutputGain(float left_gain,
                                                    float right_gain,
                                                    bool mute) {
-  CODEC_SYSLOG("Enter. left gain : %f, right gain %f", left_gain, right_gain)
-  MURASAKI_ASSERT(false)  // not yet implemented.
-  CODEC_SYSLOG("Leave.")
+  // The gain is -6.0 to 29 as 1 dB gain step.
+  // So, we double the gain and truncate to integer.
+  // The value range is :
+  // from : -6dB -> 11_1010
+  // to   : 29dB -> 01_1101
+  // These 2's complemental have to be stored to D5:D0.
+  // The D6 is mute bit. 1 -> Muted. 0-> Unmuted.
+  // D7 is always 0.
+
+  // Clip the gain into the range of [0...45.7]
+  left_gain = std::max(left_gain, -6.0f);
+  left_gain = std::min(left_gain, 29.0f);
+  right_gain = std::max(right_gain, -6.0f);
+  right_gain = std::min(right_gain, 29.0f);
+
+  // If muted, -6dB gain is forbidden. To avoid the violation,
+  // we set gain to 0dB if muted.
+  if (mute) {
+    left_gain = 0;
+    right_gain = 0;
+  }
+
+  SetPage(1);  // Page 1 for analog control.
+  {
+    // Left channel gain. D7:D6 are forced to zero.
+    uint8_t reg16 = static_cast<int8_t>(left_gain) & 0x3F;
+    if (mute) reg16 |= 1 << 6;  // Set 1 to D6 when muted.
+    uint8_t command[] = {
+        16,    // Register Address => 16: Left Output HP gain register.
+        reg16  // Left Output Line gain.
+    };
+    SendCommand(command, sizeof(command));  // Write to set gain
+  }
+  {
+    // Right channel gain. D7:D6 are forced to zero.
+    uint8_t reg17 = static_cast<int8_t>(right_gain) & 0x3F;
+    if (mute) reg17 |= 1 << 6;  // Set 1 to D6 when muted.
+    uint8_t command[] = {
+        17,    // Register Address => 17: Right Output HP Gain register.
+        reg17  // Right Output Line gain.
+    };
+    SendCommand(command, sizeof(command));  // Write to set gain.
+  }
+
+  CODEC_SYSLOG("Leave.%s", "")
 }
 
 } /* namespace murasaki */
