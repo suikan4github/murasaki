@@ -26,7 +26,11 @@ Tlv320aic3204DefaultAdapter::Tlv320aic3204DefaultAdapter(
     )
     : Tlv320aic3204AdapterStrategy(controller, device_address) {}
 
-void Tlv320aic3204DefaultAdapter::ConfigureAnalog(void) {}
+void Tlv320aic3204DefaultAdapter::ConfigureAnalog(void) {
+  CODEC_SYSLOG("Enter. %s", "")
+
+  CODEC_SYSLOG("Leave.%s", "")
+}
 
 } /* namespace murasaki */
 
