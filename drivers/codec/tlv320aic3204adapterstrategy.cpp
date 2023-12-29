@@ -50,6 +50,21 @@ void Tlv320aic3204AdapterStrategy::SendCommand(const uint8_t command[],
   CODEC_SYSLOG("Leave.%s", "")
 }
 
+void Tlv320aic3204AdapterStrategy::ReadRegisterCommand(uint8_t register_address,
+                                                       uint8_t *value) {
+  CODEC_SYSLOG("Enter %d", register_address)
+
+  i2c_->TransmitThenReceive(
+      device_addr_,       // I2C address of the target CODEC.
+      &register_address,  // Register address to read.
+      1,                  // Write  length is always 1
+      value,              // pointer to the variable to store the read data.
+      1                   // Read length is always 1
+  );
+
+  CODEC_SYSLOG("Leave. register value was %d", *value)
+}
+
 void Tlv320aic3204AdapterStrategy::Reset() {
   CODEC_SYSLOG("Enter.%s", "")
 

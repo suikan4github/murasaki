@@ -45,6 +45,19 @@ TEST(Tlv320aic3204AdapterStrategy, SendCommand) {
   adapter.SendCommand(table2, sizeof(table2));
 }
 
+// Testing ReadRegisterCommand .
+TEST(Tlv320aic3204AdapterStrategy, ReadRegisterCommand) {
+  const uint8_t device_address = 0x18;
+  uint8_t value;  // read data is stored to here.
+  MockI2cMaster i2c;
+
+  murasaki::Tlv320aic3204DefaultAdapter adapter(&i2c, device_address);
+
+  adapter.ReadRegisterCommand(22, &value);
+
+  EXPECT_TRUE(false);  // dummy check. This test is not yet implement.
+}
+
 // Testing SetPage command .
 TEST(Tlv320aic3204AdapterStrategy, SetPage) {
   MockI2cMaster i2c;

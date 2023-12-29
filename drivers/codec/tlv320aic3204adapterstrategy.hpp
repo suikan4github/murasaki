@@ -95,6 +95,16 @@ class Tlv320aic3204AdapterStrategy {
   virtual void SendCommand(const uint8_t command[], int size);
 
   /**
+   *
+   * \brief read a register from TLV320AIC3204
+   * \param register_address Register address to read.
+   * \param value Address of register to store the read value.
+   * \details
+   */
+  virtual void ReadRegisterCommand(const uint8_t register_address,
+                                   uint8_t *value);
+
+  /**
    * \brief Reset the entire TLV320AIC3204 CODEC by software
    */
   virtual void Reset();
