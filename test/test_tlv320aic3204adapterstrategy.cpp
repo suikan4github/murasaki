@@ -5,6 +5,7 @@
 #include "tlv320aic3204defaultadapter.hpp"
 
 using namespace ::testing;
+using ::testing::Pointee;
 
 // Testing SendCommand .
 TEST(Tlv320aic3204AdapterStrategy, SendCommand) {
@@ -50,12 +51,37 @@ TEST(Tlv320aic3204AdapterStrategy, ReadRegisterCommand) {
   const uint8_t device_address = 0x18;
   uint8_t value;  // read data is stored to here.
   MockI2cMaster i2c;
+  const uint8_t register_address = 22;
+  const uint8_t dummy_register_value = 111;
 
   murasaki::Tlv320aic3204DefaultAdapter adapter(&i2c, device_address);
 
-  adapter.ReadRegisterCommand(22, &value);
+  // Will given register number sent correctly?
+  const u_int8_t table[] = {register_address};
 
-  EXPECT_TRUE(false);  // dummy check. This test is not yet implement.
+  EXPECT_CALL(i2c,  // Mock
+              TransmitThenReceive(
+                  device_address,  // I2C Address
+                  _,               // Args<1> : Pointer to the data to send.
+                  sizeof(table),   // Length of data in bytes.
+                  _,     // Args<3> : Pointer to variable to received data.
+                  1,     // Length of data in bytes.
+                  NULL,  // no variable to receive the length of transmission
+                  NULL,  // no variable to receive the length of receiving
+                  murasaki::kwmsIndefinitely  // Wait forever
+                  ))
+      .With(Args<1, 2>(
+          ElementsAreArray(table)))  // Is correct register value passed?
+      .WillOnce(DoAll(SetArgPointee<3>(
+                          dummy_register_value),  // Set dummy value to rx data.
+                      Return(murasaki::ki2csOK)   // Without this, compile fails
+                      ));
+
+  // Let's try to call.
+  adapter.ReadRegisterCommand(register_address, &value);
+
+  // Is received value expected one?
+  EXPECT_EQ(value, dummy_register_value);
 }
 
 // Testing SetPage command .
