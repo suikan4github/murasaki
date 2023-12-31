@@ -30,7 +30,7 @@ void Tlv320aic3204DefaultAdapter::ConfigureAnalog(void) {
   CODEC_SYSLOG("Enter. %s", "")
   /*
    * HP output startup sequence ( SLAA577 section 2.2.3.1)
-   * 1. Setup Rpop and N and softstepping.
+   * 1. Setup Rpop and N and soft stepping.
    * 2. Configure the output driver ( common-mode, power routing)
    * 3. Choose signal to route to HP.
    * 4. Start up the driver block. Keep muting these blocks.
